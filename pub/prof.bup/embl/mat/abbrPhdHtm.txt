@@ -1,0 +1,27 @@
+****************************************************************************
+*                                                                          *
+*    Abbreviations: PHDhtm                                                 *
+*    ~~~~~~~~~~~~~~~~~~~~~                                                 *
+*                                                                          *
+*    sequence:                                                             *
+*       AA : amino acid sequence                                           *
+*    secondary structure:                                                  *
+*       HL:  H (or T)=helical transmembrane region, blank=other (loop)     *
+*       PHD: Profile network prediction HeiDelberg                         *
+*       PHDF:filtered prediction, i.e., too long transmembrane segments    *
+*            are split, too short ones are deleted                         *
+*       Rel: Reliability index of prediction (0-9)                         *
+*    detail:                                                               *
+*       prH: 'probability' for assigning helical transmembrane region      *
+*       prL: 'probability' for assigning loop                              *
+*            note: the 'probabilites' are scaled to the interval 0-9, e.g.,*
+*                  prH=5 means, that the first output node is 0.5-0.6      *
+*    subset:                                                               *
+*       SUB: a subset of the prediction, for all residues with an expected *
+*            average accuracy > 82% (tables in header)                     *
+*            note: for this subset the following symbols are used:         *
+*         L: is loop (for which above " " is used)                         *
+*       ".": means that no prediction is made for this residue, as the     *
+*            reliability is:  Rel < 5                                      *
+*                                                                          *
+****************************************************************************

@@ -1,0 +1,26 @@
+*********************** SignalP V1.1 Mail Server ***********************
+******************************** ERROR *********************************
+
+Center for Biological Sequence Analysis
+The Technical University of Denmark
+DK-2800 Lyngby, Denmark  
+
+No sequence(s) were found in your mail.
+
+Please check the syntax of the file.  It should for example look like
+this:
+
+        euk
+        graphics
+        >10KS_HUMAN
+        MKLAVTLTLV TLALCCSSAS AEICPSFQRV IETLLMDTPS SYEAAMELFS
+        >1B05_HUMAN
+        MRVTAPRTLL LLLWGAVALT ETWAGSHSMR YFYTAMSRPG RGEPRFITVG
+        .
+
+For more information, send the a message with the command `help' only.
+
+If you still encounter problems, please contact:
+ 
+    rapacki@cbs.dtu.dk   (Kristoffer Rapacki), or
+    hnielsen@cbs.dtu.dk  (Henrik Nielsen)

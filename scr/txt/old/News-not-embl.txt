@@ -1,0 +1,22 @@
+*****************************************************************************
+* IMPORTANT NEED YOUR HELP!!!                                               *
+*****************************************************************************
+
+  Dear user,
+
+  PredictProtein at EMBL is slowly dying out.  I don't know how you managed
+  to access that resource...
+
+  Please:
+	(1) tell me how you submitted your job
+	(2) use the new interfaces:
+
+  web interface:             http://dodo.cpmc.columbia.edu/predictprotein/
+  email submission:          predictprotein@dodo.cpmc.columbia.edu
+  email to administrator:    predict_help@dodo.cpmc.columbia.edu
+  fax to administrator:      B Rost, (1)-212-305-7932
+
+*****************************************************************************
+* IMPORTANT NEED YOUR HELP!!!                                               *
+*****************************************************************************
+  

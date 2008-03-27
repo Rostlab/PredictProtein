@@ -1,0 +1,801 @@
+9
+7	Bacteria; Proteobacteria; alpha subdivision; Ancylobacter group; Azorhizobium
+9	Bacteria; Proteobacteria; gamma subdivision; Buchnera
+24	Bacteria; Proteobacteria; gamma subdivision; Shewanella
+34	Bacteria; Proteobacteria; delta subdivision; Myxobacteria; Myxococcales; Cystobacterineae; Myxococcaceae; Myxococcus
+76	Bacteria; Proteobacteria; alpha subdivision; Caulobacter group; Caulobacter
+139	Bacteria; Spirochaetales; Spirochaetaceae; Borrelia; Borrelia burgdorferi group
+140	Bacteria; Spirochaetales; Spirochaetaceae; Borrelia
+160	Bacteria; Spirochaetales; Spirochaetaceae; Treponema
+173	Bacteria; Spirochaetales; Leptospiraceae; Leptospira
+192	Bacteria; Proteobacteria; alpha subdivision; Rhodospirillaceae; Azospirillum
+195	Bacteria; Proteobacteria; epsilon subdivision; Campylobacter group; Campylobacter
+197	Bacteria; Proteobacteria; epsilon subdivision; Campylobacter group; Campylobacter
+210	Bacteria; Proteobacteria; epsilon subdivision; Helicobacter group; Helicobacter
+235	Bacteria; Proteobacteria; alpha subdivision; Rhizobiaceae group; Brucella
+263	Bacteria; Proteobacteria; gamma subdivision; Thiomicrospira group; Francisella group; Francisella
+266	Bacteria; Proteobacteria; alpha subdivision; Rhodobacter group; Paracoccus
+271	Bacteria; Thermus/Deinococcus group; Thermus group; Thermus
+274	Bacteria; Thermus/Deinococcus group; Thermus group; Thermus
+285	Bacteria; Proteobacteria; beta subdivision; Comamonadaceae; Comamonas
+287	Bacteria; Proteobacteria; gamma subdivision; Pseudomonas group; Pseudomonas
+292	Bacteria; Proteobacteria; beta subdivision; Burkholderia group; Burkholderia
+294	Bacteria; Proteobacteria; gamma subdivision; Pseudomonas group; Pseudomonas
+303	Bacteria; Proteobacteria; gamma subdivision; Pseudomonas group; Pseudomonas
+305	Bacteria; Proteobacteria; beta subdivision; Burkholderia group; Ralstonia
+306	Bacteria; Proteobacteria
+316	Bacteria; Proteobacteria; gamma subdivision; Pseudomonas group; Pseudomonas
+317	Bacteria; Proteobacteria; gamma subdivision; Pseudomonas group; Pseudomonas
+339	Bacteria; Proteobacteria; gamma subdivision; Lysobacterales; Xanthomonas group; Xanthomonas
+353	Bacteria; Proteobacteria; gamma subdivision; Azotobacteraceae; Azotobacter
+354	Bacteria; Proteobacteria; gamma subdivision; Azotobacteraceae; Azotobacter
+359	Bacteria; Proteobacteria; alpha subdivision; Rhizobiaceae group; Rhizobiaceae; Agrobacterium
+362	Bacteria; Proteobacteria; alpha subdivision; Rhizobiaceae group; Rhizobiaceae; Agrobacterium
+373	Bacteria; Proteobacteria; alpha subdivision; Rhizobiaceae group; Rhizobiaceae; Agrobacterium
+375	Bacteria; Proteobacteria; alpha subdivision; Bradyrhizobium group; Bradyrhizobium
+382	Bacteria; Proteobacteria; alpha subdivision; Rhizobiaceae group; Rhizobiaceae; Sinorhizobium
+384	Bacteria; Proteobacteria; alpha subdivision; Rhizobiaceae group; Rhizobiaceae; Rhizobium
+391	Bacteria; Proteobacteria; alpha subdivision; Rhizobiaceae group; Rhizobiaceae; Rhizobium
+394	Bacteria; Proteobacteria; alpha subdivision; Rhizobiaceae group; Rhizobiaceae; Rhizobium
+408	Bacteria; Proteobacteria; alpha subdivision; Methylobacterium
+446	Bacteria; Proteobacteria; gamma subdivision; Legionellaceae; Legionella
+471	Bacteria; Proteobacteria; gamma subdivision; Pseudomonas group; Moraxellaceae; Acinetobacter
+472	Bacteria; Proteobacteria; gamma subdivision; Pseudomonas group; Moraxellaceae; Acinetobacter
+485	Bacteria; Proteobacteria; beta subdivision; Neisseriaceae; Neisseria
+486	Bacteria; Proteobacteria; beta subdivision; Neisseriaceae; Neisseria
+487	Bacteria; Proteobacteria; beta subdivision; Neisseriaceae; Neisseria
+510	Bacteria; Proteobacteria; beta subdivision; Burkholderia group; Ralstonia
+511	Bacteria; Proteobacteria; beta subdivision; Alcaligenaceae; Alcaligenes
+518	Bacteria; Proteobacteria; beta subdivision; Alcaligenaceae; Bordetella
+520	Bacteria; Proteobacteria; beta subdivision; Alcaligenaceae; Bordetella
+529	Bacteria; Proteobacteria; alpha subdivision; Rhizobiaceae group; Ochrobactrum
+542	Bacteria; Proteobacteria; alpha subdivision; Zymomonas group; Zymomonas
+546	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Citrobacter
+548	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Enterobacter
+549	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Enterobacter
+550	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Enterobacter
+552	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Erwinia
+554	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Erwinia
+556	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Erwinia
+557	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Erwinia
+562	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Escherichia
+571	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Klebsiella
+573	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Klebsiella
+584	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Proteus
+585	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Proteus
+592	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Salmonella
+601	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Salmonella
+602	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Salmonella
+615	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Serratia
+622	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Shigella
+623	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Shigella
+624	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Shigella
+630	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Yersinia
+632	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Yersinia
+633	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Yersinia
+644	Bacteria; Proteobacteria; gamma subdivision; Aeromonas group; Aeromonas
+645	Bacteria; Proteobacteria; gamma subdivision; Aeromonas group; Aeromonas
+658	Bacteria; Proteobacteria; gamma subdivision; Vibrionaceae; Photobacterium
+663	Bacteria; Proteobacteria; gamma subdivision; Vibrionaceae; Vibrio
+665	Bacteria; Proteobacteria; gamma subdivision; Vibrionaceae; Vibrio
+666	Bacteria; Proteobacteria; gamma subdivision; Vibrionaceae; Vibrio
+668	Bacteria; Proteobacteria; gamma subdivision; Vibrionaceae; Vibrio
+669	Bacteria; Proteobacteria; gamma subdivision; Vibrionaceae; Vibrio
+670	Bacteria; Proteobacteria; gamma subdivision; Vibrionaceae; Vibrio
+714	Bacteria; Proteobacteria; gamma subdivision; Pasteurellaceae; Actinobacillus
+715	Bacteria; Proteobacteria; gamma subdivision; Pasteurellaceae; Actinobacillus
+727	Bacteria; Proteobacteria; gamma subdivision; Pasteurellaceae; Haemophilus
+730	Bacteria; Proteobacteria; gamma subdivision; Pasteurellaceae; Haemophilus
+746	Bacteria; Proteobacteria; gamma subdivision; Pasteurellaceae; Pasteurella
+747	Bacteria; Proteobacteria; gamma subdivision; Pasteurellaceae; Pasteurella
+777	Bacteria; Proteobacteria; gamma subdivision; Coxiella
+782	Bacteria; Proteobacteria; alpha subdivision; Rickettsiales; Rickettsiaceae; Rickettsieae; Rickettsia
+784	Bacteria; Proteobacteria; alpha subdivision; Rickettsiales; Rickettsiaceae; Rickettsieae; Orientia
+812	Bacteria; Chlamydiales; Chlamydiaceae; Chlamydia
+813	Bacteria; Chlamydiales; Chlamydiaceae; Chlamydia
+817	Bacteria; Cytophagales; Bacteroidaceae; Bacteroides
+831	Bacteria; Firmicutes; Bacillus/Clostridium group; Clostridiaceae; Butyrivibrio
+837	Bacteria; Cytophagales; Bacteroidaceae; Porphyromonas
+844	Bacteria; Proteobacteria; epsilon subdivision; Helicobacter group; Wolinella
+870	Bacteria; Proteobacteria; gamma subdivision; Cardiobacteriaceae; Dichelobacter
+876	Bacteria; Proteobacteria; delta subdivision; Desulfovibrio
+881	Bacteria; Proteobacteria; delta subdivision; Desulfovibrio
+920	Bacteria; Proteobacteria; gamma subdivision
+956	Bacteria; Proteobacteria; alpha subdivision; Rickettsiales; Rickettsiaceae; Wolbachieae; Wolbachia
+1049	Bacteria; Proteobacteria; gamma subdivision; Chromatiaceae; Allochromatium
+1061	Bacteria; Proteobacteria; alpha subdivision; Rhodobacter group; Rhodobacter
+1063	Bacteria; Proteobacteria; alpha subdivision; Rhodobacter group; Rhodobacter
+1076	Bacteria; Proteobacteria; alpha subdivision; Bradyrhizobium group; Rhodopseudomonas
+1085	Bacteria; Proteobacteria; alpha subdivision; Rhodospirillaceae; Rhodospirillum
+1126	Bacteria; Cyanobacteria; Chroococcales; Microcystis
+1131	Bacteria; Cyanobacteria; Chroococcales; Synechococcus
+1139	Bacteria; Cyanobacteria; Chroococcales; Synechococcus
+1140	Bacteria; Cyanobacteria; Chroococcales; Synechococcus
+1143	Bacteria; Cyanobacteria; Chroococcales; Synechocystis
+1148	Bacteria; Cyanobacteria; Chroococcales; Synechocystis
+1167	Bacteria; Cyanobacteria; Nostocales; Nostocaceae; Anabaena
+1172	Bacteria; Cyanobacteria; Nostocales; Nostocaceae; Anabaena
+1174	Bacteria; Cyanobacteria; Nostocales; Nostocaceae; Anabaena
+1184	Bacteria; Cyanobacteria; Oscillatoriales; Plectonema
+1187	Bacteria; Cyanobacteria; Nostocales; Rivulariaceae; Calothrix
+1197	Bacteria; Cyanobacteria; Nostocales; Rivulariaceae; Fremyella
+1211	Bacteria; Cyanobacteria; environmental samples
+1245	Bacteria; Firmicutes; Bacillus/Clostridium group; Lactobacillaceae; Leuconostoc
+1270	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Micrococcineae; Micrococcaceae; Micrococcus
+1280	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Staphylococcus
+1281	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Staphylococcus
+1282	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Staphylococcus
+1288	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Staphylococcus
+1302	Bacteria; Firmicutes; Bacillus/Clostridium group; Streptococcaceae; Streptococcus
+1304	Bacteria; Firmicutes; Bacillus/Clostridium group; Streptococcaceae; Streptococcus
+1308	Bacteria; Firmicutes; Bacillus/Clostridium group; Streptococcaceae; Streptococcus
+1309	Bacteria; Firmicutes; Bacillus/Clostridium group; Streptococcaceae; Streptococcus
+1311	Bacteria; Firmicutes; Bacillus/Clostridium group; Streptococcaceae; Streptococcus
+1313	Bacteria; Firmicutes; Bacillus/Clostridium group; Streptococcaceae; Streptococcus
+1314	Bacteria; Firmicutes; Bacillus/Clostridium group; Streptococcaceae; Streptococcus
+1351	Bacteria; Firmicutes; Bacillus/Clostridium group; Enterococcaceae; Enterococcus
+1352	Bacteria; Firmicutes; Bacillus/Clostridium group; Enterococcaceae; Enterococcus
+1354	Bacteria; Firmicutes; Bacillus/Clostridium group; Enterococcaceae; Enterococcus
+1358	Bacteria; Firmicutes; Bacillus/Clostridium group; Streptococcaceae; Lactococcus
+1390	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1392	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1393	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Brevibacillus
+1396	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1397	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1399	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1402	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1404	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1408	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1409	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1421	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1422	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1423	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1428	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Bacillus
+1488	Bacteria; Firmicutes; Bacillus/Clostridium group; Clostridiaceae; Clostridium
+1491	Bacteria; Firmicutes; Bacillus/Clostridium group; Clostridiaceae; Clostridium
+1496	Bacteria; Firmicutes; Bacillus/Clostridium group; Clostridiaceae; Clostridium
+1501	Bacteria; Firmicutes; Bacillus/Clostridium group; Clostridiaceae; Clostridium
+1502	Bacteria; Firmicutes; Bacillus/Clostridium group; Clostridiaceae; Clostridium
+1515	Bacteria; Firmicutes; Bacillus/Clostridium group; Clostridiaceae; Clostridium
+1582	Bacteria; Firmicutes; Bacillus/Clostridium group; Lactobacillaceae; Lactobacillus
+1584	Bacteria; Firmicutes; Bacillus/Clostridium group; Lactobacillaceae; Lactobacillus
+1587	Bacteria; Firmicutes; Bacillus/Clostridium group; Lactobacillaceae; Lactobacillus
+1590	Bacteria; Firmicutes; Bacillus/Clostridium group; Lactobacillaceae; Lactobacillus
+1599	Bacteria; Firmicutes; Bacillus/Clostridium group; Lactobacillaceae; Lactobacillus
+1639	Bacteria; Firmicutes; Bacillus/Clostridium group; Bacillaceae; Listeria
+1667	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Micrococcineae; Micrococcaceae; Arthrobacter
+1718	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Corynebacterineae; Corynebacteriaceae; Corynebacterium
+1744	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Propionibacterineae; Propionibacteriaceae; Propionibacterium
+1764	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Corynebacterineae; Mycobacteriaceae; Mycobacterium
+1765	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Corynebacterineae; Mycobacteriaceae; Mycobacterium
+1766	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Corynebacterineae; Mycobacteriaceae; Mycobacterium
+1767	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Corynebacterineae; Mycobacteriaceae; Mycobacterium
+1769	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Corynebacterineae; Mycobacteriaceae; Mycobacterium
+1772	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Corynebacterineae; Mycobacteriaceae; Mycobacterium
+1773	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Corynebacterineae; Mycobacteriaceae; Mycobacterium
+1831	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Corynebacterineae; Nocardiaceae; Rhodococcus
+1833	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Corynebacterineae; Nocardiaceae; Rhodococcus
+1836	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Pseudonocardineae; Pseudonocardiaceae; Saccharopolyspora
+1855	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Frankineae; Frankiaceae; Frankia
+1889	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+1894	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+1895	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+1901	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+1902	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+1906	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+1907	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+1911	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+1912	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+1915	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+1916	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+1931	Bacteria; Firmicutes; Actinobacteria; Actinobacteridae; Actinomycetales; Streptomycineae; Streptomycetaceae; Streptomyces
+2095	Bacteria; Firmicutes; Bacillus/Clostridium group; Mollicutes; capricolum group
+2096	Bacteria; Firmicutes; Bacillus/Clostridium group; Mollicutes; Mycoplasmataceae; Mycoplasma
+2097	Bacteria; Firmicutes; Bacillus/Clostridium group; Mollicutes; Mycoplasmataceae; Mycoplasma
+2098	Bacteria; Firmicutes; Bacillus/Clostridium group; Mollicutes; Mycoplasmataceae; Mycoplasma
+2104	Bacteria; Firmicutes; Bacillus/Clostridium group; Mollicutes; Mycoplasmataceae; Mycoplasma
+2107	Bacteria; Firmicutes; Bacillus/Clostridium group; Mollicutes; Mycoplasmataceae; Mycoplasma
+2133	Bacteria; Firmicutes; Bacillus/Clostridium group; Mollicutes; Spiroplasmataceae; Spiroplasma
+2166	Archaea; Euryarchaeota; Methanobacteriales; Methanobacteriaceae; Methanobacterium
+2187	Archaea; Euryarchaeota; Methanococcales; Methanococcaceae; Methanococcus
+2188	Archaea; Euryarchaeota; Methanococcales; Methanococcaceae; Methanococcus
+2190	Archaea; Euryarchaeota; Methanococcales; Methanococcaceae; Methanococcus
+2208	Archaea; Euryarchaeota; Methanomicrobiales; Methanosarcinaceae; Methanosarcina
+2209	Archaea; Euryarchaeota; Methanomicrobiales; Methanosarcinaceae; Methanosarcina
+2234	Archaea; Euryarchaeota; Archaeoglobales; Archaeoglobaceae; Archaeoglobus
+2238	Archaea; Euryarchaeota; Halobacteriales; Halobacteriaceae; Haloarcula
+2241	Archaea; Euryarchaeota; Halobacteriales; Halobacteriaceae; Halobacterium
+2242	Archaea; Euryarchaeota; Halobacteriales; Halobacteriaceae; Halobacterium
+2246	Archaea; Euryarchaeota; Halobacteriales; Halobacteriaceae; Haloferax
+2252	Archaea; Euryarchaeota; Halobacteriales; Halobacteriaceae; Haloferax
+2261	Archaea; Euryarchaeota; Thermococcales; Thermococcaceae; Pyrococcus
+2285	Archaea; Crenarchaeota; Sulfolobales; Sulfolobus
+2287	Archaea; Crenarchaeota; Sulfolobales; Sulfolobus
+2303	Archaea; Euryarchaeota; Thermoplasmales; Thermoplasmaceae; Thermoplasma
+2336	Bacteria; Thermotogales; Thermotoga
+2338	Bacteria; environmental samples
+2512	plasmids
+2711	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Sapindales; Rutaceae; Citrus
+2762	Eukaryota; Glaucocystophyceae; Cyanophoraceae; Cyanophora
+2769	Eukaryota; Rhodophyta; Florideophyceae; Gigartinales; Gigartinaceae; Chondrus
+2771	Eukaryota; Rhodophyta; Bangiophyceae; Porphyridiales; Porphyridiaceae; Cyanidium
+2777	Eukaryota; Rhodophyta; Florideophyceae; Gracilariales; Gracilariaceae; Gracilaria
+2787	Eukaryota; Rhodophyta; Bangiophyceae; Bangiales; Bangiaceae; Porphyra
+2839	Eukaryota; stramenopiles; Bacillariophyta; Coscinodiscophyceae; Biddulphiophycidae; Eupodiscales; Eupodiscaceae; Odontella
+2880	Eukaryota; stramenopiles; Phaeophyceae/Xanthophyceae group; Phaeophyceae; Ectocarpales; Ectocarpaceae; Ectocarpus
+3037	Eukaryota; Euglenozoa; Euglenida; Astasia
+3039	Eukaryota; Euglenozoa; Euglenida; Euglena
+3055	Eukaryota; Viridiplantae; Chlorophyta; Chlorophyceae; Volvocales; Chlamydomonadaceae; Chlamydomonas
+3056	Eukaryota; Viridiplantae; Chlorophyta; Chlorophyceae; Volvocales; Chlamydomonadaceae; Chlamydomonas
+3067	Eukaryota; Viridiplantae; Chlorophyta; Chlorophyceae; Volvocales; Volvocaceae; Volvox
+3077	Eukaryota; Viridiplantae; Chlorophyta; Chlorophyceae; Chlorellales; Chlorellaceae; Chlorella
+3197	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Marchantiopsida; Marchantiales; Marchantiaceae; Marchantia
+3218	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Bryopsida; Bryidae; Funariales; Funariaceae; Physcomitrella
+3329	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Coniferopsida; Coniferales; Pinaceae; Picea
+3330	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Coniferopsida; Coniferales; Pinaceae; Picea
+3335	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Coniferopsida; Coniferales; Pinaceae; Picea
+3347	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Coniferopsida; Coniferales; Pinaceae; Pinus
+3349	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Coniferopsida; Coniferales; Pinaceae; Pinus
+3350	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Coniferopsida; Coniferales; Pinaceae; Pinus
+3352	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Coniferopsida; Coniferales; Pinaceae; Pinus
+3357	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Coniferopsida; Coniferales; Pinaceae; Pseudotsuga
+3505	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fagales; Betulaceae; Betula
+3544	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Caryophyllidae; Caryophyllales; Aizoaceae; Mesembryanthemum
+3555	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Caryophyllidae; Caryophyllales; Chenopodiaceae; Beta
+3562	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Caryophyllidae; Caryophyllales; Chenopodiaceae; Spinacia
+3570	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Caryophyllidae; Caryophyllales; Caryophyllaceae; Dianthus
+3634	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Malvales; Malvaceae; Gossypium
+3635	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Malvales; Malvaceae; Gossypium
+3649	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Violales; Caricaceae; Carica
+3654	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Cucurbitales; Cucurbitaceae; Citrullus
+3659	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Cucurbitales; Cucurbitaceae; Cucumis
+3661	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Cucurbitales; Cucurbitaceae; Cucurbita
+3694	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Violales; Salicaceae; Populus
+3702	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Capparales; Brassicaceae; Arabidopsis
+3707	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Capparales; Brassicaceae; Brassica
+3708	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Capparales; Brassicaceae; Brassica
+3711	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Capparales; Brassicaceae; Brassica
+3712	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Capparales; Brassicaceae; Brassica
+3726	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Capparales; Brassicaceae; Raphanus
+3728	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Capparales; Brassicaceae; Sinapis
+3747	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Rosales; Rosaceae; Fragaria
+3750	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Rosales; Rosaceae; Malus
+3818	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Arachis
+3823	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Canavalia
+3827	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Cicer
+3847	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Glycine
+3873	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Lupinus
+3879	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Medicago
+3880	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Medicago
+3885	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Phaseolus
+3888	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Pisum
+3891	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Psophocarpus
+3906	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Vicia
+3916	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Vigna
+3917	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Vigna
+3930	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Myrtales; Lythraceae; Cuphea
+3950	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Myrtales; Onagraceae; Oenothera
+3981	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Euphorbiales; Euphorbiaceae; Hevea
+3988	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Euphorbiales; Euphorbiaceae; Ricinus
+4039	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Araliales; Apiaceae; Daucus
+4043	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Araliales; Apiaceae; Petroselinum
+4058	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Gentiananae; Gentianales; Apocynaceae; Catharanthus
+4072	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Solananae; Solanales; Solanaceae; Capsicum
+4081	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Solananae; Solanales; Solanaceae; Solanum; Potatoe; Lycopersicon
+4092	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Solananae; Solanales; Solanaceae; Nicotiana
+4096	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Solananae; Solanales; Solanaceae; Nicotiana
+4097	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Solananae; Solanales; Solanaceae; Nicotiana
+4102	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Solananae; Solanales; Solanaceae; Petunia
+4113	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Solananae; Solanales; Solanaceae; Solanum; Potatoe; section Petota
+4120	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Solananae; Solanales; Convolvulaceae; Ipomoea
+4151	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Gentiananae; Lamiales; Scrophulariaceae; Antirrhinum
+4226	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Asterales; Asteraceae; Flaveria
+4232	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Asteridae; Asterales; Asteraceae; Helianthus
+4498	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Poales; Poaceae; Avena
+4513	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Poales; Poaceae; Hordeum
+4530	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Poales; Poaceae; Oryza
+4547	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Poales; Poaceae; Saccharum
+4550	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Poales; Poaceae; Secale
+4558	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Poales; Poaceae; Sorghum
+4565	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Poales; Poaceae; Triticum
+4577	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Poales; Poaceae; Zea
+4641	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Zingiberales; Musaceae; Musa
+4679	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Asparagales; Alliaceae; Allium
+4754	Eukaryota; Fungi; Ascomycota; Archiascomycetes; Pneumocystidaceae; Pneumocystis
+4896	Eukaryota; Fungi; Ascomycota; Archiascomycetes; Schizosaccharomycetales; Schizosaccharomycetaceae; Schizosaccharomyces
+4905	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Saccharomycetaceae; Pichia
+4906	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Saccharomycetaceae; Williopsis
+4911	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Saccharomycetaceae; Kluyveromyces
+4922	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Saccharomycetaceae; Pichia
+4932	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Saccharomycetaceae; Saccharomyces
+4952	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Dipodascaceae; Yarrowia
+5037	Eukaryota; Fungi; Ascomycota; Euascomycetes; Plectomycetes; Onygenales; Onygenaceae; Ajellomyces
+5044	Eukaryota; Fungi; Ascomycota; Euascomycetes; Pyrenomycetes; mitosporic Pyrenomycetes; Acremonium
+5059	Eukaryota; Fungi; Ascomycota; Euascomycetes; Plectomycetes; Eurotiales; Trichocomaceae; mitosporic Trichocomaceae; Aspergillus
+5061	Eukaryota; Fungi; Ascomycota; Euascomycetes; Plectomycetes; Eurotiales; Trichocomaceae; mitosporic Trichocomaceae; Aspergillus
+5062	Eukaryota; Fungi; Ascomycota; Euascomycetes; Plectomycetes; Eurotiales; Trichocomaceae; mitosporic Trichocomaceae; Aspergillus
+5067	Eukaryota; Fungi; Ascomycota; Euascomycetes; Plectomycetes; Eurotiales; Trichocomaceae; mitosporic Trichocomaceae; Aspergillus
+5072	Eukaryota; Fungi; Ascomycota; Euascomycetes; Plectomycetes; Eurotiales; Trichocomaceae; Emericella
+5076	Eukaryota; Fungi; Ascomycota; Euascomycetes; Plectomycetes; Eurotiales; Trichocomaceae; mitosporic Trichocomaceae; Penicillium
+5085	Eukaryota; Fungi; Ascomycota; Euascomycetes; Plectomycetes; Eurotiales; Trichocomaceae; mitosporic Trichocomaceae; Aspergillus
+5116	Eukaryota; Fungi; Ascomycota; Euascomycetes; Pyrenomycetes; Diaporthales; Valsaceae; Cryphonectria
+5134	Eukaryota; Fungi; Ascomycota; Euascomycetes; Pyrenomycetes; Hypocreales; Hypocreaceae; Nectria
+5138	Eukaryota; Fungi; Ascomycota; Euascomycetes; Pyrenomycetes; Phyllachorales; Phyllachoraceae; Magnaporthe
+5141	Eukaryota; Fungi; Ascomycota; Euascomycetes; Pyrenomycetes; Sordariales; Sordariaceae; Neurospora
+5145	Eukaryota; Fungi; Ascomycota; Euascomycetes; Pyrenomycetes; Sordariales; Sordariaceae; Podospora
+5207	Eukaryota; Fungi; Basidiomycota; Hymenomycetes; Tremellales; Filobasidiaceae; Filobasidiella
+5270	Eukaryota; Fungi; Basidiomycota; Ustilaginomycetes; Ustilaginomycetidae; Ustilaginales; Ustilaginaceae; Ustilago
+5306	Eukaryota; Fungi; Basidiomycota; Hymenomycetes; Stereales; Corticiaceae; Phanerochaete
+5334	Eukaryota; Fungi; Basidiomycota; Hymenomycetes; Aphyllophorales; Schizophyllaceae; Schizophyllum
+5341	Eukaryota; Fungi; Basidiomycota; Hymenomycetes; Agaricales; Agaricaceae; Agaricus
+5346	Eukaryota; Fungi; Basidiomycota; Hymenomycetes; Agaricales; Coprinaceae; Coprinus
+5457	Eukaryota; Fungi; Ascomycota; Euascomycetes; Pyrenomycetes; Phyllachorales; Phyllachoraceae; Glomerella
+5476	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Candidaceae; Candida
+5478	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Candidaceae; Candida
+5479	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Candidaceae; Candida
+5482	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Candidaceae; Candida
+5507	Eukaryota; Fungi; Ascomycota; Euascomycetes; Pyrenomycetes; Hypocreales; Hypocreaceae; mitosporic Hypocreaceae; Fusarium
+5544	Eukaryota; Fungi; Ascomycota; Euascomycetes; Pyrenomycetes; Hypocreales; Hypocreaceae; mitosporic Hypocreaceae; Trichoderma
+5656	Eukaryota; Euglenozoa; Kinetoplastida; Trypanosomatidae; Crithidia
+5661	Eukaryota; Euglenozoa; Kinetoplastida; Trypanosomatidae; Leishmania
+5664	Eukaryota; Euglenozoa; Kinetoplastida; Trypanosomatidae; Leishmania
+5665	Eukaryota; Euglenozoa; Kinetoplastida; Trypanosomatidae; Leishmania
+5671	Eukaryota; Euglenozoa; Kinetoplastida; Trypanosomatidae; Leishmania
+5689	Eukaryota; Euglenozoa; Kinetoplastida; Trypanosomatidae; Leishmania; lizard Leishmania
+5691	Eukaryota; Euglenozoa; Kinetoplastida; Trypanosomatidae; Trypanosoma
+5692	Eukaryota; Euglenozoa; Kinetoplastida; Trypanosomatidae; Trypanosoma; Nannomonas
+5693	Eukaryota; Euglenozoa; Kinetoplastida; Trypanosomatidae; Trypanosoma; Schizotrypanum
+5722	Eukaryota; Parabasalidea; Trichomonadida; Trichomonas
+5741	Eukaryota; Diplomonadida; Hexamitidae; Giardiinae; Giardia
+5755	Eukaryota; Acanthamoebidae; Acanthamoeba
+5759	Eukaryota; Entamoebidae; Entamoeba
+5791	Eukaryota; Myxomycetes; Physarida; Physarum
+5807	Eukaryota; Alveolata; Apicomplexa; Coccidia; Eimeriida; Cryptosporidiidae; Cryptosporidium
+5811	Eukaryota; Alveolata; Apicomplexa; Coccidia; Eimeriida; Sarcocystidae; Toxoplasma
+5821	Eukaryota; Alveolata; Apicomplexa; Haemosporida; Plasmodium
+5825	Eukaryota; Alveolata; Apicomplexa; Haemosporida; Plasmodium
+5833	Eukaryota; Alveolata; Apicomplexa; Haemosporida; Plasmodium
+5855	Eukaryota; Alveolata; Apicomplexa; Haemosporida; Plasmodium
+5861	Eukaryota; Alveolata; Apicomplexa; Haemosporida; Plasmodium
+5865	Eukaryota; Alveolata; Apicomplexa; Piroplasmida; Babesiidae; Babesia
+5875	Eukaryota; Alveolata; Apicomplexa; Piroplasmida; Theileriidae; Theileria
+5888	Eukaryota; Alveolata; Ciliophora; Nassophorea; Peniculida; Paramecium
+5908	Eukaryota; Alveolata; Ciliophora; Oligohymenophorea; Hymenostomatida; Tetrahymenina; Tetrahymena
+5911	Eukaryota; Alveolata; Ciliophora; Oligohymenophorea; Hymenostomatida; Tetrahymenina; Tetrahymena
+5936	Eukaryota; Alveolata; Ciliophora; hypotrichs; Euplotida; Euplotes
+5944	Eukaryota; Alveolata; Ciliophora; hypotrichs; Stichotrichida; Oxytrichidae; Oxytricha
+5949	Eukaryota; Alveolata; Ciliophora; hypotrichs; Stichotrichida; Oxytrichidae; Stylonychia
+6087	Eukaryota; Metazoa; Cnidaria; Hydrozoa; Hydroida; Anthomedusae; Hydridae; Hydra
+6162	Eukaryota; Metazoa; Platyhelminthes; Turbellaria; Tricladida; Paludicola; Dugesiidae; Girardia
+6182	Eukaryota; Metazoa; Platyhelminthes; Trematoda; Digenea; Strigeidida; Schistosomatoidea; Schistosomatidae; Schistosoma
+6183	Eukaryota; Metazoa; Platyhelminthes; Trematoda; Digenea; Strigeidida; Schistosomatoidea; Schistosomatidae; Schistosoma
+6192	Eukaryota; Metazoa; Platyhelminthes; Trematoda; Digenea; Echinostomida; Echinostomata; Fascioloidea; Fasciolidae; Fasciola
+6210	Eukaryota; Metazoa; Platyhelminthes; Cestoda; Eucestoda; Cyclophyllidea; Taeniidae; Echinococcus
+6238	Eukaryota; Metazoa; Nematoda; Secernentea; Rhabditia; Rhabditida; Rhabditina; Rhabditoidea; Rhabditidae; Peloderinae; Caenorhabditis
+6239	Eukaryota; Metazoa; Nematoda; Secernentea; Rhabditia; Rhabditida; Rhabditina; Rhabditoidea; Rhabditidae; Peloderinae; Caenorhabditis
+6252	Eukaryota; Metazoa; Nematoda; Secernentea; Rhabditia; Ascaridida; Ascaridoidea; Ascarididae; Ascaris
+6253	Eukaryota; Metazoa; Nematoda; Secernentea; Rhabditia; Ascaridida; Ascaridoidea; Ascarididae; Ascaris
+6265	Eukaryota; Metazoa; Nematoda; Secernentea; Rhabditia; Ascaridida; Ascaridoidea; Toxocaridae; Toxocara
+6279	Eukaryota; Metazoa; Nematoda; Secernentea; Spiruria; Spirurida; Filarioidea; Onchocercidae; Brugia
+6280	Eukaryota; Metazoa; Nematoda; Secernentea; Spiruria; Spirurida; Filarioidea; Onchocercidae; Brugia
+6282	Eukaryota; Metazoa; Nematoda; Secernentea; Spiruria; Spirurida; Filarioidea; Onchocercidae; Onchocerca
+6289	Eukaryota; Metazoa; Nematoda; Secernentea; Rhabditia; Strongylida; Trichostrongyloidea; Trichostrongylidae; Haemonchinae; Haemonchus
+6293	Eukaryota; Metazoa; Nematoda; Secernentea; Spiruria; Spirurida; Filarioidea; Onchocercidae; Wuchereria
+6398	Eukaryota; Metazoa; Annelida; Clitellata; Oligochaeta; Haplotaxida; Lumbricina; Lumbricidae; Lumbricus
+6421	Eukaryota; Metazoa; Annelida; Clitellata; Hirudinida; Hirudinea; Arynchobdellida; Hirudiniformes; Hirudinidae; Hirudo
+6454	Eukaryota; Metazoa; Mollusca; Gastropoda; Prosobranchia; Archaeogastropoda; Haliotidae; Haliotis
+6500	Eukaryota; Metazoa; Mollusca; Gastropoda; Opisthobranchia; Anaspidea; Aplysiidae; Aplysia
+6523	Eukaryota; Metazoa; Mollusca; Gastropoda; Pulmonata; Basommatophora; Lymnaeidae; Lymnaea
+6526	Eukaryota; Metazoa; Mollusca; Gastropoda; Pulmonata; Basommatophora; Planorbidae; Biomphalaria
+6550	Eukaryota; Metazoa; Mollusca; Bivalvia; Pteriomorphia; Mytiloida; Mytilidae; Mytilus
+6661	Eukaryota; Metazoa; Arthropoda; Crustacea; Branchiopoda; Anostraca; Artemiidae; Artemia
+6687	Eukaryota; Metazoa; Arthropoda; Crustacea; Malacostraca; Eumalacostraca; Eucarida; Decapoda; Dendrobranchiata; Penaeidae; Penaeus
+6706	Eukaryota; Metazoa; Arthropoda; Crustacea; Malacostraca; Eumalacostraca; Eucarida; Decapoda; Pleocyemata; Astacidea; Nephropoidea; Nephropidae; Homarus
+6832	Eukaryota; Metazoa; Arthropoda; Crustacea; Maxillopoda; Copepoda; Harpacticoida; Harpactidae; Tigriopus
+6850	Eukaryota; Metazoa; Arthropoda; Chelicerata; Merostomata; Xiphosura; Limulidae; Limulus
+6853	Eukaryota; Metazoa; Arthropoda; Chelicerata; Merostomata; Xiphosura; Limulidae; Tachypleus
+6941	Eukaryota; Metazoa; Arthropoda; Chelicerata; Arachnida; Acari; Parasitiformes; Ixodida; Ixodidae; Boophilus
+7004	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Orthoptera; Caelifera; Acrididae; Oedipodinae; Locusta
+7067	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Coleoptera; Polyphaga; Cucujiformia; Tenebrionidae; Tenebrio
+7070	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Coleoptera; Polyphaga; Cucujiformia; Tenebrionidae; Tribolium
+7091	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Lepidoptera; Bombycoidea; Bombycidae; Bombyx
+7092	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Lepidoptera; Bombycoidea; Bombycidae; Bombyx
+7102	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Lepidoptera; Noctuoidea; Noctuidae; Heliothis
+7111	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Lepidoptera; Noctuoidea; Noctuidae; Trichoplusia
+7121	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Lepidoptera; Bombycoidea; Saturniidae; Saturniinae; Antheraea
+7123	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Lepidoptera; Bombycoidea; Saturniidae; Saturniinae; Hyalophora
+7130	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Lepidoptera; Sphingiodea; Sphingidae; Sphinginae; Manduca
+7151	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Nematocera; Chironomoidea; Chironomidae; Chironominae; Chironomus
+7153	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Nematocera; Chironomoidea; Chironomidae; Chironominae; Chironomus
+7154	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Nematocera; Chironomoidea; Chironomidae; Chironominae; Chironomus
+7159	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Nematocera; Culicoidea; Culicidae; Aedes
+7165	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Nematocera; Culicoidea; Culicidae; Anopheles
+7167	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Nematocera; Culicoidea; Culicidae; Anopheles
+7173	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Nematocera; Culicoidea; Culicidae; Anopheles
+7175	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Nematocera; Culicoidea; Culicidae; Culex
+7213	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Tephritoidea; Tephritidae; Ceratitis
+7217	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7224	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7226	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7227	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7229	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7237	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7238	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7240	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7241	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7242	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7244	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7245	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Ephydroidea; Drosophilidae; Drosophila
+7368	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Muscoidea; Muscidae; Haematobia
+7370	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Muscoidea; Muscidae; Musca
+7373	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Oestroidea; Calliphoridae; Calliphora
+7375	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Oestroidea; Calliphoridae; Lucilia
+7386	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Diptera; Brachycera; Muscomorpha; Oestroidea; Sarcophagidae; Sarcophaga
+7460	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Hymenoptera; Apocrita; Aculeata; Apoidea; Apidae; Apis
+7640	Eukaryota; Metazoa; Echinodermata; Echinozoa; Echinoidea; Euechinoidea; Echinacea; Arbacoida; Arbaciidae; Arbacia
+7654	Eukaryota; Metazoa; Echinodermata; Echinozoa; Echinoidea; Euechinoidea; Echinacea; Temnopleuroida; Toxopneustidae; Lytechinus
+7656	Eukaryota; Metazoa; Echinodermata; Echinozoa; Echinoidea; Euechinoidea; Echinacea; Echinoida; Echinidae; Paracentrotus
+7660	Eukaryota; Metazoa; Echinodermata; Echinozoa; Echinoidea; Euechinoidea; Echinacea; Echinoida; Echinidae; Psammechinus
+7668	Eukaryota; Metazoa; Echinodermata; Echinozoa; Echinoidea; Euechinoidea; Echinacea; Echinoida; Strongylocentrotidae; Strongylocentrotus
+7719	Eukaryota; Metazoa; Chordata; Urochordata; Ascidiacea; Phlebobranchia; Cionidae; Ciona
+7726	Eukaryota; Metazoa; Chordata; Urochordata; Ascidiacea; Stolidobranchia; Styelidae; Styela
+7729	Eukaryota; Metazoa; Chordata; Urochordata; Ascidiacea; Stolidobranchia; Pyuridae; Halocynthia
+7739	Eukaryota; Metazoa; Chordata; Cephalochordata; Branchiostomidae; Branchiostoma
+7740	Eukaryota; Metazoa; Chordata; Cephalochordata; Branchiostomidae; Branchiostoma
+7757	Eukaryota; Metazoa; Chordata; Vertebrata; Cephalaspidomorphi; Petromyzontiformes; Petromyzontidae; Petromyzon
+7782	Eukaryota; Metazoa; Chordata; Vertebrata; Chondrichthyes; Elasmobranchii; Rajiformes; Rajoidei; Rajidae; Raja
+7787	Eukaryota; Metazoa; Chordata; Vertebrata; Chondrichthyes; Elasmobranchii; Rajiformes; Torpedinoidei; Torpedinidae; Torpedo
+7788	Eukaryota; Metazoa; Chordata; Vertebrata; Chondrichthyes; Elasmobranchii; Rajiformes; Torpedinoidei; Torpedinidae; Torpedo
+7792	Eukaryota; Metazoa; Chordata; Vertebrata; Chondrichthyes; Elasmobranchii; Heterodontiformes; Heterodontidae; Heterodontus
+7797	Eukaryota; Metazoa; Chordata; Vertebrata; Chondrichthyes; Elasmobranchii; Squaliformes; Squalidae; Squalus
+7801	Eukaryota; Metazoa; Chordata; Vertebrata; Chondrichthyes; Elasmobranchii; Orectolobiformes; Ginglymostomatidae; Ginglymostoma
+7830	Eukaryota; Metazoa; Chordata; Vertebrata; Chondrichthyes; Elasmobranchii; Carcharhiniformes; Scyliorhinidae; Scyliorhinus
+7897	Eukaryota; Metazoa; Chordata; Vertebrata; Coelacanthiformes; Latimeriidae; Latimeria
+7936	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Anguilliformes; Anguillidae; Anguilla
+7937	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Anguilliformes; Anguillidae; Anguilla
+7955	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Ostariophysi; Cypriniformes; Cyprinoidea; Cyprinidae; Rasborinae; Danio
+7957	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Ostariophysi; Cypriniformes; Cyprinoidea; Cyprinidae; Cyprininae; Carassius
+7962	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Ostariophysi; Cypriniformes; Cyprinoidea; Cyprinidae; Cyprininae; Cyprinus
+7998	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Ostariophysi; Siluriformes; Ictaluridae; Ictalurus
+8017	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Protacanthopterygii; Salmoniformes; Salmonidae; Oncorhynchus
+8018	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Protacanthopterygii; Salmoniformes; Salmonidae; Oncorhynchus
+8019	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Protacanthopterygii; Salmoniformes; Salmonidae; Oncorhynchus
+8020	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Protacanthopterygii; Salmoniformes; Salmonidae; Oncorhynchus
+8022	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Protacanthopterygii; Salmoniformes; Salmonidae; Oncorhynchus
+8023	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Protacanthopterygii; Salmoniformes; Salmonidae; Oncorhynchus
+8030	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Protacanthopterygii; Salmoniformes; Salmonidae; Salmo
+8032	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Protacanthopterygii; Salmoniformes; Salmonidae; Salmo
+8049	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Paracanthopterygii; Gadiformes; Gadoidei; Gadidae; Gadus
+8078	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Acanthopterygii; Atherinomorpha; Cyprinodontiformes; Cyprinodontoidei; Fundulidae; Fundulus
+8083	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Acanthopterygii; Atherinomorpha; Cyprinodontiformes; Cyprinodontoidei; Poeciliidae; Xiphophorus
+8090	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Acanthopterygii; Atherinomorpha; Cyprinodontiformes; Adrianichthyoidei; Adrianichthyidae; Oryziinae; Oryzias
+8128	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Acanthopterygii; Percomorpha; Perciformes; Labroidei; Cichlidae; Tilapia
+8255	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Acanthopterygii; Percomorpha; Pleuronectiformes; Pleuronectoidei; Bothidae; Paralichthys
+8296	Eukaryota; Metazoa; Chordata; Vertebrata; Amphibia; Batrachia; Caudata; Salamandroidea; Ambystomatidae; Ambystoma
+8316	Eukaryota; Metazoa; Chordata; Vertebrata; Amphibia; Batrachia; Caudata; Salamandroidea; Salamandridae; Notophthalmus
+8355	Eukaryota; Metazoa; Chordata; Vertebrata; Amphibia; Batrachia; Anura; Mesobatrachia; Pipoidea; Pipidae; Xenopodinae; Xenopus
+8359	Eukaryota; Metazoa; Chordata; Vertebrata; Amphibia; Batrachia; Anura; Mesobatrachia; Pipoidea; Pipidae; Xenopodinae; Xenopus
+8400	Eukaryota; Metazoa; Chordata; Vertebrata; Amphibia; Batrachia; Anura; Neobatrachia; Ranoidea; Ranidae; Raninae; Rana
+8496	Eukaryota; Metazoa; Chordata; Vertebrata; Archosauria; Crocodilia; Alligatoridae; Alligator
+8616	Eukaryota; Metazoa; Chordata; Vertebrata; Lepidosauria; Squamata; Scleroglossa; Serpentes; Colubroidea; Elapidae; Elapinae; Bungarus
+8656	Eukaryota; Metazoa; Chordata; Vertebrata; Lepidosauria; Squamata; Scleroglossa; Serpentes; Colubroidea; Elapidae; Elapinae; Naja
+8766	Eukaryota; Metazoa; Chordata; Vertebrata; Lepidosauria; Squamata; Scleroglossa; Serpentes; Colubroidea; Viperidae; Crotalinae; Trimeresurus
+8801	Eukaryota; Metazoa; Chordata; Vertebrata; Archosauria; Aves; Palaeognathae; Struthioniformes; Struthionidae; Struthio
+8839	Eukaryota; Metazoa; Chordata; Vertebrata; Archosauria; Aves; Neognathae; Anseriformes; Anatidae; Anas
+8855	Eukaryota; Metazoa; Chordata; Vertebrata; Archosauria; Aves; Neognathae; Anseriformes; Anatidae; Cairina
+8932	Eukaryota; Metazoa; Chordata; Vertebrata; Archosauria; Aves; Neognathae; Columbiformes; Columbidae; Columba
+9031	Eukaryota; Metazoa; Chordata; Vertebrata; Archosauria; Aves; Neognathae; Galliformes; Phasianidae; Phasianinae; Gallus
+9091	Eukaryota; Metazoa; Chordata; Vertebrata; Archosauria; Aves; Neognathae; Galliformes; Phasianidae; Phasianinae; Coturnix
+9094	Eukaryota; Metazoa; Chordata; Vertebrata; Archosauria; Aves; Neognathae; Galliformes; Phasianidae; Phasianinae; Coturnix
+9103	Eukaryota; Metazoa; Chordata; Vertebrata; Archosauria; Aves; Neognathae; Galliformes; Meleagrididae; Meleagris
+9267	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Metatheria; Didelphimorphia; Didelphidae; Didelphis
+9315	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Metatheria; Diprotodontia; Macropodidae; Macropus
+9337	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Metatheria; Diprotodontia; Phalangeridae; Trichosurus
+9463	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Strepsirhini; Galagonidae; Otolemur
+9483	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Platyrrhini; Callitrichidae; Callithrix
+9490	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Platyrrhini; Callitrichidae; Saguinus
+9521	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Platyrrhini; Cebidae; Cebinae; Saimiri
+9530	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Cercopithecidae; Cercopithecinae; Cercocebus
+9534	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Cercopithecidae; Cercopithecinae; Chlorocebus
+9541	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Cercopithecidae; Cercopithecinae; Macaca
+9544	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Cercopithecidae; Cercopithecinae; Macaca
+9545	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Cercopithecidae; Cercopithecinae; Macaca
+9557	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Cercopithecidae; Cercopithecinae; Papio
+9580	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Hylobatidae; Hylobates
+9593	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Hominidae; Gorilla
+9597	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Hominidae; Pan
+9598	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Hominidae; Pan
+9600	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Hominidae; Pongo
+9606	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Primates; Catarrhini; Hominidae; Homo
+9615	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Carnivora; Fissipedia; Canidae; Canis
+9627	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Carnivora; Fissipedia; Canidae; Vulpes
+9643	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Carnivora; Fissipedia; Ursidae; Ursus
+9644	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Carnivora; Fissipedia; Ursidae; Ursus
+9667	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Carnivora; Fissipedia; Mustelidae; Mustela
+9685	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Carnivora; Fissipedia; Felidae; Felis
+9720	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Carnivora; Pinnipedia; Phocidae; Phoca
+9755	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Cetacea; Odontoceti; Physeteridae; Physeter
+9773	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Cetacea; Mysticeti; Balaenopteridae; Megaptera
+9793	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Perissodactyla; Equidae; Equus
+9796	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Perissodactyla; Equidae; Equus
+9823	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Artiodactyla; Suiformes; Suina; Suidae; Sus
+9860	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Artiodactyla; Ruminantia; Pecora; Cervoidea; Cervidae; Cervinae; Cervus
+9909	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Artiodactyla; Ruminantia; Pecora; Bovoidea; Bovidae; Bovinae; Bos
+9913	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Artiodactyla; Ruminantia; Pecora; Bovoidea; Bovidae; Bovinae; Bos
+9919	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Artiodactyla; Ruminantia; Pecora; Bovoidea; Bovidae; Bovinae; Bubalus; Bubalus
+9925	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Artiodactyla; Ruminantia; Pecora; Bovoidea; Bovidae; Caprinae; Capra
+9939	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Artiodactyla; Ruminantia; Pecora; Bovoidea; Bovidae; Caprinae; Ovis
+9940	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Artiodactyla; Ruminantia; Pecora; Bovoidea; Bovidae; Caprinae; Ovis
+9970	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Artiodactyla; Ruminantia; Pecora; Bovoidea; Bovidae; Bovinae; Syncerus
+9986	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Lagomorpha; Leporidae; Oryctolagus
+10013	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Geomyidae; Thomomys
+10027	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Cricetinae
+10029	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Cricetinae; Cricetulus
+10030	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Cricetinae; Cricetulus
+10031	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Cricetinae; Cricetulus
+10036	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Cricetinae; Mesocricetus
+10041	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Sigmodontinae; Peromyscus
+10042	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Sigmodontinae; Peromyscus
+10047	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Gerbillinae; Meriones
+10089	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Murinae; Mus
+10090	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Murinae; Mus
+10095	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Murinae; Mus
+10096	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Murinae; Mus
+10116	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Murinae; Rattus
+10117	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Murinae; Rattus
+10118	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Murinae; Rattus
+10141	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Hystricognathi; Caviidae; Cavia
+10243	Viruses; dsDNA viruses, no RNA stage; Poxviridae; Chordopoxvirinae; Orthopoxvirus
+10245	Viruses; dsDNA viruses, no RNA stage; Poxviridae; Chordopoxvirinae; Orthopoxvirus
+10255	Viruses; dsDNA viruses, no RNA stage; Poxviridae; Chordopoxvirinae; Orthopoxvirus
+10258	Viruses; dsDNA viruses, no RNA stage; Poxviridae; Chordopoxvirinae; Parapoxvirus
+10261	Viruses; dsDNA viruses, no RNA stage; Poxviridae; Chordopoxvirinae; Avipoxvirus
+10279	Viruses; dsDNA viruses, no RNA stage; Poxviridae; Chordopoxvirinae; Molluscipoxvirus
+10298	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Alphaherpesvirinae; Simplexvirus
+10310	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Alphaherpesvirinae; Simplexvirus
+10318	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Alphaherpesvirinae
+10320	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Alphaherpesvirinae; Varicellovirus
+10326	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Alphaherpesvirinae; Varicellovirus
+10331	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Alphaherpesvirinae; Varicellovirus
+10335	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Alphaherpesvirinae; Varicellovirus
+10345	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Alphaherpesvirinae; Varicellovirus
+10359	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Betaherpesvirinae; Cytomegalovirus
+10366	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Betaherpesvirinae; Muromegalovirus
+10368	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Betaherpesvirinae; Roseolovirus
+10372	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Betaherpesvirinae
+10376	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Gammaherpesvirinae; Lymphocryptovirus
+10381	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Gammaherpesvirinae
+10385	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Gammaherpesvirinae
+10386	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Alphaherpesvirinae; Varicellovirus
+10390	Viruses; dsDNA viruses, no RNA stage; Herpesviridae
+10401	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; unclassified Herpesviridae
+10407	Viruses; Retroid viruses; Hepadnaviridae; Orthohepadnavirus
+10449	Viruses; dsDNA viruses, no RNA stage; Baculoviridae; Nucleopolyhedrovirus
+10450	Viruses; dsDNA viruses, no RNA stage; Baculoviridae; Nucleopolyhedrovirus
+10458	Viruses; dsDNA viruses, no RNA stage; Baculoviridae; Nucleopolyhedrovirus
+10476	Viruses; dsDNA viruses, no RNA stage; Fuselloviridae; Fusellovirus
+10488	Viruses; dsDNA viruses, no RNA stage; Iridoviridae; Iridovirus
+10497	Viruses; dsDNA viruses, no RNA stage; African swine fever-like viruses
+10506	Viruses; dsDNA viruses, no RNA stage; Phycodnaviridae; Phycodnavirus
+10512	Viruses; dsDNA viruses, no RNA stage; Adenoviridae; Mastadenovirus
+10515	Viruses; dsDNA viruses, no RNA stage; Adenoviridae; Mastadenovirus
+10519	Viruses; dsDNA viruses, no RNA stage; Adenoviridae; Mastadenovirus
+10524	Viruses; dsDNA viruses, no RNA stage; Adenoviridae; Mastadenovirus
+10566	Viruses; dsDNA viruses, no RNA stage; Papovaviridae; Papillomavirus
+10578	Viruses; dsDNA viruses, no RNA stage; Papovaviridae; Papillomavirus
+10581	Viruses; dsDNA viruses, no RNA stage; Papovaviridae; Papillomavirus
+10582	Viruses; dsDNA viruses, no RNA stage; Papovaviridae; Papillomavirus
+10625	Viruses; dsDNA viruses, no RNA stage; Papovaviridae; Polyomavirus
+10629	Viruses; dsDNA viruses, no RNA stage; Papovaviridae; Polyomavirus
+10632	Viruses; dsDNA viruses, no RNA stage; Papovaviridae; Polyomavirus
+10633	Viruses; dsDNA viruses, no RNA stage; Papovaviridae; Polyomavirus
+10641	Viruses; Retroid viruses; Caulimovirus
+10658	Viruses; dsDNA viruses, no RNA stage; Tectiviridae; Tectivirus
+10665	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Myoviridae; T4-like phages
+10677	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Myoviridae
+10678	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Myoviridae
+10679	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Myoviridae
+10685	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Myoviridae
+10690	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Myoviridae
+10710	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Siphoviridae; Lambda phage group
+10719	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Siphoviridae; Lambda phage group
+10724	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Siphoviridae; Lambda phage group
+10726	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Siphoviridae
+10754	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Podoviridae
+10756	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Podoviridae
+10759	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Podoviridae
+10760	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Podoviridae
+10785	Viruses; ssDNA viruses; Parvoviridae; Parvovirinae; Parvovirus
+10798	Viruses; ssDNA viruses; Parvoviridae; Parvovirinae; Erythrovirus
+10821	Viruses; ssDNA viruses; Geminiviridae; Mastrevirus
+10832	Viruses; ssDNA viruses; Geminiviridae; Begomovirus
+10863	Viruses; ssDNA viruses; Inoviridae; Inovirus
+10864	Viruses; ssDNA viruses; Inoviridae; Inovirus
+10886	Viruses; dsRNA viruses; Reoviridae; Orthoreovirus
+10891	Viruses; dsRNA viruses; Reoviridae; unclassified Reoviridae
+10913	Viruses; dsRNA viruses; Reoviridae; Rotavirus
+10927	Viruses; dsRNA viruses; Reoviridae; Rotavirus
+10941	Viruses; dsRNA viruses; Reoviridae; Rotavirus
+10970	Viruses; dsRNA viruses; Reoviridae; Rotavirus
+10973	Viruses; dsRNA viruses; Reoviridae; Rotavirus; Group A rotaviruses
+10991	Viruses; dsRNA viruses; Reoviridae; Fijivirus
+10995	Viruses; dsRNA viruses; Birnaviridae; Avibirnavirus
+11021	Viruses; ssRNA positive-strand viruses, no DNA stage; Togaviridae; Alphavirus
+11029	Viruses; ssRNA positive-strand viruses, no DNA stage; Togaviridae; Alphavirus
+11034	Viruses; ssRNA positive-strand viruses, no DNA stage; Togaviridae; Alphavirus
+11036	Viruses; ssRNA positive-strand viruses, no DNA stage; Togaviridae; Alphavirus
+11039	Viruses; ssRNA positive-strand viruses, no DNA stage; Togaviridae; Alphavirus
+11041	Viruses; ssRNA positive-strand viruses, no DNA stage; Togaviridae; Rubivirus
+11047	Viruses; ssRNA positive-strand viruses, no DNA stage; Nidovirales; Arteriviridae; Arterivirus
+11053	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; Flavivirus; Dengue virus group
+11060	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; Flavivirus; Dengue virus group
+11069	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; Flavivirus; Dengue virus group
+11072	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; Flavivirus; Japanese encephalitis virus group
+11084	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; Flavivirus; tick-borne encephalitis virus group
+11089	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; Flavivirus; Yellow fever virus group
+11099	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; Pestivirus
+11101	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; Pestivirus
+11103	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; Hepatitis C-like viruses
+11120	Viruses; ssRNA positive-strand viruses, no DNA stage; Nidovirales; Coronaviridae; Coronavirus
+11128	Viruses; ssRNA positive-strand viruses, no DNA stage; Nidovirales; Coronaviridae; Coronavirus
+11138	Viruses; ssRNA positive-strand viruses, no DNA stage; Nidovirales; Coronaviridae; Coronavirus
+11149	Viruses; ssRNA positive-strand viruses, no DNA stage; Nidovirales; Coronaviridae; Coronavirus
+11161	Viruses; ssRNA negative-strand viruses; Mononegavirales; Paramyxoviridae; Paramyxovirinae; Rubulavirus
+11176	Viruses; ssRNA negative-strand viruses; Mononegavirales; Paramyxoviridae; Paramyxovirinae; Rubulavirus
+11191	Viruses; ssRNA negative-strand viruses; Mononegavirales; Paramyxoviridae; Paramyxovirinae; Paramyxovirus
+11216	Viruses; ssRNA negative-strand viruses; Mononegavirales; Paramyxoviridae; Paramyxovirinae; Paramyxovirus
+11232	Viruses; ssRNA negative-strand viruses; Mononegavirales; Paramyxoviridae; Paramyxovirinae; Morbillivirus
+11234	Viruses; ssRNA negative-strand viruses; Mononegavirales; Paramyxoviridae; Paramyxovirinae; Morbillivirus
+11241	Viruses; ssRNA negative-strand viruses; Mononegavirales; Paramyxoviridae; Paramyxovirinae; Morbillivirus
+11246	Viruses; ssRNA negative-strand viruses; Mononegavirales; Paramyxoviridae; Pneumovirinae; Pneumovirus
+11250	Viruses; ssRNA negative-strand viruses; Mononegavirales; Paramyxoviridae; Pneumovirinae; Pneumovirus
+11276	Viruses; ssRNA negative-strand viruses; Mononegavirales; Rhabdoviridae; Vesiculovirus
+11287	Viruses; ssRNA negative-strand viruses; Mononegavirales; Rhabdoviridae; unclassified Rhabdoviridae
+11292	Viruses; ssRNA negative-strand viruses; Mononegavirales; Rhabdoviridae; Lyssavirus
+11309	Viruses; ssRNA negative-strand viruses; Orthomyxoviridae; unclassified Orthomyxoviridae
+11320	Viruses; ssRNA negative-strand viruses; Orthomyxoviridae; Influenza virus A and B group; Influenza A viruses
+11520	Viruses; ssRNA negative-strand viruses; Orthomyxoviridae; Influenza virus A and B group; Influenza B viruses
+11552	Viruses; ssRNA negative-strand viruses; Orthomyxoviridae; Influenza virus C group
+11604	Viruses; ssRNA negative-strand viruses; Bunyaviridae; Hantavirus
+11623	Viruses; ssRNA negative-strand viruses; Arenaviridae; Arenavirus; 1-LCMV-LASV complex
+11660	Viruses; Retroid viruses; Retroviridae; Lentivirus; Ovine/caprine lentiviruses
+11665	Viruses; Retroid viruses; Retroviridae; Lentivirus; Equine lentiviruses
+11673	Viruses; Retroid viruses; Retroviridae; Lentivirus; Feline lentiviruses
+11676	Viruses; Retroid viruses; Retroviridae; Lentivirus; Primate lentivirus group
+11709	Viruses; Retroid viruses; Retroviridae; Lentivirus; Primate lentivirus group
+11723	Viruses; Retroid viruses; Retroviridae; Lentivirus; Primate lentivirus group
+11724	Viruses; Retroid viruses; Retroviridae; Lentivirus; Primate lentivirus group
+11741	Viruses; Retroid viruses; Retroviridae; Lentivirus; Ovine/caprine lentiviruses
+11757	Viruses; Retroid viruses; Retroviridae; Mammalian type B retroviruses
+11768	Viruses; Retroid viruses; Retroviridae; Mammalian type C retroviruses; 1-Mammalian type C virus group
+11786	Viruses; Retroid viruses; Retroviridae; Mammalian type C retroviruses; 1-Mammalian type C virus group
+11827	Viruses; Retroid viruses; Retroviridae
+11876	Viruses; Retroid viruses; Retroviridae; Avian type C retroviruses
+11886	Viruses; Retroid viruses; Retroviridae; Avian type C retroviruses
+11901	Viruses; Retroid viruses; Retroviridae; BLV-HTLV retroviruses
+11908	Viruses; Retroid viruses; Retroviridae; BLV-HTLV retroviruses
+11909	Viruses; Retroid viruses; Retroviridae; BLV-HTLV retroviruses
+11976	Viruses; ssRNA positive-strand viruses, no DNA stage; Caliciviridae; Calicivirus
+11978	Viruses; ssRNA positive-strand viruses, no DNA stage; Caliciviridae; Calicivirus
+12022	Viruses; ssRNA positive-strand viruses, no DNA stage; Leviviridae; Levivirus; Levivirus subgroup I
+12037	Viruses; ssRNA positive-strand viruses, no DNA stage; Luteovirus
+12042	Viruses; ssRNA positive-strand viruses, no DNA stage; Luteovirus
+12045	Viruses; ssRNA positive-strand viruses, no DNA stage; Luteovirus
+12080	Viruses; ssRNA positive-strand viruses, no DNA stage; Picornaviridae; Enterovirus
+12086	Viruses; ssRNA positive-strand viruses, no DNA stage; Picornaviridae; Enterovirus
+12092	Viruses; ssRNA positive-strand viruses, no DNA stage; Picornaviridae; Hepatovirus
+12110	Viruses; ssRNA positive-strand viruses, no DNA stage; Picornaviridae; Aphthovirus
+12131	Viruses; ssRNA positive-strand viruses, no DNA stage; Picornaviridae; Rhinovirus
+12133	Viruses; ssRNA positive-strand viruses, no DNA stage; Picornaviridae; Rhinovirus
+12162	Viruses; ssRNA positive-strand viruses, no DNA stage; Closteroviridae; Closterovirus
+12183	Viruses; ssRNA positive-strand viruses, no DNA stage; Potexvirus
+12216	Viruses; ssRNA positive-strand viruses, no DNA stage; Potyviridae; Potyvirus
+12241	Viruses; ssRNA positive-strand viruses, no DNA stage; Tobamovirus
+12242	Viruses; ssRNA positive-strand viruses, no DNA stage; Tobamovirus
+12305	Viruses; ssRNA positive-strand viruses, no DNA stage; Bromoviridae; Cucumovirus
+12321	Viruses; ssRNA positive-strand viruses, no DNA stage; Bromoviridae; Alfamovirus
+12376	Viruses
+12455	Viruses; ssRNA negative-strand viruses; Mononegavirales
+12461	Viruses; ssRNA positive-strand viruses, no DNA stage; Caliciviridae; Calicivirus
+12475	Viruses; Deltavirus
+12591	Viruses; dsRNA viruses; Reoviridae; Orbivirus; Bluetongue virus group
+12657	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Betaherpesvirinae
+12721	Viruses; Retroid viruses; Retroviridae; Lentivirus; Primate lentivirus group
+12730	Viruses; ssRNA negative-strand viruses; Mononegavirales; Paramyxoviridae; Paramyxovirinae; Paramyxovirus
+13123	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Lepidoptera; Noctuoidea; Lymantriidae; Lymantria
+13616	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Metatheria; Didelphimorphia; Didelphidae; Monodelphis
+13776	Archaea; environmental samples
+15819	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Poales; Poaceae; Saccharum
+15957	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Poales; Poaceae; Phleum
+27292	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Saccharomycetaceae; Saccharomyces
+27689	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Chondrostei; Acipenseriformes; Acipenseridae; Acipenser
+27751	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Acanthopterygii; Percomorpha; Perciformes; Labroidei; Cichlidae; Melanochromis
+27761	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Acanthopterygii; Percomorpha; Perciformes; Labroidei; Cichlidae; Pseudotropheus; Pseudotropheus zebra complex
+28248	Bacteria; environmental samples
+28282	Viruses; dsDNA viruses, no RNA stage; Adenoviridae; Mastadenovirus
+28284	Viruses; dsDNA viruses, no RNA stage; Adenoviridae; Mastadenovirus
+28285	Viruses; dsDNA viruses, no RNA stage; Adenoviridae; Mastadenovirus
+28344	Viruses; ssRNA positive-strand viruses, no DNA stage; Nidovirales; Arteriviridae; Arterivirus
+28448	Bacteria; Proteobacteria; alpha subdivision; Acetobacteraceae; Acetobacter
+28451	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Klebsiella
+28901	Bacteria; Proteobacteria; gamma subdivision; Enterobacteriaceae; Salmonella
+28985	Eukaryota; Fungi; Ascomycota; Hemiascomycetes; Saccharomycetales; Saccharomycetaceae; Kluyveromyces
+29158	Eukaryota; Metazoa; Mollusca; Bivalvia; Pteriomorphia; Mytiloida; Mytilidae; Mytilus
+29269	Viruses; ssRNA positive-strand viruses, no DNA stage; Picornaviridae; Enterovirus
+29270	Viruses; ssRNA positive-strand viruses, no DNA stage; Picornaviridae; Enterovirus
+29281	Archaea; Crenarchaeota; environmental samples
+29449	Bacteria; Proteobacteria; alpha subdivision; Rhizobiaceae group; Rhizobiaceae; Rhizobium
+29518	Bacteria; Spirochaetales; Spirochaetaceae; Borrelia; Borrelia burgdorferi group
+29519	Bacteria; Spirochaetales; Spirochaetaceae; Borrelia; Borrelia burgdorferi group
+29760	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Rhamnales; Vitaceae; Vitis
+31033	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Acanthopterygii; Percomorpha; Tetraodontiformes; Tetraodontoidei; Tetraodontidae; Fugu
+31178	Eukaryota; Metazoa; Echinodermata; Echinozoa; Echinoidea; Euechinoidea; Echinacea; Echinoida; Echinometridae; Echinometra
+31721	Viruses; ssRNA positive-strand viruses, no DNA stage; Furovirus
+32049	Bacteria; Cyanobacteria; Chroococcales; Synechococcus
+32630	artificial sequence
+32644	unclassified
+33431	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Lepidoptera; Papilionoidea; Nymphalidae; Heliconiinae; Heliconius
+33708	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Gammaherpesvirinae
+33747	Viruses; Retroid viruses; Retroviridae; BLV-HTLV retroviruses
+33808	Bacteria; Proteobacteria; alpha subdivision; environmental samples
+33810	Bacteria; Proteobacteria; beta subdivision; environmental samples
+33812	Bacteria; Proteobacteria; gamma subdivision; environmental samples
+33813	Bacteria; environmental samples
+34107	Bacteria
+34305	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Fabales; Fabaceae; Papilionoideae; Lotus
+34400	Eukaryota; Fungi; Ascomycota; Euascomycetes; Pyrenomycetes; Diaporthales; Valsaceae; mitosporic Valsaceae; Phomopsis
+34740	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Lepidoptera; Papilionoidea; Nymphalidae; Heliconiinae; Heliconius
+34854	Eukaryota; Metazoa; Chordata; Vertebrata; Mammalia; Eutheria; Rodentia; Sciurognathi; Muridae; Murinae; Rattus
+35252	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Gammaherpesvirinae
+35298	Viruses; ssRNA positive-strand viruses, no DNA stage; Caliciviridae; Calicivirus
+35670	Eukaryota; Metazoa; Chordata; Vertebrata; Lepidosauria; Squamata; Scleroglossa; Serpentes; Colubroidea; Elapidae; Elapinae; Naja
+35767	Bacteria; Firmicutes; Actinobacteria; environmental samples
+36452	Viruses; unclassified viruses
+37110	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Alphaherpesvirinae
+37296	Viruses; dsDNA viruses, no RNA stage; Herpesviridae; Gammaherpesvirinae; Rhadinovirus
+37468	Eukaryota; Fungi; Basidiomycota; Gasteromycetes; Sclerodermatales; Sclerodermataceae; Pisolithus
+37657	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Caryophyllidae; Caryophyllales; Caryophyllaceae; Silene
+37705	Viruses; ssRNA negative-strand viruses; Bunyaviridae; Hantavirus
+38588	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Bryopsida; Bryidae; Pottiales; Pottiaceae; Tortula
+39101	Viruses; Retroid viruses; Retroviridae; BLV-HTLV retroviruses
+39811	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Coleoptera; Polyphaga; Cucujiformia; Curculionidae; Entiminae; Naupactini; Aramigus
+39839	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; GBV-C/HGV group
+43349	Eukaryota; Metazoa; Echinodermata; Echinozoa; Echinoidea; Euechinoidea; Echinacea; Echinoida; Echinometridae; Echinometra
+43611	Eukaryota; Metazoa; Chordata; Vertebrata; Lepidosauria; Squamata; Iguania; Iguanidae; Phrynosomatinae; Phrynosoma
+43993	Eukaryota; Granuloreticulosea; Foraminifera; Rotaliina; Ammonia
+44689	Eukaryota; Dictyosteliida; Dictyostelium
+45196	artificial sequence; vectors
+45255	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; GBV-C/HGV group
+45464	Eukaryota; Metazoa; Nematoda; Secernentea; Rhabditia; Strongylida; Trichostrongyloidea; Trichostrongylidae; Ostertagiinae; Ostertagia
+46015	Viruses; dsDNA viruses, no RNA stage; Baculoviridae; Nucleopolyhedrovirus
+46530	Eukaryota; Fungi; Basidiomycota; Hymenomycetes; Ceratobasidiales; Ceratobasidiaceae; Thanatephorus
+46607	Viruses; ssRNA negative-strand viruses; Bunyaviridae; Hantavirus
+46681	Eukaryota; Entamoebidae; Entamoeba
+47664	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Violales; Salicaceae; Populus
+48935	Bacteria; Proteobacteria; alpha subdivision; Zymomonas group; Sphingomonas
+49293	Eukaryota; Metazoa; Arthropoda; Tracheata; Hexapoda; Insecta; Pterygota; Coleoptera; Adephaga; Carabidae; Damaster
+51453	Eukaryota; Fungi; Ascomycota; Euascomycetes; Pyrenomycetes; Hypocreales; Hypocreaceae; Hypocrea
+53953	Archaea; Euryarchaeota; Thermococcales; Thermococcaceae; Pyrococcus
+54126	Eukaryota; Metazoa; Nematoda; Secernentea; Diplogasteria; Diplogasterida; Diplogasterina; Diplogasteroidea; Neodiplogasterida; Pristionchus
+54314	Viruses; ssRNA positive-strand viruses, no DNA stage; Flaviviridae; Pestivirus
+55188	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Sapindales; Rutaceae; Citrus
+55529	Eukaryota; Cryptophyta; Cryptomonadaceae; Guillardia
+58199	Eukaryota; Metazoa; Chordata; Vertebrata; Archosauria; Aves; Neognathae; Passeriformes; Fringillidae; Emberizinae; Dendroica
+62977	Bacteria; Proteobacteria; gamma subdivision; Pseudomonas group; Moraxellaceae; Acinetobacter
+63363	Bacteria; Aquificales; Aquificaceae; Aquifex
+64091	Archaea; Euryarchaeota; Halobacteriales; Halobacteriaceae; Halobacterium
+64353	Eukaryota; Metazoa; Echinodermata; Echinozoa; Echinoidea; Euechinoidea; Echinacea; Echinoida; Echinometridae; Echinometra
+64475	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; Liliopsida; Dioscoreales; Dioscoreaceae; Dioscorea
+65572	Eukaryota; Metazoa; Chordata; Vertebrata; Archosauria; Aves; Neognathae; Passeriformes; Fringillidae; Emberizinae; Dendroica
+66797	Viruses; dsDNA viruses, no RNA stage; Tailed phages; Siphoviridae
+68887	Viruses; ssDNA viruses; unclassified ssDNA viruses
+70805	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Capparales; Brassicaceae; Leavenworthia
+70806	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Capparales; Brassicaceae; Leavenworthia
+71257	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Ostariophysi; Siluriformes; Pimelodidae; Pimelodella
+71261	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Ostariophysi; Characiformes; Characidae; Roeboides
+71990	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Saxifragales; Saxifragaceae; Heuchera
+73824	Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; euphyllophytes; Spermatophyta; Magnoliophyta; eudicotyledons; Rosidae; Violales; Salicaceae; Populus
+74940	Eukaryota; Metazoa; Chordata; Vertebrata; Actinopterygii; Neopterygii; Teleostei; Euteleostei; Protacanthopterygii; Salmoniformes; Salmonidae; Oncorhynchus
+83191	Viruses; dsDNA viruses, no RNA stage; Poxviridae; Entomopoxvirinae; Entomopoxvirus B
+85549	Eukaryota; Metazoa; Arthropoda; Crustacea; Branchiopoda; Anostraca; Artemiidae; Artemia
+85698	Bacteria; Proteobacteria; beta subdivision; Alcaligenaceae; Achromobacter

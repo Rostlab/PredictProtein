@@ -1,0 +1,33 @@
+-----------------------------------------------------------------------------
+-               PredictProtein: 1999					    -
+-----------------------------------------------------------------------------
+
+  Dear user,
+
+    PredictProtein  has moved from EMBL (Heidelberg) to  CUBIC (New York),
+  it is now running on 8 processors of an SGI Origin 2000:
+  	dodo.cpmc.columbia.edu.
+
+  PP:	WWW	http://dodo.cpmc.columbia.edu/predictprotein
+	mail	predict-help@cpmc.columbiia.edu
+	submit	predictprotein@cpmc.columbia.edu
+
+	NEWS	http://dodo.cpmc.columbia.edu/predictprotein/doc/help_10.html
+
+	fax to administrator:      B Rost, (1)-212-305-7932
+
+  PPmirrors (updated manually):
+
+	Europe:		
+	EMBL	http://www.embl-heidelberg.de/predictprotein
+	EBI	http://www.ebi.ac.uk/~rost/predictprotein
+	CNB     http://www.es.embnet.org/Services/MolBio/PredictProtein
+
+	Australia:
+	ANGIS	http://molmod.angis.org.au//predictprotein
+
+	Asia:	
+	BIC	http://embl.bic.nus.edu.sg/predictprotein
+
+-----------------------------------------------------------------------------
+

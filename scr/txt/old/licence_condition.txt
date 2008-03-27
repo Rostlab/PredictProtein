@@ -1,0 +1,130 @@
+
+
+Conditions of License for the use of the PredictProtein Service 
+****************************************************************
+
+
+
+European Molecular Biology Laboratory
+Laboratoire Europeen de Biologie Moleculaire
+Europaeisches Laboratorium fuer Molekularbiologie
+
+Protein Design Group
+Burkhard Rost, Reinhard Schneider, and Chris Sander
+
+                                                                  June 24, 1994
+
+________________________________________________________________________________
+
+                                O F F E R 
+________________________________________________________________________________
+
+
+Alignment and Prediction by PredictProtein
+------------------------------------------
+
+as described in:
+
+Rost, B., Sander, C. & Schneider, R. (1994).  PHD - an automatic server for pro-
+        tein secondary structure prediction. CABIOS, 10, 53-60.
+Rost, B. & Sander, C. (1994). Combining evolutionary information and neural net-
+        works to predict protein secondary structure. Proteins, 19, 55-72.
+Rost, B. & Sander, C. (1994). Conservation and Prediction of Solvent Accessibil-
+        ity in Protein Families. Proteins, in press.
+
+
+You send your protein sequence by electronic mail (internet), we return the fol-
+lowing analyses for that sequence:
+
+*       alignment of your sequence against current Swissprot data bank  (program 
+        MaxHom)
+*       prediction of  secondary  structure by a system of neural networks using 
+        the alignment as inut (program PHDsec)
+*       prediction of  relative  solvent  accessibility by neural networks using 
+        the alignment as input (program PHDacc)
+
+At any time the  newest version of the system is used for prediction  (currently 
+version 5-94).
+
+Prices are:     
+        for <=   50 predictions per year                        1.000 $ 
+        for <=  250 predictions per year                        2.000 $.
+        
+The license is valid for a company, it expires after 12 months.
+
+Conditions:  no redistribution in whole or in parts,  internal company use only; 
+publications from output must be quoted.
+                
+________________________________________________________________________________
+
+Payable to:     EMBL, account number 672 02 400, Landeszentralbank Heidelberg, 
+                bank routing code  672 000 00. Reference: Sander Group, 
+                account 7031 (HSSP/PHD)
+
+Send order      by fax to B. Rost +49 - 6221 - 387 306, 
+        or      by email to Predict-Help@EMBL-Heidelberg.DE
+
+________________________________________________________________________________
+
+
+
+
+
+Order form for License 
+***********************
+
+Send order by fax to B. Rost +49 - 6221 - 387 306, 
+
+or by email to Predict-Help@EMBL-Heidelberg.DE 
+
+
+
+Company
+e-mail address
+
+
+
+
+To
+Protein Design Group (Sander)
+EMBL Heidelberg
+D-69012 Heidelberg
+Germany
+
+
+
+
+
+We hereby place a formal order for the PredictProtein Service for:
+
++--+
+|  |    <=   50 predictions     (per year)                    = 1.000 $
++--+
+
++--+
+|  |    <=  250 predictions     (per year)                    = 2.000 $
++--+
+
+(please indicate appropriate number of predictions).
+
+
+The license is valid for 12 months.  We have payed to:
+
+        EMBL, account number 672 02 400, Landeszentralbank Heidelberg, 
+        Bank routing code 672 000 00, reference: Sander Group, 
+        account 7031 (HSSP/PHD).
+
+
+
+
+
+
+
+
+______________________________                  ______________________________
+        place, date                                        signature    
+
+
+
+
+

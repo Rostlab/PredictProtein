@@ -1,0 +1,245 @@
+#############################
+#	Neural Network Specs        #
+#############################
+
+#############################
+# 	Section 0 – Setup	        #
+#############################
+Compilation files:
+1.	COMPILE_LINUX.dat (compilation command)
+2.	lib-LINUX.f
+3.	nn.f
+4.	nnPar.f (file containing parameters and variables)
+5.	lib-nn.f
+Final files:
+1.	NetRun.LINUX (executable)
+2.	lib-LINUX.o
+3.	nn.o
+4.	lib-nn.o
+
+Command line executable:  ~path/NetRun.LINUX  ~path/inSample-par
+
+#############################
+# 	Section 1 – Files	        #
+#############################
+	There are 5 files needed as input to the Neural Network.
+?	Parameter File (further referred to as inSample-par)
+?	Input File containing numbered ordered sample inputs (inSample-
+in[N])
+?	Output File containing numbered ordered sample outputs (inSample-
+out[N])
+?	(optional) Pointer File containing order of inputs in which training is 
+to occur (inSample-point).
+?	(optional) Junction File containing pre-determined weights for 
+junctions in the Network (inSample-junct)
+Regardless of whether the Network is running in the training or testing mode 4 
+kinds of output files are written:
+?	Output File containing numbered ordered outputs produced by the 
+network in response to the input using the specified junction file 
+(outSample-out[N])
+?	Junction File containing adjusted weights for junction in the Network 
+based on input and output provided by the user (outSample-junct[N])
+?	Error File containing the final error summary for the Network 
+(outSample-err)
+?	Yeah file containing confirmation of correct format of network 
+parameters and inputs (outSample-yeah).
+Note: There may be many files of the kinds marked with [N] at the end. [N] will 
+further refer to any integer.
+
+#############################
+# 	Section 2 – Format	        #
+#############################
+All input files created by user (first 4 of above input files) need to follow a 
+specific format as follows:
+- All files MUST end in '//'. Comments on format are specified by a '*'
+- inSample-par
+- Name of Parameter ? 24 spaces
+- Part 1 Quantifier (NUMIN through LOGI_RDJCTWRT ) ? 8 spaces   
+right aligned
+- Sample
+* I8	
+NUMIN                 :        2
+|----------------------|-------|
+1				   24(1)	 8     
+- Part 2 Quantifier (EPSILON through DICEITRVL) ? 8 spaces followed 
+by a period and 6 spaces all right aligned
+- Sample
+* F15.6
+EPSILON               :        0.100500
+|----------------------|-------|.|----|
+1				   24(1)   8 1    6
+- Part 3 Quantifier (TRNTYPE to the end) ? 132 spaces left aligned
+- Sample
+* A132
+TRNTYPE               : ONLINE
+|----------------------|-------…|
+1                      24(1)    132
+- inSample-in
+- Part 1: Summary
+- Sample ? 24 spaces for name (right aligned), 8 spaces for 
+quantifier (left aligned)
+* overall (A,T25,I8)
+NUMIN                 :        2
+NUMSAMFILE            :      400
+|----------------------|-------|
+1                      24(1)   8
+- Part 2: Input Numbering
+- Sample ? 8 spaces for name (right aligned), 8 spaces for  
+quantifier (left aligned)
+	* samples: count (A8,I8) NEWLINE 1..NUMIN (25I6)
+ITSAM:         1
+|------|-------|
+1      8(1)    8
+		- Part 2: Inputs
+			-Sample ? 6 spaces right aligned, no more than 25 entries per line
+			     0     0   100……………   100
+			|----|-----|-----|……………|----|
+			1    6(1)  6(1)  6……………1    6
+			|---------------------------|
+			1					   25
+	- inSample-out
+		- Part 1: Summary
+ - Sample ? 24 spaces for name (right aligned), 8 spaces for 
+quantifier (left aligned)
+* overall: (A,T25,I8)
+NUMOUT                :        2
+NUMSAMFILE            :      400
+|----------------------|-------|
+1                      24(1)   8
+		- Part 2: Outputs
+- Sample ? Output number (8 spaces right aligned), followed by ' 
+' (space), and outputs 6 spaces per entry (right aligned), no more 
+than 25 entries per line
+* samples: count (I8) SPACE 1..NUMOUT (25I6)
+       1      0   100………………     0
+|------| |----|-----|………………|----|
+1      8 1    6(1)  6(1)   1    6
+         |----------------------|
+	    1                      25
+	- inSample-sam
+		- Part 1: Summary
+- Sample ? 24 spaces for name (right aligned), 8 spaces for 
+quantifier (left aligned)
+* overall: (A,T25,I8)
+STPMAX                :    12000
+|----------------------|-------|
+1                      24(1)   8
+		- Part 2: Pointers
+			- Sample ? 8 spaces right aligned, no more than 25 entries per line
+* positions: (25I8)
+     		     288      19     241………………     365
+			|------|-------|-------|………………|------|
+			1      8(1)    8(1)    8(1)	1      8 
+			|------------------------------------|
+			1                                    25          
+
+#############################
+# 	Section 3 – Variables	        #
+#############################
+-inSample-par
+Note: In this section all values below can only be integer values
+NUMIN 			number of input nodes in the network
+NUMHID 			total number of hidden nodes in the network
+NUMOUT			number of output nodes in the network
+NUMLAYERS		number of hidden layers plus the output layer
+NUMSAM			total number of samples
+NUMFILEIN_IN		total number of inSample-in[N] files
+NUMFILEIN_OUT 		total number of inSample-out[N] files
+NUMFILEOUT_OUT 	total number of outSample-out[N] files to be written
+NUMFILEOUT_JCT 		total number of outSample-junct[N] files to be written
+STPSWPMAX	Maximum number of times that the entire input sample set 
+is presented to the network. This value is set to 0 for testing 
+phase.
+STPMAX 	Maximum number of single steps that the network takes 
+(each repetition of a single sample counts as 1 step). This 
+value is equal to the total number of sample for testing 
+phase. Calculated by numsam * stpswpmax
+STPINF	Number of steps taken by network before error is compiled 
+and output files are written. This value is set to 1 for testing
+ERRBINSTOP	Binary error stop-value. Network stops training when error 
+is less than this value. If value is 0, the network never stops 
+on account of this condition.
+BITACC	Bit accuracy (level of precision) set from 0 to this value. 
+Default -- 100
+DICESEED			Seed for random number generator. Default (100025) 
+DICESEED_ADDJCT 	Seed added to diceseed to generate random junctions. 
+Default (0)
+Note: This section is logical parameters [0/1], where 0 is no and 1 is yes
+LOGI_RDPARWRT		Write parameters read on screen? (default = 1)
+LOGI_RDINWRT 		Write sample inputs read? (default = 0)
+LOGI_RDOUTWRT 		Write sample outputs read? (default = 0)
+LOGI_RDJCTWRT 		Write junctions red? (default = 0)
+
+Note: In this section all values below have decimal points
+EPSILON			Epsilon (change term). Default 0.010000
+ALPHA			Alpha (momentum term). Default 0.100000
+TEMPERATURE	Steepness of the sigmoid (how fast the junctions change). 
+Default 1.000000
+ERRSTOP	Condition for stopping training if real error falls below this 
+value. Default 0.100000
+ERRBIAS	Change value of desired output (to skew gradient descent). 
+Default 0.000000
+ERRBINACC	Condition for stopping training if binary accuracy is within 
+errbinacc percent of bitacc. Default 0.100000
+THRESHOUT 	Only used for single node outputs. If above output is above 
+threshout, produce 1, else produce 0.
+DICEITRVL 	Used for random number generation (between –diceitrvl 
+and +diceitrvl). Default 0.100000
+
+Note: In this section quantifiers are specific values
+TRNTYPE	Type of training performed by network. Default is 
+'ONLINE'. Batch is not yet implemented???
+TRGTYPE	Training function type. Default is sigmoid ('SIG'). Nothing 
+else implemented???
+ERRTYPE	Type of error calculation (simple gradient descent error 
+function) Default is 'DELTASQ'
+MODEPRED	Type of job that this network is aimed at. Default is 'sec' 
+(prediction of secondary structure). Nothing else is 
+implemented???
+MODENET 	Type of network. Possible '1st,bal' or '1st,unbal'. First 
+level balanced or unbalanced training
+MODEIN	Description for input coding – specifically designed for sec 
+structure prediction. Few parameters separated by commas 
+and dashes:
+	'win=' – window size (integer)
+'loc=' – local variables (sequence (aa),  conservation 
+weight (cw), number of insertions (nins), number of 
+deletions (ndel))
+'glob' – global variables ( number of alignments (nali), 
+number of remote homologues (nfar), length of protein 
+(len), distance of central res from N- and C-term (dis), 
+amino acid composition (comp))
+Sample :  'win=17,loc=aa-cw-nins-ndel,glob=nali-nfar-len-
+dis-comp'
+MODEOUT 			Description of output coding. Possible 'HEL' and 'KN'
+MODEJOB			Default mode_of_job. No other settings possible
+FILEIN_IN	Name of the sample input file. There should be as many of 
+these parameters as said in NUMFILEIN_IN above
+FILEIN_OUT 	Name of the sample output file. There should be as many of 
+these parameters as said in NUMFILEIN_OUT above
+FILEIN_JCT	Name of the input junction file. For training purposes 
+setting this value to 'NEW' generates a random junction file	
+FILEIN_SAM 	Name of the pointer file. This parameter can be left out if 
+all samples should be considered in order and only once 
+(like in testing)
+FILEOUT_OUT	Name of the generated output file. There should be as many 
+of these parameters as said in NUMFILEOUT_OUT above 
+FILEOUT_JCT	Name of the generated junction file. There should be as 
+many of these parameters as said in NUMFILEOUT_JCT 
+above
+FILEOUT_ERR 		Name of the generated error account file
+FILEOUT_YEAH	Name of file to which output is written if the network 
+defined is correct.
+
+-inSample-in
+NUMIN	Number of input nodes
+NUMSAMFILE	Number of samples in this file
+
+-inSample-out
+NUMOUT	Number of output nodes
+NUMSAMFILE	Number of samples in this file
+
+-inSample-sam
+STPMAX	Number of training steps the network should take (total 
+number of entries in the file)
+########################################################################

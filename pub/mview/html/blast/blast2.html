@@ -1,0 +1,560 @@
+
+<HTML>
+<HEAD>
+<TITLE>MView: NCBI BLAST 2.0 and PSI-BLAST HSPs</TITLE>
+</HEAD>
+<BODY BGCOLOR="cccccc">
+
+
+<h3>NCBI BLAST 2.0 series and PSI-BLAST</h3>
+
+<P>
+
+The rules used in MView for selecting and tiling HSPs. The command line
+option <code>-hsp mode</code> is used to choose between <code>ranked</code>
+(the default), <code>all</code>, or <code>discrete</code> processing. 
+
+<P>
+
+Differences between NCBI BLAST 1.4 and NCBI BLAST 2.0
+
+<ul>
+<li>In the default gapped mode, the BLAST 2.0 programs produce no 'N'
+    fragment counts. Fragment counts are switched on in BLAST when it is
+    run in ungapped mode using the 'blastall... -g F' command line option.
+<li>Significances are reported only as Expectation (e-values) 'E' rather
+    than p-values 'P'.
+<li>BLASTN: negative orientation query strands are not reported because
+    the query and hit can always be reverse complemented to revert the query
+    back to the positive strand orientation.
+<li>BLASTX: query strands don't carry frame information (early versions only).
+<li>TBLASTN: hit strands don't carry frame information (early versions only).
+<li>TBLASTX: query and hit strands don't carry frame information (early versions only).
+</ul>
+
+<P>
+
+With BLAST 2.0 series output, MView assumes that only one fragment (a
+gapped alignment) is required in 'ranked' mode and accepts the FIRST
+alignment with score and expectation matching those in the hit ranking. If
+you wish to see the effect of any other HSPs use the '-hsp all' or '-hsp
+discrete' options to MView. This is particularly important if you use BLAST 
+in ungapped mode.
+
+<P>
+
+<table align="center" width="95%" BGCOLOR="white" border=0>
+
+<!-- ################################################################### -->
+<!-- BLASTP / PSI-BLAST ################################################ -->
+<!-- ################################################################### -->
+<tr>
+<th>Program</th>
+<th colspan=2>Input</th>
+<th colspan=2>Output</th>
+<th colspan=2>Orient</th>
+<th>Assemble</th>
+<th>Renumber</th>
+<th>Filter</th>
+</tr>
+
+<tr>
+<th>&nbsp;</th>
+<th>qry</th><th>hit</th>
+<th>qry</th><th>hit</th>
+<th>qry</th><th>hit</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+</tr>
+
+<tr align="center">
+<td><font color="red">BLASTP</font></td>
+<td>pro</td>
+<td>pro</td>
+<td>pro</td>
+<td>pro</td>
+<td> + </td>
+<td> + </td>
+<td>simple</td>
+<td>no</td>
+<td>none</td>    
+</tr>
+
+<tr align="center">
+<td><font color="red">PSI-BLAST</font></td>
+<td>pro</td>
+<td>pro</td>
+<td>pro</td>
+<td>pro</td>
+<td> + </td>
+<td> + </td>
+<td>simple</td>
+<td>no</td>
+<td>cycle</td>    
+</tr>
+
+<tr>
+<th colspan=10 align="center">
+HSP processing modes
+</th>
+</tr>
+
+<tr>
+<td colspan=10 align="left">
+For each specified search cycle (PSI-BLAST only):
+</td>
+</tr>
+
+<tr>
+<td>
+ranked
+</td>
+<td colspan=9>
+
+For each ranked hit, the first alignment is selected to form an alignment
+row using: 1) same expectation 'E', 2) same score 'bits'.  Row data fields:
+1) rank as integral 'hitnum', 2) identifier, 3) description, 4) ranked
+'bits', 5) ranked 'E', 6) 'N'=1.
+  
+</td>
+</tr>
+
+<tr>
+<td>
+all      
+</td>
+<td colspan=9>
+
+For each ranked hit, all alignments are selected for assembly.  Row data
+fields: 1) rank as integral 'hitnum', 2) identifier, 3) description, 4)
+highest 'bits', 5) lowest 'E', 6) total number of alignments 'N'.
+
+</td>
+</tr>
+
+<tr>
+<td>
+discrete
+</td>
+<td colspan=9>
+
+For each ranked hit, every alignment is assigned its own row.  Row data
+fields: 1) alignment rank as compound rank 'hitnum.alignmentnum', 2)
+identifier, 3) description, 4) alignment 'bits', 5) alignment 'E', 6)
+'N'=1.
+
+</td>
+</tr>
+
+
+<tr BGCOLOR="cccccc"><td colspan=10>&nbsp;</td></tr>
+<!-- ################################################################### -->
+<!-- BLASTN ############################################################ -->
+<!-- ################################################################### -->
+<tr>
+<th>Program</th>
+<th colspan=2>Input</th>
+<th colspan=2>Output</th>
+<th colspan=2>Orient</th>
+<th>Assemble</th>
+<th>Renumber</th>
+<th>Filter</th>
+</tr>
+
+<tr>
+<th>&nbsp;</th>
+<th>qry</th><th>hit</th>
+<th>qry</th><th>hit</th>
+<th>qry</th><th>hit</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+</tr>
+
+<tr align="center">
+<td><font color="red">BLASTN</font></td>
+<td>dna</td><td>dna</td>
+<td>dna</td><td>dna</td>
+<td> + </td><td> + </td>
+<td>simple</td>
+<td>no</td>
+<td>none</td>
+</tr>
+
+<tr align="center">
+<td colspan=5>&nbsp;</td>
+<td> + </td><td> - </td>
+<td>simple</td>
+<td>no</td>
+<td>none</td>
+</tr>
+
+<tr>
+<th colspan=10 align="center">
+HSP processing modes
+</th>
+</tr>
+
+<tr>
+<td colspan=10 align="left">
+For a given query orientation (+, -) derived from the query sequence numbering:
+</td>
+</tr>
+
+<tr>
+<td>
+ranked
+</td>
+<td colspan=9>
+
+For each ranked hit, alignments corresponding to those in the ranking are
+selected for assembly having: 1) same expectation 'E', 2) same score
+'bits'.  Row data fields: 1) rank as integral 'hitnum', 2) identifier, 3)
+description, 4) ranked 'bits', 5) ranked 'E', 6) 'N'=1. 7) 'hit'
+orientation.
+
+</td>
+</tr>
+
+<tr>
+<td>
+all      
+</td>
+<td colspan=9>
+
+For each ranked hit, alignments are selected for assembly having: 1) same
+hit orientation.  Row data fields: 1) rank as compound
+'hitnum.alignmentnum', 2) identifier, 3) description, 4) highest 'bits', 5)
+lowest 'E', 6) total number of alignments 'N', 7) 'hit' orientation.
+
+</td>
+</tr>
+
+<tr>
+<td>
+discrete
+</td>
+<td colspan=9>
+
+For each ranked hit, every alignment is assigned its own row.  Row data
+fields: 1) alignment rank as compound rank 'hitnum.alignmentnum', 2)
+identifier, 3) description, 4) alignment 'bits', 5) alignment 'E', 6)
+'N'=1, 7) 'hit' orientation.
+
+</td>
+</tr>
+
+
+<tr BGCOLOR="cccccc"><td colspan=10>&nbsp;</td></tr>
+<!-- ################################################################### -->
+<!-- BLASTX ############################################################ -->
+<!-- ################################################################### -->
+<tr>
+<th>Program</th>
+<th colspan=2>Input</th>
+<th colspan=2>Output</th>
+<th colspan=2>Orient</th>
+<th>Assemble</th>
+<th>Renumber</th>
+<th>Filter</th>
+</tr>
+
+<tr>
+<th>&nbsp;</th>
+<th>qry</th><th>hit</th>
+<th>qry</th><th>hit</th>
+<th>qry</th><th>hit</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+</tr>
+
+<tr align="center">
+<td><font color="red">BLASTX</font></td>
+<td>dna</td><td>pro</td>
+<td>pro</td><td>pro</td>
+<td> + </td><td> + </td>
+<td>simple</td>
+<td>yes</td>
+<td>query sign</td>
+</tr>
+  
+<tr align="center">
+<td colspan=5>&nbsp;</td>
+<td> - </td><td> + </td>
+<td>reverse</td>
+<td>yes</td>
+<td>query sign</td>
+</tr>
+
+<tr>
+<th colspan=10 align="center">
+HSP processing modes
+</th>
+</tr>
+
+<tr>
+<td colspan=10 align="left">
+For a given query orientation (+, -) derived from the query sequence numbering:
+</td>
+</tr>
+
+<tr>
+<td>
+ranked
+</td>
+<td colspan=9>
+
+For each ranked hit, alignments corresponding to those in the ranking are
+selected for assembly having: 1) same expectation 'E', 2) same score
+'bits', 3) same query orientation.  Row data fields: 1) rank as integral
+'hitnum', 2) identifier, 3) description, 4) ranked 'bits', 5) ranked 'E',
+6) 'N=1', 7) query orientation 'qry'.
+  
+</td>
+</tr>
+
+<tr>
+<td>
+all      
+</td>
+<td colspan=9>
+
+For each ranked hit, alignments are selected for assembly having: 1) same
+query orientation.  Row data fields: 1) rank as integral 'hitnum', 2)
+identifier, 3) description, 4) highest 'bits', 5) lowest 'E', 6) total
+number of alignments 'N', 7) query orientation 'qry'.
+
+</td>
+</tr>
+
+<tr>
+<td>
+discrete
+</td>
+<td colspan=9>
+
+For each ranked hit, every alignment is assigned its own row.  Row data
+fields: 1) alignment rank as compound rank 'hitnum.alignmentnum', 2)
+identifier, 3) description, 4) alignment 'bits', 5) alignment 'E', 6)
+'N'=1, 7) query orientation 'qry'.
+
+</td>
+</tr>
+
+
+<tr BGCOLOR="cccccc"><td colspan=10>&nbsp;</td></tr>
+<!-- ################################################################### -->
+<!-- TBLASTN ########################################################### -->
+<!-- ################################################################### -->
+<tr>
+<th>Program</th>
+<th colspan=2>Input</th>
+<th colspan=2>Output</th>
+<th colspan=2>Orient</th>
+<th>Assemble</th>
+<th>Renumber</th>
+<th>Filter</th>
+</tr>
+
+<tr>
+<th>&nbsp;</th>
+<th>qry</th><th>hit</th>
+<th>qry</th><th>hit</th>
+<th>qry</th><th>hit</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+</tr>
+
+<tr align="center">
+<td><font color="red">TBLASTN</font></td>
+<td>pro</td><td>dna</td>
+<td>pro</td><td>pro</td>
+<td> + </td><td> + </td>
+<td>simple</td>
+<td>no</td>
+<td>none</td>
+</tr>
+
+<tr align="center">
+<td colspan=5>&nbsp;</td>
+<td> + <td> - </td>
+<td>simple</td>
+<td>no</td>
+<td>none</td>
+</tr>
+
+<tr>
+<th colspan=10 align="center">
+HSP processing modes
+</th>
+</tr>
+
+<tr>
+<td>
+ranked
+</td>
+<td colspan=9>
+
+For each ranked hit, alignments corresponding to those in the ranking are
+selected for assembly having: 1) same expectation 'E', 2) same score
+'bits', 3) same hit orientation.  Row data fields: 1) rank as integral
+'hitnum', 2) identifier, 3) description, 4) ranked 'bits', 5) ranked 'E',
+'N'=1, 7) 'hit' orientation.
+  
+</td>
+</tr>
+
+<tr>
+<td>
+all      
+</td>
+<td colspan=9>
+
+For each ranked hit, alignments are selected for assembly having: 1) same
+hit orientation.  Row data fields: 1) rank as compound
+'hitnum.alignmentnum', 2) identifier, 3) description, 4) highest 'bits', 5)
+lowest 'E', 6) total number of alignments 'N', 7) 'hit' orientation.
+
+</td>
+</tr>
+
+<tr>
+<td>
+discrete
+</td>
+<td colspan=9>
+
+For each ranked hit, every alignment is assigned its own row.  Row data
+fields: 1) alignment rank as compound rank 'hitnum.alignmentnum', 2)
+identifier, 3) description, 4) alignment 'bits', 5) alignment 'E', 6)
+'N'=1, 7) 'hit' orientation.
+
+</td>
+</tr>
+
+<tr BGCOLOR="cccccc"><td colspan=10>&nbsp;</td></tr>
+<!-- ################################################################### -->
+<!-- TBLASTX ########################################################### -->
+<!-- ################################################################### -->
+<tr>
+<th>Program</th>
+<th colspan=2>Input</th>
+<th colspan=2>Output</th>
+<th colspan=2>Orient</th>
+<th>Assemble</th>
+<th>Renumber</th>
+<th>Filter</th>
+</tr>
+
+<tr>
+<th>&nbsp;</th>
+<th>qry</th><th>hit</th>
+<th>qry</th><th>hit</th>
+<th>qry</th><th>hit</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+</tr>
+
+<tr align="center">
+<td><font color="red">TBLASTX</font></td>
+<td>dna</td><td>dna</td>
+<td>pro</td><td>pro</td>
+<td> + </td><td> + </td>
+<td>simple</td>
+<td>yes</td>
+<td>query sign</td>
+</tr>
+
+<tr align="center">
+<td colspan=5>&nbsp;</td>
+<td> + </td><td> - </td>
+<td>simple</td>
+<td>yes</td>
+<td>query sign</td>
+</tr>
+
+<tr align="center">
+<td colspan=5>&nbsp;</td>
+<td> - </td><td> + </td>
+<td>reverse</td>
+<td>yes</td>
+<td>query sign</td>
+</tr>
+
+<tr align="center">
+<td colspan=5>&nbsp;</td>
+<td> - </td><td> - </td>
+<td>reverse</td>
+<td>yes</td>
+<td>query sign</td>
+</tr>
+
+<tr>
+<th colspan=10 align="center">
+HSP processing modes
+</th>
+</tr>
+
+<tr>
+<td colspan=10 align="left">
+For a given query orientation (+, -) derived from the query sequence numbering:
+</td>
+</tr>
+
+<tr>
+<td>
+ranked
+</td>
+<td colspan=9>
+
+For each ranked hit, alignments corresponding to those in the ranking are
+selected for assembly having: 1) same expectation 'E', 2) same score
+'bits', 3) same hit orientation.  Row data fields: 1) rank as integral
+'hitnum', 2) identifier, 3) description, 4) ranked 'bits', 5) ranked 'E',
+6) 'N'=1, 7) 'hit' orientation.
+ 
+</td>
+</tr>
+
+<tr>
+<td>
+all      
+</td>
+<td colspan=9>
+
+For each ranked hit, alignments are selected for assembly having: 1) same
+hit orientation.  Row data fields: 1) rank as compound
+'hitnum.alignmentnum', 2) identifier, 3) description, 4) highest 'bits', 5)
+lowest 'E', 6) total number of alignments 'N', 7) 'hit' orientation.
+
+</td>
+</tr>
+
+<tr>
+<td>
+discrete
+</td>
+<td colspan=9>
+
+For each ranked hit, every alignment is assigned its own row.  Row data
+fields: 1) alignment rank as compound rank 'hitnum.alignmentnum', 2)
+identifier, 3) description, 4) alignment 'bits', 5) alignment 'E', 6)
+'N'=1, 7) 'hit' orientation.
+
+</td>
+</tr>
+
+</table>
+
+
+<HR>
+ <A HREF="http://www.nimr.mrc.ac.uk">[NIMR]</A>
+ <A HREF="http://mathbio.nimr.mrc.ac.uk">[MathBio]</A>
+<HR>
+<ADDRESS><SMALL>Maintained by <A HREF="MAILTO:nbrown@nimr.mrc.ac.uk">Nigel Brown</A>.</SMALL> <SMALL>Last update Dec  1 1999
+</SMALL>. <A HREF="http://mathbio.nimr.mrc.ac.uk/disclaimer.html"><SMALL>Disclaimer</SMALL></A></ADDRESS>
+</BODY></HTML>

@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+
+<META name="author"      content="Jinfeng Liu">
+<META name="copyright"   content="&copy; 2004 CUBIC, NYC, USA">
+<META name="description" content="CHOP: domain dissection based on homology">
+<META name="keywords"    content="bioinformatics, proteomes, proteomics">
+<META name="date"        content="2004-02-11">
+
+<TITLE>CHOP: domain dissection based on homology</TITLE>
+
+<script language="JavaScript" type="text/javascript">
+ function OpenHelp(url)
+ {
+ dimension = "width=400,height=500";
+ options = ",status=0,resizable=0,scrollbars=1,noresize";
+ window.open(url,"help",dimension+options);
+ }
+</script>
+
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<IMG SRC="graphics/chop.jpg" ALT="chop.jpg">
+</CENTER>
+
+<BR>
+
+<table BORDER=0 cellpadding=0 cellspacing=0>
+<TR>
+<TD bgcolor=#efefef width=120 nowrap><center><font size=-1><a href=index.html>&nbsp;Intro&nbsp;</a></font></center></TD>
+<TD bgcolor=#224499 width=120 nowrap><center><font size=-1 color=#ffffff>&nbsp;<b>Submit</b>&nbsp;</font></center></TD>
+<TD bgcolor=#efefef width=120 nowrap><center><font size=-1><a href=help.html>&nbsp;Help&nbsp;</a></font></center></TD>
+<TD bgcolor=#efefef width=120 nowrap><center><font size=-1><a href=output.html>&nbsp;Sample output&nbsp;</a></font></center></TD>
+<td bgcolor=#efefef width=120 nowrap><center><font size=-1><a href=info.html>&nbsp;Information&nbsp;</a></font></center></td>
+
+</TR>
+</table>
+
+<table width=100% BORDER=0 cellpadding=2 cellspacing=0>
+<TR>
+<TD bgcolor=#224499 nowrap><font size=-1 color=#ffffff><BR></font>
+</TD>
+</TR>
+</table>
+<FORM METHOD="POST" ENCTYPE="multipart/form-data" ACTION="http://cubic.bioc.columbia.edu/cgi/var/database/chop/submit"> 
+<HR>
+
+
+<TABLE>
+<!-- ================================================================================ -->
+<!-- beg address -->
+<TR><TD BGCOLOR="SILVER">
+	Type the required information into the fields</TD>
+<TD BGCOLOR="SILVER">	Description of field </TD></TR>
+
+<TR><TD><HR ALIGN=JUSTIFY></TD><TD><HR ALIGN=JUSTIFY></TD></TR>
+
+<TR VALIGN="TOP">
+<TD>	<INPUT SIZE=40 NAME="usr-email" TYPE="TEXT"     ALT="Your email address"></TD>
+<TD>	
+		<STRONG>Your email address</STRONG></A> [ watch typpos -:) ]</TD></TR>
+
+<!-- end address -->
+
+<!-- begin input -->
+<TR><TD><HR ALIGN=JUSTIFY ></TD><TD><HR ALIGN=JUSTIFY ></TD></TR>
+<TR><TD BGCOLOR="#bcd2ee"><FONT SIZE="+1"><STRONG>Input sequence</STRONG></FONT></TD></TR>
+<TR VALIGN="TOP">
+<TD>    
+     <SELECT NAME="seq-format">
+       <OPTION VALUE="fasta" SELECTED>Default: simple sequence or fasta
+       <OPTION VALUE="swissid">SWISS-PROT ID
+     </SELECT>
+</TD>
+<TD><A HREF=javascript:OpenHelp('help_list.html#seqFormat')><IMG src="graphics/help.jpg" width=50 height=15 align=ABSMIDDLE></A> sequence format
+</TD>
+</TR>
+
+<TR VALIGN="TOP">
+<TD>	<INPUT SIZE=40 NAME="sequenceFile" TYPE="FILE"  ALT="Your file with sequence"> 
+	</TD>
+<TD>	<STRONG>Either choose a file from your local disk, or ... </STRONG></TD></TR>
+<TR VALIGN="TOP">
+<TD>	<TEXTAREA NAME="sequence" ROWS=10 COLS=50></TEXTAREA>
+	</TD>
+<TD>
+	
+		<STRONG>Paste, or type in your sequence</STRONG>
+
+	<UL>
+	<LI>amino acids in one-letter code 
+	<LI>any number of white spaces allowed
+	<LI>non-standard amino acids to 'X'
+	</UL>
+
+ <STRONG>OR the swiss-prot identifier if you chose "SWISS-PROT ID" as your sequence format in the drop-down menu above </STRONG>
+	</TD>
+</TR>
+<!-- end input -->
+
+<!-- begin output options -->
+<TR><TD><HR ALIGN=JUSTIFY ></TD><TD><HR ALIGN=JUSTIFY ></TD></TR>
+<TR><TD BGCOLOR="#bcd2ee"><FONT SIZE="+1"><STRONG>Output options</STRONG></FONT></TD></TR>
+
+<TR VALIGN="MIDDLE">
+<TD>
+    <TABLE> <TR><TD width=100>Format:</TD>
+    <TD><INPUT TYPE="RADIO"  NAME="opt-ret-html" VALUE=0>TEXT </TD> 
+    <TD><INPUT TYPE="RADIO" CHECKED NAME="opt-ret-html" VALUE=1>HTML </TD>
+    </TR></TABLE></TD>
+<TD><A HREF=javascript:OpenHelp('help_list.html#format')><IMG src="graphics/help.jpg" width=50 height=15 align=absmiddle></A></TD>
+</TR>
+<TR></TR>
+
+<TR VALIGN="TOP">
+<TD>	 <STRONG>
+   	<INPUT TYPE="SUBMIT" VALUE="SUBMIT / RUN PREDICTION">  
+    	<INPUT TYPE="RESET"  VALUE="CLEAR PAGE">
+	</STRONG></FONT>
+	</TD>
+<TD>
+		<STRONG></STRONG></A></TD></TR>
+<!-- end output options -->
+
+
+<!-- begin advanced options -->
+<TR><TD><HR ALIGN=JUSTIFY ></TD><TD><HR ALIGN=JUSTIFY ></TD></TR>
+<TR><TD BGCOLOR="#bcd2ee"><FONT SIZE="+1"><STRONG>Advanced options</STRONG></FONT></TD></TR>
+<TR VALIGN="MIDDLE">
+<TD>
+        <TABLE> <TR><TD width=200>BLAST e-value:</TD><TD>
+	<INPUT SIZE=10 NAME="opt-exp-chop-blastE" VALUE="0.01" TYPE="TEXT"     ALT="BLAST E-value"></TD>
+	</TR></TABLE></TD>
+<TD><A HREF=javascript:OpenHelp('help_list.html#blastE')><IMG src="graphics/help.jpg" width=50 height=15 align=ABSMIDDLE></A> real number (suggested between 1e-10 to 1)
+	</TD></TR>
+<TR VALIGN="MIDDLE"><TD>
+        <TABLE> <TR><TD width=200>HMMER E-value:</TD><TD>
+	<INPUT SIZE=10 NAME="opt-exp-chop-hmmerE" VALUE="0.01" TYPE="TEXT" ALT="E-value for HMMER"></TD>
+        	</TR></TABLE></TD>
+<TD><A HREF=javascript:OpenHelp('help_list.html#hmmerE')><IMG src="graphics/help.jpg" width=50 height=15 align=absmiddle></A> real number (suggested between 1e-6 to 0.1) </TD></TR>
+<TR VALIGN="MIDDLE"><TD>
+         <TABLE> <TR><TD width=200>Min domain coverage:</TD><TD>
+	<INPUT SIZE=10 NAME="opt-exp-chop-domcov" VALUE="80" TYPE="TEXT" ALT="minimum domain coverage">%</TD>
+        </TR></TABLE></TD>
+<TD><A HREF=javascript:OpenHelp('help_list.html#mindomcov')><IMG src="graphics/help.jpg" width=50 height=15 align=absmiddle></A> integer between 60 and 99
+	</TD></TR>
+<TR VALIGN="MIDDLE"><TD>
+         <TABLE> <TR><TD width=200>Min length of domain:</TD><TD>
+	<INPUT SIZE=10 NAME="opt-exp-chop-minfraglen" VALUE="30" TYPE="TEXT" ALT="minimum domain length"></TD>
+        </TR></TABLE></TD>
+<TD><A HREF=javascript:OpenHelp('help_list.html#minfraglen')><IMG src="graphics/help.jpg" width=50 height=15 align=absmiddle></A> integer between 20 and 60
+	</TD></TR>
+
+<!-- end of advanced options -->
+<TR VALIGN="TOP">
+<TD>	 <STRONG>
+   	<INPUT TYPE="SUBMIT" VALUE="SUBMIT / RUN PREDICTION">  
+    	<INPUT TYPE="RESET"  VALUE="CLEAR PAGE">
+	</STRONG></FONT>
+	</TD>
+<TD>
+		<STRONG></STRONG></A></TD></TR>
+
+</TABLE>
+</FORM>
+<PRE>
+
+
+</PRE>
+<CENTER><A HREF="index.html">CHOP</A> <A HREF="http://cubic.bioc.columbia.edu/">CUBIC</A> 
+ <A HREF="mailto:liu@maple.bioc.columbia.edu">Contact</A>
+</CENTER>
+
+
+</BODY>
+</HTML>
+
+
+
+
+
+
+
+
+

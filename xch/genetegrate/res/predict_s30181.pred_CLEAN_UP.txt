@@ -1,0 +1,86 @@
+PPhdr from 9INS
+PPhdr resp MAIL
+PPhdr orig MAIL
+PPhdr want unk
+
+
+
+Result of ISIS				
+~~~~~~~~~~~~~~                              		
+
+Yanay Ofran,Burkhard Rost						
+"XXXX                               ", submitted
+
+________________________________________________________________________________
+
+
+
+
+
+
+
+
+: strech=5 crowd_predictions=7 gap=8 itr=51
+1234567890123456789012345678901234567890
+GIVEQCCTSICSLYQLENYCNFVNQHLCGSHLVEALYLVC
+----P-P-PPP-PPP-PPPPP--PP-PPP-P--P--PP--
+
+GERGFFYTPKA
+PPPPP-PPP--
+
+0
+1 G -12
+2 I -23
+3 V -22
+4 E 5
+5 Q 14
+6 C 5
+7 C 11
+8 T 0
+9 S 59
+10 I 62
+11 C 16
+12 S 5
+13 L 25
+14 Y 40
+15 Q 60
+16 L -11
+17 E 18
+18 N 30
+19 Y 44
+20 C 33
+21 N 21
+22 F 1
+23 V -14
+24 N 27
+25 Q 19
+26 H 2
+27 L 12
+28 C 11
+29 G 12
+30 S 7
+31 H 20
+32 L 0
+33 V -19
+34 E 16
+35 A -55
+36 L -15
+37 Y 28
+38 L 35
+39 V 6
+40 C -1
+41 G 49
+42 E 37
+43 R 45
+44 G 20
+45 F 13
+46 F 3
+47 Y 55
+48 T 17
+49 P 11
+50 K 1
+51 A -18
+
+________________________________________________________________________________
+
+

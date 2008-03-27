@@ -1,0 +1,215 @@
+<HTML>
+<HEAD>
+<TITLE>
+	Explanations for terms (META PredictProtein)
+</TITLE>
+</HEAD>
+
+<BODY bgcolor=#FFFFFF>
+<H1>Brief explanation of META PredictProtein</H1>
+
+<!-- -------------------------------------------------------------------------------- -->
+<!-- beg toc  -->
+<DIV style="padding: 1em; margin: 1em 0; border: thick inset; background: silver"> 
+<P>
+<STRONG>Contents</STRONG>
+<P>
+<UL>
+<LI><A HREF="#user">User information</A>
+<LI><A HREF="#list">List of all available services</A>
+<LI><A HREF="#services">Services available</A>
+	<OL>
+	<LI><A HREF="#services_var">      Various analyses</A>
+	<LI><A HREF="#services_sec">      Secondary structure prediction</A>
+	<LI><A HREF="#services_htm">      Membrane regions</A>
+	<LI><A HREF="#services_threading">Threading (detecting remote homologues in PDB)</A>
+	<LI><A HREF="#services_homo">     Homology modelling</A>
+	</OL>
+<LI><A HREF="#formats">Formats for submitting sequence or alignment</A>
+</UL>
+</DIV>
+<!-- end toc  -->
+<!-- -------------------------------------------------------------------------------- -->
+
+<P><BR><HR><BR><P>
+
+
+<!-- -------------------------------------------------------------------------------- -->
+<!-- beg user  -->
+
+<TABLE WIDTH="100%">
+<TR><TD VALIGN=TOP ALIGN=CENTER BGCOLOR="#000080">
+	<STRONG><FONT COLOR="#FFFFFF" SIZE="+3">
+	<A NAME="user">User information</A>
+	</FONT></STRONG>
+	</TD></TR>
+</TABLE>
+
+<OL>
+<LI><A NAME="PX_usr_email">Your email</A>
+		<I>Example: rost@columbia.edu</I>d
+	<BR>Your entire (and entirely correct) email address (e.g. rost@columbia.edu).
+	<BR>Note: typos will result in that no results will be returned ...
+
+<!-- 
+<LI><A NAME="PX_usr_password">Password</A>
+		<I>Example: </I> (i.e. leave field empty!)
+	<BR>Using PredictProtein is free for academical users.  Only companies have to fill in their password, here!
+ -->
+
+<LI><A NAME="PX_prot_name">One-line name of protein</A>
+		<I>Example: Cytochrome C oxidase</I>
+
+<LI><A NAME="PX_prot_seq">Paste, or type your sequence </A>
+	<BR>Example:
+        <PRE><I>	MSAQISDSIEEKRGFFTRWFMSTNHKDIGVLYLFTAGLAGLISVTLTVYMRMELQHPGVQ
+	YMCLEGMRLVADAAAECTPNAHL</I></PRE>
+	Please use only one-letter code amino acids. In particular, avoid numbers or '*', or '.'.
+	<BR>
+	For other possible input formats <A HREF="#PX_formats">click here</A>!
+
+<LI><A NAME="PX_submit">SUBMIT or CLEAR</A>
+	<BR>Click on the button <STRONG>SUBMIT</STRONG> to request a prediction
+	<BR>Click on the button <STRONG>CLEAR </STRONG> to clear all data you filled in (e.g. to restart, or to send a new request).
+
+</OL>
+<!-- end user  -->
+<!-- -------------------------------------------------------------------------------- -->
+
+<P><BR><HR><BR><P>
+
+<!-- -------------------------------------------------------------------------------- -->
+<!-- beg list  -->
+<TABLE WIDTH="100%">
+<TR><TD VALIGN=TOP ALIGN=CENTER BGCOLOR="#000080">
+	<STRONG><FONT COLOR="#FFFFFF" SIZE="+3">
+	<A NAME="list">List of services available</A>
+	</FONT></STRONG>
+	</TD></TR>
+</TABLE>
+
+<TABLE CELLPADDING=2 WIDTH="100%">
+LIST_OF_SERVICES
+</TABLE>
+
+<!-- end list  -->
+<!-- -------------------------------------------------------------------------------- -->
+
+<P><BR><HR><BR><P
+
+<!-- -------------------------------------------------------------------------------- -->
+<!-- beg services  -->
+
+<TABLE WIDTH="100%">
+<TR><TD VALIGN=TOP ALIGN=CENTER BGCOLOR="#000080">
+	<STRONG><FONT COLOR="#FFFFFF" SIZE="+3">
+	<A NAME="services">Information about services available</A>
+	</FONT></STRONG>
+	</TD></TR>
+</TABLE>
+
+
+<!-- various			-------------------------------------------------- -->
+<P><HR><P>
+<H3><A NAME="services_var">Various analyses</A></H3>
+Various services for sequence analysis.  
+
+<TABLE COLS=2 CELLPADDING=2 WIDTH="100%">
+METHODS_various
+</TABLE>
+<P><BR><P>
+
+
+<!-- secondary str		-------------------------------------------------- -->
+<P><HR><P>
+<H3><A NAME="services_sec">Secondary structure prediction</A></H3>
+Servers returning predictions of secondary structure based on single sequences, or sequence alignments.
+
+<TABLE COLS=2 CELLPADDING=2 WIDTH="100%">
+METHODS_secondary
+</TABLE>
+<P><BR><P>
+
+
+<!-- transmembrane helices	-------------------------------------------------- -->
+<P><HR><P>
+<H3><A NAME="services_htm">Prediction of transmembrane helices</A></H3>
+Servers returning predictions of transmembrane helix location and topology based on single sequences, or sequence alignments. Note: there is no general method for detecting porin-like membrane proteins, yet.
+
+<TABLE COLS=2 CELLPADDING=2 WIDTH="100%">
+METHODS_transmembrane
+</TABLE>
+<P><BR><P>
+
+
+<!-- threading			-------------------------------------------------- -->
+<P><HR><P>
+<H3><A NAME="services_threading">Threading (detecting remote homologues in PDB)</A></H3>
+Threading servers search through databases of proteins of known structures (subsets of PDB), and detect similiarities between proteins which are too weak to be inferred from simple sequence alignment techniques.  (The 'trick' that allows to intrude below the twilight zone of 'simple' similarity detection is using the information contained in the known structures of the proteins compared to your sequence.)
+<BR>Note: detection of remote homologues is more of an art than of a solved problem.  Most of the results returned are supposedly wrong!  Thus, you have to gather independent evidence to be able to believe in a particular result.
+
+<TABLE COLS=2 CELLPADDING=2 WIDTH="100%">
+METHODS_threading
+</TABLE>
+<P><BR><P>
+
+
+<!-- homology model		-------------------------------------------------- -->
+<P><HR><P>
+<H3><A NAME="services_homo">Homology modelling</A></H3>
+Homology modelling predicts the three-dimensional structure for your sequence based on the similarity of that sequence to a protein of experimentally determined structure. Since the assumption of the method is that the backbone of your protein and the similar one of known structure (referred to as 'the template') are identical, the sequence similarity between the two has to be significant!  <BR>
+Note: if there is no similar structure in PDB, 3D structure can NOT (repeat NOT) be predicted by ANY method at this moment!
+
+<TABLE COLS=2 CELLPADDING=2 WIDTH="100%">
+METHODS_homology
+</TABLE>
+<P><BR><P>
+
+
+<!-- end services  -->
+<!-- -------------------------------------------------------------------------------- -->
+
+<P><BR><HR><BR><P>
+
+<!-- -------------------------------------------------------------------------------- -->
+<!-- beg formats  -->
+<A NAME="PX_formats">
+<TABLE WIDTH="100%">
+<TR><TD VALIGN=TOP ALIGN=CENTER BGCOLOR="#000080">
+	<STRONG><FONT COLOR="#FFFFFF" SIZE="+3">
+	<A NAME="formats">Formats for submitting sequence or alignment</A>
+	</FONT></STRONG>
+	</TD></TR>
+</TABLE>
+</A>
+The following formats are valid for submitting your sequence, or alignment.<BR>
+<B>Note: we recommend to use either of the formats in bold print! </B>
+<UL>
+<LI><B>simple sequence in one-letter amino acid code 
+	(<A HREF="../Dexa/format_simple.html">Example</A>)</B>
+<LI><B>sequence in FASTA format 
+	(<A HREF="../Dexa/format_fasta.html">Example</A>)</B>
+<LI>sequence in SWISS-PROT format 
+	(<A HREF="../Dexa/format_swiss.html">Example</A>)
+<LI>sequence in GCG format 
+	(<A HREF="../Dexa/format_gcg.html">Example</A>)
+<LI>sequence in PIR format 
+	(<A HREF="../Dexa/format_pir.html">Example</A>)
+<LI>sequence in DSSP format
+	(<A HREF="../Dexa/format_dssp.html">Example</A>)
+
+<LI><B>alignment in FASTA format 
+	(<A HREF="../Dexa/format_fastamul.html">Example</A>)</B>
+<LI><B>alignment in SAF format 
+	(<A HREF="../Dexa/format_saf.html">Example</A>)</B>
+<LI>alignment in MSF format 
+	(<A HREF="../Dexa/format_msf.html">Example</A>)
+<LI>alignment in HSSP format
+	(<A HREF="../Dexa/format_hssp.html">Example</A>)
+</UL>
+
+<!-- end formats  -->
+<!-- -------------------------------------------------------------------------------- -->
+
+</BODY>
+</HTML>

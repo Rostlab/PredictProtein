@@ -1,0 +1,297 @@
+*********************** SignalP V1.1 Mail Server *********************** 
+******************************* HELP FILE ******************************
+
+Center for Biological Sequence Analysis
+The Technical University of Denmark
+DK-2800 Lyngby, Denmark  
+
+
+DESCRIPTION:
+
+The SignalP mail server predicts the presence and location of signal
+peptide cleavage sites in amino acid sequences from different organisms:
+Gram-positive prokaryotes, Gram-negative prokaryotes, and eukaryotes.
+The method incorporates a prediction of cleavage sites and a signal
+peptide/non-signal peptide prediction based on a combination of several
+artificial neural networks.     
+
+
+PAPER:
+
+The method is described in 
+"Identification of prokaryotic and eukaryotic signal peptides and
+prediction of their cleavage sites" 
+Henrik Nielsen, Jacob Engelbrecht, Soeren Brunak and Gunnar von Heijne 
+Protein Engineering, 10, 1-6, 1997
+
+Preprint requests: mail to hnielsen@cbs.dtu.dk (Henrik Nielsen)
+The paper may also be downloaded in Postscript format from the WWW server
+http://www.cbs.dtu.dk/services/SignalP/
+
+
+INSTRUCTIONS for using the SignalP mail server:
+
+1)  Prepare a text file including one or more sequences. 
+    The sequences should be in `FASTA' format: Each sequence must be
+    preceded by a sequence header line starting by the symbol `>'
+    immediately followed by a name (identifier) of the sequence.  The
+    rest of the header line is ignored.  The sequences must be written
+    using the one letter abbreviations  for the amino acids:
+    `acdefghiklmnpqrstvwy' or `ACDEFGHIKLMNPQRSTVWY'.  Other letters
+    will be converted to `X' and treated as unknown amino acids.  Other
+    characters, such as blanks and numbers, will simply be ignored.
+
+    It is recommended that the N-terminal part only (not more than 50-70
+    amino acids) of the sequences is submitted.  A longer sequence will
+    increase the risk of false positives and make the graphical output
+    difficult to read.  
+
+2)  Before the first sequence, the following keywords may appear:
+    
+    `euk', `gram-', or `gram+':
+        Use networks trained on sequences from eukaryotes, Gram-negative
+	prokaryotes, or Gram-positive prokaryotes, respectively.  If
+	none of these keywords are found, predictions from all three
+	network ensembles will be returned.  
+
+    `postscript' or `graphics'
+        Request a graphical output (in Postscript format) of the
+	prediction.  The Postscript file will be sent as a separate
+	message.  Before viewing the Postscript output, the mail headers
+	must be removed.
+
+    `help'
+        Send this help file.  No other output will be returned.
+
+3)  A line consisting of only a `.' (dot) terminates the sequences, and
+    the rest of the message is discarded.  This is useful if your mailer
+    automatically appends a signature.
+
+4)  Mail the text file to signalp@cbs.dtu.dk.
+
+5)  You will receive a mail containing the prediction, or possibly error
+    messages, from the server.  Response time depends on system load.
+
+
+EXAMPLE:
+
+If you want a prediction of signal peptides in two human protein
+sequences, and a graphical representation of the results, your
+mail might look like this:
+
+	euk
+	graphics
+	>10KS_HUMAN
+	MKLAVTLTLV TLALCCSSAS AEICPSFQRV IETLLMDTPS SYEAAMELFS
+	>1B05_HUMAN
+	MRVTAPRTLL LLLWGAVALT ETWAGSHSMR YFYTAMSRPG RGEPRFITVG
+	.
+
+
+OUTPUT:
+
+The SignalP  mail server will return three scores between 0 and 1 for
+each position in your sequences:
+
+C-score (raw cleavage site score):
+	The output score from networks trained to recognize cleavage
+	sites vs. other sequence positions.  Trained to be high at
+	position +1 (immediately after the cleavage site) low at all
+	other positions.  
+
+S-score (signal peptide score)
+	The output score from networks trained to recognize signal
+	peptide vs. non-signal-peptide positions.  Trained to be high
+	at all positions before the cleavage site low at 30 positions
+	after the cleavage site and in the N-terminals of non-secretory
+	proteins.  
+
+Y-score (combined cleavage site score)
+	The prediction of cleavage site location is optimized by
+	observing where the C-score is high and the S-score changes from
+	a high to a low value.  The Y-score formalizes this by combining
+	the height of the C-score with the slope of the S-score. 
+
+	Specifically, the Y-score is a geometric average between the
+	C-score and a smoothed derivative of the S-score (i.e. the
+	difference between the mean S-score over d positions before and
+	d positions after the current position, where d varies with the
+	chosen network ensemble). 
+
+For each sequence, SignalP will report the maximal C-, S-, and Y-scores,
+and the mean S-score between the N-terminal and the predicted cleavage
+site.  These values are used to distinguish between signal peptides and
+non-signal peptides.  If the your sequence is predicted to have a signal
+peptide, the cleavage site is predicted to be immediately before the
+position with the maximal Y-score. 
+
+
+DATA:
+
+The neural networks are trained on large data sets of signal peptide and
+non-signal-peptide sequences derived from SWISS-PROT.  The data sets are
+available by anonymous ftp from our ftp server:
+
+	Host:      virus.cbs.dtu.dk
+	login:     anonymous
+	password:  <your e-mail address>
+	directory: pub/signalp
+
+The file README describes the data selection procedure and the format of
+the data files.
+
+
+WWW SERVER:
+
+If you have access to a WWW browser that supports forms, it is faster
+and more convenient to use the SignalP World Wide Web server at 
+
+	http://www.cbs.dtu.dk/services/SignalP/
+
+for prediction of single sequences.  From the server you have access to
+several pages of information about SignalP.
+
+
+USAGE NOTES:
+
+When interpreting the output from SignalP, you should be aware of the
+following:
+
+SignalP predicts *secretory* signal peptides
+	In some contexts, target peptides for chloroplasts and
+	mitochondria or peptides involved in intracellular signal
+	transduction are referred to as "signal peptides". These are
+	not similar to the signal peptides predicted by SignalP, which
+	serve as signals for entering the secretory pathway.
+
+Prokaryotic lipoprotein cleavage sites are not predicted 
+	Some prokaryotic lipoproteins are cleaved by a specific
+	lipoprotein signal peptidase, Lsp or signal peptidase II.  This
+	peptidase recognizes a conserved sequence and cuts upstream of
+	a cysteine residue to which a glyceride-fatty acid lipid is
+	attached.  The cleavage sites of these proteins differ
+	considerably from those cleaved by the standard prokaryotic
+	signal peptidase (Lep).
+
+	More information about prokaryotic lipoproteins and their
+	consensus sequence can be found in the PROSITE entry
+	PROKAR_LIPOPROTEIN (PDOC00013).  Sequences may be scanned for
+	the occurence of PROSITE consensus patterns with the
+	ScanProsite server
+	(http://expasy.hcuge.ch/sprot/scnpsit1.html).
+
+Check the length of the predicted signal peptide 
+	If SignalP predicts an abnormally short or long signal peptide,
+	you should be aware that it might be a false prediction.  You
+	can compare with the length distribution of our signal peptide
+	data set (see
+	http://www.cbs.dtu.dk/services/SignalP/sp_lengths.html).
+
+	Specifically, if SignalP predicts a eukaryotic signal peptide
+	with a length over 30 residues, it might be uncleaved.  See the
+	page about identification of signal anchors
+	(http://www.cbs.dtu.dk/services/SignalP/signal_anchors.html).
+
+Include position +1 in your sequence 
+	The C- and Y-scores are trained to be maximal at position +1
+	(immediately after the cleavage site).  If a submitted signal
+	peptide sequence does not include position +1, the cleavage
+	site will be invisible.  Therefore, if you want to submit a
+	putative signal peptide alone (with none of the mature protein
+	included), append at least one `X' to the C-terminal of your
+	sequence.
+
+
+PREDICTION ACCURACY:
+
+The accuracy values given below are cross-validation *test* set values,
+i.e. expected performances of the prediction method for sequences
+without significant homology in the signal peptide region to any
+sequences in the data sets used to train the neural networks.  Sequences
+closely related to members of these data sets will have higher
+probabilities for being predicted correctly.
+
+-   Single position accuracy:
+
+    When a cutoff value of 0.5 is used, the correlation coefficient for
+    the single position assignments are:
+
+            C score      S score        Y score
+    euk        0.62         0.90           0.62 
+    gram-      0.71         0.81           0.71 
+    gram+      0.62         0.82           0.60 
+
+-   Cleavage site location accuracy:
+
+    When the cleavage site is placed at the position in the sequence
+    where the score has maximal value, the percentage of sequences with
+    correctly placed cleavage sites are:
+
+	    C score         Y score
+    euk     70 %            70 %
+    gram-   78 %            79 %
+    gram+   66 %            68 %
+
+-   Sequence classification accuracy:
+
+    The maximal values of the scores are used to predict whether the
+    tested sequence has a signal peptide (i.e. is the start of a
+    secretory protein) or no signal peptide  (i.e. is the start of a
+    cytoplasmic or (in eukaryotes only) nuclear protein).  The
+    correlation coefficients for this prediction are given below [with
+    the corresponding optimal cutoff values given in brackets].
+
+	    maximal         maximal         maximal         mean
+	    C score         Y score         S score         S score
+    euk     0.85 [0.37]     0.97 [0.34]     0.96 [0.88]     0.97 [0.48]
+    gram-   0.71 [0.49]     0.89 [0.36]     0.82 [0.88]     0.88 [0.54]
+    gram+   0.64 [0.42]     0.85 [0.34]     0.87 [0.95]     0.96 [0.55]
+
+    "mean S score" is the average of the S score in the predicted signal
+    peptide region, i.e. from position 1 to the position immediately
+    before that where the Y score has maximal value.
+
+
+CONFIDENTIALITY:
+
+Your submitted sequences will be deleted automatically immediately after
+processing by SignalP.
+
+
+COMMENTS AND SUGGESTIONS:
+
+Direct questions and suggestions to:
+
+hnielsen@cbs.dtu.dk  (Henrik Nielsen), or
+brunak@cbs.dtu.dk  (Soren Brunak), or
+gunnar@biokemi.su.se (Gunnar von Heijne) (*).
+
+    Center for Biological Sequence Analysis
+    The Technical University of Denmark
+    Building 206
+    DK-2800 Lyngby
+    Denmark
+
+    (*) Department of Biochemistry  
+    Arrhenius Laboratory 
+    Stockholm University 
+    S-106 91 Stockholm, Sweden
+
+
+PROBLEMS:
+
+Should be addressed to: 
+
+    Kristoffer Rapacki (rapacki@cbs.dtu.dk)
+  
+
+    Center for Biological Sequence Analysis
+    The Technical University of Denmark
+    Building 206
+    DK-2800 Lyngby
+    Denmark
+
+    Tel: +45 45252477
+    Fax: +45 45934808  
+
+

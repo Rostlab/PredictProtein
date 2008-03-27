@@ -1,0 +1,27 @@
+-----------------------------------------------------------------------------
+- PredictProtein (PP): News 1999                                            -
+-----------------------------------------------------------------------------
+-                                                                           -
+- PP home:                                                                  -
+  New York            http://dodo.cpmc.columbia.edu/predictprotein
+-                                                                           -
+- PP mirrors:                                                               -
+  Australia (ANGIS)   http://molmod.angis.org.au//predictprotein
+  England (EBI)       http://www.ebi.ac.uk/~rost/predictprotein
+  Germany (EMBL)      http://www.embl-heidelberg.de/predictprotein
+  India (CDFC)        http://iris.cdfd.org.in/~www/pp/predictprotein
+  India (Pune)        http://202.41.70.33/predictprotein
+  Israel (Beer-Sheva) http://www.cs.bgu.ac.il/~dfischer/predictprotein
+  Italy (Rome)        http://obelix.bio.uniroma2.it/www/predictprotein
+  Singapore (BIC)     http://embl.bic.nus.edu.sg/predictprotein
+  Spain (CNB)         http://www.es.embnet.org/Services/MolBio/PredictProtein
+  Switzerland (Glaxo) http://www.gwer.ch/tools/predictprotein
+-                                                                           -
+- Tools to post-process PP results:                                         -
+-                                                                           -
+- Generate a PostScript (or GIF, or TIFF):                                  -
+  ESPript (New York)  http://dodo.cpmc.columbia.edu/cgi/pp/ESPript
+  ESPript (Toulouse)  http://www-pgm1.ipbs.fr:8080/ESPript
+-                                                                           -
+-----------------------------------------------------------------------------
+

@@ -1,0 +1,38 @@
+# header for merged PHD.rdb file
+#
+# NOTATION No   : residue number 
+# NOTATION AA   : amino acid one letter code
+#
+# NOTATION OHEL : observed secondary structure
+# NOTATION PHEL : predicted secondary structure,  H=helix, E=strand, L=non-regular (taken from DSSP)
+# NOTATION RI_S : reliability of secondary structure prediction ,  0-9,   (0 low, 9 high)
+# NOTATION pH   : probability of predicting helix,                 0-9,   (0 low, 9 high)
+# NOTATION pE   : probability of predicting strand,                0-9,   (0 low, 9 high)
+# NOTATION pL   : probability of predicting loop,                  0-9,   (0 low, 9 high)
+# NOTATION OtH  : network output for helix,                        0-100, (0 low, 100 high)
+# NOTATION OtE  : network output for strand,                       0-100, (0 low, 100 high)
+# NOTATION OtL  : network output for loop,                         0-100, (0 low, 100 high)
+#
+# NOTATION OACC : observed accessible surface area (from DSSP),    0-300 A**2
+# NOTATION PACC : predicted accessible surface area,               0-300 A**2
+# NOTATION OREL : observed relative accessible surface area,       0-100
+# NOTATION PREL : predicted relative accessible surface area,      0-100
+# NOTATION RI_A : reliability of accessibility prediction,         0-9,   (0 low, 9 high)
+# NOTATION Obie : observed exposure state
+# NOTATION Pbie : predicted exposure state, b=buried, i=intermediate, e=exposed
+# NOTATION Ot(n): network output for relative accessibility= n*n%, 0-100
+#
+# NOTATION OTN  : observed transmembrane helices
+# NOTATION PTN  : predicted transmembrane helices, T=helical membrane, N=no helical transmembrane
+# NOTATION PFTN : filtered prediction of transmembrane helices
+# NOTATION RI_H : reliability of secondary structure prediction ,  0-9,   (0 low, 9 high)
+# NOTATION pT   : probability of predicting transmembrane helix,   0-9,   (0 low, 9 high)
+# NOTATION pN   : probability of predicting non-htm,               0-9,   (0 low, 9 high)
+# NOTATION OtT  : network output for helix,                        0-100, (0 low, 100 high)
+# NOTATION OtN  : network output for loop,                         0-100, (0 low, 100 high)
+# NOTATION PRTN : refined prediction (maximum score model)
+# NOTATION PR2TN: refined prediction (second best maximum score model)
+# NOTATION PTHLA: predicted model for maximal charge difference (all)
+# NOTATION PTHLS: predicted model for maximal charge difference (sep)
+# NOTATION PiTo : predicted topology of transmembrane regions, i=loop inside, T=transmembrane, o=loop outside
+#

@@ -1,0 +1,656 @@
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------
+#   hssp                        internal subroutines:
+#                               ---------------------
+# 
+#   hssp_fil_num2txt            translates a number for percentage sequence iden-
+#   hssp_rd_header              reads the header of an HSSP file for numbers 1..$#num
+#   hssp_rd_strip_one           reads the alignment for one sequence from a (new) strip file
+#   hssp_rd_strip_one_correct1  correct for begin and ends
+#   hssp_rd_strip_one_correct2  shorten indels for begin and ends
+#   hsspChopProf                chops profiles from HSSP file
+#   hsspfile_to_pdbid           extracts id from hssp file
+#   hsspFilterGetPosExcl        flags positions (in pairs) to exclude
+#   hsspFilterGetPosIncl        flags positions (in pairs) to include
+#   hsspFilterGetIdeCurve       flags positions (in pairs) above identity threshold
+#   hsspFilterGetIdeCurveMinMax flags positions (in pairs) above maxIde and below minIde
+#   hsspFilterGetSimCurve       flags positions (in pairs) above similarity threshold
+#   hsspFilterGetSimCurveMinMax flags positions (in pairs) above maxSim and below minSim
+#   hsspFilterGetRuleBoth       flags all positions (in pairs) with:
+#   hsspFilterGetRuleSgi        Sim > Ide, i.e. flags all positions (in pairs) with: 
+#   hsspFilterMarkFile          marks the positions specified in command line
+#   hsspGetChain                extracts all chain identifiers in HSSP file
+#   hsspGetChainBreaks          extracts all chain breaks (if not labelled, or
+#   hsspGetChainLength          extracts the length of a chain in an HSSP file
+#   hsspGetChainNali            gets Nali for chain X (restricted to HSSP dist D)
+#   hsspGetFile                 searches all directories for existing HSSP file
+#   hsspGetFileLoop             loops over all directories
+#   hsspRdAli                   reads and writes the sequence of HSSP + 70 alis
+#   hsspRdHeader                reads a HSSP header
+#   hsspRdHeader4topits         extracts the summary from HSSP header (for TOPITS)
+#   hsspRdProfile               reads the HSSP profile from ifir to ilas
+#   hsspRdSeqSecAcc             reads the HSSP seq/sec/acc from ifir to ilas
+#   hsspRdSeqSecAccOneLine      reads begin of one HSSP line
+#   hsspRdStrip4topits          reads the new strip file for PP
+#   hsspRdStripAndHeader        reads the headers for HSSP and STRIP and merges them
+#   hsspRdStripHeader           reads the header of a HSSP.strip file
+#   hsspSkewProf                changes the HSSP profile for too few alignments
+#   extract_pdbid_from_hssp     extracts all PDB ids found in the HSSP 0 header
+#   get_hssp_file               searches all directories for existing HSSP file
+#   pdbid_to_hsspfile           finds HSSP file for given id (old)
+#   read_hssp_seqsecacc         reads sequence, secondary str and acc from HSSP file
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------
+#   hssp                        external subroutines:
+#                               ---------------------
+# 
+#   call from file:             is_hssp,is_hssp_empty,open_file
+# 
+#   call from hssp:             get_hssp_file,hsspGetChainLength,hsspGetChainNali,hsspGetFileLoop
+#                               hsspRdHeader,hsspRdSeqSecAccOneLine,hsspRdStripHeader
+#                               hssp_rd_strip_one_correct1
+# 
+#   call from prot:             funcAddMatdb2prof,getDistanceNewCurveIde,getDistanceNewCurveSim
+#                               is_chain,is_pdbid,metricRdbRd,secstr_convert_dsspto3
+# 
+#   call from scr:              errSbr,errSbrMsg,get_range,get_rangeHyphen
+# 
+#   call from sys:              complete_dir,sysCpfile
+# 
+#   call from system:            
+# 
+#   call from missing:           
+# 
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------------
+#   hssp                        description of subroutines:
+#                               ---------------------------
+#   --------------------------   
+#   hssp_fil_num2txt            translates a number for percentage sequence iden-
+#                               tity into the input argument for MaxHom, e.g.,
+#                               30% => 'FORMULA+5'
+#       in:                     $perc_ide
+#       out:                    $txt ("FORMULA+/-n")
+#                               tity into the input argument for MaxHom, e.g.,
+#                               30% => 'FORMULA+5'
+#       in:                     $perc_ide
+#       out:                    $txt ("FORMULA+/-n")
+#   --------------------------   
+#   hssp_rd_header              reads the header of an HSSP file for numbers 1..$#num
+#       in:                     $file_hssp,@num  (numbers to read)
+#       out:                    $rdLoc{} (0 for error)
+#       in:                     $file_hssp,@num  (numbers to read)
+#       out:                    $rdLoc{} (0 for error)
+#   --------------------------   
+#   hssp_rd_strip_one           reads the alignment for one sequence from a (new) strip file
+#       in:                     $file, $position_of_protein_to_be_read, $Lscreen
+#       out:                    %rd (returned)
+#       out:                    $rd{"seq1"},$rd{"seq2"},$rd{"sec1"},$rd{"sec2"},
+#       out:                    $rd{"id1"},$rd{"id2"},
+#       in:                     $file, $position_of_protein_to_be_read, $Lscreen
+#       out:                    %rd (returned)
+#       out:                    $rd{"seq1"},$rd{"seq2"},$rd{"sec1"},$rd{"sec2"},
+#       out:                    $rd{"id1"},$rd{"id2"},
+#   --------------------------   
+#   hssp_rd_strip_one_correct1  correct for begin and ends
+#   --------------------------   
+#   hssp_rd_strip_one_correct2  shorten indels for begin and ends
+#   --------------------------   
+#   hsspChopProf                chops profiles from HSSP file
+#       in:                     $fileIn,$fileOut
+#       out:                    
+#       err:                    ok=(1,'ok','blabla'), err=(0,errNumber,'msg')
+#       in:                     $fileIn,$fileOut
+#       out:                    
+#       err:                    ok=(1,'ok','blabla'), err=(0,errNumber,'msg')
+#   --------------------------   
+#   hsspfile_to_pdbid           extracts id from hssp file
+#   --------------------------   
+#   hsspFilterGetPosExcl        flags positions (in pairs) to exclude
+#       in:                     e.g. excl=1-5,9,15 
+#       out:                    @notLoc
+#   GLOBAL in /out:             $rd{"NALIGN"},$rd{"NROWS"},$rd{"NR","$it"}
+#       in:                     e.g. excl=1-5,9,15 
+#       out:                    @notLoc
+#   GLOBAL in /out:             $rd{"NALIGN"},$rd{"NROWS"},$rd{"NR","$it"}
+#   --------------------------   
+#   hsspFilterGetPosIncl        flags positions (in pairs) to include
+#       in:                     e.g. incl=1-5,9,15 
+#       out:                    @takeLoc
+#   GLOBAL in /out:             $rd{"NALIGN"},$rd{"NROWS"},$rd{"NR","$it"}
+#       in:                     e.g. incl=1-5,9,15 
+#       out:                    @takeLoc
+#   GLOBAL in /out:             $rd{"NALIGN"},$rd{"NROWS"},$rd{"NR","$it"}
+#   --------------------------   
+#   hsspFilterGetIdeCurve       flags positions (in pairs) above identity threshold
+#       in:                     $threshLoc= distance from HSSP (new ide) threshold
+#       out:                    @takeLoc
+#   GLOBAL in /out:             $rd{"NR","$it"},$rd{"LALI","$it"}
+#       in:                     $threshLoc= distance from HSSP (new ide) threshold
+#       out:                    @takeLoc
+#   GLOBAL in /out:             $rd{"NR","$it"},$rd{"LALI","$it"}
+#   --------------------------   
+#   hsspFilterGetIdeCurveMinMax flags positions (in pairs) above maxIde and below minIde
+#       in:                     $minLoc,$maxLoc = distances from HSSP (new ide) threshold
+#       in:                     $fhSbr: if not defined, no output written
+#       out:                    @notLoc
+#   GLOBAL in /out:             $rd{"NR","$it"},$rd{"LALI","$it"}
+#       in:                     $minLoc,$maxLoc = distances from HSSP (new ide) threshold
+#       in:                     $fhSbr: if not defined, no output written
+#       out:                    @notLoc
+#   GLOBAL in /out:             $rd{"NR","$it"},$rd{"LALI","$it"}
+#   --------------------------   
+#   hsspFilterGetSimCurve       flags positions (in pairs) above similarity threshold
+#       in:                     $threshLoc= distance from HSSP (new sim) threshold
+#       out:                    @take
+#   GLOBAL in /out:             @take,$rd{"NR","$it"}
+#       in:                     $threshLoc= distance from HSSP (new sim) threshold
+#       out:                    @take
+#   GLOBAL in /out:             @take,$rd{"NR","$it"}
+#   --------------------------   
+#   hsspFilterGetSimCurveMinMax flags positions (in pairs) above maxSim and below minSim
+#       in:                     $minLoc,$maxLoc = distances from HSSP (new sim) threshold
+#       in:                     $fhSbr: if not defined, no output written
+#       out:                    @notLoc
+#   GLOBAL in /out:             $rd{"NR","$it"}
+#       in:                     $minLoc,$maxLoc = distances from HSSP (new sim) threshold
+#       in:                     $fhSbr: if not defined, no output written
+#       out:                    @notLoc
+#   GLOBAL in /out:             $rd{"NR","$it"}
+#   --------------------------   
+#   hsspFilterGetRuleBoth       flags all positions (in pairs) with:
+#                               ide > thresh, and  similarity > thresh
+#       in:                     $threshLoc= distance from HSSP (new ide) threshold
+#       out:                    @notLoc
+#   GLOBAL in /out:             $rd{"NR","$it"},$rd{"LALI","$it"},$rd{"IDE","$it"},$rd{"WSIM","$it"}
+#                               ide > thresh, and  similarity > thresh
+#       in:                     $threshLoc= distance from HSSP (new ide) threshold
+#       out:                    @notLoc
+#   GLOBAL in /out:             $rd{"NR","$it"},$rd{"LALI","$it"},$rd{"IDE","$it"},$rd{"WSIM","$it"}
+#   --------------------------   
+#   hsspFilterGetRuleSgi        Sim > Ide, i.e. flags all positions (in pairs) with: 
+#                                  sim > ide, and both above thresh (optional)
+#       in:                     $threshLoc distance from HSSP (new) threshold (optional),
+#       in:                     if not defined thresh -> take all
+#       out:                    @okLoc
+#   GLOBAL in /out:             $rd{"NR","$it"},$rd{"LALI","$it"},$rd{"IDE","$it"},$rd{"WSIM","$it"}
+#                                  sim > ide, and both above thresh (optional)
+#       in:                     $threshLoc distance from HSSP (new) threshold (optional),
+#       in:                     if not defined thresh -> take all
+#       out:                    @okLoc
+#   GLOBAL in /out:             $rd{"NR","$it"},$rd{"LALI","$it"},$rd{"IDE","$it"},$rd{"WSIM","$it"}
+#   --------------------------   
+#   hsspFilterMarkFile          marks the positions specified in command line
+#       in:                     $fileIn,$fileOut,@num = number to mark
+#       out:                    implicit: fileMarked
+#       err:                    (1,'ok'), (0,'message')
+#       in:                     $fileIn,$fileOut,@num = number to mark
+#       out:                    implicit: fileMarked
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   hsspGetChain                extracts all chain identifiers in HSSP file
+#       in:                     $file
+#       out:                    $chains (ABC) ,%rdLoc
+#                      no chain -> $chains=' '
+#       out                        $rdLoc{"NROWS"},$rdLoc{"$ct","chain"},
+#       out                        $rdLoc{"$ct","ifir"},$rdLoc{"$ct","ilas"}
+#       in:                     $file
+#       out:                    $chains (ABC) ,%rdLoc
+#                      no chain -> $chains=' '
+#       out                        $rdLoc{"NROWS"},$rdLoc{"$ct","chain"},
+#       out                        $rdLoc{"$ct","ifir"},$rdLoc{"$ct","ilas"}
+#   --------------------------   
+#   hsspGetChainBreaks          extracts all chain breaks (if not labelled, or
+#                               if within labelled chain: _a-z added to chain,
+#                               e.g. 1a0i_abc, or 1cse_E_ab
+#       in:                     $file
+#       out:                    1|0,msg,$tmp{}
+#       out:                       $tmp{"NROWS"}=        number of chains
+#                                  $tmp{"chains"}=       $chains (a,b,Ea,Eb,c,d,Ia..) ,
+#                                  $tmp{"chain","$ct"}   chain $ct
+#                                  $tmp{"ifir","$ct"}    first residue for chain $ct
+#                                  $tmp{"ilas","$ct"}    last for chain $ct
+#       err:                    1|0, error message
+#                               if within labelled chain: _a-z added to chain,
+#                               e.g. 1a0i_abc, or 1cse_E_ab
+#       in:                     $file
+#       out:                    1|0,msg,$tmp{}
+#       out:                       $tmp{"NROWS"}=        number of chains
+#                                  $tmp{"chains"}=       $chains (a,b,Ea,Eb,c,d,Ia..) ,
+#                                  $tmp{"chain","$ct"}   chain $ct
+#                                  $tmp{"ifir","$ct"}    first residue for chain $ct
+#                                  $tmp{"ilas","$ct"}    last for chain $ct
+#       err:                    1|0, error message
+#   --------------------------   
+#   hsspGetChainLength          extracts the length of a chain in an HSSP file
+#       in:                     hssp_file,chain,
+#       out:                    $length,$ifir,$ilas
+#       in:                     hssp_file,chain,
+#       out:                    $length,$ifir,$ilas
+#   --------------------------   
+#   hsspGetChainNali            gets Nali for chain X (restricted to HSSP dist D)
+#       in:                     $fileInLoc   : HSSP file
+#       in:                     $chainInLoc  : chain to read
+#                                   '*' for omitting the test
+#       in:                     $distLoc     : limiting distance from HSSP (new Ide)
+#                                   '0' in NEXT variable for omitting the test
+#       in:                     $distModeLoc : mode of limit ('gt|ge|lt|le')
+#                                              -> if mode=gt, all with dist>distLoc
+#                                                  will be counted
+#                                   '0' for omitting the test
+#       out:                    1|0,msg,$num,$take:
+#                               $take='n,m,..': list of pairs ok
+#       err:                    (1,'ok'), (0,'message')
+#       in:                     $fileInLoc   : HSSP file
+#       in:                     $chainInLoc  : chain to read
+#                                   '*' for omitting the test
+#       in:                     $distLoc     : limiting distance from HSSP (new Ide)
+#                                   '0' in NEXT variable for omitting the test
+#       in:                     $distModeLoc : mode of limit ('gt|ge|lt|le')
+#                                              -> if mode=gt, all with dist>distLoc
+#                                                  will be counted
+#                                   '0' for omitting the test
+#       out:                    1|0,msg,$num,$take:
+#                               $take='n,m,..': list of pairs ok
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   hsspGetFile                 searches all directories for existing HSSP file
+#       in:                     $file,$Lscreen,@dir
+#       out:                    returned file,chain ($hssp,$chain), (if chain in file)
+#       watch:                  loop onto itself:
+#                               1prcH.hssp not found -> try 1prc.hssp
+#       in:                     $file,$Lscreen,@dir
+#       out:                    returned file,chain ($hssp,$chain), (if chain in file)
+#       watch:                  loop onto itself:
+#                               1prcH.hssp not found -> try 1prc.hssp
+#   --------------------------   
+#   hsspGetFileLoop             loops over all directories
+#       in:                     $file,$Lscreen,@dir
+#       out:                    returned file
+#       in:                     $file,$Lscreen,@dir
+#       out:                    returned file
+#   --------------------------   
+#   hsspRdAli                   reads and writes the sequence of HSSP + 70 alis
+#       in:                     $fileHssp (must exist), 
+#         @des                  (1) =1, 2, ...,  i.e. number of sequence to be read
+#                               (2) = swiss_id1, swiss_id2, i.e. identifiers to read
+#                               (3) = all (or undefined)
+#                               NOTE: you can give ids AND numbers ('1','paho_chick','2') ..
+#                               furthermore:
+#                               if @want = 'seq|seqAli|seqNoins'
+#                                  only those will be returned (e.g. $tmp{"seq","$ct"})
+#                               default: all 3!
+#       out:                    1|0,$rd{} with: 
+#       err:                    (0,$msg)
+#                    overall:
+#                               $rd{"NROWS"}=          : number of alis, i.e. $#want
+#                               $rd{"NRES"}=N          : number of residues in guide
+#                               $rd{"SWISS"}='sw1,sw2' : list of swiss-ids read
+#                               $rd{"0"}='pdbid'       : id of guide sequence (in file header)
+#                               $rd{"$it"}='sw$ct'     : swiss id of the it-th alignment
+#                               $rd{"$id"}='$it'       : position of $id in final list
+#                               $rd{"sec","$itres"}    : secondary structure for residue itres
+#                               $rd{"acc","$itres"}    : accessibility for residue itres
+#                               $rd{"chn","$itres"}    : chain for residue itres
+#                    per prot:
+#                               $rd{"seqNoins","$ct"}=sequences without insertions
+#                               $rd{"seqNoins","0"}=  GUIDE sequence
+#                               $rd{"seq","$ct"}=SEQW  : sequences, with all insertions
+#                                                        but NOT aligned!!!
+#                               $rd{"seqAli","$ct"}    : sequences, with all insertions,
+#                                                        AND aligned (all, including guide
+#                                                        filled up with '.' !!
+#       in:                     $fileHssp (must exist), 
+#         @des                  (1) =1, 2, ...,  i.e. number of sequence to be read
+#                               (2) = swiss_id1, swiss_id2, i.e. identifiers to read
+#                               (3) = all (or undefined)
+#                               NOTE: you can give ids AND numbers ('1','paho_chick','2') ..
+#                               furthermore:
+#                               if @want = 'seq|seqAli|seqNoins'
+#                                  only those will be returned (e.g. $tmp{"seq","$ct"})
+#                               default: all 3!
+#       out:                    1|0,$rd{} with: 
+#       err:                    (0,$msg)
+#                    overall:
+#                               $rd{"NROWS"}=          : number of alis, i.e. $#want
+#                               $rd{"NRES"}=N          : number of residues in guide
+#                               $rd{"SWISS"}='sw1,sw2' : list of swiss-ids read
+#                               $rd{"0"}='pdbid'       : id of guide sequence (in file header)
+#                               $rd{"$it"}='sw$ct'     : swiss id of the it-th alignment
+#                               $rd{"$id"}='$it'       : position of $id in final list
+#                               $rd{"sec","$itres"}    : secondary structure for residue itres
+#                               $rd{"acc","$itres"}    : accessibility for residue itres
+#                               $rd{"chn","$itres"}    : chain for residue itres
+#                    per prot:
+#                               $rd{"seqNoins","$ct"}=sequences without insertions
+#                               $rd{"seqNoins","0"}=  GUIDE sequence
+#                               $rd{"seq","$ct"}=SEQW  : sequences, with all insertions
+#                                                        but NOT aligned!!!
+#                               $rd{"seqAli","$ct"}    : sequences, with all insertions,
+#                                                        AND aligned (all, including guide
+#                                                        filled up with '.' !!
+#   --------------------------   
+#   hsspRdHeader                reads a HSSP header
+#       in:                     $fileHssp (must exist), 
+#         @kwdInLoc             = one of the default keywords 
+#                               (@kwdLocHsspTop,@kwdLocHsspHeader)
+#       in:                     'nopair' surpresses reading of pair information
+#       out:                    for top  (e.g. NALIGN): $rd{"kwd"}
+#                               for prot (e.g. LALI):   $rd{"kwd","$it"}
+#                               note: for the later number of elements (it) in
+#                                     $rd{"NROWS"}
+#         special               ID=ID1, $rd{"kwd","$it"} existes for ID1 and ID2
+#       in:                     $fileHssp (must exist), 
+#         @kwdInLoc             = one of the default keywords 
+#                               (@kwdLocHsspTop,@kwdLocHsspHeader)
+#       in:                     'nopair' surpresses reading of pair information
+#       out:                    for top  (e.g. NALIGN): $rd{"kwd"}
+#                               for prot (e.g. LALI):   $rd{"kwd","$it"}
+#                               note: for the later number of elements (it) in
+#                                     $rd{"NROWS"}
+#         special               ID=ID1, $rd{"kwd","$it"} existes for ID1 and ID2
+#   --------------------------   
+#   hsspRdHeader4topits         extracts the summary from HSSP header (for TOPITS)
+#       in:                     $fileHssp 
+#       out:                    $rd_hssp{"kwd","$ct"}, where :
+#                                  $ct= number of protein
+#                                  kwd= ide,ifir,jfir,ilas,jlas,lali,ngap,lgap,len2,id2
+#                               number of proteins: $rd_hssp{"NROWS"}=$rd_hssp{"nali"}
+#       err:                    ok=(1,'ok',$rd_hssp{}), err=(0,'msg',"error")
+#       in:                     $fileHssp 
+#       out:                    $rd_hssp{"kwd","$ct"}, where :
+#                                  $ct= number of protein
+#                                  kwd= ide,ifir,jfir,ilas,jlas,lali,ngap,lgap,len2,id2
+#                               number of proteins: $rd_hssp{"NROWS"}=$rd_hssp{"nali"}
+#       err:                    ok=(1,'ok',$rd_hssp{}), err=(0,'msg',"error")
+#   --------------------------   
+#   hsspRdProfile               reads the HSSP profile from ifir to ilas
+#       in:                     file.hssp_C ifir ilas $chainLoc (* for all numbers and chain) 
+#       out:                    %prof{"kwd","it"}
+#                   @kwd=       ("seqNo","pdbNo","V","L","I","M","F","W","Y","G","A","P",
+#				 "S","T","C","H","R","K","Q","E","N","D",
+#				 "NOCC","NDEL","NINS","ENTROPY","RELENT","WEIGHT");
+#       in:                     file.hssp_C ifir ilas $chainLoc (* for all numbers and chain) 
+#       out:                    %prof{"kwd","it"}
+#                   @kwd=       ("seqNo","pdbNo","V","L","I","M","F","W","Y","G","A","P",
+#				 "S","T","C","H","R","K","Q","E","N","D",
+#				 "NOCC","NDEL","NINS","ENTROPY","RELENT","WEIGHT");
+#   --------------------------   
+#   hsspRdSeqSecAcc             reads the HSSP seq/sec/acc from ifir to ilas
+#       in:                     file.hssp_C ifir ilas (* for all numbers, ' ' or '*' for chain)
+#                               @kwdRd (which to read) = 0 for all
+#       out:                    %rdLoc{"kwd","it"}
+#                 @kwd=         ("seqNo","pdbNo","seq","sec","acc")
+#                                'chain'
+#       in:                     file.hssp_C ifir ilas (* for all numbers, ' ' or '*' for chain)
+#                               @kwdRd (which to read) = 0 for all
+#       out:                    %rdLoc{"kwd","it"}
+#                 @kwd=         ("seqNo","pdbNo","seq","sec","acc")
+#                                'chain'
+#   --------------------------   
+#   hsspRdSeqSecAccOneLine      reads begin of one HSSP line
+#   --------------------------   
+#   hsspRdStrip4topits          reads the new strip file for PP
+#       in:                     $fileHssp 
+#       out:                    $rd_hssp{"kwd","$ct"}, where :
+#       err:                    ok=(1,'ok',$rd_hssp{}), err=(0,'msg',"error")
+#       in:                     $fileHssp 
+#       out:                    $rd_hssp{"kwd","$ct"}, where :
+#       err:                    ok=(1,'ok',$rd_hssp{}), err=(0,'msg',"error")
+#   --------------------------   
+#   hsspRdStripAndHeader        reads the headers for HSSP and STRIP and merges them
+#       in:                     $fileHssp,$fileStrip,$fhErrSbr,@keywords
+#         $fhErrSbr             FILE-HANDLE to report errors
+#         @keywords             "hsspTop",  @kwdHsspTop,
+#                               "hsspPair", @kwdHsspPairs,
+#                               "stripTop", @kwdStripTop,
+#                               "stripPair",@KwdStripPair,
+#                               i.e. the key words of the variables to read
+#                               following translation:
+#         HsspTop:              pdbid1   -> PDBID     (of fileHssp, 1pdb_C -> 1pdbC)
+#                               date     -> DATE      (of file)
+#                               db       -> SEQBASE   (database used for ali)
+#                               parameter-> PARAMETER (lines giving the maxhom paramters)
+#             NOTE:                         multiple lines separated by tabs!
+#                               threshold-> THRESHOLD (i.e. which threshold was used)
+#                               header   -> HEADER
+#                               compnd   -> COMPND    
+#                               source   -> SOURCE
+#                               len1     -> SEQLENGTH (i.e. length of guide seq)
+#                               nchain   -> NCHAIN    (number of chains in protein)
+#                               kchain   -> KCHAIN    (number of chains in file)
+#                               nali     -> NALIGN    (number of proteins aligned in file)
+#         HsspPair:             pos      -> NR        (number of pair)
+#                               id2      -> ID        (id of aligned seq, 1pdb_C -> 1pdbC)
+#                               pdbid2   -> STRID     (PDBid of aligned seq, 1pdb_C -> 1pdbC)
+#                               pide     -> IDEN      (seq identity, returned as int Perce!!)
+#                               wsim     -> WSIM      (weighted simil., ret as int Percentage)
+#                               ifir     -> IFIR      (first residue of guide seq in ali)
+#                               ilas     -> ILAS      (last residue of guide seq in ali)
+#                               jfir     -> JFIR      (first residue of aligned seq in ali)
+#                               jlas     -> JLAS      (last residue of aligned seq in ali)
+#                               lali     -> LALI      (number of residues aligned)
+#                               ngap     -> NGAP      (number of gaps)
+#                               lgap     -> LGAP      (length of all gaps, number of residues)
+#                               len2     -> LSEQ2     (length of aligned sequence)
+#                               swissAcc -> ACCNUM    (SWISS-PROT accession number)
+#         StripTop:             nali     -> alignments (number of alis)
+#                               listName -> list name (alignment list)
+#                               lastName -> last name was (last aligned id)
+#                               sortMode -> sort-mode (ZSCORE/asf.)
+#                               weight1  -> weights 1 (sequence weights for guide: (YES|NO))
+#                               weight2  -> weights 2 (sequence weights for aligned: (YES|NO))
+#                               smin     -> smin      (minimal value of scoring metric)
+#                               smax     -> smax      (maximal value of scoring metric)
+#                               gapOpen  -> gap_open  (gap open penalty)
+#                               gapElon  -> gap_elongation  (gap elongation/extension penalty)
+#                               indel1   -> INDEL in sec-struc of SEQ1 (YES|NO)
+#                               indel2   -> INDEL in sec-struc of SEQ2 (YES|NO)
+#         StripPair:            energy   -> VAL       (Smith-Waterman score)
+#                               idel     -> 
+#                               ndel     -> 
+#                               zscore   -> ZSCORE
+#                               strh     -> STRHOM    (secStr ide Q3, , ret as int Percentage)
+#                               rmsd     -> RMS
+#                               name     -> NAME      (name of protein)
+#       out:                    %rdHdr{""}
+#                               $rdHdr{"NROWS"}       (number of pairs read)
+#                               $rdHdr{"$kwd"}        kwds, only for guide sequenc
+#                               $rdHdr{"$kwd","$ct"}  all values for each pair ct
+#       err:                    ok=(1,'ok',$rd_hssp{}), err=(0,'msg',"error")
+#       in:                     $fileHssp,$fileStrip,$fhErrSbr,@keywords
+#         $fhErrSbr             FILE-HANDLE to report errors
+#         @keywords             "hsspTop",  @kwdHsspTop,
+#                               "hsspPair", @kwdHsspPairs,
+#                               "stripTop", @kwdStripTop,
+#                               "stripPair",@KwdStripPair,
+#                               i.e. the key words of the variables to read
+#                               following translation:
+#         HsspTop:              pdbid1   -> PDBID     (of fileHssp, 1pdb_C -> 1pdbC)
+#                               date     -> DATE      (of file)
+#                               db       -> SEQBASE   (database used for ali)
+#                               parameter-> PARAMETER (lines giving the maxhom paramters)
+#             NOTE:                         multiple lines separated by tabs!
+#                               threshold-> THRESHOLD (i.e. which threshold was used)
+#                               header   -> HEADER
+#                               compnd   -> COMPND    
+#                               source   -> SOURCE
+#                               len1     -> SEQLENGTH (i.e. length of guide seq)
+#                               nchain   -> NCHAIN    (number of chains in protein)
+#                               kchain   -> KCHAIN    (number of chains in file)
+#                               nali     -> NALIGN    (number of proteins aligned in file)
+#         HsspPair:             pos      -> NR        (number of pair)
+#                               id2      -> ID        (id of aligned seq, 1pdb_C -> 1pdbC)
+#                               pdbid2   -> STRID     (PDBid of aligned seq, 1pdb_C -> 1pdbC)
+#                               pide     -> IDEN      (seq identity, returned as int Perce!!)
+#                               wsim     -> WSIM      (weighted simil., ret as int Percentage)
+#                               ifir     -> IFIR      (first residue of guide seq in ali)
+#                               ilas     -> ILAS      (last residue of guide seq in ali)
+#                               jfir     -> JFIR      (first residue of aligned seq in ali)
+#                               jlas     -> JLAS      (last residue of aligned seq in ali)
+#                               lali     -> LALI      (number of residues aligned)
+#                               ngap     -> NGAP      (number of gaps)
+#                               lgap     -> LGAP      (length of all gaps, number of residues)
+#                               len2     -> LSEQ2     (length of aligned sequence)
+#                               swissAcc -> ACCNUM    (SWISS-PROT accession number)
+#         StripTop:             nali     -> alignments (number of alis)
+#                               listName -> list name (alignment list)
+#                               lastName -> last name was (last aligned id)
+#                               sortMode -> sort-mode (ZSCORE/asf.)
+#                               weight1  -> weights 1 (sequence weights for guide: (YES|NO))
+#                               weight2  -> weights 2 (sequence weights for aligned: (YES|NO))
+#                               smin     -> smin      (minimal value of scoring metric)
+#                               smax     -> smax      (maximal value of scoring metric)
+#                               gapOpen  -> gap_open  (gap open penalty)
+#                               gapElon  -> gap_elongation  (gap elongation/extension penalty)
+#                               indel1   -> INDEL in sec-struc of SEQ1 (YES|NO)
+#                               indel2   -> INDEL in sec-struc of SEQ2 (YES|NO)
+#         StripPair:            energy   -> VAL       (Smith-Waterman score)
+#                               idel     -> 
+#                               ndel     -> 
+#                               zscore   -> ZSCORE
+#                               strh     -> STRHOM    (secStr ide Q3, , ret as int Percentage)
+#                               rmsd     -> RMS
+#                               name     -> NAME      (name of protein)
+#       out:                    %rdHdr{""}
+#                               $rdHdr{"NROWS"}       (number of pairs read)
+#                               $rdHdr{"$kwd"}        kwds, only for guide sequenc
+#                               $rdHdr{"$kwd","$ct"}  all values for each pair ct
+#       err:                    ok=(1,'ok',$rd_hssp{}), err=(0,'msg',"error")
+#   --------------------------   
+#   hsspRdStripHeader           reads the header of a HSSP.strip file
+#       in:                     fileStrip
+#                               exclTxt="n1-n2", or "*-n2", or "n1,n3,...", or 'none|all'
+#                               inclTxt="n1-n2", or "*-n2", or "n1,n3,...", or 'none|all'
+#                               minimal Z-score; minimal and maximal seq ide
+#         neutral:  'unk'       for all non-applicable variables!
+#         @kwdInLoc             = one of the default keywords 
+#                               (@kwdLocHsspTop,@kwdLocHsspHeader)
+#       out:                    for top  (e.g. NALIGN): $rd{"kwd"}
+#                               for prot (e.g. LALI):   $rd{"kwd","$it"}
+#                               note: for the later number of elements (it) in
+#                                     $rd{"NROWS"}
+#                               $rd{"$des","$ct"} = column $des for pair no $ct
+#                               $des=
+#                                   IAL,VAL,LEN1,IDEL,NDEL,ZSCORE,IDE,STRHOM,LEN2,RMS,NAME
+#                               -------------------------------
+#                               ALTERNATIVE keywords for HEADER
+#                               -------------------------------
+#                               nali     -> alignments (number of alis)
+#                               listName -> list name (alignment list)
+#                               lastName -> last name was (last aligned id)
+#                               sortMode -> sort-mode (ZSCORE/asf.)
+#                               weight1  -> weights 1 (sequence weights for guide: (YES|NO))
+#                               weight2  -> weights 2 (sequence weights for aligned: (YES|NO))
+#                               smin     -> smin      (minimal value of scoring metric)
+#                               smax     -> smax      (maximal value of scoring metric)
+#                               gapOpen  -> gap_open  (gap open penalty)
+#                               gapElon  -> gap_elongation  (gap elongation/extension penalty)
+#                               indel1   -> INDEL in sec-struc of SEQ1 (YES|NO)
+#                               indel2   -> INDEL in sec-struc of SEQ2 (YES|NO)
+#       in:                     fileStrip
+#                               exclTxt="n1-n2", or "*-n2", or "n1,n3,...", or 'none|all'
+#                               inclTxt="n1-n2", or "*-n2", or "n1,n3,...", or 'none|all'
+#                               minimal Z-score; minimal and maximal seq ide
+#         neutral:  'unk'       for all non-applicable variables!
+#         @kwdInLoc             = one of the default keywords 
+#                               (@kwdLocHsspTop,@kwdLocHsspHeader)
+#       out:                    for top  (e.g. NALIGN): $rd{"kwd"}
+#                               for prot (e.g. LALI):   $rd{"kwd","$it"}
+#                               note: for the later number of elements (it) in
+#                                     $rd{"NROWS"}
+#                               $rd{"$des","$ct"} = column $des for pair no $ct
+#                               $des=
+#                                   IAL,VAL,LEN1,IDEL,NDEL,ZSCORE,IDE,STRHOM,LEN2,RMS,NAME
+#                               -------------------------------
+#                               ALTERNATIVE keywords for HEADER
+#                               -------------------------------
+#                               nali     -> alignments (number of alis)
+#                               listName -> list name (alignment list)
+#                               lastName -> last name was (last aligned id)
+#                               sortMode -> sort-mode (ZSCORE/asf.)
+#                               weight1  -> weights 1 (sequence weights for guide: (YES|NO))
+#                               weight2  -> weights 2 (sequence weights for aligned: (YES|NO))
+#                               smin     -> smin      (minimal value of scoring metric)
+#                               smax     -> smax      (maximal value of scoring metric)
+#                               gapOpen  -> gap_open  (gap open penalty)
+#                               gapElon  -> gap_elongation  (gap elongation/extension penalty)
+#                               indel1   -> INDEL in sec-struc of SEQ1 (YES|NO)
+#                               indel2   -> INDEL in sec-struc of SEQ2 (YES|NO)
+#   --------------------------   
+#   hsspSkewProf                changes the HSSP profile for too few alignments
+#       in:                     $fileInLoc    : HSSP file (chain ignored!)
+#       in:                     $chainInLoc   : chain to read
+#                                   '*' for omitting the test
+#       in:                     $fileOutLoc   : HSSP file with skewed profiles to write
+#       in:                     $fileMatdbLoc : RDB file with substitution matrix to skew
+#       in:                     $naliSatLoc   : number of alignments when no db taken
+#       in:                     $distLoc      : limiting distance from HSSP (new Ide)
+#                                   '0' in NEXT variable for omitting the test
+#       in:                     $distModeLoc  : mode of limit ('gt|ge|lt|le')
+#                                              -> if mode=gt, all with dist>distLoc
+#                                                 will be counted
+#                                   '0' for omitting the test
+#       out:                    1|0,msg,  implicit: file
+#       err:                    (1,'ok'), (0,'message')
+#       in:                     $fileInLoc    : HSSP file (chain ignored!)
+#       in:                     $chainInLoc   : chain to read
+#                                   '*' for omitting the test
+#       in:                     $fileOutLoc   : HSSP file with skewed profiles to write
+#       in:                     $fileMatdbLoc : RDB file with substitution matrix to skew
+#       in:                     $naliSatLoc   : number of alignments when no db taken
+#       in:                     $distLoc      : limiting distance from HSSP (new Ide)
+#                                   '0' in NEXT variable for omitting the test
+#       in:                     $distModeLoc  : mode of limit ('gt|ge|lt|le')
+#                                              -> if mode=gt, all with dist>distLoc
+#                                                 will be counted
+#                                   '0' for omitting the test
+#       out:                    1|0,msg,  implicit: file
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   extract_pdbid_from_hssp     extracts all PDB ids found in the HSSP 0 header
+#                               note: existence of HSSP file assumed
+#   GLOBAL
+#   -  $PDBIDS_IN_HSSP "1acx,2bdy,3cez,"...
+#                               note: existence of HSSP file assumed
+#   GLOBAL
+#   -  $PDBIDS_IN_HSSP "1acx,2bdy,3cez,"...
+#   --------------------------   
+#   get_hssp_file               searches all directories for existing HSSP file
+#       in:                     $fileInLoc,$Lscreen,@dir
+#       out:                    $file,$chain (sometimes)
+#       in:                     $fileInLoc,$Lscreen,@dir
+#       out:                    $file,$chain (sometimes)
+#   --------------------------   
+#   pdbid_to_hsspfile           finds HSSP file for given id (old)
+#   --------------------------   
+#   read_hssp_seqsecacc         reads sequence, secondary str and acc from HSSP file
+#                               (file expected to be open handle = $fh_in).  
+#                               The reading is restricted by:
+#                                  chain_in, beg_in, end_in, 
+#                               which are passed in the following manner:
+#                               (say chain = A, begin = 2 (PDB pos), end = 10 (PDB pos):
+#                                  "A 2 10"
+#                               Wild cards allowed for any of the three.
+#       in:                     file_handle, chain, begin, end
+#       out:                    SEQHSSP, SECHSSP, ACCHSSP, PDBPOS
+#       out GLOBAL:             all output stuff is assumed to be global
+#   setting to zero
+#   extract input
+#   read in file
+#                               (file expected to be open handle = $fh_in).  
+#                               The reading is restricted by:
+#                                  chain_in, beg_in, end_in, 
+#                               which are passed in the following manner:
+#                               (say chain = A, begin = 2 (PDB pos), end = 10 (PDB pos):
+#                                  "A 2 10"
+#                               Wild cards allowed for any of the three.
+#       in:                     file_handle, chain, begin, end
+#       out:                    SEQHSSP, SECHSSP, ACCHSSP, PDBPOS
+#       out GLOBAL:             all output stuff is assumed to be global
+#   setting to zero
+#   extract input
+#   read in file

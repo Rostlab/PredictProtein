@@ -1,0 +1,39 @@
+
+----------------------------------------------------------------------
+COMMENTS AND SUGGESTIONS:
+
+Direct questions and suggestions to:
+
+hnielsen@cbs.dtu.dk  (Henrik Nielsen), or
+brunak@cbs.dtu.dk    (Soren Brunak), or
+gunnar@biokemi.su.se (Gunnar von Heijne) (*).
+
+    Center for Biological Sequence Analysis
+    The Technical University of Denmark
+    Building 206
+    DK-2800 Lyngby
+    Denmark
+
+    (*) Department of Biochemistry
+    Arrhenius Laboratory
+    Stockholm University
+    S-106 91 Stockholm, Sweden
+
+
+PROBLEMS:
+
+Should be addressed to:
+
+    rapacki@cbs.dtu.dk   (Kristoffer Rapacki), or
+    hnielsen@cbs.dtu.dk  (Henrik Nielsen)
+
+    Center for Biological Sequence Analysis
+    The Technical University of Denmark
+    Building 206
+    DK-2800 Lyngby
+    Denmark
+
+    Tel: +45 45252477
+    Fax: +45 45934808
+
+

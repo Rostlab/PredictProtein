@@ -1,0 +1,72 @@
+-----------------------------------------------------------------------------
+---   PredictProtein: NEWS from January, 1997				  ---
+---   									  ---
+---   Dear user,                                                     	  ---
+---   									  ---
+---      as of  January 1, 1997,  EMBL has effectively decided to not	  ---
+---   support the PredictProtein service by personal resources.  I do	  ---
+---   maintain the program, so to speak, in my private time. However,	  ---
+---   my contract obliges me to do science, instead.   Unfortunately,	  ---
+---   the computer environment at  EMBL  is at the same time starting	  ---
+---   to become increasingly unstable.   Consequence of these two re-	  ---
+---   cent developments is that the  PredictProtein service is not as	  ---
+---   stable as it was.						 	  ---
+---   									  ---
+---      I apologise for the problems this may cause.  In particular,	  ---
+---   I apologise for my inability to reply to the 20-30 daily,  per-	  ---
+---   sonal mails, and suggest to  re-submit requests after 24 hours!	  ---
+---   									  ---
+---   Hoping  that I shall  find  a more convenient  solution for the	  ---
+---   future of the PredictProtein I remain with my best regards,	  ---
+---   									  ---
+---   Burkhard Rost							  ---
+-----------------------------------------------------------------------------
+---   PredictProtein: NEWS from April, 1998				  ---
+---   									  ---
+--------------------------------					  ---
+---   MOVING PredictProtein						  ---
+---   There appears to be light on the horizon! PP will may be having     ---
+---   many hickups over the next months (as I shall leave EMBL). How-     ---
+---   ever, the server seems to have a fair chance of survival thanks     ---
+---   to a major support that is being raised by Columbia University,     ---
+---   New York, U.S.A.).   I hope that this will settle the issue for     ---
+---   the years to come ...						  ---
+--------------------------------					  ---
+---   WARNING								  ---
+---   After a  major  rewriting of most of the PP code over the last,     ---
+---   I am afraid  that  not all errors have been traced by me,  yet.     ---
+---   Thus, please have mercy and report any bug you'll encounter!	  ---
+---                                             THANKS, Burkhard Rost	  ---
+--------------------------------					  ---
+---   NEW PREDICTION DEFAULTS						  ---
+---   * Coiled-coil regions: now by default the program COILS written     ---
+---     by Andrei Lupas is run on your sequence. An output is return-     ---
+---     ed if a coiled-coil region has been detected.			  ---
+---   * Functional sequence motifs: now by default the  PROSITE data-     ---
+---     base written by  Amos Bairoch, Philip Bucher, and Kay Hofmann     ---
+---     is scanned for sequence motifs.  An output is returned if any     ---
+---     motif has been detected.					  ---
+--------------------------------					  ---
+---   see http://www.embl-heidelberg.de/predictprotein/ppNews.html	  ---
+---     for a description of the following new options.			  ---
+---   NEW INPUT OPTION							  ---
+---   * Your input sequence(s) in FASTA-list format ("# FASTA list ")	  ---
+---   NEW OUTPUT OPTIONS						  ---
+---   * Return also BLASTP output ("return blast")			  ---
+---   * Return prediction additionally in RDB format ("return phd rdb")   ---
+---   * Return topits hssp  ("return topits hssp")			  ---
+---   * Return topits strip ("return topits strip")			  ---
+---   * Return topits own   ("return topits own")			  ---
+---   * Return no coils     ("return no coils")				  ---
+---   * Return no prosite   ("return no prosite")			  ---
+-----------------------------------------------------------------------------
+---   PredictProtein: NEWS from May, 1998				  ---
+--------------------------------					  ---
+---   NEW PREDICTION DEFAULTS						  ---
+---   * Domain assignment: now by default your sequences is run also      ---
+---     against the domain data-base ProDom generated and maintained      ---
+---     by Daniel Kahn, Jerome Gouzy, and F Corpet. An output is re-      ---
+---     if domains have been found to clearly match in your protein.      ---
+---   NEW OUTPUT OPTIONS						  ---
+---   * Return no prodom    ("return no prodom")			  ---
+-----------------------------------------------------------------------------

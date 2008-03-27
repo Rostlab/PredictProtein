@@ -1,0 +1,571 @@
+<HTML>
+<HEAD>
+
+<TITLE>Explanations for terms (META PredictProtein)</TITLE>
+</HEAD>
+
+<BODY bgcolor=#FFFFFF>
+<H1>Brief explanation of META PredictProtein</H1>
+
+<!-- -------------------------------------------------------------------------------- -->
+<!-- beg toc  -->
+<H3>Table of Contents</H3>
+<UL>
+<LI><A HREF="#user">User information</A>
+<LI><A HREF="#list">List of all available services</A>
+<LI><A HREF="#services">Services available</A>
+	<OL>
+	<LI><A HREF="#services_var">      Various analyses</A>
+	<LI><A HREF="#services_sec">      Secondary structure prediction</A>
+	<LI><A HREF="#services_htm">      Membrane regions</A>
+	<LI><A HREF="#services_threading">Threading (detecting remote homologues in PDB)</A>
+	<LI><A HREF="#services_homo">     Homology modelling</A>
+	</OL>
+<LI><A HREF="#formats">Formats for submitting sequence or alignment</A>
+</UL>
+<!-- end toc  -->
+<!-- -------------------------------------------------------------------------------- -->
+
+<P><BR><HR><BR><P>
+
+
+<!-- -------------------------------------------------------------------------------- -->
+<!-- beg user  -->
+
+<H2><A NAME="user">User information</A></H2>
+<OL>
+<LI><A NAME="PX_usr_email">Your email</A>
+		<I>Example: rost@embl-heidelberg.de</I>
+	<BR>Your entire (and entirely correct) email address (e.g. rost@embl-heidelberg.de).
+	<BR>Note: typos will result in that we shall not be ablet to return the results.
+
+<!-- 
+<LI><A NAME="PX_usr_password">Password</A>
+		<I>Example: </I> (i.e. leave field empty!)
+	<BR>Using PredictProtein is free for academical users.  Only companies have to fill in their password, here!
+ -->
+
+<LI><A NAME="PX_prot_name">One-line name of protein</A>
+		<I>Example: Cytochrome C oxidase</I>
+
+<LI><A NAME="PX_prot_seq">Paste, or type your sequence </A>
+	<BR>Example:
+        <PRE><I>	MSAQISDSIEEKRGFFTRWFMSTNHKDIGVLYLFTAGLAGLISVTLTVYMRMELQHPGVQ
+	YMCLEGMRLVADAAAECTPNAHL</I></PRE>
+	Please use only one-letter code amino acids. In particular, avoid numbers or '*', or '.'.
+	<BR>
+	For other possible input formats <A HREF="#PX_formats">click here</A>!
+
+<LI><A NAME="PX_submit">SUBMIT or CLEAR</A>
+	<BR>Click on the button <STRONG>SUBMIT</STRONG> to request a prediction
+	<BR>Click on the button <STRONG>CLEAR </STRONG> to clear all data you filled in (e.g. to restart, or to send a new request).
+
+</OL>
+<!-- end user  -->
+<!-- -------------------------------------------------------------------------------- -->
+
+<P><BR><HR><BR><P>
+
+<!-- -------------------------------------------------------------------------------- -->
+<!-- beg list  -->
+<H2><A NAME="list">List of services available</A></H2>
+
+<TABLE>
+LIST_OF_SERVICES
+</TABLE>
+
+<!-- end list  -->
+<!-- -------------------------------------------------------------------------------- -->
+
+<P><BR><HR><BR><P
+
+<!-- -------------------------------------------------------------------------------- -->
+<!-- beg services  -->
+<H2><A NAME="services">Services available</A></H2>
+
+<!-- various			-------------------------------------------------- -->
+<H3><A NAME="services_var">Various analyses</A></H3>
+Various services for sequence analysis.  
+
+<OL>
+<!-- signalp		.............................. -->
+<LI>	<A NAME="PX_about_signalp">
+	<STRONG>Server: signalp</STRONG>
+	</A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_signalp">URL_4_signalp</A>
+	<LI>About: 
+		The SignalP World Wide Web server predicts the presence and location of signal peptide cleavage sites in amino acid sequences from different organisms: Gram-positive prokaryotes, Gram-negative prokaryotes, and eukaryotes. The method incorporates a prediction of cleavage sites and a signal peptide/non-signal peptide prediction based on a combination of several artificial neural networks. 
+	<LI>Options:<BR>
+		<UL>
+		<LI>If you do not check the organism (gram-positive, gram-negative prokaryotes, or eukaryotes), predictions for all three will be returned.
+		</UL>
+	
+	<LI>Please quote when using output from signalp: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_signalp
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_signalp
+	<LI>Done by: DONEBY_4_signalp
+	<LI>Email address: <A HREF="mailto:EMAIL_4_signalp">EMAIL_4_signalp</A>
+	</UL>
+<!-- netoglyc		.............................. -->
+<LI>	<A NAME="PX_about_netoglyc">
+	<STRONG>Server: netoglyc</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_netoglyc">URL_4_netoglyc</A>
+	<LI>About: 
+		The NetOglyc WWW server produces neural network predictions of mucin type GalNAc O-glycosylation sites in mammalian proteins. 
+	<LI>Please quote when using output from netoglyc: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_netoglyc
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_netoglyc
+	<LI>Done by: DONEBY_4_netoglyc
+	<LI>Email address: <A HREF="mailto:EMAIL_4_netoglyc">EMAIL_4_netoglyc</A>
+	</UL>
+<!-- netpico		.............................. -->
+<LI>	<A NAME="PX_about_netpico">
+	<STRONG>Server: netpico</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_netpico">URL_4_netpico</A>
+	<LI>About: 
+		The NetPicoRNA World Wide Web server produces neural network predictions of cleavage sites of picornaviral proteases.
+	<LI>Please quote when using output from netpico: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_netpico
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_netpico
+	<LI>Done by: DONEBY_4_netpico
+	<LI>Email address: <A HREF="mailto:EMAIL_4_netpico">EMAIL_4_netpico</A>
+	</UL>
+<!-- chlorop		.............................. -->
+<LI>	<A NAME="PX_about_chlorop">
+	<STRONG>Server: chlorop</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_chlorop">URL_4_chlorop</A>
+	<LI>About: 
+		The ChloroP www-server is able to predict two things: 
+		<UL>
+		<LI>1. cTP or no cTP<BR>
+			Whether or not an amino acid sequence contains an N-terminal chloroplast transit peptide, cTP.
+		<LI>2. Cleavage site<BR>
+			 The probable site for cleavage of the transit peptide (if it was predicted to exist in the first step). 
+		</UL>
+		<I>Short instructions for use</I>
+		<UL>
+		<LI> Include the N-terminus<BR>
+		It is strongly recommended to include the N-terminus of the submitted sequence. The further from the  N-terminal residue the submitted sequence starts, the more difficult and unreliable will the prediction be. 
+		<LI> Submit preferably 100-150 residues<BR>
+		Submit if possible at least 100 and no more than 150 N-terminal residues. The lower boundary is due to the fact  that the "cTP"/"no cTP" predictor was trained with input sequences of length 100 residues. However, shorter sequences may also be satisfactory predicted (it is more important that the N-terminal part is intact). The  cleavage site prediction is in itself not influenced by sequence length, but restricting the submitted length to approximately 150 residues prevents the prediction of too long cTP's. 
+		</UL>
+	<LI>Please quote when using output from chlorop: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_chlorop
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_chlorop
+	<LI>Done by: DONEBY_4_chlorop
+	<LI>Email address: <A HREF="mailto:EMAIL_4_chlorop">EMAIL_4_chlorop</A>
+	</UL>
+<!-- 
+<LI>	<A NAME="PX_about_generic">
+	<STRONG>Server: generic</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_generic">URL_4_generic</A>
+	<LI>About: 
+		
+	<LI>Please quote when using output from generic: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_generic
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_generic
+	<LI>Done by: DONEBY_4_generic
+	<LI>Email address: <A HREF="mailto:EMAIL_4_generic">EMAIL_4_generic</A>
+	</UL>
+ -->
+
+</OL>
+
+<!-- secondary str		-------------------------------------------------- -->
+<H3><A NAME="services_sec">Secondary structure prediction</A></H3>
+Servers returning predictions of secondary structure based on single sequences, or sequence alignments.
+
+<OL>
+<!-- jpred		.............................. -->
+<LI>	<A NAME="PX_about_jpred">
+	<STRONG>Server: jpred</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_jpred">URL_4_jpred</A>
+	<LI>About: 
+		A consensus method for protein secondary structure prediction.
+	<LI>Please quote when using output from jpred: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_jpred
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_jpred
+	<LI>Done by: DONEBY_4_jpred
+	<LI>Email address: <A HREF="mailto:EMAIL_4_jpred">EMAIL_4_jpred</A>
+	</UL>
+<!-- psipred		.............................. -->
+<LI>	<A NAME="PX_about_psipred">
+	<STRONG>Server: psipred</STRONG></A>
+	<UL type="disk">
+	<LI><STRONG>Not available, since under construction</STRONG>
+	<LI>Site (URL): <A HREF="URL_4_psipred">URL_4_psipred</A>
+	<LI>About: 
+		
+	<LI>Please quote when using output from psipred: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_psipred
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_psipred
+	<LI>Done by: DONEBY_4_psipred
+	<LI>Email address: <A HREF="mailto:EMAIL_4_psipred">EMAIL_4_psipred</A>
+	</UL>
+<!-- generic		.............................. -->
+<!-- 
+<LI>	<A NAME="PX_about_generic">
+	<STRONG>Server: generic</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_generic">URL_4_generic</A>
+	<LI>About: 
+		
+	<LI>Please quote when using output from generic: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_generic
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_generic
+	<LI>Done by: DONEBY_4_generic
+	<LI>Email address: <A HREF="mailto:EMAIL_4_generic">EMAIL_4_generic</A>
+	</UL>
+ -->
+
+</OL>
+
+<!-- membrane			-------------------------------------------------- -->
+<H3><A NAME="services_htm">Membrane regions</A></H3>
+Servers predicting the location (and orientation) of membrane regions in your protein. 
+<BR>Note: all listed at the moment are restricted to a prediction of membrane helices.  
+
+<OL>
+<!-- tmhmm		.............................. -->
+<LI>	<A NAME="PX_about_tmhmm">
+	<STRONG>Server: tmhmm</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_tmhmm">URL_4_tmhmm</A>
+	<LI>About: 
+		Hidden Markov Model predicting the location of transmembrane helices and their topology.  (Remark Burkhard Rost: find it to be the most original method for this purpose!)
+	<LI>Please quote when using output from tmhmm: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_tmhmm
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_tmhmm
+	<LI>Done by: DONEBY_4_tmhmm
+	<LI>Email address: <A HREF="mailto:EMAIL_4_tmhmm">EMAIL_4_tmhmm</A>
+	</UL>
+<!-- toppred		.............................. -->
+<LI>	<A NAME="PX_about_toppred">
+	<STRONG>Server: toppred</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_toppred">URL_4_toppred</A>
+	<LI>About: 
+		Prediction of location and orientation of transmembrane helices through an advanced use of hydrophobicity patterns, and by applying the 'positive-inside' rule.
+	<LI>Please quote when using output from toppred: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_toppred
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_toppred
+	<LI>Done by: DONEBY_4_toppred
+	<LI>Email address: <A HREF="mailto:EMAIL_4_toppred">EMAIL_4_toppred</A>
+	</UL>
+<!-- das		.............................. -->
+<LI>	<A NAME="PX_about_das">
+	<STRONG>Server: das</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_das">URL_4_das</A>
+	<LI>About: 
+		Prediction of location of transmembrane helices through an advanced use of hydrophobicity patterns.
+	<LI>Please quote when using output from das: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_das
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_das
+	<LI>Done by: DONEBY_4_das
+	<LI>Email address: <A HREF="mailto:EMAIL_4_das">EMAIL_4_das</A>
+	</UL>
+<!-- memsat		.............................. -->
+<LI>	<A NAME="PX_about_memsat">
+	<STRONG>Server: memsat</STRONG></A>
+	<UL type="disk">
+	<LI><STRONG>Not available, since under construction</STRONG>
+	<LI>Site (URL): <A HREF="URL_4_memsat">URL_4_memsat</A>
+	<LI>About: 
+		
+	<LI>Please quote when using output from memsat: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_memsat
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_memsat
+	<LI>Done by: DONEBY_4_memsat
+	<LI>Email address: <A HREF="mailto:EMAIL_4_memsat">EMAIL_4_memsat</A>
+	</UL>
+</OL>
+
+<!-- threading			-------------------------------------------------- -->
+<H3><A NAME="services_threading">Threading (detecting remote homologues in PDB)</A></H3>
+Threading servers search through databases of proteins of known structures (subsets of PDB), and detect similiarities between proteins which are too weak to be inferred from simple sequence alignment techniques.  (The 'trick' that allows to intrude below the twilight zone of 'simple' similarity detection is using the information contained in the known structures of the proteins compared to your sequence.)
+<BR>Note: detection of remote homologues is more of an art than of a solved problem.  Most of the results returned are supposedly wrong!  Thus, you have to gather independent evidence to be able to believe in a particular result.
+
+<OL>
+<!-- frsvr		.............................. -->
+<LI>	<A NAME="PX_about_frsvr">
+	<STRONG>Server: frsvr</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_frsvr">URL_4_frsvr</A>
+	<LI>About: 
+		Prediction-based threading, also incorporating purely sequence-based database searches.  
+	<LI>Options:<BR>
+		<UL>
+		<LI>Include H3P2: requests to include the results of the H3P2 prediction. 
+		<LI>Include PROFILESEARCH: requests to include the results of the PROFILESEARCH program (Smith-Waterman using a profile of the multiple alignment). 
+		</UL>
+	<LI>Please quote when using output from frsvr: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_frsvr
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_frsvr
+	<LI>Done by: DONEBY_4_frsvr
+	<LI>Email address: <A HREF="mailto:EMAIL_4_frsvr">EMAIL_4_frsvr</A>
+	</UL>
+<!-- genethreader		.............................. -->
+<!-- 
+<LI>	<A NAME="PX_about_genethreader">
+	<STRONG>Server: genethreader</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_genethreader">URL_4_genethreader</A>
+	<LI>About: 
+		
+	<LI>Please quote when using output from genethreader: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_genethreader
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_genethreader
+	<LI>Done by: DONEBY_4_genethreader
+	<LI>Email address: <A HREF="mailto:EMAIL_4_genethreader">EMAIL_4_genethreader</A>
+	</UL>
+ -->
+
+<!-- pssm		.............................. -->
+<!-- 
+<LI>	<A NAME="PX_about_pssm">
+	<STRONG>Server: pssm</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_pssm">URL_4_pssm</A>
+	<LI>About: 
+		
+	<LI>Please quote when using output from pssm: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_pssm
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_pssm
+	<LI>Done by: DONEBY_4_pssm
+	<LI>Email address: <A HREF="mailto:EMAIL_4_pssm">EMAIL_4_pssm</A>
+	</UL>
+ -->
+<!-- basic		.............................. -->
+<!-- commented out
+<LI>	<A NAME="PX_about_basic">
+	<STRONG>Server: basic</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_basic">URL_4_basic</A>
+	<LI>About: 
+		
+	<LI>Please quote when using output from basic: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_basic
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_basic
+	<LI>Done by: DONEBY_4_basic
+	<LI>Email address: <A HREF="mailto:EMAIL_4_basic">EMAIL_4_basic</A>
+	</UL>
+ -->
+
+<!-- samt98		.............................. -->
+<LI>	<A NAME="PX_about_samt98">
+	<STRONG>Server: samt98</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_samt98">URL_4_samt98</A>
+	<LI>About: 
+		A new hidden Markov model method (SAM-T98) for finding remote homologs of protein sequences is described and evaluated. The method begins with a single target sequence and iteratively builds a hidden Markov model (HMM) from the sequence and homologs found using the HMM for database search. SAM-T98 is also used to construct model libraries automatically from sequences in structural databases. 
+	<LI>Please quote when using output from samt98: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_samt98
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_samt98
+	<LI>Done by: DONEBY_4_samt98
+	<LI>Email address: <A HREF="mailto:EMAIL_4_samt98">EMAIL_4_samt98</A>
+	</UL>
+<!-- generic		.............................. -->
+<!-- 
+<LI>	<A NAME="PX_about_generic">
+	<STRONG>Server: generic</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_generic">URL_4_generic</A>
+	<LI>About: 
+		
+	<LI>Please quote when using output from generic: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_generic
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_generic
+	<LI>Done by: DONEBY_4_generic
+	<LI>Email address: <A HREF="mailto:EMAIL_4_generic">EMAIL_4_generic</A>
+	</UL>
+ -->
+</OL>
+
+<!-- homology model		-------------------------------------------------- -->
+<H3><A NAME="services_homo">Homology modelling</A></H3>
+Homology modelling predicts the three-dimensional structure for your sequence based on the similarity of that sequence to a protein of experimentally determined structure. Since the assumption of the method is that the backbone of your protein and the similar one of known structure (referred to as 'the template') are identical, the sequence similarity between the two has to be significant!  <BR>
+Note: if there is no similar structure in PDB, 3D structure can NOT (repeat NOT) be predicted by ANY method at this moment!
+<OL>
+<!-- swissmodel		.............................. -->
+<LI>	<A NAME="PX_about_swissmodel">
+	<STRONG>Server: swissmodel</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_swissmodel">URL_4_swissmodel</A>
+	<LI>About: 
+		SWISS-MODEL is an Automated Protein Modelling Server running at the GlaxoWellcome Experimental Research in Geneva, Switzerland (<A HREF="http://www.expasy.ch/swissmod/SWISS-MODEL.html">click here</A> for more details on how the method works).
+
+	<LI>Please quote when using output from SWISSMODEL: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_swissmodel
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_swissmodel
+	<LI>Done by: DONEBY_4_swissmodel
+	<LI>Email address: <A HREF="mailto:EMAIL_4_swissmodel">EMAIL_4_swissmodel</A>
+	</UL>
+<!-- cphmodels		.............................. -->
+<LI>	<A NAME="PX_about_cphmodels">
+	<STRONG>Server: cphmodels</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_cphmodels">URL_4_cphmodels</A>
+	<LI>About: CPHmodels is a collection of methods and databases developed to predict protein structures.  It currently consists of the following tools: Sowhat: A neural network based method to predict contacts between C-alpha atoms from the amino acid sequence. RedHom: A tool to find a subset with low sequence similarity in a database.  Databases: Subsets of the Brookhaven Protein Data Bank (PDB) database with low sequence similarity produced using the RedHom tool. 
+	<LI>Please quote when using output from cphmodels: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_cphmodels
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_cphmodels
+	<LI>Done by: DONEBY_4_cphmodels
+	<LI>Email address: <A HREF="mailto:EMAIL_4_cphmodels">EMAIL_4_cphmodels</A>
+	</UL>
+</OL>
+
+<!-- alignment			-------------------------------------------------- -->
+<!-- 
+<H3></H3>
+<FONT SIZE="-2">
+</FONT>
+<OL>
+<LI>	<A NAME="PX_about_generic">
+	<STRONG>Server: generic</STRONG></A>
+	<UL type="disk">
+	<LI>Site (URL): <A HREF="URL_4_generic">URL_4_generic</A>
+	<LI>About: 
+		
+	<LI>Please quote when using output from generic: 
+		<CITE>
+		<OL type="i">
+		<LI>QUOTE_4_generic
+		</OL>
+		</CITE>
+	<LI>Administrator: ADMIN_4_generic
+	<LI>Done by: DONEBY_4_generic
+	<LI>Email address: <A HREF="mailto:EMAIL_4_generic">EMAIL_4_generic</A>
+	</UL>
+
+
+</OL>
+ -->
+
+<!-- end services  -->
+<!-- -------------------------------------------------------------------------------- -->
+
+<P><BR><HR><BR><P>
+
+<!-- -------------------------------------------------------------------------------- -->
+<!-- beg formats  -->
+<A NAME="PX_formats">
+<H2><A NAME="formats">Formats for submitting sequence or alignment</A></H2>
+</A>
+The following formats are valid for submitting your sequence, or alignment.<BR>
+<B>Note: we recommend to use either of the formats in bold print! </B>
+<UL>
+<LI><B>simple sequence in one-letter amino acid code 
+	(<A HREF="../Dexa/format_simple.html">Example</A>)</B>
+<LI><B>sequence in FASTA format 
+	(<A HREF="../Dexa/format_fasta.html">Example</A>)</B>
+<LI>sequence in SWISS-PROT format 
+	(<A HREF="../Dexa/format_swiss.html">Example</A>)
+<LI>sequence in GCG format 
+	(<A HREF="../Dexa/format_gcg.html">Example</A>)
+<LI>sequence in PIR format 
+	(<A HREF="../Dexa/format_pir.html">Example</A>)
+<LI>sequence in DSSP format
+	(<A HREF="../Dexa/format_dssp.html">Example</A>)
+
+<LI><B>alignment in FASTA format 
+	(<A HREF="../Dexa/format_fastamul.html">Example</A>)</B>
+<LI><B>alignment in SAF format 
+	(<A HREF="../Dexa/format_saf.html">Example</A>)</B>
+<LI>alignment in MSF format 
+	(<A HREF="../Dexa/format_msf.html">Example</A>)
+<LI>alignment in HSSP format
+	(<A HREF="../Dexa/format_hssp.html">Example</A>)
+</UL>
+
+<!-- end formats  -->
+<!-- -------------------------------------------------------------------------------- -->
+
+</BODY>
+</HTML>

@@ -1,0 +1,10 @@
+-----------------------------------------------------------------------------
+---   PredictProtein: NEWS from February, 1999				  ---
+---   									  ---
+---   Dear user,                                                     	  ---
+---   ... finally PredictProtein started at Columbia Univ (New York)!	  ---
+---   The transition has caused friction.     Thus, if you experience	  ---
+---   unexperienced, or unexpected problems, please contact:		  ---
+---	rost@embl-heidelberg.de						  ---
+---                                                     Burkhard Rost	  ---
+-----------------------------------------------------------------------------

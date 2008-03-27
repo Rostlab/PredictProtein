@@ -1,0 +1,546 @@
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------
+#   molbio                      internal subroutines:
+#                               ---------------------
+# 
+#   blast3Formatdb              formats a db for BLAST (blast 3 = new PSI blast)
+#   blast3RunSimple             simply runs BLASTALL (blast3)
+#   blastGetSummary             BLAST out -> summary: IDE,LALI,LEN,PROB,DISTANCE-to-hssp-curve
+#   blastpExtrId                extracts only lines with particular id from BLAST
+#   blastpRdHdr                 reads header of BLASTP output file
+#   blastpRun                   runs BLASTP
+#   blastpRunSimple             simply runs BLASTP (blast2)
+#   blastpFormatdb              formats a db for BLASTP (blast 2)
+#   blastSetenv                 sets environment for BLASTP runs
+#   blastWrtSummary             writes summary for blast results (%ide,len,distance HSSP)
+#   coilsRd                     reads the column format of coils
+#   coilsRun                    runs the COILS program from Andrei Lupas
+#   fastaRun                    runs FASTA
+#   maxhomCheckHssp             checks: (1) any ali? (2) PDB?
+#   maxhomGetArg                gets the input arguments to run MAXHOM
+#   maxhomGetArgCheck           performs some basic file-existence-checks
+#   maxhomGetThresh             translates cut-off ide into text input for MAXHOM csh
+#   maxhomGetThresh4PP          translates cut-off ide into text input for MAXHOM csh
+#   maxhomMakeLocalDefault      build local maxhom default file, and set PATH!!
+#   maxhomRun                   runs Maxhom (looping for many trials + self)
+#   maxhomRunLoop               loops over a maxhom run (until paraTimeOutL = 3hrs)
+#   maxhomRunSelf               runs a MaxHom: search seq against itself
+#   prodomRun                   runs a BLASTP against the ProDom db
+#   prodomWrt                   write the PRODOM data + BLAST ali
+#   segInterpret                reads FASTA-formatted output from SEG, counts 'x'
+#   segRun                      runs the Wootton program SEG on one FASTA sequence
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------
+#   molbio                      external subroutines:
+#                               ---------------------
+# 
+#   call from comp:             get_max
+# 
+#   call from file:             isFasta,open_file,rdbGenWrtHdr
+# 
+#   call from formats:          convSeq2fasta
+# 
+#   call from molbio:           blastpExtrId,blastpRdHdr,blastpRun,maxhomCheckHssp
+#                               maxhomGetArg,maxhomGetArgCheck,maxhomGetThresh,maxhomRunLoop
+#                               maxhomRunSelf,prodomWrt
+# 
+#   call from prot:             getDistanceNewCurveIde
+# 
+#   call from scr:              errSbr,errSbrMsg,myprt_npoints
+# 
+#   call from sys:              fileCp,run_program,sysCpfile,sysRunProg
+# 
+#   call from system:            
+#                                call
+#                                call call
+#                               $cmd$cmd
+#                               \\rm MAX*$jobid\\rm MAX*$jobid
+#                               setenv BLASTDB $tmpsetenv BLASTDB $tmp
+# 
+#   call from missing:           
+#                               ctime
+#                               ctrlAlarm
+# 
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------------
+#   molbio                      description of subroutines:
+#                               ---------------------------
+#   --------------------------   
+#   blast3Formatdb              formats a db for BLAST (blast 3 = new PSI blast)
+#                               NOTE: automatically sets environment !!!
+#                                  syntax 'formatdb -t TITLE -i DIR/fasta-file -l logfile'
+#                                  note:  files will be created in DIR !
+#       in:                     $fileInLoc     : FASTAmul formatted db file
+#       in:                     $fileOutLoc    : BLASTP output                if = 0: onto screen
+#       in:                     $exeBlastLoc   : FORTRAN exe BLASTP           if = 0: default
+#       in:                     $fileOutScreen : screen dumpb of system call  if = 0: 0 -> STDOUT
+#       in:                     $fhSbrErr      : error file handle
+#       out:                    1|0,msg,$title : name of formatted db
+#       err:                    (1,'ok'), (0,'message')
+#                               NOTE: automatically sets environment !!!
+#                                  syntax 'formatdb -t TITLE -i DIR/fasta-file -l logfile'
+#                                  note:  files will be created in DIR !
+#       in:                     $fileInLoc     : FASTAmul formatted db file
+#       in:                     $fileOutLoc    : BLASTP output                if = 0: onto screen
+#       in:                     $exeBlastLoc   : FORTRAN exe BLASTP           if = 0: default
+#       in:                     $fileOutScreen : screen dumpb of system call  if = 0: 0 -> STDOUT
+#       in:                     $fhSbrErr      : error file handle
+#       out:                    1|0,msg,$title : name of formatted db
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   blast3RunSimple             simply runs BLASTALL (blast3)
+#                               NOTE: for security call &blastSetenv before running
+#       in:                     $fileInLoc     : FASTA formatted input file
+#       in:                     $fileOutLoc    : BLASTP output                if = 0: onto screen
+#       in:                     $exeBlastLoc   : FORTRAN exe BLASTP           if = 0: default
+#       in:                     $dbBlastLoc    : BLASTP db to run             if = 0: swiss
+#       in:                     $parELoc       : BLASTP para E                if = 0: default
+#       in:                     $parBLoc       : BLASTP para B                if = 0: default
+#       in:                     $fileOutScreen : screen dumpb of system call  if = 0: 0 -> STDOUT
+#       in:                     $fhSbrErr      : error file handle
+#       out:                    1|0,msg,  implicit: file
+#       err:                    (1,'ok'), (0,'message')
+#                               NOTE: for security call &blastSetenv before running
+#       in:                     $fileInLoc     : FASTA formatted input file
+#       in:                     $fileOutLoc    : BLASTP output                if = 0: onto screen
+#       in:                     $exeBlastLoc   : FORTRAN exe BLASTP           if = 0: default
+#       in:                     $dbBlastLoc    : BLASTP db to run             if = 0: swiss
+#       in:                     $parELoc       : BLASTP para E                if = 0: default
+#       in:                     $parBLoc       : BLASTP para B                if = 0: default
+#       in:                     $fileOutScreen : screen dumpb of system call  if = 0: 0 -> STDOUT
+#       in:                     $fhSbrErr      : error file handle
+#       out:                    1|0,msg,  implicit: file
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   blastGetSummary             BLAST out -> summary: IDE,LALI,LEN,PROB,DISTANCE-to-hssp-curve
+#       in:                     $fileInLoc    : file with BLAST output
+#       in:                     $minLaliLoc   : take those with LALI > x      (=0: all)
+#       in:                     $minDistLoc   : take those with $pide>HSSP+X  (=0: all)
+#       out:                    1|0,msg,$tmp{}, with
+#                               $tmp{"NROWS"}     : number of pairs
+#                               $tmp{"id",$it}    : name of protein it
+#                               $tmp{"len",$it}   : length of protein it
+#                               $tmp{"lali",$it}  : length of alignment for protein it
+#                               $tmp{"prob",$it}  : BLAST probability for it
+#                               $tmp{"score",$it} : BLAST score for it
+#                               $tmp{"pide",$it}  : pairwise percentage sequence identity
+#                               $tmp{"dist",$it}  : distance from HSSP-curve
+#       err:                    (1,'ok'), (0,'message')
+#       in:                     $fileInLoc    : file with BLAST output
+#       in:                     $minLaliLoc   : take those with LALI > x      (=0: all)
+#       in:                     $minDistLoc   : take those with $pide>HSSP+X  (=0: all)
+#       out:                    1|0,msg,$tmp{}, with
+#                               $tmp{"NROWS"}     : number of pairs
+#                               $tmp{"id",$it}    : name of protein it
+#                               $tmp{"len",$it}   : length of protein it
+#                               $tmp{"lali",$it}  : length of alignment for protein it
+#                               $tmp{"prob",$it}  : BLAST probability for it
+#                               $tmp{"score",$it} : BLAST score for it
+#                               $tmp{"pide",$it}  : pairwise percentage sequence identity
+#                               $tmp{"dist",$it}  : distance from HSSP-curve
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   blastpExtrId                extracts only lines with particular id from BLAST
+#       in:                     $fileBlast,$fileHANDLE_OUTPUTFILE,@id_to_read
+#       in:                     NOTE: if $#id==0, all are read
+#       out:                    (1,'ok') + written into FILE_HANDLE
+#       err:                    (0,'msg')
+#       in:                     $fileBlast,$fileHANDLE_OUTPUTFILE,@id_to_read
+#       in:                     NOTE: if $#id==0, all are read
+#       out:                    (1,'ok') + written into FILE_HANDLE
+#       err:                    (0,'msg')
+#   --------------------------   
+#   blastpRdHdr                 reads header of BLASTP output file
+#       in:                     $fileBlast
+#       out:                    (1,'ok',%hdrLoc)
+#       out:                    $hdrLoc{"$id"}='id1,id2,...'
+#       out:                    $hdrLoc{"$id","$kwd"} , with:
+#                                  $kwd=(score|prob|ide|len|lali)
+#       err:                    (0,'msg')
+#       in:                     $fileBlast
+#       out:                    (1,'ok',%hdrLoc)
+#       out:                    $hdrLoc{"$id"}='id1,id2,...'
+#       out:                    $hdrLoc{"$id","$kwd"} , with:
+#                                  $kwd=(score|prob|ide|len|lali)
+#       err:                    (0,'msg')
+#   --------------------------   
+#   blastpRun                   runs BLASTP
+#       in:                     $niceLoc,$dirData,$dirSwissSplit,$exeBlastp,$exeBlastpFil,
+#       in:                     $envBlastpMat,$envBlastpDb,$numHits,$parBlastpDb,
+#       in:                     $fileInLoc,$fileOutLoc,$fileOutFilLoc,$fhTraceLoc
+#       out:                    
+#       err:                    ok=(1,'ok'), err=(0,'msg')
+#       in:                     $niceLoc,$dirData,$dirSwissSplit,$exeBlastp,$exeBlastpFil,
+#       in:                     $envBlastpMat,$envBlastpDb,$numHits,$parBlastpDb,
+#       in:                     $fileInLoc,$fileOutLoc,$fileOutFilLoc,$fhTraceLoc
+#       out:                    
+#       err:                    ok=(1,'ok'), err=(0,'msg')
+#   --------------------------   
+#   blastpRunSimple             simply runs BLASTP (blast2)
+#                               NOTE: for security call &blastSetenv before running
+#       in:                     $fileInLoc     : FASTA formatted input file
+#       in:                     $fileOutLoc    : BLASTP output                if = 0: onto screen
+#       in:                     $exeBlastLoc   : FORTRAN exe BLASTP           if = 0: default
+#       in:                     $dbBlastLoc    : BLASTP db to run             if = 0: swiss
+#       in:                     $parELoc       : BLASTP para E                if = 0: default
+#       in:                     $parBLoc       : BLASTP para B                if = 0: default
+#       in:                     $fileOutScreen : screen dumpb of system call  if = 0: 0 -> STDOUT
+#       in:                     $fhSbrErr      : error file handle
+#       out:                    1|0,msg,  implicit: file
+#       err:                    (1,'ok'), (0,'message')
+#                               NOTE: for security call &blastSetenv before running
+#       in:                     $fileInLoc     : FASTA formatted input file
+#       in:                     $fileOutLoc    : BLASTP output                if = 0: onto screen
+#       in:                     $exeBlastLoc   : FORTRAN exe BLASTP           if = 0: default
+#       in:                     $dbBlastLoc    : BLASTP db to run             if = 0: swiss
+#       in:                     $parELoc       : BLASTP para E                if = 0: default
+#       in:                     $parBLoc       : BLASTP para B                if = 0: default
+#       in:                     $fileOutScreen : screen dumpb of system call  if = 0: 0 -> STDOUT
+#       in:                     $fhSbrErr      : error file handle
+#       out:                    1|0,msg,  implicit: file
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   blastpFormatdb              formats a db for BLASTP (blast 2)
+#                               NOTE: automatically sets environment !!!
+#       in:                     $fileInLoc     : FASTAmul formatted db file
+#       in:                     $fileOutLoc    : BLASTP output                if = 0: onto screen
+#       in:                     $exeBlastLoc   : FORTRAN exe BLASTP           if = 0: default
+#       in:                     $fileOutScreen : screen dumpb of system call  if = 0: 0 -> STDOUT
+#       in:                     $fhSbrErr      : error file handle
+#       out:                    1|0,msg,$title : name of formatted db
+#       err:                    (1,'ok'), (0,'message')
+#                               NOTE: automatically sets environment !!!
+#       in:                     $fileInLoc     : FASTAmul formatted db file
+#       in:                     $fileOutLoc    : BLASTP output                if = 0: onto screen
+#       in:                     $exeBlastLoc   : FORTRAN exe BLASTP           if = 0: default
+#       in:                     $fileOutScreen : screen dumpb of system call  if = 0: 0 -> STDOUT
+#       in:                     $fhSbrErr      : error file handle
+#       out:                    1|0,msg,$title : name of formatted db
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   blastSetenv                 sets environment for BLASTP runs
+#       in:                     $BLASTMAT,$BLASTDB (or default)
+#       out:                    1|0,msg,  implicit:
+#       err:                    (1,'ok'), (0,'message')
+#       in:                     $BLASTMAT,$BLASTDB (or default)
+#       out:                    1|0,msg,  implicit:
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   blastWrtSummary             writes summary for blast results (%ide,len,distance HSSP)
+#       in:                     $fileOutLoc   (if = 0, written to STDOUT)
+#       in:                     $tmp{} :
+#                    HEADER:
+#                               $tmp{"para","expect"}='para1,para2' 
+#                               $tmp{"para","paraN"}   : value for parameter paraN
+#                               $tmp{"form","paraN"}   : output format for paraN (default '%-s')
+#                    DATA gen:
+#                               $tmp{"NROWS"}        : number of proteins (it1)
+#                               $tmp{$it1}             : number of pairs for it1
+#                               $tmp{"id",$it1}        : name of protein it1
+#                    DATA rows:
+#                               $tmp{$it1,"id",$it2}   : name of protein it2 aligned to it1
+#                               $tmp{$it1,"len",$it2}  : length of protein it2
+#                               $tmp{$it1,"lali",$it2} : alignment length for it1/it2
+#                               $tmp{$it1,"pide",$it2} : perc sequence identity for it1/it2
+#                               $tmp{$it1,"dist",$it2} : distance from HSSP-curve for it1/it2
+#                               $tmp{$it1,"prob",$it2} : BLAST prob for it1/it2
+#                               $tmp{$it1,"score",$it2}: BLAST score for it1/it2
+#                               $tmp{"form",$kwd}    : perl format for keyword $kwd
+#                               $tmp{"sep"}            : separator for output columns
+#       out:                    1|0,msg,  implicit: file
+#       err:                    (1,'ok'), (0,'message')
+#       in:                     $fileOutLoc   (if = 0, written to STDOUT)
+#       in:                     $tmp{} :
+#                    HEADER:
+#                               $tmp{"para","expect"}='para1,para2' 
+#                               $tmp{"para","paraN"}   : value for parameter paraN
+#                               $tmp{"form","paraN"}   : output format for paraN (default '%-s')
+#                    DATA gen:
+#                               $tmp{"NROWS"}        : number of proteins (it1)
+#                               $tmp{$it1}             : number of pairs for it1
+#                               $tmp{"id",$it1}        : name of protein it1
+#                    DATA rows:
+#                               $tmp{$it1,"id",$it2}   : name of protein it2 aligned to it1
+#                               $tmp{$it1,"len",$it2}  : length of protein it2
+#                               $tmp{$it1,"lali",$it2} : alignment length for it1/it2
+#                               $tmp{$it1,"pide",$it2} : perc sequence identity for it1/it2
+#                               $tmp{$it1,"dist",$it2} : distance from HSSP-curve for it1/it2
+#                               $tmp{$it1,"prob",$it2} : BLAST prob for it1/it2
+#                               $tmp{$it1,"score",$it2}: BLAST score for it1/it2
+#                               $tmp{"form",$kwd}    : perl format for keyword $kwd
+#                               $tmp{"sep"}            : separator for output columns
+#       out:                    1|0,msg,  implicit: file
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   coilsRd                     reads the column format of coils
+#       in:                     $fileInLoc,$fileOutLoc,$probMinLoc,$fhErrSbr
+#         $fileInLoc            file with COILS output (column format expected)
+#         $probMinLoc           minimal probability (otherwise returns '2,$msg')
+#       out:                    fileOut
+#       err:                    (0,$err), (1,'ok '), (2,'info...') -> not Coils
+#       in:                     $fileInLoc,$fileOutLoc,$probMinLoc,$fhErrSbr
+#         $fileInLoc            file with COILS output (column format expected)
+#         $probMinLoc           minimal probability (otherwise returns '2,$msg')
+#       out:                    fileOut
+#       err:                    (0,$err), (1,'ok '), (2,'info...') -> not Coils
+#   --------------------------   
+#   coilsRun                    runs the COILS program from Andrei Lupas
+#       in:                     $fileIn,$exeCoils,$metric,$optOut,$fileOut,$fhErrSbr
+#       in:                     NOTE if not defined arg , or arg=" ", then defaults
+#       out:                    write into file (0,$err), (1,'ok ')
+#       in:                     $fileIn,$exeCoils,$metric,$optOut,$fileOut,$fhErrSbr
+#       in:                     NOTE if not defined arg , or arg=" ", then defaults
+#       out:                    write into file (0,$err), (1,'ok ')
+#   --------------------------   
+#   fastaRun                    runs FASTA
+#       in:                     $niceLoc,$dirData,$exeFasta,$exeFastaFil,$envFastaLibs,
+#       in:                     $numHits,$parFastaThresh,$parFastaScore,$parFastaSort,
+#       in:                     $fileInLoc,$fileOutLoc,$fileOutFilLoc,$fhTraceLoc
+#       out:                    
+#       err:                    ok=(1,'ok'), err=(0,'msg')
+#       in:                     $niceLoc,$dirData,$exeFasta,$exeFastaFil,$envFastaLibs,
+#       in:                     $numHits,$parFastaThresh,$parFastaScore,$parFastaSort,
+#       in:                     $fileInLoc,$fileOutLoc,$fileOutFilLoc,$fhTraceLoc
+#       out:                    
+#       err:                    ok=(1,'ok'), err=(0,'msg')
+#   --------------------------   
+#   maxhomCheckHssp             checks: (1) any ali? (2) PDB?
+#       in:                     $fileHssp,$laliMin (minimal ali length to report PDB)
+#       out:                    $Lok,$LisEmpty,$LisSelf,$IsIlyaPdb,$pdbidFound
+#       out:                    1 error: (0,'error','error message')
+#       out:                    1 ok   : (1,'ok',   'message')
+#       out:                    2 empty: (2,'empty','message')
+#       out:                    3 self : (3,'self', 'message')
+#       out:                    4 pdbid: (4,'pdbid','message')
+#       in:                     $fileHssp,$laliMin (minimal ali length to report PDB)
+#       out:                    $Lok,$LisEmpty,$LisSelf,$IsIlyaPdb,$pdbidFound
+#       out:                    1 error: (0,'error','error message')
+#       out:                    1 ok   : (1,'ok',   'message')
+#       out:                    2 empty: (2,'empty','message')
+#       out:                    3 self : (3,'self', 'message')
+#       out:                    4 pdbid: (4,'pdbid','message')
+#   --------------------------   
+#   maxhomGetArg                gets the input arguments to run MAXHOM
+#       in:                     
+#         $niceLoc              level of nice (nice -n)
+#         $exeMaxLoc            fortran executable for MaxHom
+#         $fileDefaultLoc       local copy of maxhom default file
+#         $jobid                number which will be added to files :
+#                               MAXHOM_ALI.jobid, MAXHOM.LOG_jobid, maxhom.default_jobid
+#                               filter.list_jobid, blast.x_jobid
+#         $fileMaxIn            query sequence (should be FASTA, here)
+#         $fileMaxList          list of db to align against
+#         $Lprofile             NO|YES
+#         $fileMaxMetric        metric
+#         $paraMaxSmin          minimal value of metric (typical -0.5)
+#         $paraMaxSmax          maximal value of metric (typical  1.0)
+#         $paraMaxGo            gap open penalty        (typical  3.0)
+#         $paraMaxGe            gap extension/elongation penalty (typ 
+#         $paraMaxWeight1       YES|NO                  (typ yes)
+#         $paraMaxWeight2       YES|NO                  (typ NO)
+#         $paraMaxIndel1        YES|NO                  (typ yes)
+#         $paraMaxIndel2        YES|NO                  (typ yes)
+#         $paraMaxNali          maximal number of alis reported (was 500)
+#         $paraMaxThresh              
+#         $paraMaxSort          DISTANCE|    
+#         $fileHsspOut          NO|name of output file (.hssp)
+#         $dirMaxPdb            path of PDB directory
+#         $paraMaxProfileOut    NO| ?
+#         $fileStripOut         NO|file name of strip file
+#       out:                    $command
+#       in:                     
+#         $niceLoc              level of nice (nice -n)
+#         $exeMaxLoc            fortran executable for MaxHom
+#         $fileDefaultLoc       local copy of maxhom default file
+#         $jobid                number which will be added to files :
+#                               MAXHOM_ALI.jobid, MAXHOM.LOG_jobid, maxhom.default_jobid
+#                               filter.list_jobid, blast.x_jobid
+#         $fileMaxIn            query sequence (should be FASTA, here)
+#         $fileMaxList          list of db to align against
+#         $Lprofile             NO|YES
+#         $fileMaxMetric        metric
+#         $paraMaxSmin          minimal value of metric (typical -0.5)
+#         $paraMaxSmax          maximal value of metric (typical  1.0)
+#         $paraMaxGo            gap open penalty        (typical  3.0)
+#         $paraMaxGe            gap extension/elongation penalty (typ 
+#         $paraMaxWeight1       YES|NO                  (typ yes)
+#         $paraMaxWeight2       YES|NO                  (typ NO)
+#         $paraMaxIndel1        YES|NO                  (typ yes)
+#         $paraMaxIndel2        YES|NO                  (typ yes)
+#         $paraMaxNali          maximal number of alis reported (was 500)
+#         $paraMaxThresh              
+#         $paraMaxSort          DISTANCE|    
+#         $fileHsspOut          NO|name of output file (.hssp)
+#         $dirMaxPdb            path of PDB directory
+#         $paraMaxProfileOut    NO| ?
+#         $fileStripOut         NO|file name of strip file
+#       out:                    $command
+#   --------------------------   
+#   maxhomGetArgCheck           performs some basic file-existence-checks
+#                               before Maxhom arguments are built up
+#       in:                     $exeMaxLoc,$fileDefLoc,$fileMaxIn,$fileMaxList,$fileMaxMetric
+#       out:                    msg,warn
+#                               before Maxhom arguments are built up
+#       in:                     $exeMaxLoc,$fileDefLoc,$fileMaxIn,$fileMaxList,$fileMaxMetric
+#       out:                    msg,warn
+#   --------------------------   
+#   maxhomGetThresh             translates cut-off ide into text input for MAXHOM csh
+#       in:                     $ideIn (= distance to FORMULA, old)
+#       out:                    $txt 'FORMULA+/-n'
+#       in:                     $ideIn (= distance to FORMULA, old)
+#       out:                    $txt 'FORMULA+/-n'
+#   --------------------------   
+#   maxhomGetThresh4PP          translates cut-off ide into text input for MAXHOM csh
+#       note:                   special for PP, as assumptions about upper/lower
+#       in:                     ($LisExpert,$expertMinIde,$minIde,$minIdeRd
+#       out:                    $txt 'FORMULA+/-n'
+#       note:                   special for PP, as assumptions about upper/lower
+#       in:                     ($LisExpert,$expertMinIde,$minIde,$minIdeRd
+#       out:                    $txt 'FORMULA+/-n'
+#   --------------------------   
+#   maxhomMakeLocalDefault      build local maxhom default file, and set PATH!!
+#       in:                     $fileInDef,$fileLocDef,$dirWorkLoc
+#       out:                    
+#       err:                    ok=(1,'ok'), err=(0,'msg')
+#       in:                     $fileInDef,$fileLocDef,$dirWorkLoc
+#       out:                    
+#       err:                    ok=(1,'ok'), err=(0,'msg')
+#   --------------------------   
+#   maxhomRun                   runs Maxhom (looping for many trials + self)
+#       in:                     give 'def' instead of argument for default settings
+#       out:                    (0,'error','txt') OR (1,'ok','name')
+#       in:                     give 'def' instead of argument for default settings
+#       out:                    (0,'error','txt') OR (1,'ok','name')
+#   --------------------------   
+#   maxhomRunLoop               loops over a maxhom run (until paraTimeOutL = 3hrs)
+#       in:                     see program...
+#       out:                    (0,'error message',0), (1,'error in pdbid',1), 
+#       out:                    (1,0|pdbidFound,0|1) last arg=0 if self, =1 if ali
+#       err:                    ok=(1,'ok|pdbid',0|1), err=(0,'msg',0)
+#       in:                     see program...
+#       out:                    (0,'error message',0), (1,'error in pdbid',1), 
+#       out:                    (1,0|pdbidFound,0|1) last arg=0 if self, =1 if ali
+#       err:                    ok=(1,'ok|pdbid',0|1), err=(0,'msg',0)
+#   --------------------------   
+#   maxhomRunSelf               runs a MaxHom: search seq against itself
+#                               NOTE: needs to run convert_seq to make sure
+#                                     that 'itself' is in FASTA format
+#       in:                     many
+#       out:                    
+#       err:                    ok=(1,'ok'), err=(0,'msg')
+#                               NOTE: needs to run convert_seq to make sure
+#                                     that 'itself' is in FASTA format
+#       in:                     many
+#       out:                    
+#       err:                    ok=(1,'ok'), err=(0,'msg')
+#   --------------------------   
+#   prodomRun                   runs a BLASTP against the ProDom db
+#       in:                     many
+#       out:                    (1,'ok',$nhits_below_threshold)
+#       err:                    (0,'msg')
+#       in:                     many
+#       out:                    (1,'ok',$nhits_below_threshold)
+#       err:                    (0,'msg')
+#   --------------------------   
+#   prodomWrt                   write the PRODOM data + BLAST ali
+#       in:                     $fileBlast,$fileHANDLE_OUTPUTFILE,@id_to_read
+#       in:                     NOTE: if $#id==0, none written!
+#       out:                    (1,'ok') + written into FILE_HANDLE
+#       err:                    (0,'msg')
+#       in:                     $fileBlast,$fileHANDLE_OUTPUTFILE,@id_to_read
+#       in:                     NOTE: if $#id==0, none written!
+#       out:                    (1,'ok') + written into FILE_HANDLE
+#       err:                    (0,'msg')
+#   --------------------------   
+#   segInterpret                reads FASTA-formatted output from SEG, counts 'x'
+#       in:                     $fileInLoc
+#       out:                    1|0,msg,$len(all),$lenComposition(only the 'x')
+#       err:                    (1,'ok'), (0,'message')
+#       in:                     $fileInLoc
+#       out:                    1|0,msg,$len(all),$lenComposition(only the 'x')
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   segRun                      runs the Wootton program SEG on one FASTA sequence
+#                               the following parameters can be set:
+#         <window> - OPTIONAL window size (default 12) 
+#         <locut>  - OPTIONAL low (trigger) complexity (default 2.2) 
+#         <hicut>  - OPTIONAL high (extension) complexity (default 2.5) 
+#         <options> 
+#            -x  each input sequence is represented by a single output 
+#                sequence with low-complexity regions replaced by 
+#                strings of 'x' characters 
+#            -c <chars> number of sequence characters/line (default 60)
+#            -m <size> minimum length for a high-complexity segment 
+#                (default 0).  Shorter segments are merged with adjacent 
+#                low-complexity segments 
+#            -l  show only low-complexity segments (fasta format) 
+#            -h  show only high-complexity segments (fasta format) 
+#            -a  show all segments (fasta format) 
+#            -n  do not add complexity information to the header line 
+#            -o  show overlapping low-complexity segments (default merge) 
+#            -t <maxtrim> maximum trimming of raw segment (default 100) 
+#            -p  prettyprint each segmented sequence (tree format) 
+#            -q  prettyprint each segmented sequence (block format) 
+#                               e.g. globular W=45 3.4 3.75  (for coiled-coil)
+#                                    globular W=25 3.0 3.30  (for histones)
+#       NOTE: for input options give '0' to take defaults!                       
+#       in:                     $fileInLoc : input sequence (FASTA format!)
+#       in:                     $fileOutLoc: output of SEG
+#                          NOTE: = 0 -> STDOUT!
+#       in:                     $exeSegLoc : executable for SEG
+#       in:                     $cmdSegLoc : =0 or entire command line to run SEG.ARCH!!
+#       in:                     $modeSegLoc: 'norm|glob'
+#                                            norm  -> win = 12
+#                                            glob-> win = 30
+#       in:                     $winSegLoc : window (default = 12, or see above)
+#       in:                     $locutSegLoc
+#       in:                     $hicutSegloc
+#       in:                     $optSegLoc : any of the following as a comma separated list:
+#                                            x,c,m,l,h,a,n,o,t,p,q
+#                                            default: -x 
+#       in:                     $fhSbrErr  : file handle for error messages
+#       out:                    1|0,msg   implicit: fileOutLoc
+#       err:                    (1,'ok'), (0,'message')
+#                               the following parameters can be set:
+#         <window> - OPTIONAL window size (default 12) 
+#         <locut>  - OPTIONAL low (trigger) complexity (default 2.2) 
+#         <hicut>  - OPTIONAL high (extension) complexity (default 2.5) 
+#         <options> 
+#            -x  each input sequence is represented by a single output 
+#                sequence with low-complexity regions replaced by 
+#                strings of 'x' characters 
+#            -c <chars> number of sequence characters/line (default 60)
+#            -m <size> minimum length for a high-complexity segment 
+#                (default 0).  Shorter segments are merged with adjacent 
+#                low-complexity segments 
+#            -l  show only low-complexity segments (fasta format) 
+#            -h  show only high-complexity segments (fasta format) 
+#            -a  show all segments (fasta format) 
+#            -n  do not add complexity information to the header line 
+#            -o  show overlapping low-complexity segments (default merge) 
+#            -t <maxtrim> maximum trimming of raw segment (default 100) 
+#            -p  prettyprint each segmented sequence (tree format) 
+#            -q  prettyprint each segmented sequence (block format) 
+#                               e.g. globular W=45 3.4 3.75  (for coiled-coil)
+#                                    globular W=25 3.0 3.30  (for histones)
+#       NOTE: for input options give '0' to take defaults!                       
+#       in:                     $fileInLoc : input sequence (FASTA format!)
+#       in:                     $fileOutLoc: output of SEG
+#                          NOTE: = 0 -> STDOUT!
+#       in:                     $exeSegLoc : executable for SEG
+#       in:                     $cmdSegLoc : =0 or entire command line to run SEG.ARCH!!
+#       in:                     $modeSegLoc: 'norm|glob'
+#                                            norm  -> win = 12
+#                                            glob-> win = 30
+#       in:                     $winSegLoc : window (default = 12, or see above)
+#       in:                     $locutSegLoc
+#       in:                     $hicutSegloc
+#       in:                     $optSegLoc : any of the following as a comma separated list:
+#                                            x,c,m,l,h,a,n,o,t,p,q
+#                                            default: -x 
+#       in:                     $fhSbrErr  : file handle for error messages
+#       out:                    1|0,msg   implicit: fileOutLoc
+#       err:                    (1,'ok'), (0,'message')

@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+
+<META name="author"      content="Jinfeng Liu">
+<META name="copyright"   content="&copy; 2004 CUBIC, NYC, USA">
+<META name="description" content="CHOP: domain dissection based on homology">
+<META name="keywords"    content="bioinformatics, proteomes, proteomics">
+<META name="date"        content="2004-02-11">
+
+<TITLE>CHOP: domain dissection based on homology<</TITLE>
+
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<IMG SRC="graphics/chop.jpg" ALT="chop.jpg">
+</CENTER>
+
+<BR>
+
+
+<table border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td bgcolor=#efefef width=120 nowrap><center><font size=-1><a href=index.html>&nbsp;Intro&nbsp;</a></font></center></td>
+<td bgcolor=#efefef width=120 nowrap><center><font size=-1><a href=submit.html>&nbsp;Submit&nbsp;</a></font></center></td>
+<td bgcolor=#efefef width=120 nowrap><center><font size=-1><a href=help.html>&nbsp;Help&nbsp;</a></font></center></td>
+<td bgcolor=#00007b width=120 nowrap><center><font size=-1 color=#ffffff>&nbsp;<b>Sample output</b>&nbsp;</font></center></td>
+<td bgcolor=#efefef width=120 nowrap><center><font size=-1><a href=info.html>&nbsp;Information&nbsp;</a></font></center></td>
+
+</tr>
+</table>
+
+<table width=100% border=0 cellpadding=2 cellspacing=0>
+<tr>
+<td bgcolor=#00007b nowrap><font size=-1 color=#ffffff><BR></td>
+</tr>
+</table>
+
+<P>
+<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%" bgcolor="#ffffff">
+<TR>
+<TD>
+
+<center>
+<TABLE BORDER=0 CELLPADDING="4" CELLSPACING="4" bgcolor="#ffffff">
+<TR> 
+    <TD><A HREF="#txt">Text(ASCII) output</A> &nbsp;&nbsp </TD>
+    <TD><A HREF="#html">HTML output</A></TD></TR>
+</TABLE>
+</center>
+
+<HR>
+<h3><A name="input">Input sequence</A></h3>
+<PRE>
+>YOL113W SKM1, Chr XV from 104325-106292
+MKGVKKEGWISYKVDGLFSFLWQKRYLVLNDSYLAFYKSDKCNEEPVLSVPLTSITNVSR
+IQLKQNCFEILRATDQKENISPINSYFYESNSKRSIFISTRTERDLHGWLDAIFAKCPLL
+SGVSSPTNFTHKVHVGFDPKVGNFVGVPDSWAKLLQTSEITYDDWNRNSKAVIKALQFYE
+DYNGLDTMQFNDHLNTSLDLKPLKSPTRYIINKRTNSIKRSVSRTLRKGKTDSILPVYQS
+ELKPFPRPSDDDYKFTNIEDNKVREEGRVHVSKESTADSQTKQLGKKEQKVIQSHLRRHD
+NNSTFRPHRLAPSAPATKNHDSKTKWHKEDLLELKNNDDSNEIIMKMKTVAIDVNPRPYF
+QLVEKAGQGASGAVYLSKRIKLPQENDPRFLKSHCHRVVGERVAIKQIRLSEQPKKQLIM
+NELLVMNDSRQENIVNFLEAYIIDDEELWVIMEYMEGGCLTDILDAVARSNTGEHSSPLN
+ENQMAYIVKETCQGLKFLHNKKIIHRDIKSDNILLNSQGLVKITDFGFCVELTEKRSKRA
+TMVGTPYWMAPEIVNQKGYDEKVDVWSLGIMLIEMIEGEPPYLNEDPLKALYLIANNGSP
+KLRHPESVSKQTKQFLDACLQVNVESRASVRKLLTFEFLSMACSPEQLKVSLKWH
+</PRE>
+
+<HR width=75% align='left'>
+<h3><A name="txt">TEXT output</A></h3>
+
+<PRE>
+Result of CHOP prediction (Jinfeng Liu & Burkhard Rost)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Jinfeng Liu & Burkhard Rost
+Proteins. (2004) in press
+________________________________________________________
+# Query  : yol113w
+# Length : 655
+Fragments    Homologue(region)      E_value      Method
+----------   --------------------   ----------   --------------------
+4-118        PF00169(1-92)          7.5e-19      HMMER/Pfam_ls
+126-192      1f3mA1(1-70)           4e-11        BLAST/prism_trim
+193-359      NULL                   NULL         NULL
+360-640      1muoA1(6-247)          2e-21        BLAST/prism_trim
+//
+
+
+</PRE>
+
+
+<HR  width=75% align='left'>
+
+<h3><A name="html">HTML output</A></h3>
+
+<PRE>
+Result of CHOP prediction (Jinfeng Liu & Burkhard Rost)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Jinfeng Liu & Burkhard Rost
+Proteins. (2004) in press
+________________________________________________________
+</PRE>
+Query : yol113w<BR>
+Length: 655<BR>
+<P>
+<TABLE CELLPADDING=2>
+<TR VALIGN=TOP style='background:#bcd2ee;font-family:Times,Serif'>
+        <TD>Fragments &nbsp;&nbsp;</TD>
+        <TD>Homologue(region) &nbsp;&nbsp;</TD>
+        <TD>E value &nbsp;&nbsp;</TD>
+        <TD>Method &nbsp;&nbsp;</TD>
+        <TD>Database &nbsp;&nbsp;</TD>
+        </TR>
+<TR VALIGN=TOP style='background:#d9d9d9;font-family:Times,Serif'>
+        <TD>4-118</TD>
+        <TD><A TARGET=_blank HREF="http://walnut.bioc.columbia.edu/srs7bin/cgi-bin/wgetz?-newId+-e+[PFAMA-AccNumber:'PF00169']">PF00169</A>(1-92)</TD>
+        <TD>7.5e-19</TD>
+        <TD>HMMER</TD>
+        <TD>Pfam_ls</TD>
+</TR>
+<TR VALIGN=TOP style='background:#cccccc;font-family:Times,Serif'>
+        <TD>126-192</TD>
+        <TD><A  TARGET=_blank HREF="http://walnut.bioc.columbia.edu/srs7bin/cgi-bin/wgetz?-newId+-e+[PDB-id:'1f3m']">1f3m</A>A1(1-70)</TD>
+        <TD>4e-11</TD>
+        <TD>BLAST</TD>
+        <TD>prism_trim</TD>
+</TR>
+<TR VALIGN=TOP style='background:#d9d9d9;font-family:Times,Serif'>
+        <TD>193-359</TD>
+        <TD>&nbsp</TD>
+        <TD>&nbsp</TD>
+        <TD>&nbsp</TD>
+        <TD>&nbsp</TD>
+</TR>
+<TR VALIGN=TOP style='background:#cccccc;font-family:Times,Serif'>
+        <TD>360-640</TD>
+        <TD><A  TARGET=_blank HREF="http://walnut.bioc.columbia.edu/srs7bin/cgi-bin/wgetz?-newId+-e+[PDB-id:'1muo']">1muo</A>A1(6-247)</TD>
+        <TD>2e-21</TD>
+        <TD>BLAST</TD>
+        <TD>prism_trim</TD>
+</TR>
+</TABLE>
+
+
+
+<CENTER><A HREF="http://cubic.bioc.columbia.edu/services/CHOP/">CHOP</A> <A HREF="http://cubic.bioc.columbia.edu/">CUBIC</A> <A HREF="mailto:liu@maple.bioc.columbia.edu">Contact</A>
+</CENTER>
+
+<!-- This is to fix the header on mozilla
+     otherwise the gif moves around between pages 
+     when the broser is full size
+-->
+
+</BODY>
+</HTML>
+
+
+
+
+

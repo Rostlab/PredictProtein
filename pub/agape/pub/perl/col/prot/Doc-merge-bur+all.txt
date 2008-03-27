@@ -1,0 +1,29 @@
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------
+#   merge-bur+all               internal subroutines:
+#                               ---------------------
+# 
+#   MAIN                        
+#   open_file                   opens file, writes warning asf
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------
+#   merge-bur+all               external subroutines:
+#                               ---------------------
+# 
+#   call from file:             open_file,rdRdbAssociative,rdRdbAssociativeNum
+# 
+#   call from system:            
+# 
+#   call from missing:           
+# 
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------------
+#   merge-bur+all               description of subroutines:
+#                               ---------------------------
+#   --------------------------   
+#   MAIN                        
+#   --------------------------   
+#   open_file                   opens file, writes warning asf

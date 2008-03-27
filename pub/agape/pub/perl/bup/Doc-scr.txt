@@ -1,0 +1,306 @@
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------
+#   scr                         internal subroutines:
+#                               ---------------------
+# 
+#   brIniErr                    error check for initial parameters
+#   brIniGetArg                 standard reading of command line arguments
+#   brIniHelp                   initialise help text
+#   brIniHelpLoop               loop over help 
+#   brIniHelpRdItself           reads the calling perl script (scrName),
+#   brIniRdDef                  reads defaults for initialsing parameters
+#   brIniRdDefWhere             searches for a default file
+#   brIniSet                    changing parameters according to input arguments
+#   brIniWrt                    write initial settings on screen
+#   errSbr                      simply writes '*** ERROR $sbrName: $txtInLoc'
+#   errSbrMsg                   simply writes '*** ERROR $sbrName: $txtInLoc\n'.$msg
+#   errScrMsg                   writes message and EXIT!!
+#   fctRunTimeLeft              estimates the time the job still needs to run
+#   fctSeconds2time             converts seconds to hours:minutes:seconds
+#   form_perl2rdb               converts printf perl (d,f,s) into RDB format (N,F, ) 
+#   form_rdb2perl               1
+#   get_in_keyboard             gets info from keyboard
+#   get_range                   converts range=n1-n2 into @range (1,2)
+#   get_rangeHyphen             reads 'n1-n2'  
+#   is_rdb                      checks whether or not file is in RDB format
+#   is_rdbf                     checks whether or not file is in RDB format
+#   month2num                   converts name of month to number
+#   myprt_array                 prints array ('sep',@array)
+#   myprt_empty                 writes line with '--- \n'
+#   myprt_line                  prints a line with 70 '-'
+#   myprt_npoints               writes line with N dots of the form '....,....1....,....2' 
+#   myprt_points80              1
+#   myprt_txt                   adds '---' and '\n' for writing text
+#   printm                      print on multiple filehandles (in:$txt,@fh; out:print)
+#   write80_data_prepdata       writes input into array called @write80_data
+#   write80_data_preptext       writes input into array called @write80_data
+#   write80_data_do             writes hssp seq + sec str + exposure
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------
+#   scr                         external subroutines:
+#                               ---------------------
+# 
+#   call from file:             open_file
+# 
+#   call from scr:              brIniHelp,brIniHelpRdItself,brIniRdDef,errSbrMsg,fctSeconds2time
+#                               get_in_keyboard,get_rangeHyphen,myprt_points80
+# 
+#   call from system:            
+# 
+#   call from missing:           
+# 
+# 
+# -----------------------------------------------------------------------------# 
+#                               ---------------------------
+#   scr                         description of subroutines:
+#                               ---------------------------
+#   --------------------------   
+#   brIniErr                    error check for initial parameters
+#       in GLOBAL:              $par{},@ARGV
+#       in:                     $exceptions = 'kwd1,kwd2'
+#                                  key words not to check for file existence
+#       out:                    ($Lok,$msg)
+#       in GLOBAL:              $par{},@ARGV
+#       in:                     $exceptions = 'kwd1,kwd2'
+#                                  key words not to check for file existence
+#       out:                    ($Lok,$msg)
+#   --------------------------   
+#   brIniGetArg                 standard reading of command line arguments
+#       in GLOBAL:              @ARGV,$defaults{},$par{}
+#       out GLOBAL:             $par{},@fileIn
+#       out:                    @arg_not_understood (i.e. returns 0 if everything ok!)
+#       in GLOBAL:              @ARGV,$defaults{},$par{}
+#       out GLOBAL:             $par{},@fileIn
+#       out:                    @arg_not_understood (i.e. returns 0 if everything ok!)
+#   --------------------------   
+#   brIniHelp                   initialise help text
+#       out:                    \d,txt
+#       err:                    0,$msg  -> error
+#       err:                    1,'fin' -> wanted help, given help
+#       err:                    1,$msg  -> continue, was just trying
+#       in:                     $tmp{} with
+#                               $tmp{sourceFile}=  name and path of calling script
+#                               $tmp{scrName}=     name of calling script (no .pl)
+#                               $tmp{scrIn}=       input arguments for script
+#                               $tmp{scrGoal}=     what script does
+#                               $tmp{scrNarg}=     number of argument needed for script
+#                               $tmp{scrHelpTxt}=  long blabla about script
+#                                   separate by '\n'
+#                               $tmp{scrAddHelp}=  help option other than standard
+#                                   e.g.: "help xyz     : explain .xyz "
+#                                   many: '\n' separated
+#                                   NOTE: this will be an entry to $tmp{$special},
+#                                   -> $special =  'help xyz' will give explanation 
+#                                      $tmp{$special}
+#                               $tmp{special}=     'kwd1,kwd2,...' special keywords
+#                               $tmp{$special}=    explanation for $special
+#                                   syntax: print flat lines (or '--- $line'), separate by '\n'
+#                               $tmp{scrHelpHints}= hints (tab separated)
+#                               $tmp{scrHelpProblems}= known problems (tab separated)
+#       in GLOBULAR:            @ARGV
+#                               $par{fileHelpOpt}
+#                               $par{fileHelpMan}
+#                               $par{fileHelpHints}
+#                               $par{fileHelpProblems}
+#                               $par{fileDefautlts}
+#       in unk:                 leave undefined, or give value = 'unk'
+#       out:                    \d,txt
+#       err:                    0,$msg  -> error
+#       err:                    1,'fin' -> wanted help, given help
+#       err:                    1,$msg  -> continue, was just trying
+#       in:                     $tmp{} with
+#                               $tmp{sourceFile}=  name and path of calling script
+#                               $tmp{scrName}=     name of calling script (no .pl)
+#                               $tmp{scrIn}=       input arguments for script
+#                               $tmp{scrGoal}=     what script does
+#                               $tmp{scrNarg}=     number of argument needed for script
+#                               $tmp{scrHelpTxt}=  long blabla about script
+#                                   separate by '\n'
+#                               $tmp{scrAddHelp}=  help option other than standard
+#                                   e.g.: "help xyz     : explain .xyz "
+#                                   many: '\n' separated
+#                                   NOTE: this will be an entry to $tmp{$special},
+#                                   -> $special =  'help xyz' will give explanation 
+#                                      $tmp{$special}
+#                               $tmp{special}=     'kwd1,kwd2,...' special keywords
+#                               $tmp{$special}=    explanation for $special
+#                                   syntax: print flat lines (or '--- $line'), separate by '\n'
+#                               $tmp{scrHelpHints}= hints (tab separated)
+#                               $tmp{scrHelpProblems}= known problems (tab separated)
+#       in GLOBULAR:            @ARGV
+#                               $par{fileHelpOpt}
+#                               $par{fileHelpMan}
+#                               $par{fileHelpHints}
+#                               $par{fileHelpProblems}
+#                               $par{fileDefautlts}
+#       in unk:                 leave undefined, or give value = 'unk'
+#   --------------------------   
+#   brIniHelpLoop               loop over help 
+#       in/out:                 see brIniHelp
+#       out:                    1|0,msg,  implicit:
+#       err:                    (1,'ok'), (0,'message')
+#       in/out:                 see brIniHelp
+#       out:                    1|0,msg,  implicit:
+#       err:                    (1,'ok'), (0,'message')
+#   --------------------------   
+#   brIniHelpRdItself           reads the calling perl script (scrName),
+#                               searches for 'sub\siniDef', and gets comment lines
+#       in:                     perl-script-source
+#       out:                    (Lok,$msg,%tmp), with:
+#                               $tmp{"kwd"}   = 'kwd1,kwd2'
+#                               $tmp{"$kwd1"} = explanations for keyword 1
+#                               searches for 'sub\siniDef', and gets comment lines
+#       in:                     perl-script-source
+#       out:                    (Lok,$msg,%tmp), with:
+#                               $tmp{"kwd"}   = 'kwd1,kwd2'
+#                               $tmp{"$kwd1"} = explanations for keyword 1
+#   --------------------------   
+#   brIniRdDef                  reads defaults for initialsing parameters
+#       in GLOBAL:              $par{},@ARGV
+#       out GLOBAL:             $par{} (i.e. changes settings automatically)
+#       in:                     file_default
+#       out:                    ($Lok,$msg,%defaults) with:
+#                               $defaults{"kwd"}=         'kwd1,kwd2,...,'
+#                               $defaults{"$kwd1"}=       val1
+#                               $defaults{"$kwd1","expl"}=explanation for kwd1
+#                               note: long explanations split by '\n'
+#       in GLOBAL:              $par{},@ARGV
+#       out GLOBAL:             $par{} (i.e. changes settings automatically)
+#       in:                     file_default
+#       out:                    ($Lok,$msg,%defaults) with:
+#                               $defaults{"kwd"}=         'kwd1,kwd2,...,'
+#                               $defaults{"$kwd1"}=       val1
+#                               $defaults{"$kwd1","expl"}=explanation for kwd1
+#                               note: long explanations split by '\n'
+#   --------------------------   
+#   brIniRdDefWhere             searches for a default file
+#       in:                     $scrName = 'script' , $sourceName = 'dir/script.pl'
+#       out:                    name of default file, or 0
+#       in:                     $scrName = 'script' , $sourceName = 'dir/script.pl'
+#       out:                    name of default file, or 0
+#   --------------------------   
+#   brIniSet                    changing parameters according to input arguments
+#                               e.g. adding directories to file names asf
+#                               e.g. adding directories to file names asf
+#   --------------------------   
+#   brIniWrt                    write initial settings on screen
+#       in:                     $excl     : 'kwd1,kwd2,kw*' exclude from writing
+#                                            '*' for wild card
+#       in:                     $fhTrace  : file handle to write
+#                                  = 0, or undefined -> STDOUT
+#       in:                     $excl     : 'kwd1,kwd2,kw*' exclude from writing
+#                                            '*' for wild card
+#       in:                     $fhTrace  : file handle to write
+#                                  = 0, or undefined -> STDOUT
+#   --------------------------   
+#   errSbr                      simply writes '*** ERROR $sbrName: $txtInLoc'
+#   --------------------------   
+#   errSbrMsg                   simply writes '*** ERROR $sbrName: $txtInLoc\n'.$msg
+#   --------------------------   
+#   errScrMsg                   writes message and EXIT!!
+#   --------------------------   
+#   fctRunTimeLeft              estimates the time the job still needs to run
+#       in:                     $timeBegLoc : time (time) when job began
+#       in:                     $num_to_run : number of things to do
+#       in:                     $num_did_run: number of things that are done, so far
+#       out:                    $_string_time-still (hour:min:sec)
+#       in:                     $timeBegLoc : time (time) when job began
+#       in:                     $num_to_run : number of things to do
+#       in:                     $num_did_run: number of things that are done, so far
+#       out:                    $_string_time-still (hour:min:sec)
+#   --------------------------   
+#   fctSeconds2time             converts seconds to hours:minutes:seconds
+#       in:                     seconds
+#       out:                    05:13:50
+#       in:                     seconds
+#       out:                    05:13:50
+#   --------------------------   
+#   form_perl2rdb               converts printf perl (d,f,s) into RDB format (N,F, ) 
+#   --------------------------   
+#   form_rdb2perl               1
+#   form_perl2rdb               converts RDB (N,F, ) to printf perl format (d,f,s)
+#   form_perl2rdb               converts RDB (N,F, ) to printf perl format (d,f,s)
+#   --------------------------   
+#   get_in_keyboard             gets info from keyboard
+#       in:                     $des :    keyword to get
+#       in:                     $def :    default settings
+#       in:                     $pre :    text string beginning screen output
+#                                         default '--- '
+#       in:                     $Lmirror: if true, the default is mirrored
+#       out:                    $val : value obtained
+#       in:                     $des :    keyword to get
+#       in:                     $def :    default settings
+#       in:                     $pre :    text string beginning screen output
+#                                         default '--- '
+#       in:                     $Lmirror: if true, the default is mirrored
+#       out:                    $val : value obtained
+#   --------------------------   
+#   get_range                   converts range=n1-n2 into @range (1,2)
+#       in:                     'n1-n2' NALL: e.g. incl=1-5,9,15 
+#                               n1= begin, n2 = end, * for wild card
+#                               NALL = number of last position
+#       out:                    @takeLoc: begin,begin+1,...,end-1,end
+#       in:                     'n1-n2' NALL: e.g. incl=1-5,9,15 
+#                               n1= begin, n2 = end, * for wild card
+#                               NALL = number of last position
+#       out:                    @takeLoc: begin,begin+1,...,end-1,end
+#   --------------------------   
+#   get_rangeHyphen             reads 'n1-n2'  
+#       in:                     'n1-n2', NALL (n1= begin, n2 = end, * for wild card)
+#                               NALL = number of last position
+#       out:                    begin,begin+1,...,end-1,end
+#       in:                     'n1-n2', NALL (n1= begin, n2 = end, * for wild card)
+#                               NALL = number of last position
+#       out:                    begin,begin+1,...,end-1,end
+#   --------------------------   
+#   is_rdb                      checks whether or not file is in RDB format
+#       in:                     filehandle
+#       out (GLOBAL):           $LIS_RDB
+#       in:                     filehandle
+#       out (GLOBAL):           $LIS_RDB
+#   --------------------------   
+#   is_rdbf                     checks whether or not file is in RDB format
+#       in:                     file
+#       out:                    returns 1 if is RDB, 0 else
+#       in:                     file
+#       out:                    returns 1 if is RDB, 0 else
+#   --------------------------   
+#   month2num                   converts name of month to number
+#       in:                     Jan (or january)
+#       out:                    1
+#       in:                     Jan (or january)
+#       out:                    1
+#   --------------------------   
+#   myprt_array                 prints array ('sep',@array)
+#   --------------------------   
+#   myprt_empty                 writes line with '--- \n'
+#   --------------------------   
+#   myprt_line                  prints a line with 70 '-'
+#   --------------------------   
+#   myprt_npoints               writes line with N dots of the form '....,....1....,....2' 
+#       in:                     $number_of_points_per_line,$number_to_end_with
+#       out:                    $line
+#       in:                     $number_of_points_per_line,$number_to_end_with
+#       out:                    $line
+#   --------------------------   
+#   myprt_points80              1
+#   --------------------------   
+#   myprt_txt                   adds '---' and '\n' for writing text
+#   --------------------------   
+#   printm                      print on multiple filehandles (in:$txt,@fh; out:print)
+#       in:                     $txt,@fh,
+#       out:                    print on all @fh
+#       in:                     $txt,@fh,
+#       out:                    print on all @fh
+#   --------------------------   
+#   write80_data_prepdata       writes input into array called @write80_data
+#   --------------------------   
+#   write80_data_preptext       writes input into array called @write80_data
+#   --------------------------   
+#   write80_data_do             writes hssp seq + sec str + exposure
+#                               (projected onto 1 digit) into 
+#                               file with 80 characters per line
+#                               (projected onto 1 digit) into 
+#                               file with 80 characters per line

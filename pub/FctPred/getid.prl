@@ -1,0 +1,107 @@
+#!/usr/local/bin/perl -w
+
+##############################################################################
+# getIDposition
+##############################################################################
+#
+# modified by D. Devos, December 2000
+#
+# swissprotPath defined at beginning of code
+##############################################################################
+#
+# Written by Osvaldo Graña, November 2000
+#
+# This application creates a hash index for searching in 'swissprot.dat' by
+# the ID code. It creates two files "IDpositions.dir" and "IDpositions.pag",
+# so you can get a better access in swissprot.dat.
+# 
+# Before running this application you must create a file called 'swissprotPath.txt',
+# containing only in the first line the path and name of your swissprot database
+# file, then you save the file.
+# Example: /usr/local/home/swissprot.dat
+#
+# You only have to do this the first time you run this application or each time
+# you change the path or name of your swissprot database file.
+# 
+# To execute you just type "getIDposition"
+#
+# Once you have done it, you can execute "func_pred" for your requests
+#
+##############################################################################
+
+use Fcntl;
+use strict;
+use GDBM_File;
+
+my ($swp,$ok,$file);
+my (%hash,$posicion,$index,$path,$swissprotPath);
+
+$swissprotPath="/data/swissprot/";
+opendir(SWP,$swissprotPath);
+while ($swp=readdir (SWP)) {
+	if ($swp=~/^sprot..\.dat$/) {
+		$ok++;
+		$file=$swp;
+	}
+}
+die "couldn't find swp file; aborted\n" unless (defined $ok);
+$swissprotPath=$swissprotPath.$file;
+
+$|=1;
+
+# obtengo el directorio actual
+#$path=`pwd`;
+#chomp $path;
+
+# recogo el path de la base de datos swissprot en el archivo swissprotPath.txt
+#open(fileHandle,"swissprotPath.txt") || die "\a\n\ngetIDposition: Cannot find 'swissprotPath.txt',
+#remember that before you run this application you must create a file called
+#'swissprotPath.txt', containing only in the first line the path and name of your swissprot
+#database file, like for example: /usr/local/home/swissprot.dat\nYou only have to do this the first time you run
+#this application or each time you change the path or name of your swissprot database file.\n\n\n";
+
+#this one removed and replaced by search at beginning of prog
+# recoge el path
+#$swissprotPath=<fileHandle>;
+#chomp $swissprotPath;
+# elimino los posibles espacios del ppio
+#$swissprotPath=~ s/ +\s//;
+# cierro
+#close fileHandle;
+
+# indica que ha empezado
+print "\n\n Working on it .......";
+
+# por si ya existen los índices me los cargo
+`rm -f Swisshash/IDpositions.*`;
+
+# ligo la hash al fichero de salida, para crear y escribir
+tie (%hash,"GDBM_File","Swisshash/IDpositions",O_RDWR|O_CREAT, 0644)  || die "\ngetIDposition: cannot tie to index file\n\n\n";
+
+# abro la base de datos swissprot o aviso de que no puedo hacerlo
+print "\nswiss is $swissprotPath\n\n";
+open (fileHandle,$swissprotPath) || die "\n\ngetIDposition: Cannot open swissprot database\n\n\n";
+
+# mientras no llegue al final
+while (<fileHandle>){
+	# fuera los saltos de línea
+	chomp;
+	
+	# si empieza por ID almaceno en la hash la posición del ID
+	# correspondiente
+	if (/^ID/) { 
+		$index=(split)[1];	
+		$hash{$index}=tell(fileHandle);
+#		print "$index  at  $hash{$index}\n";
+		}
+		
+	}
+# cierro fichero
+close fileHandle;
+
+# desligo la hash
+untie %hash || die "can't untie\n";
+
+# aviso de fin
+print "\n\n\n OK, FINISHED!!!\n\n\n";
+

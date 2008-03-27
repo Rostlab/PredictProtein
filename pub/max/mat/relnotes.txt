@@ -1,0 +1,1457 @@
+
+                   SWISS-PROT RELEASE 38.0 RELEASE NOTES
+
+
+1.  INTRODUCTION
+
+Release 38.0  of SWISS-PROT  contains 80'000  sequence entries,  comprising
+29'085'265 amino  acids abstracted  from 64'965 references. This represents
+an increase  of 3%  over release  37.  The  growth  of  the  data  bank  is
+summarized below.
+
+ Release      Date           Number of       Number of amino
+                               entries                 acids
+    2.0       09/86               3939               900 163
+    3.0       11/86               4160               969 641
+    4.0       04/87               4387             1 036 010
+    5.0       09/87               5205             1 327 683
+    6.0       01/88               6102             1 653 982
+    7.0       04/88               6821             1 885 771
+    8.0       08/88               7724             2 224 465
+    9.0       11/88               8702             2 498 140
+   10.0       03/89              10008             2 952 613
+   11.0       07/89              10856             3 265 966
+   12.0       10/89              12305             3 797 482
+   13.0       01/90              13837             4 347 336
+   14.0       04/90              15409             4 914 264
+   15.0       08/90              16941             5 486 399
+   16.0       11/90              18364             5 986 949
+   17.0       02/91              20024             6 524 504
+   18.0       05/91              20772             6 792 034
+   19.0       08/91              21795             7 173 785
+   20.0       11/91              22654             7 500 130
+   21.0       03/92              23742             7 866 596
+   22.0       05/92              25044             8 375 696
+   23.0       08/92              26706             9 011 391
+   24.0       12/92              28154             9 545 427
+   25.0       04/93              29955            10 214 020
+   26.0       07/93              31808            10 875 091
+   27.0       10/93              33329            11 484 420
+   28.0       02/94              36000            12 496 420
+   29.0       06/94              38303            13 464 008
+   30.0       10/94              40292            14 147 368
+   31.0       02/95              43470            15 335 248
+   32.0       11/95              49340            17 385 503
+   33.0       02/96              52205            18 531 384
+   34.0       10/96              59021            21 210 389
+   35.0       11/97              69113            25 083 768
+   36.0       07/98              74019            26 840 295
+   37.0       12/98              77977            28 268 293
+   38.0       07/99              80000            29 085 965
+
+
+
+2.  DESCRIPTION OF THE CHANGES MADE TO SWISS-PROT SINCE RELEASE 37
+
+2.1  Sequences and annotations
+
+2'106 sequences  have been added since release 37, the sequence data of 400
+existing entries  has been  updated and  the annotations  of 12'576 entries
+have been revised.
+
+
+2.2  What's happening with the model organisms
+
+We have  selected a  number of  organisms that  are the  target  of  genome
+sequencing and/or mapping projects and for which we intend to:
+
+o  Be as  complete as possible.  All sequences  available at a given time
+   should  be  immediately  included  in  SWISS-PROT.  This also includes
+   sequence corrections and updates;
+o  Provide a higher level of annotation;
+o  Provide  cross-references  to  specialized  database(s) that  contain,
+   among other  data,  some genetic information about the genes that code
+   for these proteins;
+o  Provide specific indices or documents.
+
+Here is the current status of the model organisms in SWISS-PROT:
+
+ Organism        Database            Index file       Number of
+                 cross-referenced                     sequences
+ --------------  ----------------    --------------   ---------
+ A.thaliana      None yet            In preparation         821
+ B.subtilis      SubtiList           SUBTILIS.TXT          2069
+ C.albicans      None yet            CALBICAN.TXT           221
+ C.elegans       Wormpep             CELEGANS.TXT          2202
+ D.discoideum    DictyDB             DICTY.TXT              292
+ D.melanogaster  FlyBase             FLY.TXT               1088
+ E.coli          EcoGene             ECOLI.TXT             4516
+ H.influenzae    HiDB (TIGR)         HAEINFLU.TXT          1698
+ H.sapiens       MIM                 MIMTOSP.TXT           5406
+ H.pylori        HpDB (TIGR)         HPYLORI.TXT            382
+ M.genitalium    MgDB (TIGR)         MGENITAL.TXT           469
+ M.musculus      MGD                 MGDTOSP.TXT           3549
+ M.jannaschii    MjDB (TIGR)         MJANNASC.TXT          1312
+ M.tuberculosis  None yet            None yet               928
+ S.cerevisiae    SGD                 YEAST.TXT             4811
+ S.typhimurium   StyGene             SALTY.TXT              727
+ S.pombe         None yet            POMBE.TXT             1438
+ S.solfataricus  None yet            None yet                86
+ --------------  ----------------    --------------   ---------
+
+Collectively the  entries from the above model organisms represent 38.5% of
+all SWISS-PROT entries.
+
+We plan  to finish as quickly as possible the annotation of the Escherichia
+coli,  Haemophilus   influenzae,   Methanococcus   jannaschii   and   yeast
+(S.cerevisiae) sequence entries which are not yet part of SWISS-PROT.
+
+Please also  see the  description of  the Human  Proteomics  Initiative  in
+section 10 of these release notes.
+
+
+2.3  First steps in the conversion of SWISS-PROT to mixed-case characters
+
+We are gradually converting SWISS-PROT entries from all UPPER CASE to MiXeD
+CaSe. The  line-types that  have been  converted between  release 37 and 38
+are: DT  (DaTe), OS  (Organism Species),  OC (Organism  Classification), OG
+(OrGanelle), RL  (Reference Location)  and KW  (KeyWord). The RT (Reference
+Title) lines  were already  introduced in  mixed-case  at  release  37.  As
+described in  section 3.1,  the process  of converting all of SWISS-PROT to
+mixed case is continuing.
+
+
+2.4  Small change  in the  format of  RL lines  for submissions  to the DNA
+     databases
+
+Along with  the conversion  of the  RL to mixed-case (see 2.3) we have also
+made a  small change  to the  format of RL lines for submissions to the DNA
+databases. What used to be:
+
+RL   SUBMITTED (MMM-YEAR) TO EMBL/GENBANK/DDBJ DATA BANKS.
+
+is now:
+
+RL   Submitted (MMM-YEAR) to the EMBL/GenBank/DDBJ databases.
+
+This change  was made  to follow  more closely  the format used by the EMBL
+nucleotide sequence database.
+
+
+2.5  Introduction of a new CC line-type topic: MISCELLANEOUS
+
+We have introduced in this release a new 'topic' for the comments (CC) line
+type: MISCELLANEOUS.  This topic  is used  for all  comments which  do  not
+belong to  any other  already defined  topic. This means that starting with
+the current release all comments are now assigned to a topic. Example, what
+was previously:
+
+CC   -!- BINDS TO BACITRACIN.
+
+is now:
+
+CC   -!- MISCELLANEOUS: BINDS TO BACITRACIN.
+
+
+2.6  Cleaning up of the SIMILARITY comment line (CC) topic
+
+We are  continuing a  major overhaul of the SIMILARITY topic. We would like
+the majority  of the  information stored  in this  topic to  be  usable  by
+computer  programs   (while  being   human-readable).  We   are   therefore
+standardizing the  format of this topic using two different subformats. One
+to describe to which family a protein belongs:
+
+CC   -!-  SIMILARITY: BELONGS TO THE <Name1> FAMILY [OF <Name2>].
+CC        [<Name3> SUBFAMILY.]
+
+Examples:
+
+CC   -!-  SIMILARITY: BELONGS TO THE 14-3-3 FAMILY.
+CC   -!-  SIMILARITY: BELONGS TO THE 6-PHOSPHOGLUCONATE DEHYDROGENASE
+CC        FAMILY.
+CC   -!-  SIMILARITY: BELONGS TO THE AAA FAMILY OF ATPASES.
+CC   -!-  SIMILARITY: BELONGS TO THE IRON/ASCORBATE-DEPENDENT FAMILY OF
+CC        OXIDOREDUCTASES.
+CC   -!-  SIMILARITY: BELONGS TO THE ANTP FAMILY OF HOMEOBOX PROTEINS.
+CC        "DEFORMED" SUBFAMILY.
+CC   -!-  SIMILARITY: BELONGS TO THE KINESIN-LIKE PROTEIN FAMILY.
+CC        KINESIN SUBFAMILY.
+
+And one to describe which domains are found in a given protein:
+
+CC   -!-  SIMILARITY: CONTAINS n <Name> [DOMAIN|REPEAT][S].
+
+Examples:
+
+CC   -!-  SIMILARITY: CONTAINS 1 FHA DOMAIN.
+CC   -!-  SIMILARITY: CONTAINS 45 EGF-LIKE DOMAINS.
+CC   -!-  SIMILARITY: CONTAINS 2 SH3 DOMAINS.
+CC   -!-  SIMILARITY: CONTAINS 2 SUSHI (SCR) REPEATS.
+
+We have  already updated many entries in this and the previous releases and
+plan to complete this change for the next release.
+
+
+2.7  Changes concerning cross-references (DR line)
+
+We have added cross-references from SWISS-PROT to the Zebrafish Information
+Network (ZFIN)  database available  at http://zfish.uoregon.edu/ZFIN/ (see:
+Westerfield M.,  Doerry E.,  Kirkpatrick A.E.  and Douglas S.A.; Meth. Cell
+Biol. 60:339-355(1999)).  These cross-references  are  present  in  the  DR
+lines:
+
+Data bank identifier: ZFIN
+Primary identifier  : The ZFIN identifiers for a given gene.
+Secondary identifier: The gene designation
+Example             : DR   ZFIN; ZDB-GENE-980526-290; hoxa1.
+
+We have  started to  add cross-references  from SWISS-PROT  to the CarbBank
+Complex        Carbohydrate         Structure        Database        (CCSD)
+(http://128.192.9.29/carbbank/). These  cross-references are present in the
+DR lines:
+
+Data bank identifier: CARBBANK
+Primary identifier  : The CarbBank identifier for a given carbohydrate
+                      structure.
+Secondary identifier: A dash (-).
+Example             : DR   CARBBANK; CCSD:27494; -.
+
+In this  release, we have also updated all the DR lines pointing to the MIM
+and Pfam databases.
+
+
+2.8  Switching from  pID to  protein_ID  in  cross-references  to  the  DNA
+     sequence databases
+
+The DNA  sequence  databases  (EMBL/GenBank/DDBJ)  recently  changed  their
+referencing system  for CDS (CoDing Sequence). They used to associate every
+CDS in  the database  with what  was called  a pID. The pID was a string of
+variable length  composed of  a letter  (D, E  or G)  followed by  a number
+(example: E345673).  Whenever the  protein sequence  coded by  a CDS  would
+change due  to a  sequence or annotation revision, a new pID was attributed
+to that  CDS. This system made it difficult to track down changes. pID have
+therefore been replaced by what is now called protein_ID' (protein sequence
+IDentifier). The  protein_ID consists of a stable ID portion (8 characters:
+3 letters  followed by  5 numbers)  plus a  version number  after a decimal
+point (example:  AAA03208.1). The  version number  only  changes  when  the
+protein sequence  coded by  the CDS  changes, while the stable part remains
+unchanged.
+
+In release  38, we have converted the cross-references to EMBL/GenBank/DDBJ
+to use  the protein_ID  instead of  the pID  as the secondary identifier in
+these DR lines. Example, what was previously:
+
+DR   EMBL; Z75208; E1165324; -.
+
+is now:
+
+DR   EMBL; Z75208; CAA99603.1; -.
+
+For a  number of  technical reasons,  there are still 732 pID referenced in
+release 38, they will gradually be replaced by the corresponding protein_ID
+for release 39.
+
+
+2.9  Introduction of a unique identifier in the VARIANT feature description
+     of human sequence entries
+
+We have  introduced in  release 38  a unique  identifier  for  all  VARIANT
+feature keys  in human  sequence entries.  This change  is the  first  step
+toward providing  a unique  identifier to  all SWISS-PROT  features.  Human
+sequence variants  were chosen  as a  prototype for this improvement. It is
+now possible  to directly  link specific  sequence variants to the relevant
+entries in disease mutation databases as well as to provide these databases
+with a method to implement reciprocal links.
+
+The unique  identifier is  of the  form of /FTId=VAR_nnnnnn and is added as
+the last  part of the description field of 'VARIANT' feature keys. Example,
+what was previously:
+
+FT   VARIANT       6      6       E -> V (IN S; SICKLE CELL ANEMIA).
+FT   VARIANT      11     11       V -> D (IN WINDSOR; O2 AFFINITY UP;
+FT                                UNSTABLE).
+
+is now:
+
+FT   VARIANT       6      6       E -> V (IN S; SICKLE CELL ANEMIA).
+FT                                /FTId=VAR_002863.
+FT   VARIANT      11     11       V -> D (IN WINDSOR; O2 AFFINITY UP;
+FT                                UNSTABLE).
+FT                                /FTId=VAR_002873.
+
+
+
+3.  FORTHCOMING CHANGES
+
+3.1  Continuation of the conversion of SWISS-PROT to mixed-case characters
+
+We will continue to convert SWISS-PROT entries from all UPPER CASE to MiXeD
+CaSe. In  release 39  we are  planning to convert the RA (Reference Author)
+and RC  (Reference Comment)  line types.  We will  also  convert  the  gene
+designations in  the DR  (Database cross-Reference) lines for MGD, EcoGene,
+StyGene, SubtiList and DictyDb to mixed case.
+
+Further lines will be converted in release 40.
+
+Here is an example of what a SWISS-PROT entry will look like in release 39:
+
+ID   HXC4_MOUSE     STANDARD;      PRT;   264 AA.
+AC   Q08624;
+DT   01-OCT-1994 (Rel. 30, Created)
+DT   01-OCT-1994 (Rel. 30, Last sequence update)
+DT   15-DEC-1999 (Rel. 39, Last annotation update)
+DE   HOMEOBOX PROTEIN HOX-C4 (HOX-3.5).
+GN   HOXC4 OR HOXC-4 OR HOX-3.5.
+OS   Mus musculus (Mouse).
+OC   Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Mammalia;
+OC   Eutheria; Rodentia; Sciurognathi; Muridae; Murinae; Mus.
+RN   [1]
+RP   SEQUENCE FROM N.A.
+RC   STRAIN=Balb/C; TISSUE=Liver;
+RX   MEDLINE; 93288004.
+RA   Goto J., Miyabayashi T., Wakamatsu Y., Takahashi N., Muramatsu M.;
+RT   "Organization and expression of mouse Hox3 cluster genes.";
+RL   Mol. Gen. Genet. 239:41-48(1993).
+RN   [2]
+RP   SEQUENCE FROM N.A.
+RC   TISSUE=Embryo;
+RX   MEDLINE; 93161956.
+RA   Geada A.M.C., Gaunt S.J., Azzawi M., Shimeld S.M., Pearce J.,
+RA   Sharpe P.T.;
+RT   "Sequence and embryonic expression of the murine Hox-3.5 gene.";
+RL   Development 116:497-506(1992).
+RN   [3]
+RP   SEQUENCE OF 177-201 FROM N.A.
+RC   STRAIN=C57BL/6; TISSUE=Spleen;
+RX   MEDLINE; 92073357.
+RA   Murtha M.T., Leckman J.F., Ruddle F.H.;
+RT   "Detection of homeobox genes in development and evolution.";
+RL   Proc. Natl. Acad. Sci. U.S.A. 88:10711-10715(1991).
+CC   -!- FUNCTION: SEQUENCE-SPECIFIC TRANSCRIPTION FACTOR WHICH IS PART OF
+CC       A DEVELOPMENTAL REGULATORY SYSTEM THAT PROVIDES CELLS WITH
+CC       SPECIFIC POSITIONAL IDENTITIES ON THE ANTERIOR-POSTERIOR AXIS.
+CC   -!- SUBCELLULAR LOCATION: NUCLEAR.
+CC   -!- SIMILARITY: BELONGS TO THE ANTP FAMILY OF HOMEOBOX PROTEINS.
+CC       "DEFORMED" SUBFAMILY.
+DR   EMBL; D11328; BAA01947.1; -.
+DR   EMBL; S62287; AAB27153.1; -.
+DR   EMBL; X69019; CAA48784.1; -.
+DR   EMBL; M81660; AAA63313.1; -.
+DR   PIR; S35219; S35219.
+DR   HSSP; P02833; 1SAN.
+DR   MGD; MGI:96195; Hoxc4.
+DR   PFAM; PF00046; homeobox; 1.
+DR   PROSITE; PS00027; HOMEOBOX_1; 1.
+DR   PROSITE; PS00032; ANTENNAPEDIA; 1.
+DR   PROSITE; PS50071; HOMEOBOX_2; 1.
+KW   Homeobox; DNA-binding; Developmental protein; Nuclear protein;
+KW   Transcription regulation.
+FT   DOMAIN       54     60       POLY-PRO.
+FT   DOMAIN      135    140       ANTP-TYPE HEXAPEPTIDE (BY SIMILARITY).
+FT   DNA_BIND    156    215       HOMEOBOX (BY SIMILARITY).
+FT   DOMAIN      183    186       POLY-ARG.
+FT   CONFLICT     80     80       A -> G (IN REF. 2).
+FT   CONFLICT     96     96       P -> S (IN REF. 2).
+SQ   SEQUENCE   264 AA;  29865 MW;  611C069F CRC32;
+     MIMSSYLMDS NYIDPKFPPC EEYSQNSYIP EHSPEYYGRT RESGFQHHHQ ELYPPPPPRP
+     SYPERQYSCT SLQGPGNSRA HGPAQAGHHH PEKSQPLCEP APLSGTSASP SPAPPACSQP
+     APDHPSSAAS KQPIVYPWMK KIHVSTVNPN YNGGEPKRSR TAYTRQQVLE LEKEFHYNRY
+     LTRRRRIEIA HSLCLSERQI KIWFQNRRMK WKKDHRLPNT KVRSAPPAGA APSTLSAATP
+     GTSEDHSQSA TPPEQQRAED ITRL
+//
+
+
+3.2  Extension of the accession number system
+
+With the  creation of  the TrEMBL  database (see  section 6)  and the rapid
+increase in  the amount  of sequence  data, we  are faced with a problem of
+availability of  accession numbers.  Currently we  use a  system based on a
+one-letter prefix  followed by  5 digits.  This system was also used by the
+nucleotide sequence  databases which had originally reserved for SWISS-PROT
+the prefix letters O, 'P' and 'Q'. The nucleotide databases, having run out
+of space  (due mainly  to EST's),  have been  forced to  start using  a new
+format based on a two-letter prefix followed by 6 digits.
+
+We have now used up all possible numbers with O, 'P' and 'Q'. As we believe
+that changing  the format  of the accession numbers to that used now by the
+nucleotide database  would create  havoc on  the numerous software packages
+using SWISS-PROT,  we have  decided to  keep a  system of accession numbers
+based on a six-character code, but with the following format extension:
+
+    1        2       3          4            5            6
+    [O,P,Q]  [0-9]  [A-Z, 0-9]  [A-Z, 0-9]   [A-Z, 0-9]   [0-9]
+
+What the above means is that we will keep a six-character code, but that in
+positions 3,  4 and  5 of  this code any combination of letters and numbers
+can be  present. This format allows a total of 14 million accession numbers
+(up from 300'000 with the current system).
+
+We only allow numbers in positions 2 and 6 so that the SWISS-PROT accession
+numbers can  not be  mistaken with  gene names,  acronyms,  other  type  of
+accession numbers or any type of words!
+
+Examples: P0A3S2, Q2ASD4, O13YX2, P9B123
+
+
+3.3  Introduction of a new FT key: SE_CYS
+
+Selenocysteine is  the 21st natural amino acid. It is now known to occur in
+several dozen  proteins. Its  mRNA codon  is UGA, which usually serves as a
+stop codon,  but with  a specific  downstream sequence forming a loop and a
+specific translational  elongation factor.  It is recognized as the site of
+selenocysteine incorporation into proteins.
+
+Very recently  the joint  nomenclature committee  of the  IUPAC/IUBMB  (see
+http://     www.chem.qmw.ac.uk/iupac/jcbn/)      officially     recommended
+(http://www.chem.qmw.ac.uk/iubmb/newsletter/1999/item3.html) a three-letter
+and a one-letter symbol for selenocysteine, namely Sec and U.
+
+We recognize that introducing a new one-letter code in the sequence records
+would disrupt  most, if  not all,  sequence analysis software. We therefore
+decided to  change, in  SWISS-PROT, the rules used to annotate the presence
+of selenocysteine  residues in  sequence entries  in the  manner  described
+below.
+
+Currently selenocysteines  are stored,  in the  sequence records, using the
+one-letter symbol  C for  cysteine and  are indicated  in the feature table
+(FT) by a line of the type:
+
+FT   BINDING       x      x       SELENIUM.
+
+The one-letter  code will  not be changed (for the reason explained above),
+but we  will introduce  a specific  feature key  (SE_CYS) to  indicate  the
+presence of  a selenocysteine  at a  given  sequence  position.  The  above
+example will therefore be changed to:
+
+FT   SE_CYS        x      x
+
+We also  want to  remind users  that the keyword Selenocysteine is and will
+continue to  be used to tag sequence entries that contain at least one such
+residue.
+
+
+3.4  Introduction of a new CC line-type topic: PHARMACEUTICAL
+
+We will  introduce in  the next release a new 'topic' for the comments (CC)
+line type:  PHARMACEUTICAL. This  topic will describe the use of a specific
+protein as  a pharmaceutical drug. The information provided by such a topic
+will include  the brand  name(s) under  which a  protein is  available, the
+name(s) of  the compani(es)  that produce it as well as a short description
+of the therapeutic usage of the protein.
+
+Examples:
+
+CC   -!- PHARMACEUTICAL: Available under the names Avonex (Biogen),
+CC       Betaseron (Berlex) and Rebif (Serono). Used in the treatment
+CC       of multiple sclerosis (MS). Betaseron is a slightly modified
+CC       form of IFNB1 with two residue substitutions.
+
+CC   -!- PHARMACEUTICAL: Available under the name Proleukin (Chiron).
+CC       Used in patients with renal cell carcinoma or metastatic
+CC       melanoma.
+
+It should be noted that any entries containing such a comment field will
+also be tagged with the keyword Pharmaceutical.
+
+
+3.5  Multiple AC lines
+
+Starting with  release 39,  there can  be more than one AC (ACcession) line
+per SWISS-PROT entry. Strictly speaking this is not a format change and the
+users manual  of SWISS-PROT  always indicated that there could be more than
+one AC line per entry. Until recently, a single line was sufficient and the
+majority of  entries contained  only a single accession number. But, in the
+process of  providing an  optimally non-redundant  database we  are merging
+information from  TrEMBL entries  into SWISS-PROT  entries. When we merge a
+TrEMBL entry  to a  SWISS-PROT one,  we add  to that  SWISS-PROT entry  the
+accession number(s)  of the  TrEMBL entry. The repetition of such a process
+sometimes produces  an accession  number list  which can no longer fit in a
+single AC  line. Therefore  there will  now be some entries with two, three
+(as shown below) or more AC lines.
+
+AC   P16070; P22511; Q04858; Q13419; Q13957; Q13958; Q13959; Q13960;
+AC   Q13961; Q13967; Q13968; Q13980; Q15861; Q16064; Q16065; Q16066;
+AC   Q16208; Q16522;
+
+
+3.6  Change in the syntax of the SQ line
+
+The SQ  (SeQuence header) line marks the beginning of the sequence data and
+gives a  quick summary  of its  content. The  format  of  the  SQ  line  is
+currently:
+
+SQ   SEQUENCE  XXXX AA; XXXXXX MW;  XXXXXXXX CRC32;
+
+The last information item in the SQ line is a 32-bit CRC (Cyclic Redundancy
+Check) value  which is  computed  from  the  sequence.  As  the  number  of
+available sequences  is increasing rapidly, there are now a few cases where
+two sequences can share the same CRC32 (but none, which also share the same
+molecular weight  MW or number of amino acids AA). To address this issue we
+will, starting with the next release, replace the 32-bit CRC value by a 64-
+bit CRC. The format of the SQ line will therefore be changed to:
+
+SQ   SEQUENCE  XXXX AA; XXXXXX MW;  XXXXXXXXXXXXXXXX CRC64;
+
+Example:
+
+SQ   SEQUENCE   233 AA;  25630 MW;  146A1B48A1475C86 CRC64;
+
+
+
+4.  STATUS OF THE DOCUMENTATION FILES
+
+SWISS-PROT is  distributed with a large number of documentation files. Some
+of these  files have  been available  for a  long time  (the  user  manual,
+release notes, the various indices for authors, citations, keywords, etc.),
+but many  have been  created recently  and we  are continuously  adding new
+files. The  following table  lists all  the documents  that  are  currently
+available.
+
+ USERMAN.TXT    User manual
+ RELNOTES.TXT   Release notes for current release (38)
+ OLDRLNOT.TXT   Release notes for previous release (37)
+ SHORTDES.TXT   Short description of entries in SWISS-PROT
+ JOURLIST.TXT   List of abbreviations for journals cited
+ KEYWLIST.TXT   List of keywords in use
+ SPECLIST.TXT   List of organism identification codes
+ TISSLIST.TXT   List of tissues [See 1]
+ EXPERTS.TXT    List of on-line experts for PROSITE and SWISS-PROT
+ SUBMIT.TXT     Submission of sequence data to SWISS-PROT
+
+ ACINDEX.TXT    Accession number index
+ AUTINDEX.TXT   Author index
+ CITINDEX.TXT   Citation index
+ KEYINDEX.TXT   Keyword index
+ SPEINDEX.TXT   Species index
+ DELETEAC.TXT   Deleted accession number index
+
+ 7TMRLIST.TXT   List of 7-transmembrane G-linked receptors entries
+ AATRNASY.TXT   List of aminoacyl-tRNA synthetases
+ ALLERGEN.TXT   Nomenclature and index of allergen sequences
+ ANNBIOCH.TXT   SWISS-PROT annotation:  how is biochemical information
+                assigned to sequence entries [See 2]
+ BLOODGRP.TXT   List of blood group antigen proteins
+ CALBICAN.TXT   Index   of  Candida  albicans  entries   and  their
+                corresponding gene designations
+ CDLIST.TXT     CD  nomenclature  for  surface  proteins  of  human
+                leucocytes
+ CELEGANS.TXT   Index  of Caenorhabditis elegans entries  and their
+                corresponding gene Wormpep cross-references
+ DICTY.TXT      Index   of  Dictyostelium  discoideum  entries  and
+                their  corresponding gene designations  and DictyDb
+                cross-references
+ EC2DTOSP.TXT   Index  of  Escherichia coli  Gene-protein  database
+                entries referenced in SWISS-PROT
+ ECOLI.TXT      Index  of Escherichia coli K12  chromosomal entries
+                and their corresponding EcoGene cross-references
+ EMBLTOSP.TXT   Index  of   EMBL  Database  entries  referenced  in
+                SWISS-PROT
+ EXTRADOM.TXT   Nomenclature of extracellular domains
+ FLY.TXT        Index  of  Drosophila  entries and  FlyBase  cross-
+                references
+ GLYCOSID.TXT   Classification  of glycosyl hydrolase  families and
+                index of glycosyl hydrolase entries
+ HAEINFLU.TXT   Index  of  Haemophilus  influenzae  RD  chromosomal
+                entries
+ HOXLIST.TXT    Vertebrate  homeotic Hox proteins: nomenclature and
+                index
+ HPYLORI.TXT    Index   of   Helicobacter   pylori   strain   26695
+                chromosomal entries
+ HUMCHR16.TXT   Index of protein  sequence entries encoded on human
+                chromosome 16 [See 2]
+ HUMCHR17.TXT   Index of protein  sequence entries encoded on human
+                chromosome 17
+ HUMCHR18.TXT   Index of protein  sequence entries encoded on human
+                chromosome 18
+ HUMCHR19.TXT   Index of protein  sequence entries encoded on human
+                chromosome 19
+ HUMCHR20.TXT   Index of protein  sequence entries encoded on human
+                chromosome 20
+ HUMCHR21.TXT   Index of protein  sequence entries encoded on human
+                chromosome 21
+ HUMCHR22.TXT   Index of protein  sequence entries encoded on human
+                chromosome 22
+ HUMCHRX.TXT    Index of protein  sequence entries encoded on human
+                chromosome X
+ HUMCHRY.TXT    Index of protein  sequence entries encoded on human
+                chromosome Y
+ HUMPVAR.TXT    Index of human proteins with sequence variants
+ INITFACT.TXT   List and index of translation initiation factors
+ MIMTOSP.TXT    Index of MIM entries referenced in SWISS-PROT
+ METALLO.TXT    Classification  of  metallothioneins and  index  of
+                entries in SWISS-PROT
+ MGDTOSP.TXT    Index of MGD entries referenced in SWISS-PROT
+ MGENITAL.TXT   Index  of Mycoplasma genitalium chromosomal entries
+ MJANNASC.TXT   Index of Methanococcus jannaschii entries
+ NGR234.TXT     Table  of   putative  genes  in  Rhizobium  plasmid
+                pNGR234a
+ NOMLIST.TXT    List   of  nomenclature   related  references   for
+                proteins
+ PCC6803.TXT    Index of Synechocystis strain PCC 6803 entries
+ PDBTOSP.TXT    Index  of X-ray  crystallography Protein Data  Bank
+                (PDB) entries referenced in SWISS-PROT
+ PEPTIDAS.TXT   Classification  of peptidase families and  index of
+                peptidase entries
+ PLASTID.TXT    List of chloroplast and cyanelle encoded proteins
+ POMBE.TXT      Index   of  Schizosaccharomyces  pombe  entries  in
+                SWISS-PROT    and    their    corresponding    gene
+                designations
+ RESTRIC.TXT    List of restriction enzyme and methylase entries
+ RIBOSOMP.TXT   Index of  ribosomal proteins classified by families
+                on the basis of sequence similarities
+ SALTY.TXT      Index  of  Salmonella typhimurium  LT2  chromosomal
+                entries  and  their  corresponding  StyGene  cross-
+                references
+ SUBTILIS.TXT   Index of  Bacillus subtilis 168 chromosomal entries
+                and their corresponding SubtiList cross-references
+ UPFLIST.TXT    UPF  (Uncharacterized  Protein Families)  list  and
+                index of members
+ YEAST.TXT      Index   of  Saccharomyces  cerevisiae  entries  and
+                their corresponding gene designations
+ YEAST1.TXT     Yeast Chromosome I entries
+ YEAST2.TXT     Yeast Chromosome II entries
+ YEAST3.TXT     Yeast Chromosome III entries
+ YEAST5.TXT     Yeast Chromosome V entries
+ YEAST6.TXT     Yeast Chromosome VI entries
+ YEAST7.TXT     Yeast Chromosome VII entries
+ YEAST8.TXT     Yeast Chromosome VIII entries
+ YEAST9.TXT     Yeast Chromosome IX entries
+ YEAST10.TXT    Yeast Chromosome X entries
+ YEAST11.TXT    Yeast Chromosome XI entries
+ YEAST13.TXT    Yeast Chromosome XIII entries
+ YEAST14.TXT    Yeast Chromosome XIV entries
+
+ 1. The tissue  list  (tisslist.txt)  has  been  converted  to  mixed-case
+    characters;
+ 2. The annbioch.txt  and humchr16.txt  files are new documents introduced
+    in this release.
+
+We have  continued to  include in  some SWISS-PROT  documentation files the
+references of  Web sites relevant to the subject under consideration. There
+are now 42 documents that include such links.
+
+
+
+5.  THE EXPASY WORLD-WIDE WEB SERVER
+
+5.1  Background information
+
+The most  efficient and user-friendly way to browse interactively in SWISS-
+PROT, PROSITE,  ENZYME, SWISS-2DPAGE  and other  databases is  to  use  the
+World-Wide Web (WWW) molecular biology server ExPASy. The ExPASy server was
+made available  to the  public in  September 1993  and is  reachable at the
+following address:
+
+                           http://www.expasy.ch/
+
+The ExPASy  WWW server  allows access,  using the  user-friendly  hypertext
+model, to  the SWISS-PROT, PROSITE, ENZYME, SWISS-2DPAGE, SWISS-3DIMAGE and
+CD40Lbase databases. And, through any SWISS-PROT protein sequence entry, to
+other databases  such as  EMBL, Eco2DBASE, EcoCyc, EcoGene, FlyBase, GCRDb,
+MaizeDB,  Mendel,   OMIM,   PDB,   HSSP,   Pfam,   ProDom,   REBASE,   SGD,
+SubtiList/NRSub, TRANSFAC,  YPD, ZFIN  and Medline. ExPASy also offers many
+tools for the analysis of protein sequences and 2D gels.
+
+
+5.2  Swiss-Shop
+
+We    provide,     on    ExPASy,     a    service     called     Swiss-Shop
+(http://www.expasy.ch/swiss-shop/). Swiss-Shop  is  an  automated  sequence
+alerting system  which allows  users to  obtain,  by  email,  new  sequence
+entries relevant  to their  field(s) of  interest. Various  criteria can be
+combined:
+
+-  By  entering  one  or  more  words  that  should  be  present  in  the
+   description line;
+-  By entering one or more species name(s) or taxonomic division(s);
+-  By entering one or more keywords;
+-  By entering one or more author names;
+-  By entering  the accession number (or entry name) of a PROSITE pattern
+   or a user-defined sequence pattern;
+-  By entering the accession number (or entry name) of an existing SWISS-
+   PROT entry or by entering a private sequence.
+
+Every week,  the new  sequences entered  in  SWISS-PROT  are  automatically
+compared with  all the  criteria that  have been defined by the users. If a
+sequence corresponds  to the  selection criteria  defined by  a user,  that
+sequence is sent by electronic mail.
+
+
+5.3  What is new on ExPASy
+
+ExPASy is  constantly modified  and improved. If you wish to be informed on
+the changes made to the server you can either:
+
+-  Read the  document History  of changes,  improvements and new features
+   which is available at the address: http://www.expasy.ch/history.html
+-  Subscribe to  Swiss-Flash, a  service that  reports news of databases,
+   software and service developments. By subscribing to this service, you
+   will automatically  get Swiss-Flash  bulletins by  electronic mail. To
+   subscribe use the address: http://www.expasy.ch/ swiss-flash/
+
+Among all  the improvements and the new features introduced during the last
+three months,  here are  those that  we believe  are specifically useful to
+SWISS-PROT users:
+
+1. We have switched our default  view of  SWISS-PROT entry to that provided
+   by the  NiceProt tool. NiceProt offers  a user-friendly  tabular view of
+   SWISS-PROT  entries.  Access  to   the  original  SWISS-PROT  format  is
+   maintained and  is directly available from the NiceProt view. Tools with
+   similar functionalities have been  developed to  display the  ENZYME and
+   PROSITE databases (see section 8.1 and 8.2).
+2. We have  revised  the  ExPASy file  and directory structure, in order to
+   have the  vast amount  of data  that has accumulated on the server since
+   September 1993  available in a more structured manner, and to facilitate
+   replication on our mirror sites. This has caused certain changes in html
+   links, and you should update your bookmarks and links accordingly. If in
+   doubt, please refer to the document 'How to create html links to ExPASy'
+   (http://www.expasy.ch/expasy_urls.html). At the same  time  we  wish  to
+   reiterate our  announcement of the  ExPASy  mirror  sites  in  Australia
+   (http://expasy.proteome.org.au/) and Taiwan (http://expasy.nhri.org.tw/).
+   For your own convenience,  please use  the mirror  site closest  to you.
+   Please also make sure  to update all bookmarks or links that use the old
+   domain expasy.hcuge.ch,  which was replaced by  www.expasy.ch  in  March
+   1997! The 'expasy.hcuge.ch' address might be disabled in the near future.
+3. WWW  links  have  been  implemented  between  SWISS-PROT  and  CarbBank,
+   EcoGene and ZFIN.
+
+
+
+6.  TREMBL - A SUPPLEMENT TO SWISS-PROT
+
+The ongoing  genome  sequencing  and  mapping  projects  have  dramatically
+increased the  number of  protein sequences  to be incorporated into SWISS-
+PROT. Since we do not want to dilute the quality standards of SWISS-PROT by
+incorporating sequences  into the database without proper sequence analysis
+and annotation,  we cannot  speed up the incorporation of new incoming data
+indefinitely. But  as we  also want to make the sequences available as fast
+as possible,  we have  introduced  with  SWISS-PROT  a  computer  annotated
+supplement. This  supplement consists  of entries in SWISS-PROT-like format
+derived from  the translation  of all  coding sequences  (CDS) in  the EMBL
+nucleotide sequence database, except those already included in SWISS-PROT.
+
+This supplement  is  named  TrEMBL  (Translation  from  EMBL).  It  can  be
+considered as  a preliminary section of SWISS-PROT. This SWISS-PROT release
+is supplemented by TrEMBL release 11. TrEMBL is split in two main sections;
+SP-TrEMBL and REM-TrEMBL:
+
+SP-TrEMBL (SWISS-PROT  TrEMBL) contains the entries (199'794 in release 11)
+which should  be incorporated into SWISS-PROT. SWISS-PROT accession numbers
+have been assigned for all SP-TrEMBL entries.
+
+REM-TrEMBL (REMaining  TrEMBL) contains  the entries (45'967 in release 11)
+that we  do not  want to  include in  SWISS-PROT for  a variety  of reasons
+(synthetic sequences,  pseudogenes, translations  of incorrect open reading
+frames,  fragments   with  less  than  eight  amino  acids,  patent-derived
+sequences, immunoglobulins and T-cell receptors, etc.)
+
+TrEMBL is available by FTP from the EBI and ExPASy servers in the directory
+databases/trembl'. It  can be  queried on  WWW by  the EBI  and ExPASy  SRS
+servers. It  is also  searchable on  the FASTA, BIC_SW and BLAST servers of
+the EBI.
+
+
+
+7.  FTP ACCESS TO SWISS-PROT AND TREMBL
+
+7.1  Generalities
+
+SWISS-PROT is  available  for  download  on  the  following  anonymous  FTP
+servers:
+
+Organization   Swiss Institute of Bioinformatics (SIB)
+Address        ftp.expasy.ch
+Directory      /databases/swiss-prot/
+
+Organization   European Bioinformatics Institute (EBI)
+Address        ftp.ebi.ac.uk
+Directory      /pub/databases/swissprot/
+
+
+7.2  Weekly updates of SWISS-PROT
+
+Weekly updates  of SWISS-PROT  are available  by anonymous FTP. Three files
+are generated at each update:
+
+new_seq.dat    Contains all the new entries since the last full release;
+upd_seq.dat    Contains the  entries for  which the  sequence data has been
+               updated since the last release;
+upd_ann.dat    Contains the entries for which one or more annotation fields
+               have been updated since the last release.
+
+Important notes
+
+o Although we try to follow a regular schedule, we do not promise to update
+  these files  every week.  In most  cases two weeks may elapse between two
+  updates.
+o Instead of  using the  above files,  you can,  every  week,  download  an
+  updated copy  of the  SWISS-PROT database.  This file is available in the
+  directory containing the non-redundant database (see next section).
+
+
+7.3  Non-redundant database
+
+More than  a year  ago, we  started to distribute on the ExPASy and EBI FTP
+servers, files  that make  up a  non-redundant (see  further) and  complete
+protein sequence database consisting of three components:
+
+1) SWISS-PROT
+2) TrEMBL
+3) New  entries to  be later  integrated into  TrEMBL (hereafter  known  as
+TrEMBL_New)
+
+Every week  three files  are completely  rebuilt. These  files  are  named:
+sprot.dat.Z, trembl.dat.Z  and trembl_new.dat.Z.  As indicated  by their .Z
+extension these  are Unix  compress format  files which, when decompressed,
+will produce ASCII files in SWISS-PROT format.
+
+Three  other  files  are  also  available  (sprot.fas.Z,  trembl.fas.Z  and
+trembl_new.fas.Z) which  are compressed  fasta format sequence files useful
+for building  the  databases  used  by  FASTA,  BLAST  and  other  sequence
+similarity search  programs. Please  do not  use these  files for any other
+purpose, as  you will  lose all  annotations by  using this  very primitive
+format.
+
+The files  for the  non-redundant database  are  stored  in  the  directory
+/databases/sp_tr_nrdb on  the ExPASy  FTP server (ftp.expasy.ch) and in the
+directory /pub/databases/sp_tr_nrdb on the EBI FTP server (ftp.ebi.ac.uk).
+
+Additional notes
+
+o The SWISS-PROT  file continuously  grows as  new annotated  sequences are
+  added.
+
+o The TrEMBL  file decreases  in size  as sequences  are moved  out of that
+  section after  being annotated  and moved  into SWISS-PROT.  Four times a
+  year a  new release  of TrEMBL  is built at EBI, at this point the TrEMBL
+  file increases  in size as it then includes all of the new data (see next
+  section) that has accumulated since the last release.
+
+o The TrEMBL_New file starts as a very small file and grows in size until a
+  new release of TrEMBL is available.
+
+o SWISS-PROT and  TrEMBL  share  the  same  system  of  accession  numbers.
+  Therefore you  will not  find any  primary  accession  number  duplicated
+  between the  two sections.  A TrEMBL  entry (and its associated accession
+  number(s)) can  either move  to SWISS-PROT as new entry or be merged with
+  an existing SWISS-PROT entry. In the latter case, the accession number(s)
+  of that TrEMBL entry are added to that of the SWISS-PROT entry.
+
+o TrEMBL_New does not have real accession numbers. However it was necessary
+  to have  an AC  line so  as to  be able to use it with different software
+  products. This  AC line contains a temporary identifier which consists of
+  the protein_ID  (protein sequence  identifier) of  the coding sequence in
+  the parent nucleotide sequence.
+
+o TrEMBL_New is  quite messy!  You will of course find new sequence entries
+  but you will also encounter sequences that are going to be used to update
+  existing TrEMBL  or SWISS-PROT entries. None of the "cleaning" steps that
+  are applied to produce a TrEMBL release are run on TrEMBL_New nor are any
+  of the  computer-annotation software  tools that  are used to enhance the
+  information content  of TrEMBL. TrEMBL_New is provided only so that users
+  can be  sure not  to miss  any important  new  sequences  when  they  run
+  similarity searches.
+
+o While these  three files  allow you to build what we call a non-redundant
+  database, it  must be noted that this is not completely a true statement.
+  Without going  into a  long explanation we can say that this is currently
+  the best  attempt in  providing a  complete selection of protein sequence
+  entries while  trying  to  eliminate  redundancies.  Also  SWISS-PROT  is
+  completely (well  99.994% !) non-redundant, TrEMBL is far from being non-
+  redundant and the addition of SWISS-PROT + TrEMBL is even less.
+
+o To describe  to your users the version of the non-redundant database that
+  you are providing them with, you should use a statement of the form:
+
+     SWISS-PROT release 38 and updates until <current_date>;
+     TrEMBL  release  11  minus  data  integrated  into  SWISS-PROT  as  of
+     <current_date>;
+     New preliminary TrEMBL entries created since release 11 of TrEMBL
+
+
+
+8.  ENZYME AND PROSITE
+
+8.1  The ENZYME nomenclature database
+
+Release 25.0  of the  ENZYME  nomenclature  database  is  distributed  with
+release 38 of SWISS-PROT. ENZYME release 25.0 contains information relative
+to 3704  enzymes. In  this release,  we have  added a significant number of
+synonyms (AN lines) to a number of entries.
+
+The WWW  version of  ENZYME on  ExPASy now  provides a  more  user-friendly
+tabular view of enzyme entries through a new tool called NiceZyme. NiceZyme
+also provides  direct links,  through  Medline,  to  literature  references
+relevant to  a specific enzyme. You can use this tool to link to any ENZYME
+entry  by  using  the  following  type  of  URL:  http://www.expasy.ch/cgi-
+bin/nicezyme.pl?a.b.c.d (where  a.b.c.d is  any  valid  enzyme  EC  number;
+example: 1.2.1.1).
+
+Please also  note that  the URL  of the  top page  of ENZYME  has moved to:
+http://www.expasy.ch/enzyme/
+
+
+8.2  The PROSITE database
+
+Release 16.0  of the  PROSITE database  is distributed  with release  38 of
+SWISS-PROT. This  release of  PROSITE contains  1034 documentation  entries
+that describe  1'374 different patterns, rules and profiles/matrices. Since
+release 15.0, 20 entries have been added and 180 entries have been updated.
+
+The WWW  version of  PROSITE on  ExPASy now  provides a  more user-friendly
+tabular view  of enzyme entries through a new tool called NiceSite. You can
+use this  tool to link to any PROSITE entry by using the following types of
+URL: http://www.expasy.ch/cgi-bin/nicesite.pl?PSxxxxx (where PSxxxxx is any
+valid  PROSITE  pattern  or  matrix  entry)  and  http://www.expasy.ch/cgi-
+bin/nicedoc.pl?PDOCxxxxx (where  PDOCxxxxx is  any valid  PROSITE  document
+entry).
+
+Please also  note that  the URL  of the  top page  of PROSITE has moved to:
+http://www.expasy.ch/prosite/
+
+
+
+9.  WE NEED YOUR HELP!
+
+We welcome feedback from our users. We would especially appreciate that you
+notify us  if you  find that sequences belonging to your field of expertise
+are missing  from the  database. We  also would  like to  be notified about
+annotations to  be updated,  if, for example, the function of a protein has
+been clarified or if new information about post-translational modifications
+has become  available. To  facilitate this feedback we offer, on the ExPASy
+WWW server, a form that allows the submission of updates and/or corrections
+to SWISS-PROT:
+
+              http://www.expasy.ch/sprot/sp_update_form.html
+
+It is  also possible,  from any entry in SWISS-PROT displayed by the ExPASy
+server, to  submit updates  and/or corrections  for that  particular entry.
+Finally, you can also send your comments by electronic mail to the address:
+
+                           swiss-prot@expasy.ch
+
+Note that  since January  1999, all  update requests  are assigned a unique
+identifier of  the form  UR-Xnnnn (example:  UR-A0123). This  identifier is
+used internally  by the  SWISS-PROT staff  at SIB and EBI to track down the
+fate of  requests and  is also  be used in email exchanges with the persons
+having submitted a request.
+
+
+
+10.  JULY 1999 ANNOUNCEMENT: THE HUMAN PROTEOMICS INITIATIVE
+
+In a  few months the combined efforts of a number of sequencing centers and
+companies will  produce a first draft of the human genome sequence. Such an
+endeavor is  only a  very preliminary  step in  the understanding  of human
+biological processes. The first pitfall to overcome is the detection of all
+coding regions  on the  genomic sequence.  Current algorithms,  while being
+very powerful,  are not  capable of detecting with certainty all exons, are
+not well  equipped to  distinguish different splice variants and are unable
+to detect small proteins (which are numerous and crucial to many biological
+processes). Even when all potential coding regions have been predicted, the
+user community  will have  at its disposition the sequence of from 80000 to
+100000 naked  proteins.  We  call  these  proteins  naked  because  genomic
+information does  not allow  the efficient  prediction  of  all  the  post-
+translational modifications (PTM) of which the majority of proteins are the
+target. Proteins,  once synthesized  on the  ribosomes, are  subject  to  a
+multitude  of   modification  steps.   The  complexity  due  to  all  these
+modifications is compounded by the high level of diversity that alternative
+splicing can produce at the level of sequence. Thus the number of different
+protein molecules  expressed by  the human  genome is  probably closer to a
+million than  to  the  hundred  thousand  generally  considered  by  genome
+scientists. Another factor of complexity to take into account is the amount
+of polymorphism  at  the  protein  sequence  level.  While  some  of  these
+polymorphisms are  linked to disease states, most are not, yet have in many
+cases a direct or indirect effect on the activities of the proteins.
+
+We therefore  are initiating  a major  project to  annotate all known human
+sequences according  to the  quality standards  of SWISS-PROT.  This  means
+providing, for  each known  protein, a  wealth of information that includes
+the  description   of  its  function,  its  domain  structure,  subcellular
+location, post-translational modifications, variants, similarities to other
+proteins, etc.  There are currently slightly more than 5400 annotated human
+sequences in  SWISS-PROT. These  entries are  associated with  about  14500
+literature references;  16000 experimental  or predicted  PTMs, 800  splice
+variants and  8000 polymorphisms  (most of  which are  linked with  disease
+states). We  will use  the current information as the ground basis for what
+we call the Human Proteomics Initiative (HPI).
+
+The HPI  project contains  a number  of sub-components,  which are  briefly
+described below:
+
+ú Annotation of  all known  human proteins.  In the course of the next nine
+  months (from  July 1999 to end of March 2000) the human protein sequences
+  that are  not yet  in SWISS-PROT  will be  fully annotated.  We will also
+  review and  complete the  annotation of  the human sequences currently in
+  SWISS-PROT. At the end of this nine-month period we expect to be complete
+  and up-to-date  and to  hereafter keep up with the appearance of new data
+  relevant to human proteins.
+ú Annotation of  mammalian orthologs  of human  proteins. We will make sure
+  that for  any human  proteins,  existing  orthologs  in  other  mammalian
+  species will  also be  annotated at  a level  equivalent to  that of  the
+  cognate human sequences.
+ú Annotation of  all known  human polymorphisms  at  the  protein  sequence
+  level. As  mentioned above,  SWISS-PROT already  holds information  on  a
+  sizeable amount  of such  polymorphisms, and it will significantly expand
+  its effort  to store  and annotate  all small  variations at  the protein
+  level.
+ú Annotation  of   all  known  post-translational  modifications  in  human
+  proteins. During  the next  nine months  a major  effort will  be made to
+  supplement the  already quite  comprehensive description  of known  post-
+  translational modifications  in  human  proteins  currently  provided  in
+  SWISS-PROT.
+ú Tight links  to structural  information. SWISS-PROT  is tightly linked to
+  the PDB/RCSB  3D-structure database  and already  includes many  features
+  useful to  structural biologists.  These  tight  links  will  be  further
+  expanded by  providing homology-derived models for all human proteins for
+  which such an approach is scientifically relevant.
+
+For all  aspects of  the HPI  projects, we  would appreciate  the help  and
+collaboration of the scientific community. Information concerning the human
+proteome is  highly critical  to  a  large  section  of  the  life  science
+community. We  therefore appeal  to the user community to fully participate
+in this  initiative by  providing all the necessary information to help and
+to speed up the comprehensive annotation of the human proteome.
+
+The HPI  project has  two different time-related aspects: one of which is a
+nine-month "marathon"  to catch  up with the current state of research, the
+other one is a long-term commitment to keep such a project alive as long as
+it is  necessary. For  a detailed  description of  the HPI  project and its
+current status please consult:
+
+                      http://www.expasy.ch/sprot/hpi/
+
+
+
+11. JULY 1998 ANNOUNCEMENT: NEW SWISS-PROT FUNDING SCHEME
+
+It became  obvious in  the last  years that the tremendous increase in data
+flow has  created a  requirement for resources which cannot be addressed in
+full by  public funding.  This is  causing databases  to  fall  behind  the
+research. We believe that the only solution to the resource shortfall is to
+ask commercial  users to  participate by paying a license fee. No fee is or
+will be  charged to  academic users,  nor is  any restriction be imposed on
+their use  or reuse  of the data. Both SWISS-PROT and PROSITE are concerned
+by these changes, while this is not the case of ENZYME.
+
+A document  fully describing  what will  be the  impact of  this change for
+SWISS-PROT is  available with  the SWISS-PROT  distribution  files  on  FTP
+(sp_info.txt). You  can also  access the document as well as other relevant
+ones from:
+
+                      http://www.expasy.ch/announce/
+ http://www.ebi.ac.uk/swissprot/Information/Announcement/announcement.html
+
+If you do not have the time to read this document, the most important take-
+home message is that these changes do not have any impact on the way SWISS-
+PROT or  PROSITE are  accessed or  redistributed. Academic  users  are  not
+affected by  these changes.  Industrial end-users  are  also  not  directly
+affected as  long as  their employer  pays the  license fee. The same holds
+true for bioinformatics companies. Academic software or database developers
+as well  as providers  of database distribution services are only minimally
+affected by  these changes. We hope to be able to keep the spirit of SWISS-
+PROT and  PROSITE alive  and  at  the  same  time  ensure  their  long-term
+financial survival.  We sincerely  hope and  believe that  in the  next two
+years the  only change  that will  matter will be the increase in scope and
+timeliness of the databases.
+
+
+  ========================================================================
+
+
+                         APPENDIX A: SOME STATISTICS
+
+
+   A.1  Amino acid composition
+
+        A.1.1  Composition in percent for the complete data bank
+
+   Ala (A) 7.58   Gln (Q) 3.97   Leu (L) 9.43   Ser (S) 7.13
+   Arg (R) 5.16   Glu (E) 6.36   Lys (K) 5.94   Thr (T) 5.67
+   Asn (N) 4.44   Gly (G) 6.84   Met (M) 2.37   Trp (W) 1.24
+   Asp (D) 5.27   His (H) 2.24   Phe (F) 4.10   Tyr (Y) 3.19
+   Cys (C) 1.66   Ile (I) 5.81   Pro (P) 4.92   Val (V) 6.58
+
+   Asx (B) 0.001  Glx (Z) 0.001  Xaa (X) 0.01
+
+
+        A.1.2  Classification of the amino acids by their frequency
+
+   Leu, Ala, Ser, Gly, Val, Glu, Lys, Ile, Thr, Asp, Arg, Pro, Asn, Phe,
+   Gln, Tyr, Met, His, Cys, Trp
+
+
+
+   A.2  Repartition of the sequences by their organism of origin
+
+   Total number of species represented in this release of SWISS-PROT: 6580
+
+   The first twenty species represent 37741 sequences: 47.2 % of the total
+   number of entries.
+
+
+   A.2.1 Table of the frequency of occurrence of species
+
+        Species represented 1x: 3122
+                            2x: 1013
+                            3x:  509
+                            4x:  363
+                            5x:  243
+                            6x:  225
+                            7x:  154
+                            8x:  127
+                            9x:  105
+                           10x:   62
+                       11- 20x:  304
+                       21- 50x:  191
+                       51-100x:   73
+                         >100x:   89
+
+
+   A.2.2  Table of the most represented species
+
+  ------  ---------  --------------------------------------------
+  Number  Frequency  Species
+  ------  ---------  --------------------------------------------
+       1       5406  Homo sapiens (Human)
+       2       4811  Saccharomyces cerevisiae (Baker's yeast)
+       3       4516  Escherichia coli
+       4       3549  Mus musculus (Mouse)
+       5       2630  Rattus norvegicus (Rat)
+       6       2069  Bacillus subtilis
+       7       2002  Caenorhabditis elegans
+       8       1698  Haemophilus influenzae
+       9       1438  Schizosaccharomyces pombe (Fission yeast)
+      10       1313  Methanococcus jannaschii
+      11       1149  Bos taurus (Bovine)
+      12       1088  Drosophila melanogaster (Fruit fly)
+      13        928  Mycobacterium tuberculosis
+      14        894  Gallus gallus (Chicken)
+      15        821  Arabidopsis thaliana (Mouse-ear cress)
+      16        729  Xenopus laevis (African clawed frog)
+      17        727  Salmonella typhimurium
+      18        699  Synechocystis sp. (strain PCC 6803)
+      19        670  Sus scrofa (Pig)
+      20        604  Oryctolagus cuniculus (Rabbit)
+      21        490  Mycoplasma pneumoniae
+      22        469  Mycoplasma genitalium
+      23        446  Zea mays (Maize)
+      24        403  Rhizobium sp. (strain NGR234)
+      25        382  Helicobacter pylori (Campylobacter pylori)
+      26        368  Pseudomonas aeruginosa
+      27        337  Oryza sativa (Rice)
+      28        308  Canis familiaris (Dog)
+      29        296  Nicotiana tabacum (Common tobacco)
+      30        292  Dictyostelium discoideum (Slime mold)
+      31        277  Treponema pallidum
+      32        272  Bacteriophage T4
+      33        269  Ovis aries (Sheep)
+                269  Mycobacterium leprae
+      35        266  Borrelia burgdorferi (Lyme disease spirochete)
+      36        263  Pisum sativum (Garden pea)
+      37        255  Methanobacterium thermoautotrophicum
+      38        253  Vaccinia virus (strain Copenhagen)
+      39        239  Glycine max (Soybean)
+      40        228  Staphylococcus aureus
+      41        227  Neurospora crassa
+      42        226  Hordeum vulgare (Barley)
+      43        221  Candida albicans (Yeast)
+      44        219  Porphyra purpurea
+      45        216  Archaeoglobus fulgidus
+      46        211  Lycopersicon esculentum (Tomato)
+      47        209  Triticum aestivum (Wheat)
+      48        205  Solanum tuberosum (Potato)
+      49        204  Rhodobacter capsulatus (Rhodopseudomonas capsulata)
+      50        199  Klebsiella pneumoniae
+      51        196  Pseudomonas putida
+      52        193  Human cytomegalovirus (strain AD169)
+      53        192  Bacillus stearothermophilus
+      54        186  Vaccinia virus (strain WR)
+      55        172  Cavia porcellus (Guinea pig)
+      56        170  Agrobacterium tumefaciens
+      57        169  Spinacia oleracea (Spinach)
+      58        159  Chlamydomonas reinhardtii
+      59        158  Rhizobium meliloti
+      60        154  Autographa californica nuclear polyhedrosis virus
+      61        153  Emericella nidulans (Aspergillus nidulans)
+      62        152  Mesocricetus auratus (Golden hamster)
+      63        151  Marchantia polymorpha (Liverwort)
+      64        150  Streptomyces coelicolor
+                150  Equus caballus (Horse)
+      66        148  Guillardia theta (Cryptomonas phi)
+      67        147  Cyanophora paradoxa
+      68        146  Variola virus
+      69        142  Lactococcus lactis (subsp. lactis) (Streptococcus lactis)
+      70        139  Odontella sinensis
+      71        134  Orgyia pseudotsugata multicapsid polyhedrosis virus
+      72        133  Kluyveromyces lactis (Yeast)
+      73        128  Brachydanio rerio (Zebrafish) (Zebra danio)
+      74        127  Trypanosoma brucei brucei
+                127  Synechococcus sp. (strain PCC 7942)
+      76        126  Thermus aquaticus (subsp. thermophilus)
+      77        120  Alcaligenes eutrophus
+                118  Anabaena sp. (strain PCC 7120)
+      79        116  Bombyx mori (Silk moth)
+      80        115  Bradyrhizobium japonicum
+      81        113  Yersinia enterocolitica
+      82        112  Oncorhynchus mykiss (Rainbow trout) (Salmo gairdneri)
+      83        111  Aquifex aeolicus
+                108  Streptococcus pneumoniae
+      85        107  Brassica napus (Rape)
+      86        104  Neisseria gonorrhoeae
+      87        103  Macaca mulatta (Rhesus macaque)
+                103  Felis silvestris catus (Cat)
+      89        102  Rhodobacter sphaeroides (Rhodopseudomonas sphaeroides)
+
+
+
+   A.3  Repartition of the sequences by size
+
+               From   To  Number             From   To   Number
+                  1-  50    3213             1001-1100      722
+                 51- 100    6704             1101-1200      553
+                101- 150    9719             1201-1300      377
+                151- 200    7640             1301-1400      251
+                201- 250    7202             1401-1500      210
+                251- 300    6703             1501-1600      133
+                301- 350    6294             1601-1700      117
+                351- 400    6438             1701-1800       89
+                401- 450    4831             1801-1900       94
+                451- 500    4566             1901-2000       65
+                501- 550    3444             2001-2100       37
+                551- 600    2308             2101-2200       80
+                601- 650    1801             2201-2300       75
+                651- 700    1326             2301-2400       40
+                701- 750    1159             2401-2500       42
+                751- 800     956             >2500          232
+                801- 850     762
+                851- 900     798
+                901- 950     552
+                951-1000     467
+
+
+
+   A.4  Longest sequences
+
+   The longest sequences (>=4000 residues) are listed here:
+
+                              BACA_BACLI  5255
+                              HTS1_COCCA  5217
+                              MUC2_HUMAN  5179
+                              FAT_DROME   5147
+                              RYNR_RABIT  5037
+                              RYNR_PIG    5035
+                              RYNR_HUMAN  5032
+                              RYNC_RABIT  4969
+                              LRP_CAEEL   4753
+                              DYHC_DICDI  4725
+                              PLEC_RAT    4687
+                              LRP2_RAT    4660
+                              LRP2_HUMAN  4655
+                              DYHC_RAT    4644
+                              DYHC_DROME  4639
+                              DYHC_CAEEL  4568
+                              DYHB_CHLRE  4568
+                              APB_HUMAN   4563
+                              APOA_HUMAN  4548
+                              LRP1_HUMAN  4544
+                              LRP1_CHICK  4543
+                              DYHC_PARTE  4540
+                              RRPA_CVMJH  4488
+                              DYHG_CHLRE  4485
+                              DYHC_ANTCR  4466
+                              DYHC_TRIGR  4466
+                              GRSB_BACBR  4451
+                              PKSK_BACSU  4447
+                              PKSL_BACSU  4427
+                              PGBM_HUMAN  4393
+                              YP73_CAEEL  4385
+                              DYHC_NEUCR  4367
+                              DYHC_FUSSO  4349
+                              DYHC_EMENI  4344
+                              PKD1_HUMAN  4303
+                              DYHC_SCHPO  4196
+                              DYHC_YEAST  4092
+                              RRPA_CVH22  4085
+                              RRPL_DUGBV  4036
+
+
+   A.5  Statistics for journal citations
+
+
+   Total number of journals cited in this release of SWISS-PROT: 1011
+
+
+   A.5.1 Table of the frequency of journal citations
+
+        Journals cited 1x: 381
+                       2x: 130
+                       3x:  84
+                       4x:  46
+                       5x:  39
+                       6x:  23
+                       7x:  15
+                       8x:  15
+                       9x:  14
+                      10x:  14
+                  11- 20x:  75
+                  21- 50x:  71
+                  51-100x:  24
+                    >100x:  80
+
+
+   A.5.2  List of the most cited journals in SWISS-PROT
+
+   Nb    Citations   Journal abbreviation
+   --    ---------   ----------------------------------
+    1    6683        J. Biol. Chem.
+    2    4031        Proc. Natl. Acad. Sci. U.S.A.
+    3    3434        Nucleic Acids Res.
+    4    2868        J. Bacteriol.
+    5    2714        Gene
+    6    2162        FEBS Lett.
+    7    2046        Eur. J. Biochem.
+    8    1915        Biochem. Biophys. Res. Commun.
+    9    1888        Biochemistry
+   10    1788        EMBO J.
+   11    1684        Nature
+   12    1542        Biochim. Biophys. Acta
+   13    1462        J. Mol. Biol.
+   14    1321        Cell
+   15    1240        Mol. Cell. Biol.
+   16    1042        Genomics
+   17     999        Mol. Gen. Genet.
+   18     987        Plant Mol. Biol.
+   19     956        Biochem. J.
+   20     867        Science
+   21     828        Mol. Microbiol.
+   22     786        Virology
+   23     714        J. Biochem.
+   24     534        J. Virol.
+   25     487        Yeast
+   26     485        J. Cell Biol.
+   27     465        Plant Physiol.
+   28     465        J. Gen. Virol.
+   29     437        Hum. Mol. Genet.
+   30     427        Genes Dev.
+   31     398        Hum. Mutat.
+   32     371        J. Immunol.
+   33     367        Arch. Biochem. Biophys.
+   34     348        Infect. Immun.
+   35     346        Oncogene
+   36     336        Structure
+   37     329        Curr. Genet.
+   38     311        Mol. Biochem. Parasitol.
+   39     307        FEMS Microbiol. Lett.
+   40     307        Am. J. Hum. Genet.
+   41     301        Nat. Genet.
+   42     267        Development
+   43     265        Biol. Chem. Hoppe-Seyler
+   44     256        Microbiology
+   45     252        J. Clin. Invest.
+   46     250        Mol. Endocrinol.
+   47     249        Nat. Struct. Biol.
+   48     234        J. Mol. Evol.
+   49     233        Hum. Genet.
+   50     231        Genetics
+   51     222        J. Gen. Microbiol.
+   52     213        Hoppe-Seyler's Z. Physiol. Chem.
+   53     206        DNA Cell Biol.
+   54     204        Appl. Environ. Microbiol.
+   55     196        Protein Sci.
+   56     193        J. Exp. Med.
+   57     193        Blood
+   58     189        Dev. Biol.
+   59     184        Neuron
+   60     164        Immunogenetics
+   61     152        DNA Seq.
+   62     152        DNA
+   63     151        Endocrinology
+   64     140        Plant Cell
+   65     132        Cancer Res.
+   66     125        Plant J.
+   67     119        Mol. Biol. Evol.
+   68     118        Brain Res. Mol. Brain Res.
+   69     117        Mech. Dev.
+   70     117        J. Neurochem.
+   71     117        Biochimie
+   72     116        Hemoglobin
+   73     116        Bioorg. Khim.
+   74     115        Acta Crystallogr. D
+   75     113        Comp. Biochem. Physiol.
+   76     111        Virus Res.
+   77     110        Agric. Biol. Chem.
+   78     106        Mamm. Genome
+   79     106        J. Neurosci.
+   80     103        Biosci. Biotechnol. Biochem.
+
+  ========================================================================
+
+
+   APPENDIX B: RELATIONSHIPS BETWEEN SWISS-PROT AND SOME BIOMOLECULAR
+               DATABASES
+
+   The current  status of  the relationships (cross-references) between
+   SWISS-PROT and some biomolecular databases is shown in the following
+   schematic:
+
+
+                         ***********************
+                         *  EMBL Nucleotide    *
+                         *  Sequence Database  *
+                         *       [EBI]         *
+                         ***********************
+                           ^ ^ ^  ^  ^ ^ ^ ^ ^
+******************         | | |  I  | | | | |         **********************
+* FlyBase        * <-------+ | |  I  | | | | +-------> * MGD [Mouse]        *
+******************         | | |  I  | | | | |         **********************
+                           | | |  I  | | | | |
+******************         | | |  I  | | | | |         **********************
+* SubtiList      * <---------+ |  I  | | | +---------> * GCRDb [7TM recep.] *
+* [B.subtilis]   *         | | |  I  | | | | |         **********************
+******************         | | |  I  | | | | |
+                           | | |  I  | | | | |         **********************
+******************         | | |  I  | | +-----------> * EcoGene [E.coli]   *
+* Mendel [Plant] * <-----+ | | |  I  | | | | |         **********************
+******************       | | | |  I  | | | | |
+                         | | | |  I  | | | | |         **********************
+******************       | | | |  I  +---------------> * SGD [Yeast]        *
+* MaizeDb        * <-----------+  I  | | | | |         **********************
+* [Zea mays]     *       | | | |  I  | | | | |
+******************       | | | |  I  | | | | |         **********************
+                         | | | |  I  | +-------------> * DictyDB [D.disco.] *
+******************       | | | |  I  | | | | |         **********************
+* WormPep        *       | | | |  I  | | | | |
+* [C.elegans]    * <---+ | | | |  I  | | | | |         **********************
+******************     | | | | |  I  | | | | | +-----> * ENZYME [Nomencl.]  *
+                       | | | | |  I  | | | | | |       **********************
+******************     | v v v v  v  v v v v v v           v
+* REBASE         *     *************************       **********************
+* [Restriction   * <-- *   SWISS-PROT          * ----> * OMIM [Human]       *
+*  enzymes]      *     *   Protein Sequence    *       **********************
+******************     *   Data Bank           *
+                       *************************       **********************
+******************      ^ ^ ^ ^ ^ ^ ^ | ^ ^ ^          * ECO2DBASE     [2D] *
+* StyGene        *      | | | | | | | | | | +--------> **********************
+* [S.typhimurium]* <----+ | | | | | | | | |
+******************        | | | | | | | | |            **********************
+                          | | | | | | | | +----------> * Maize-2DPAGE  [2D] *
+******************        | | | | | | | |              **********************
+* TRANSFAC       * <------+ | | | | | | |
+******************          | | | | | | |              **********************
+                            | | | | | | +------------> * SWISS-2DPAGE  [2D] *
+******************          | | | | | |                **********************
+* Harefield [2D] * <--------+ | | | | |
+******************            | | | | |                **********************
+                              | | | | +--------------> * Aarhus/Ghent  [2D] *
+******************            | | | |                  **********************
+* PROSITE        *            | | | |
+* [Patterns and  * <----------+ | | +----------------> **********************
+* profiles]      *              | |                    * YEPD [Yeast]  [2D] *
+******************              | +----------------+   **********************
+             |                  v                  |
+             |          ***********************    +-> **********************
+             +--------> * PDB [3D structures] * <----- * HSSP [3D similar.] *
+                        ***********************        **********************
+
+  =End=of=SWISS-PROT=release=38=notes=====================================

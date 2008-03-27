@@ -1,0 +1,412 @@
+#!/usr/bin/perl -w
+
+use strict;
+{
+#    use lib '/data2/ppuser/meta/lib/perl5/site_perl/5.6.1/i386-linux';
+#    use lib '/data2/ppuser/meta/lib/perl5/site_perl/5.6.1';
+    use DBI;
+    package _PP_DB;
+
+    sub new{
+	my ($self, $host , $db_name, $user, $pass ) = @_;
+
+	my $db_ref = $self->open ($host , $db_name, $user, $pass);
+	bless $db_ref, $_[0];
+	return $db_ref;
+    }
+
+    sub getServerData{
+	my ($self, $svc_id, $dbg) = @_;
+	my $str_sql = "select id, cgi, url, webresponse, name from services where ID = '$svc_id'";
+
+#	_META_PP->_msg ("SQL: $str_sql") if ($dbg);
+#	_META_PP->_msg ("SQL: $str_sql");
+	my $ref_data =  $self->select($str_sql);
+	return $ref_data->[0];
+    }
+
+    sub getServerByName{
+        my ($self, $svc_name, $dbg) = @_;
+        my $str_sql = "select id, cgi, url, webresponse, name from services where NAME = '$svc_name'";
+#        _META_PP->_msg ("SQL: $str_sql") if ($dbg); 
+        my $ref_data =  $self->select($str_sql);
+        return $ref_data->[0];
+    }
+
+
+
+    sub getServerParams{
+	my ($self, $svc_id, $dbg) =@_;
+
+	my %param_data =();
+	# Get a list of params for this service
+	my $str_sql = "select param_name, param_val from params where svc_id = $svc_id";
+	my $ref_data =  $self->select($str_sql);
+	
+
+	# Construct the parmaeter array
+	foreach my $ref(@$ref_data){
+	    my $name = $ref->{'param_name'};
+	    my $val = $ref->{'param_val'};
+	    $param_data{"$name"} = $val;
+	}
+
+	# construct the query string
+	return \%param_data;
+    }			       
+
+    sub setJobState{
+	my ($self, $job_id, $state, $dbg) = @_;
+	my $sql = "update requests set STATE=$state WHERE id = $job_id";
+#	_META_PP->_msg ("SQL: $sql");# if ($dbg); 
+	my $result = $self->execQuery($sql);
+	return $result;
+    }
+
+
+    sub setBatchState{
+	my ($self, $batch_id, $state, $dbg) = @_;
+	my $sql = "update batches set STATE=$state WHERE id = $batch_id ";
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+
+	my $result = $self->execQuery($sql);
+	return $result;
+    }
+
+    sub setBatchStartTime{
+	my ($self, $id, $dbg) =@_;
+	my $sql = "UPDATE batches SET STARTTIME=NOW() where id=$id";
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+	my $result = $self->execQuery($sql);
+	return $result;
+    }
+
+    sub setBatchMD5ID{
+	my ($self, $batch_id, $md5id, $dbg) = @_;
+	my $sql = "update batches set MD5ID='".$md5id."' WHERE id = $batch_id ";
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+	my $result = $self->execQuery($sql);
+	return $result;
+
+    }
+
+
+    sub setJobStartTime{
+	my ($self, $id, $dbg) =@_;
+	my $sql = "UPDATE requests SET TIMEMODIFIED=NOW() where id=$id";
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+	my $result = $self->execQuery($sql);
+	return $result;
+    }
+
+
+    sub setJobModTime{
+	my ($self, $id, $dbg) =@_;
+	my $sql = "UPDATE jobs SET MODIFIEDTIME=NOW() where id=$id";
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+	my $result = $self->execQuery($sql);
+	return $result;
+    }
+
+
+    sub setJobAttempts{
+	my ($self, $id, $attempts, $dbg) =@_;
+	my $sql = "UPDATE jobs SET ATTEMPTS=$attempts where id=$id";
+	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+	my $result = $self->execQuery($sql);
+	return $result;
+    }
+
+#    sub getNextBatchJob{
+#	my ($self, $dbg) = @_;
+#	my $sql = "SELECT * FROM batches WHERE id = (select min(id) from batches where STATE=0)";
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+#	my $ref_result = $self->select($sql);
+#	return $ref_result->[0];
+#    }
+
+
+   sub getNextJob{
+	my ($self, $state,$dbg) = @_;
+#	my $sql = "SELECT * FROM batches WHERE id = (select min(id) from batches where  STATE < $max_state)";
+	my $sql = "select * from requests where id = (SELECT min(ID) FROM requests WHERE STATE =$state)";
+#	print $sql,"\n";
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+	my $ref_result = $self->select($sql);
+	return $ref_result;
+    }
+
+
+    sub getBatchJobs{
+	my ($self, $batch_id, $dbg) = @_;
+	my $sql = "SELECT * FROM jobs WHERE BATCH_ID = $batch_id";
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+	my $ref_result = $self->select($sql);
+	return $ref_result;
+    }
+
+
+    sub getJobsForBatch{
+	my ($self, $batch_id, $dbg) = @_;
+	my $sql = "SELECT ID, SVC_ID FROM jobs WHERE BATCH_ID = $batch_id and STATE=0";
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+	my $ref_result = $self->select($sql);
+	return $ref_result;
+    }
+
+    sub getJobs{
+	my ($self, $batch_id, $dbg) = @_;
+	my $sql = "SELECT ID,SVC_ID, RESULT_ID, STARTTIME, MODIFIEDTIME, ATTEMPTS FROM jobs WHERE ID = $batch_id";
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+	my $ref_result = $self->select($sql);
+	return $ref_result;
+    }
+
+
+    sub setResults{
+	my ($self, $job_id, $contents, $req_name, $dbid, $dbg) =@_;
+	my $result;
+#	$contents =  $self->{'dbh'}->quote($contents);     
+	my $sql = "INSERT INTO  results (NAME, CONTENT, TIMECREATED, REQ_NAME, REQ_ID ) VALUES ('$job_id',?,NOW(), '$req_name', $dbid)";
+	print $sql;
+#	my $sql = "INSERT INTO  results (NAME, CONTENT, TIMECREATED ) VALUES ('$job_id',$contents,NOW())";
+	eval{ # Start TX
+	    my $sth = $self->{'dbh'}->prepare($sql);
+	    $sth->execute( $contents );
+#	    $sth->execute(  );
+	    $result .= "updated results\n";
+#	    my $id = $self->{'dbh'}->{'mysql_insertid'};
+#	    $sql ="UPDATE jobs SET RESULT_ID=$id where ID=$job_id";
+#	    $result .= $self->execQuery($sql);
+#	    $result .= "updated job with result id\n";
+             # got this far means no errors
+#	     $self->{'dbh'}->commit();
+	};
+         # if any errors ---> rollback
+	if ($@)	{
+#	    print "l191\n";
+	    my $msg =  "Couldn't execute query '$sql': $DBI::errstr\n";
+	    $self->{'dbh'}->rollback();
+#	    print "l194\n";
+	    return (undef,$msg); 
+	}
+	return $result;
+    }
+
+
+    sub getBatchResults{
+	my ($self, $batch_id, $dbg) =@_;
+	my $sql = "SELECT s.NAME,r.CONTENT, j.STATE, j.ATTEMPTS FROM services s, jobs j LEFT JOIN results r ON r.id = j.result_id 
+                   WHERE (s.id=j.svc_id AND j.batch_id=$batch_id)";
+#	my $sql ="SELECT s.NAME,r.CONTENT, j.STATE, j.ATTEMPTS FROM results r, jobs j, services s WHERE (s.id=j.svc_id and r.id = j.result_id AND j.batch_id=$batch_id)";
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+	my $ref_result = $self->select($sql);
+	return $ref_result; 
+    }				
+
+
+    
+    sub getBatchResultsByInput{
+	my ($self,  $serviceID, $proteinName, $sequence, $dbg) =@_;
+
+	my $sql = "SELECT s.NAME, r.CONTENT, j.STATE, j.ATTEMPTS FROM services s, jobs j LEFT JOIN results r ON r.id = j.result_id ";
+	$sql .= "WHERE (s.id = j.svc_id AND j.batch_id = (SELECT b.id FROM batches b, jobs j ";
+	$sql .= "WHERE b.input = '".$sequence."' AND b.job_name = '".$proteinName."' AND b.id = j.batch_id AND j.svc_id =$serviceID))";
+
+#	_META_PP->_msg ("SQL: $sql") if ($dbg); 
+	my $ref_result = $self->select($sql);
+
+	return $ref_result->[0]; 
+    }		
+
+
+    sub open{
+	my ($self, $host , $db_name, $user, $pass) = @_;
+
+#	my $dsn = "dbi:mysql:$db_name;$host";
+	my $dsn = "dbi:mysqlPP:database=$db_name;host=$host";
+	my $dbh = DBI->connect( $dsn, $user, $pass ) || return undef;
+	my $drh = DBI->install_driver( "mysqlPP" ) || return undef;
+
+	my $hash_ref = {
+	    dsn => $dsn,	 
+	    dbh => $dbh,
+	    drh => $drh		
+	    };			 
+	return $hash_ref;
+    }
+    
+
+    sub execQuery{
+	my ($self, $sql) = @_;
+	# Now retrieve data from the table.
+#	if (!$self->{'dbh'}){
+#	    $self->open('bonsai.bioc.columbia.edu','PREDICTPROTEIN','phd','Pr3d8ct');
+#	}
+	my  $sth = $self->{'dbh'}->prepare("$sql");
+
+	$sth->execute() || die "Couldn't execute query '$sql': $DBI::errstr\n"; 
+	return 1;
+    }
+
+    sub select{
+	my ($self, $sql) = @_;
+	# Now retrieve data from the table.
+
+#	if (!$self->{'dbh'}){
+#	    $self->open('bonsai.bioc.columbia.edu','PREDICTPROTEIN','phd','Pr3d8ct');
+#	}
+	
+	my  $sth = $self->{'dbh'}->prepare("$sql");
+
+	$sth->execute() || warn "Couldn't execute query '$sql': $DBI::errstr\n"; 
+
+	my $numrows=0;
+	my @data;
+
+	eval { 
+	    while (my $ref = $sth->fetchrow_hashref()){
+		push @data, $ref;
+		$numrows++;
+	    }
+	}; warn $@ if $@;
+#	print "_PP_DB.pm Line 262\n";
+	$sth->finish();
+	return undef if ($numrows==0);
+	return \@data;
+    }
+
+
+    sub close{
+	my $self = $_[0];
+	$self->{'dbh'}->disconnect();
+    }
+
+    sub msg{
+	my $s = shift;
+	print ($s);
+	print "\n";
+	
+    }
+
+    sub set_tranx{   
+	my $self =$_[0];		      
+#	$self->{'dbh'}->{AutoCommit} = 0; # enable transactions, if possible
+	$self->{'dbh'}->{RaiseError} = 1;
+    }
+
+    sub commit_tranx{
+	my $self =$_[0];		     
+	$self->{'dbh'}->commit;	# commit the changes if we get this far
+    }
+
+    sub rollback_tranx{
+	my $self =$_[0];		      
+	eval { $self->{'dbh'}->rollback };
+    }
+
+
+
+   ########## Genetegrate META #######################################################
+
+    sub setServiceJob{
+        my ($self, $batch_id,$service_id, $dbg) =@_;
+        my $id;
+        my $sql = "INSERT INTO jobs (BATCH_ID, SVC_ID) VALUES ($batch_id,$service_id)";
+        eval{ # Start TX
+#            _META_PP->_msg ("SQL: $sql") if ($dbg);
+            $self->execQuery($sql);
+            $id = $self->{'dbh'}->{'mysql_insertid'};
+            # got this far means no errors
+            $self->{'dbh'}->commit();
+        };
+        # if any errors ---> rollback
+        if ($@) {
+            my $msg =  "Couldn't execute query '$sql': $DBI::errstr\n";
+            $self->{'dbh'}->rollback();
+            return (undef,$msg);
+        }
+        return $id;
+    }
+
+
+
+    sub setBatchJob{
+        my ($self, $email,$prot_name, $sequence, $dbg) =@_;
+        my $id;
+        my $sql = "INSERT INTO batches (USER_EMAIL, JOB_NAME, INPUT) VALUES (\'$email\',\'$prot_name\',\'$sequence\')";
+        eval{ # Start TX
+#            _META_PP->_msg ("SQL: $sql") if ($dbg);
+            $self->execQuery($sql);
+            $id = $self->{'dbh'}->{'mysql_insertid'};
+            # got this far means no errors
+            $self->{'dbh'}->commit();
+        };
+        # if any errors ---> rollback
+        if ($@){
+            my $msg =  "Couldn't execute query '$sql': $DBI::errstr\n";
+            $self->{'dbh'}->rollback();
+            return (undef,$msg);
+        }
+#       $id=$dbg;
+        return $id;
+    }
+
+    ###################################################################################
+
+
+
+
+
+}				
+1; 
+
+__END__
+
+my %User_Preferences;
+
+
+
+
+
+
+
+				# 
+print "Content-type:text/html\n\n";
+
+my $db_host = $User_Preferences{"DB_HOST"};
+my $db_user = $User_Preferences{"DB_USER"};
+my $db_pass = $User_Preferences{"DB_PASS"};
+my $db_name = $User_Preferences{"DB_INSTANCE"};
+
+
+# 
+
+# 
+
+# 
+$sth = $dbh->prepare("SELECT * FROM services");
+$sth->execute;
+$numRows = $sth->rows;
+$numFields = $sth->{'NUM_OF_FIELDS'};
+print "$numFields\n"x10;
+#while ($row_ref = $sth->fetchrow_hashref())
+#{
+#    print "User <b>$row_ref->{User}</b> has privileges on <b>$row_ref->{Host}</b>.<br>";
+#}
+
+
+exit;
+
+
+
+
+#use DBI;
+#$db_handle = DBI->connect("dbi:mysql:database=$db_name;host=$db_host;user=$db_user;password=$db_pass")
+#    or die "Couldn't connect to database: $DBI::errstr\n";
+#$sql = "SELECT * FROM services";
+#$statement = $db_handle->prepare($sql)
+#    or die "Couldn't prepare query '$sql': $DBI::errstr\n";
+#$statement->execute()
+#    or die "Couldn't execute query '$sql': $DBI::errstr\n";
+#$db_handle->disconnect();
