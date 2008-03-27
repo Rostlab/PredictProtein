@@ -1,0 +1,2 @@
+>1shg   mol:protein length:62     Alpha Spectrin (Sh3 Domain) - Chain _
+MDETGKELVLALYDYQEKSPREVTMKKGDILTLLNSTNKDWWKVEVNDRQGFVPAAYVKKLD

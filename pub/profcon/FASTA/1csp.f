@@ -1,0 +1,2 @@
+>1csp   mol:protein length:67     Major Cold Shock Protein (Cspb) - Chain _
+MLEGKVKWFNSEKGFGFIEVEGQDDVFVHFSAIQGEGFKTLEEGQAVSFEIVEGNRGPQAANVTKEA

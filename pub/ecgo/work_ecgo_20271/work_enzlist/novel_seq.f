@@ -1,0 +1,4 @@
+>prot (#) default: single protein sequence description=t0366 /home/ppuser/server/work/predict_h22603
+TENLYFQSMG LRTVEMKKGP TDSLGISIAG GVGSPLGDVP IFIAMMHPTG
+VAAQTQKLRV GDRIVTICGT STEGMTHTQA VNLLKNASGS IEMQVVAGGD
+VSETSV

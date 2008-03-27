@@ -1,0 +1,4 @@
+>prot (#) default: single protein sequence description=t0377 /home/ppuser/server/work/predict_h9664
+MAMLYLIFYD ITDDNLRNRV AEFLKKKGLD RIQYSVFMGD LNSSRLKDVE
+AGLKIIGNRK KLQEDERFFI LIVPITENQF RERIVIGYSG SEREEKSNVV
+W

@@ -1,0 +1,2 @@
+>1srl   mol:protein length:64     Src Tyrosine Kinase Transforming Protein (Sh3
+GALAGGVTTFVALYDYESRTETDLSFKKGERLQIVNNTEGDWWLAHSLTTGQTGYIPSNYVAPS
