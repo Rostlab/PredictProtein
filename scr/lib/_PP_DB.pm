@@ -165,29 +165,45 @@ use strict;
 
     sub setResults{
 	my ($self, $job_id, $contents, $req_name, $dbid, $dbg) =@_;
-	my $result;
-#	$contents =  $self->{'dbh'}->quote($contents);     
-	my $sql = "INSERT INTO  results (NAME, CONTENT, TIMECREATED, REQ_NAME, REQ_ID ) VALUES ('$job_id',?,NOW(), '$req_name', $dbid)";
-	print $sql;
-#	my $sql = "INSERT INTO  results (NAME, CONTENT, TIMECREATED ) VALUES ('$job_id',$contents,NOW())";
+	my ($result, $msg);
+
+	my $sql  = "INSERT INTO  results (NAME,  TIMECREATED, REQ_NAME, REQ_ID ) VALUES ('$job_id',NOW(), '$req_name', $dbid)";
+	my $sql2 = "INSERT INTO  results_content (res_id, CONTENT) VALUES (?,COMPRESS(?))";  
+	
 	eval{ # Start TX
-	    my $sth = $self->{'dbh'}->prepare($sql);
-	    $sth->execute( $contents );
-#	    $sth->execute(  );
+	    my $sth  = $self->{'dbh'}->prepare($sql);
+	    my $sth2 = $self->{'dbh'}->prepare($sql2);
+	    $sth->execute( );
+	    my $res_id = $self->{'dbh'}->{ q{mysql_insertid}};
+
+	    $sth2->execute( $res_id,$contents );
+	    $result = $res_id;
+	    $msg = "updated results\n";
+	};
+	# if any errors ---> rollback
+	if ($@)	{
+	    $msg =  "Couldn't execute query '$sql': $DBI::errstr\n";
+	    $self->{'dbh'}->rollback();
+	    return (undef,$msg); 
+	}
+	return ($result,$msg);
+    }
+
+
+    sub setXMLResults{
+	my ($self,$dbid, $contents, $errConv,  $dbg) =@_;
+	my $result;
+	my $sql;
+
+	eval{ # Start TX
+	    $sql = "REPLACE INTO  XMLRESULTS (REQUESTID, XML_CONTENT,UCONV_ERR) VALUES ($dbid, COMPRESS(?),".$self->{'dbh'}->quote($errConv).")";
+	    $self->{'dbh'}->do($sql,undef,$contents, $errConv) || die ( $DBI::errstr);
 	    $result .= "updated results\n";
-#	    my $id = $self->{'dbh'}->{'mysql_insertid'};
-#	    $sql ="UPDATE jobs SET RESULT_ID=$id where ID=$job_id";
-#	    $result .= $self->execQuery($sql);
-#	    $result .= "updated job with result id\n";
-             # got this far means no errors
-#	     $self->{'dbh'}->commit();
 	};
          # if any errors ---> rollback
 	if ($@)	{
-#	    print "l191\n";
 	    my $msg =  "Couldn't execute query '$sql': $DBI::errstr\n";
 	    $self->{'dbh'}->rollback();
-#	    print "l194\n";
 	    return (undef,$msg); 
 	}
 	return $result;

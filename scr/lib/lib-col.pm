@@ -350,7 +350,8 @@ sub blastpRun {
                                 # ------------------------------
                                 # run BLASTP
                                 # ------------------------------
-    $command="$niceLoc $exeBlastp $parBlastpDb $fileInLoc B=$nhits > $fileOutLoc";
+#    $command="$niceLoc $exeBlastp $parBlastpDb $fileInLoc B=$nhits > $fileOutLoc";
+    $command="$niceLoc $exeBlastp  -p blastp -d ".$ENV{'BLASTDB'}."$parBlastpDb -i $fileInLoc -B $nhits > $fileOutLoc";
     $msg="--- $sbr '$command'\n";
 
     ($Lok,$msgSys)=
@@ -5798,8 +5799,9 @@ sub prodomRun {
 				# ------------------------------
 				# run BLAST
     $dbTmp=$parBlastDb;$dbTmp=~s/\/$//g;
-    $cmd=  "$niceLoc $exeBlast $dbTmp $fileInLoc E=$parBlastE B=$parBlastN >> $fileOutTmpLoc ";
-    $cmd=  "$exeBlast $dbTmp $fileInLoc E=$parBlastE B=$parBlastN >> $fileOutTmpLoc ";
+#    $cmd=  "$niceLoc $exeBlast $dbTmp $fileInLoc E=$parBlastE B=$parBlastN >> $fileOutTmpLoc ";
+#    $cmd=  "$exeBlast -p blastp -d $dbTmp -i $fileInLoc -E $parBlastE -B $parBlastN >> $fileOutTmpLoc ";
+    $cmd=  "$exeBlast -p blastp -d $dbTmp -i $fileInLoc -B $parBlastN >> $fileOutTmpLoc ";
     print $fhErrSbr "--- $sbrName: system \t $cmd\n";
     system("$cmd");
 				# ------------------------------
@@ -6859,7 +6861,6 @@ sub sysRunProg {
 				# ------------------------------
 				# dissect arguments
 
-    print "cmd=$cmd\n"x10;
     ($prog,@arg)=split(/,/,$cmd);
     if    ($fhErrLoc && ! @arg) {
 	print $fhErrLoc "-*- WARN $sbrName: no arguments to pipe into:\n$prog\n";

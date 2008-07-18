@@ -624,25 +624,26 @@ sub htmlBuild {
 #	print $fhoutTocLoc "<H2>TOC for file ".$fileInHtml."</H2>\n","<OL>\n";
 	print $fhoutTocLoc "<H2>Table Of Contents</H2>\n","<OL>\n";
 				# BODY
-	print $fhoutLoc 
-	    "<H2>BEG of results </H2>\n","<P><BR><P>\n"; }
+#	print $fhoutLoc 
+#	    "<H2>BEG of results </H2>\n","<P><BR><P>\n";
+ }
 
 				# ------------------------------
 				# closing files (and return)
 				# ------------------------------
     if ($kwdLoc=~/end/) {
 				# closing TOC
-	print $fhoutTocLoc 
-	    "</OL><BR>\n",
-	    "END of TOC<BR>\n",
-	    "<P><BR><P><HR><P><BR><P>\n"; 
+#	print $fhoutTocLoc 
+#	    "</OL><BR>\n",
+#	    "END of TOC<BR>\n",
+#	print $fhoutTocLoc   "<P><BR><P><HR><P><BR><P>\n"; 
 	close($fhoutTocLoc)     if ($fhoutTocLoc ne "STDOUT");
 				# closing BODY
 
 	$fileTmp=$fileOutHtmlLoc; $fileTmp=~s/^.*\/|\..*$//g;
-	print $fhoutLoc 
-	    "END of results for file ".$fileTmp."<BR>\n",
-	    "<P><BR><P><HR><P><BR><P>\n"; 
+#	print $fhoutLoc 
+#	    "END of results for file ".$fileTmp."<BR>\n",
+#	    "<P><BR><P><HR><P><BR><P>\n"; 
 	close($fhoutLoc)        if ($fhoutLoc ne "STDOUT");
 	return(1,"ok"); }
 	
@@ -3239,7 +3240,6 @@ sub getHtmlBval{
     $cmd = "cat $fileInHeading > $fileOutProfBvalHtm";
     ($Lok,$msg)= &sysSystem("$cmd",$fhoutSbr);    
 
-    print "fileOutProfBvalHtm=$fileOutProfBvalHtm\n"x10;
 
     open (FO,">>$fileOutProfBvalHtm")|| return(0, "fileOut=$fileOutProfBvalHtm error:$!\n");
     print FO $str;

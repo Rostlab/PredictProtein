@@ -131,7 +131,8 @@ INIT: {
 # init datbase connection
     use lib '/nfs/data5/users/ppuser/server/scr/lib';
     require _PP_DB;
-    $sqlDB = _PP_DB->new('bonsai.bioc.columbia.edu','PREDICTPROTEIN','yachdav','Y4chd4v');
+#    $sqlDB = _PP_DB->new('bonsai.bioc.columbia.edu','PREDICTPROTEIN','yachdav','Y4chd4v');
+    $sqlDB = _PP_DB->new('cherry.bioc.columbia.edu','PREDICTPROTEIN','yachdav','Y4chd4v');
 #    $sqlDB = _PP_DB->new('bonsai.bioc.columbia.edu','PREDICTPROTEIN','phd','phd');
 
 
@@ -905,6 +906,39 @@ sub predict {
     &ctrlDbgMsg("end of (6l) runProfBval: $packName",$fhTrace,$Debug);
 
 
+
+                               # -----------------------------------------------
+                                # Run NORSnet
+                                # -----------------------------------------------
+
+    if ($job{"run"} =~ /\b(norsnet|norsnet_only)\b/i) {
+        ($Lok,$err,$msg)=
+            &runNORSnet ($Origin,$Date,$niceRun,$filePID,$fhOut,$fhTrace,
+                         $envPP{"dir_work"},$filePredTmp,$fileHtmlTmp,$fileHtmlToc,
+                         $Debug,$job{"run"},$job{"out"},
+                         $envPP{"exeCopf"},$envPP{"exeNORSnet"},
+                         $envPP{"dirNorsnet"});
+        if (!$Lok){
+            print $fhTrace "*** ERROR in runNORSnet\n*** err=$err\n*** msg=$msg\n" if ($Debug);
+            print "*** ERROR in runNORSnet\n*** err=$err\n*** msg=$msg\n";
+	    # Add error message to result file
+	    $msg = "--- Attempt to run Norsnet failed. Please contact the service administrator\n";
+	    $command = "echo $msg>>";
+	    if ($job{"out"}=~/ret html/){ $command .= $fileHtmlTmp;}
+	    else{ $command .= $filePredTmp;}			
+	    ($Lok,$msgSys)=&sysSystem("$command");
+            if (0){
+                ($Lok,$msg2)=
+                    &ctrlAbortPred($err,"abort ".$msg);  print $fhTrace "$msg2\n"
+		    if ($Debug && ! $Lok);
+                                # **************************************************
+                return(0,"$msg");} # <<<<< ****** this is bad end
+                                # **************************************************
+        }
+    }
+    &ctrlDbgMsg("end of (6l) runNORSnet: $packName",$fhTrace,$Debug);
+
+
 				# -----------------------------------------------
 				# Run Prenup
 				# -----------------------------------------------
@@ -937,6 +971,41 @@ sub predict {
 	}
     }
     &ctrlDbgMsg("end of (6m) runPrenup: $packName",$fhTrace,$Debug); 
+
+
+				# -----------------------------------------------
+				# Run MD - AVNER SCHLESSINGER 2008_05
+				# -----------------------------------------------
+
+    if ($job{"run"} =~/mdisorder/i) {
+	($Lok,$err,$msg)=
+	    &runMdisorder ($Origin,$Date,$niceRun,$filePID,$fhOut,$fhTrace,
+			 $envPP{"dir_work"},$filePredTmp,$fileHtmlTmp,$fileHtmlToc,
+			 $Debug,$job{"run"},$job{"out"},
+			 $envPP{"exeCopf"},$envPP{"exeMdisorder"}, $envPP{"exeMdisorder_slow"}, 
+			 $envPP{"dirMdisorder"});
+	if (!$Lok){
+	    print $fhTrace "*** ERROR in runMdisorder\n*** err=$err\n*** msg=$msg\n" if ($Debug);
+	    print "*** ERROR in runMdisorder\n*** err=$err\n*** msg=$msg\n";
+	    # Add error message to result file
+	    $msg = "--- Attempt to run Mdisorder failed."
+                         ."Please contact the service administrator\n"; 
+	    $command = "echo $msg>>";
+	    if ($job{"out"}=~/ret html/){ $command .= $fileHtmlTmp;}
+	    else{ $command .= $filePredTmp;}			
+	    ($Lok,$msgSys)=&sysSystem("$command");
+
+	    if (0){
+		($Lok,$msg2)=
+		    &ctrlAbortPred($err,"abort ".$msg);  print $fhTrace "$msg2\n" 
+			if ($Debug && ! $Lok);
+				# **************************************************
+		return(0,"$msg");} # <<<<< ****** this is bad end 
+				# **************************************************
+	}
+    }
+    &ctrlDbgMsg("end of (6m) runMdisorder: $packName",$fhTrace,$Debug); 
+
 
 
 				# -----------------------------------------------
@@ -976,11 +1045,46 @@ sub predict {
 
 
 
+
+                               # -----------------------------------------------                                          
+                               # Run DISIS                                                                                
+                               # -----------------------------------------------                                          
+
+    if ($job{"run"} =~/disis/i) {
+        ($Lok,$err,$msg)=
+            &runDisis  ($Origin,$Date,$niceRun,$filePID,$fhOut,$fhTrace,
+			   $envPP{"dir_work"},$filePredTmp,$fileHtmlTmp,$fileHtmlToc,
+			   $Debug,$job{"run"},$job{"out"},
+			   $envPP{"exeMaxhom"},$envPP{"exeDisis"},
+			   $envPP{"dirDisis"});
+        if (!$Lok){
+            print $fhTrace "*** ERROR in runDisis\n*** err=$err\n*** msg=$msg\n" if ($Debug);
+            print "*** ERROR in runDisis\n*** err=$err\n*** msg=$msg\n";
+
+            # Add error message to result file                                                                             
+            $msg = "--- Attempt to run DISIS failed. Please contact the service administrator\n";
+            $command = "echo $msg>>";
+            if ($job{"out"}=~/ret html/){ $command .= $fileHtmlTmp;}
+            else{ $command .= $filePredTmp;}
+            ($Lok,$msgSys)=&sysSystem("$command");
+
+            if (0){
+                ($Lok,$msg2)=
+                    &ctrlAbortPred($err,"abort ".$msg);  print $fhTrace "$msg2\n"
+		    if ($Debug && ! $Lok);
+                                # **************************************************                                       
+                return(0,"$msg");} # <<<<< ****** this is bad end                                                          
+                                # **************************************************                                       
+	}
+    }
+    &ctrlDbgMsg("end of (6j) runDisis: $packName",$fhTrace,$Debug);
+
+
 				# -----------------------------------------------
 				# Run ISIS
 				# -----------------------------------------------
 
-    if ($job{"run"} =~/isis/i) {
+    if ($job{"run"} =~/isis/i && $job{"run"} !~ /disis/ ) {
 	($Lok,$err,$msg)=
 	    &runPredIsis  ($Origin,$Date,$niceRun,$filePID,$fhOut,$fhTrace,
 			 $envPP{"dir_work"},$filePredTmp,$fileHtmlTmp,$fileHtmlToc,
@@ -1260,6 +1364,29 @@ sub predict {
     &ctrlDbgMsg("end of (6) runPhd/runProf/runTopits/runCafaspThreader: $packName",
 		$fhTrace,$Debug);
 
+
+    ($strXMLContents, $errMsg)   = &convertToXML($filePID,$fhTrace, $envPP{"dir_work"}, ,$Debug  );
+     if ( length($strXMLContents)>0 ||  length($errMsg)>0){
+#	 $fhfileXMLStore = "FHFILEXMLSTORE";
+#	 $Lok=       &open_file($fhfileXMLStore,$fileXMLStore) ||
+	 warn("*** warnning $sbr:convertToXML :$errMsg") if (length($errMsg)>0); 
+#	 if ($Lok){
+#	     undef $/;		# 'slurp' mode
+#	     $tmpXMLContents = <$fhfileXMLStore>;
+#	     close $fhfileXMLStore;
+#	     $/="\n";			# back to regular mode
+#	     # Put the XML file in the database
+#	     $errJconv =  $errUconv = "";
+#	     undef $tmpRes; 
+	 ($tmpRes,$msg) = $sqlDB->setXMLResults($DBid, $strXMLContents,$errMsg, $Debug);
+	 warn "-*- $packName'$sbr setXMLResults failed.System message:$msg \n" if (! defined $tmpRes);
+     } else {
+	 warn "-*- $packName'$sbr convertToXML failed.System message:$msg \n" if (! defined $tmpRes);
+     }
+	
+     
+
+
 #-------------------------------------------------------------------------------
 #   (7) prepare holidays
 #-------------------------------------------------------------------------------
@@ -1293,6 +1420,12 @@ sub predict {
     return(1,"ok","formatSend=html");
 
 }				# end of predict
+
+
+
+
+
+
 # ================================================================================
 # 
 #--------------------------------------------------------------------------------#
@@ -1342,7 +1475,7 @@ sub initPackEnv {
 				# scripts, executables and files
 				# ------------------------------
     foreach $kwd ("pack_licence","lib_ctime","lib_pp","lib_err","lib_col",
-		  "exe_mail","exe_status","exe_stripstars","exe_ps",
+		  "exe_mail","exe_status","exe_stripstars","exe_ps","exe_convert2xml",
 #		  "envFastaLibs",
 		  "envBlastMat","envBlastDb","envProdomBlastDb",
 		  "envBlastPsiMat","envBlastPsiDb",
@@ -1374,8 +1507,8 @@ sub initPackEnv {
 #"dirBigTremblSplit",
 		  "dirBigPdbSplit","dirSnap",
 		  "dirPhd","dirProf","dirTopits","dirDisulfind","dirProfCon","dirPcc",  
-		  "dirChop","dirChopper","dir_pplocal_home", "dirProfBval", "dirPrenup","dirEcgo",
-		  "dirIsis","dirNLProt", "dirProfTmb",  "dirLocTar",  "dirPfam",  "dirAgape","dirR4S", "dirConBlast"){
+		  "dirChop","dirChopper","dir_pplocal_home", "dirProfBval","dirNORSnet", "dirPrenup","dirEcgo","dirMdisorder",
+		  "dirIsis","dirDisis","dirNLProt", "dirProfTmb",  "dirLocTar",  "dirPfam",  "dirAgape","dirR4S", "dirConBlast"){
 	next if (length($kwd)<1);
 #	$envPP{$kwd}=         &envPP'getLocal("$kwd");    #e.e'
 	$envPP{$kwd}=         &envPP::getLocal($kwd);
@@ -1445,13 +1578,13 @@ sub initPackEnv {
 		  "exePhdRdb2kg",
 		  "exe_ppGetCachedResults",
 		  "exeProf",      "exeProfFor",        "exeProfPhd1994",   "exeProfPhd1994For",
-		  "exeProfConv",  "exeProfHtmfil","exeProfHtmref",     "exeProfHtmtop", "exePrenup","exeEcgo",
+		  "exeProfConv",  "exeProfHtmfil","exeProfHtmref",     "exeProfHtmtop", "exePrenup","exeEcgo", "exeMdisorder","exeMdisorder_slow",
 #		  "exeGlobe",
 #		  "exeTopitsWrtOwn",
 		  "exeTopits",    "exeTopitsMaxhomCsh","exeTopitsMakeMetr","exeTopitsMaxhom",
-		  "exeThreader","exePfam","exeProfBval","exeSnap",
+		  "exeThreader","exePfam","exeProfBval","exeSnap","exeNORSnet",
 		  "exeMview", "exeProfCon", "exePcc", "exeChop", "exeChopper",
-                  "exeIsis", "exeProfTmb", "exeLocTar", "exeAgape","exeConBlast", "exeNLProt", "exeR4S",
+                  "exeIsis", "exeDisis", "exeProfTmb", "exeLocTar", "exeAgape","exeConBlast", "exeNLProt", "exeR4S",
 #"exe_svcSubmitter",
 		  ){
 	next if (length($kwd)<1);
@@ -1552,8 +1685,8 @@ sub initPackEnv {
 		  "maxhom","blast","mview","coils","seg",
 		  "phd", "phd_sec", "phd_acc", "phd_htm",
 		  "prof","prof_sec","prof_acc","prof_htm","pfam",
-		  "globe","topits","disulfind","asp","norsp", "profcon", "pcc", "profbval", "prenup", "ecgo","snap", 
-		  "chop","chopper","isis", "proftmb", "loctar",  "agape","conblast", "NLProt",  "conseq",  "consurf"
+		  "globe","topits","disulfind","asp","norsp", "profcon", "pcc", "profbval", "prenup", "ecgo","snap", "norsnet","mdisorder",
+		  "chop","chopper","isis", "disis", "proftmb", "loctar",  "agape","conblast", "NLProt",  "conseq",  "consurf"
 		  ){
 	$kwd2="version_".$kwd;
 	$envPP{$kwd2}=        &envPP::getLocal($kwd2);
@@ -1588,17 +1721,25 @@ sub initPackEnv {
 		  "fileAppRetGraph",     "fileAppRetCol",       "fileAppRetPhdCasp2",
 		  "fileAppRetProfMsf",   "fileAppRetProfRdb",    
 		  "fileAppRetProfGraph", "fileAppRetProfCol",   "fileAppRetProfCasp",
-
 		  "fileAppWrgMsfexa",    "fileAppWrgSafexa",    "fileAppErrCrypt",
+		  "fileAppEmpty",        "fileAppHtmlHeadChop", "fileAppHtmlHeadProfCon", 
+		  "fileAppHtmlHeadProfBval", 
+                  "fileAppHtmlHead",      "fileAppHtmlHeadIsis", 
+		  "fileAppHtmlHeadAgape", "fileAppHtmlHeadNLProt","fileAppHtmlHeadNLProt",
+		  "fileAppHtmlHeadDisis", "fileAppHtmlFoot", "fileAppProfCon",
+		  "fileAppHtmlHeadProfBval", "fileAppPcc", 
+                  "fileAppHtmlHeadConBlast",   
+                  "fileAppHtmlHeadSnap",  
+		  "fileAppHtmlHeadPrenup", "fileAppHtmlHeadMdisorder","fileAppHtmlHeadEcgo", 
+		  "fileAppHtmlHeadNORSnet","fileAppHtmlStyles",    "fileAppHtmlQuote", 
 
-		  "fileAppEmpty",        "fileAppHtmlHeadChop", "fileAppHtmlHeadProfCon", "fileAppHtmlHeadProfBval", 
-		 "fileAppHtmlHead", "fileAppHtmlHeadIsis", "fileAppHtmlHeadAgape", "fileAppHtmlHeadNLProt", "fileAppHtmlHeadNLProt",
-		  "fileAppHtmlFoot", "fileAppProfCon", "fileAppPcc", "fileAppHtmlHeadProfBval", "fileAppHtmlHeadConBlast",   "fileAppHtmlHeadSnap", 
-		  "fileAppHtmlStyles",    "fileAppHtmlQuote", "fileAppChop", "fileAppChopper",
-		  "fileAppIsis", "fileAppProfTmb", "fileAppNLProt", "fileAppProfBval","fileAppSnap",
-		  "fileAppLocTar",  "fileAppPfam",   "fileAppAgape","fileAppConBlast",  "fileAppR4S", "fileAppPrenup", "fileAppEcgo",
-		  "fileAppConSurf", "fileAppConSeq"
-		    
+		  "fileAppChop",           "fileAppChopper",      "fileAppIsis",
+		  "fileAppDisis",          "fileAppProfTmb",      "fileAppNLProt", 
+		  "fileAppProfBval",       "fileAppSnap",         "fileAppNORSnet",
+		  "fileAppLocTar",         "fileAppPfam",         "fileAppAgape",
+		  "fileAppConBlast",       "fileAppR4S",          "fileAppPrenup", 
+		  "fileAppEcgo",           "fileAppConSurf",       "fileAppConSeq",
+		  "fileAppMdisorder",  
 				# note: PHD internal now
 #		  "fileAbbrPhd3",        "fileAbbrRdb3",        "fileAbbrPhdBoth",
 #		  "fileAbbrPhdSec",      "fileAbbrPhdAcc",      "fileAbbrPhdHtm",
@@ -1864,22 +2005,27 @@ sub iniHtmlBuild {
 	 'asp',              "Ambivalent Sequence Predictor(Malin Young, Kent Kirshenbaum, Stefan Highsmith)",
 	 'norsp',             "predictor of NOn-Regular Secondary Structure (Jinfeng Liu & Burkhard Rost)",
 	 'coils',            "COILS prediction (A Lupas)",
-	 'disulfind',	     "DISULFIND (A. Vullo and P. Frasconi)",
+	 'disulfind',	     "DISULFIND (A. Ceroni, A. Passerini, A. Vullo and P. Frasconi)",
 #	 'cyspred',	     "CYSPRED prediction(P Fariselli,P Riccobelli & R Casadio)",
 	 'pcc',	             "Predict Cell Cycle (Kazimierz O. Wrzeszczynski, Guy Yachdav, Phil Carter & Burkhard Rost)",
 	 'profcon',	     "Prof Con prediction (Marco Punta & Burkhard Rost)",
-	 'prenup',	     "Prenup",
-	 'ucon',	     "Prenup",
+	 'prenup',	     "Ucon - Prediction of Natively Unstructured Regions through Contacts",
+	 'ucon',	     "Ucon - Prediction of Natively Unstructured Regions through Contacts ",
+	 'mdisorder',	     "MD - ",
 	 'ecgo',	     "Ecgo",
 	 'pfam',	     "Pfam",
 	 'proftmb',	     "Prediction of transmembrane beta-barrelsfor entire proteomes (Bigelow, H., Petrey, D., Liu, J.,Przybylski, D. & Rost, B.)",
 	 'profbval',	     "PROFBval - Neural network-based prediction method of flexibility/rigidity from sequence.(Schlessinger A, Rost B)",
+	 'norsnet',	     "NORSnet - Natively unstructured loops differ from other loops",
 	 'snap',             "snap",
 	 'loctar',	     "Loc Tar rajesh nair",
 	 'agape',	      "Improving fold recognition without folds (Przybylski,D, Rost B)",
 	 'conblast',	      "ConBlast (Przybylski,D, Rost B)",
 	 'conseq',  	      "ConSeq/Rate4Site (Glaser, F., Pupko, T., Paz, I., Bell, R.E., Bechor-Shental, D.,Martz, E. and Ben-Tal, N.)",
 	 'isis',             "Predicted protein-protein interaction sites fromlocal sequence information.(Ofran Y, Rost B)",
+	 'disis',             " Prediction of DNA binding residues from sequence. (Ofran Y, Myso\
+re V, Yachdav G & Rost B; submitted)",
+
 	 'nlprot',            "NLProt (Mika S, Rost B)",
 #	 'isis',	     "ISIS - Predict Prot Prot interaction (Yanay Ofran,,)",
 	 'chop',	     "CHOP Proteins into structural domain-like fragments (Liu J.,Rost B)",
@@ -2825,14 +2971,31 @@ sub modInterpret {
     $job{"run"}.=",coils"       if ($job{"out"}!~ /no coils/);
 
 				# PROFCON  
-    $job{"run"}.=",profcon"       if ($job{"out"}=~ /profcon/);
+    if ($job{"out"}=~ /prof_only/){
+	$job{"run"}.=",profcon_only";
+    }elsif($job{"out"}=~ /profcon/){ # 
+	$job{"run"}.=",profcon";
+    }
+
+    				# MD
+     if  ($job{"out"} =~ /(mdisorder[\_only]+\_slow)/){
+	$job{"run"}  .= ",profcon,profbval, norsnet,ucon,$1 ";
+    }elsif($job{"out"} =~ /(mdisorder[\_only]+)/){
+        $job{"run"}  .=",profbval, norsnet, $1";
+    }
 
 				# PRENUP  
-    $job{"run"}.=",profcon,prenup"       if ($job{"out"}=~ /prenup|ucon/);
+    if ($job{"out"}=~ /ucon_only/){
+	$job{"run"}.=",profcon,ucon_only";
+    }elsif($job{"out"}=~ /ucon/){
+	$job{"run"}.=",profcon,ucon";
+    }
+
+
 
 				# ECGO  
-    $job{"run"}.=",ecgo"       if ($job{"out"}=~ /ecgo/);
-
+#    $job{"run"}.=",ecgo"       if ($job{"out"}=~ /ecgo/);
+    $job{"run"}.=",$1"         if ($job{"out"} =~ /(ecgo[\_only]+)/);
 				# PFAM
     $job{"run"}.=",pfam"        if ($job{"out"}=~ /pfam/);
         
@@ -2841,6 +3004,8 @@ sub modInterpret {
 
 				# PROFBVAL  
     $job{"run"}.=",profbval"       if ($job{"out"}=~ /profbval|(prof bval)/);
+				# NORSNET  
+    $job{"run"}.=",norsnet"       if ($job{"out"}=~ /norsnet/);
 
 #				# SNAP  
 #    $job{"run"}.=",snap"       if ($job{"out"}=~ /snap/);
@@ -2865,7 +3030,9 @@ sub modInterpret {
     $job{"run"}.="pcc"           if ($job{"out"}=~ /pcc/);
 
     				# Predict ProtProt interaction isis
-#    $job{"run"}.="isis"           if ($job{"out"}=~ /isis/);
+    $job{"run"}.="isis"           if ($job{"out"}=~ /run isis/);
+    				# Predict ProtProt interaction isis
+    $job{"run"}.="disis"           if ($job{"out"}=~ /disis/);
 
   				# CHOP
 #    $job{"run"}.="chop"           if ($job{"out"}=~ /chop/);
@@ -2973,10 +3140,22 @@ sub modInterpret {
       
 
     # ----
-    # ISIS
+    # ISIS/DISIS
     # ----
-    if ( $job{"run"} =~ /isis_only/ ) {
-	$job{"run"}= "maxhom,prof,isis";
+    if ( $job{"run"} =~ /disis_only/ ) {
+	$job{"run"}= "blastp, hssp,maxhom,prof,disis_only";
+    }				# 
+
+    if ( $job{"run"} =~ /isis_only/ && $job{"run"} !~ /disis_only/) {
+        $job{"run"}= "blastp, maxhom,prof,isis_only";
+    }
+
+    if ( $job{"run"} =~ /disis/ ) {
+	$job{"run"}.= ",disis";
+    }				# 
+
+    if ( $job{"run"} =~ /run isis/ ) {
+        $job{"run"}.= ",isis";
     }
 
     # -------
@@ -4160,12 +4339,12 @@ sub modAlign {
 	elsif ($optRun =~/blastp/){
 	    $fileAliList=$file{"aliBlastpFil"};}
 
-
 				# ------------------------------
 				# files automatically generated by MAXHOM
 	$tmp=$fileJobId;$tmp=~tr/[a-z]/[A-Z]/;
 	$file{"MAXHOM.LOG"}=$dirWork."MAXHOM.LOG_".$tmp;              push(@kwdRm,"MAXHOM.LOG");
 	$file{"MAXHOM_ALI"}=$dirWork."MAXHOM_ALI.".$tmp;              push(@kwdRm,"MAXHOM_ALI");
+
 	$msgHere.="\n--- $sbr \t run maxhomRunLoop($date,$nice,$exeMax,".
 	    $file{"maxDef"}.",$fileJobId,".$file{"seq"}.",$fileAliList,".
 		$file{"aliMax"}.",$optExpMatSeq,$dirPdb,$Lprof,$parMaxSmin,".
@@ -4521,21 +4700,20 @@ sub modAlign {
 		   "align final appending...\n: $msg,\n"."$msgHere") if (! $Lok);}
 
 				# --------------------------------------------------
-				# (10) ret HTML (append HTML output)
+				# (10) ret HTML (append HTML output) XX GY 2008_05 fix mview problem
 				# --------------------------------------------------
 
-	if ($optOut=~/ret html/) {
-	    return(0,"err=2240","*** err=2240 ($sbr: file{aliHtmlMviewIn} missing!)\n")
-		if (! defined $file{"aliHtmlMviewIn"} || ! -e $file{"aliHtmlMviewIn"});
+#	if ($optOut=~/ret html/) {
+#	    return(0,"err=2240","*** err=2240 ($sbr: file{aliHtmlMviewIn} missing!)\n")
+#		if (! defined $file{"aliHtmlMviewIn"} || ! -e $file{"aliHtmlMviewIn"});
+#	    $file{"aliHtmlMview"}=$dirWork.$fileJobId.".htmlMview";   push(@kwdRm,"aliHtmlMview");
+#	    ($Lok,$err,$msg)=
+#		&htmlMaxhom($file{"aliHtmlMviewIn"},$file{"aliFilOut"},$exeMview,$parMview,$optOut,
+#			    $file{"aliHtmlMview"},$fileHtmlTmp,$fileHtmlToc,$fhErrSbr);
 
-	    $file{"aliHtmlMview"}=$dirWork.$fileJobId.".htmlMview";   push(@kwdRm,"aliHtmlMview");
-	    ($Lok,$err,$msg)=
-		&htmlMaxhom($file{"aliHtmlMviewIn"},$file{"aliFilOut"},$exeMview,$parMview,$optOut,
-			    $file{"aliHtmlMview"},$fileHtmlTmp,$fileHtmlToc,$fhErrSbr);
-
-	    if (! $Lok) { $msg="*** err=2244 ($sbr: htmlBuild failed kwd=ali_maxhom_body)\n".$msg."\n";
-			  print $fhTrace $msg;
-			  return(0,"err=2244",$msg); }}
+#	    if (! $Lok) { $msg="*** err=2244 ($sbr: htmlBuild failed kwd=ali_maxhom_body)\n".$msg."\n";
+#			  print $fhTrace $msg;
+#			  return(0,"err=2244",$msg); }}
 	
     }				# end of append (not for manual)
 				# --------------------------------------------------
@@ -4587,7 +4765,7 @@ sub modFin {
     if ($origin=~/^mail|^html|^testPP/i){
 	if ($optOut !~ /ret concise/ and  
 	    $optRun !~ /nors_only|chop_only|chopper_only/ ) { 
-# return news unless concise output required
+                                # return news unless concise output required
 				# append <<< --------------------
 	    ($Lok,$msg)=	# 
 		&sysCatfile("nonice",$Ldebug,$filePredTmp,
@@ -4602,21 +4780,14 @@ sub modFin {
 				# ------------------------------
 	if ($optOut=~/ret html/ && -e $fileHtmlTmp){
 
-	    if ( $optRun =~ /chop_only/ ) {
+	    if ( $optRun =~ /(chop|profcon|profbval|norsnet|ucon|mdisorder|agape|conblast|disis|nlprot|ecgo|only|snap)_only/ ) {
 		($Lok,$msg)=
                     &htmlFin($fileJobId,$dirWork,
-                             $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
-                             $envPP{"fileAppHtmlHeadChop"},$envPP{"fileAppEmpty"},
+                             $filePredTmp,$fileHtmlTmp,$envPP{"fileAppEmpty"},
+                             $envPP{"fileAppHtmlHead"},$envPP{"fileAppEmpty"},
                              $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
                              $fileHtmlFin);
 
-	   } elsif ( $optRun =~ /profcon_only/ ) {
-		($Lok,$msg)=
-                    &htmlFin($fileJobId,$dirWork,
-                             $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
-                             $envPP{"fileAppHtmlHeadProfCon"},$envPP{"fileAppEmpty"},
-                             $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
-                             $fileHtmlFin);
 
 	    } elsif ( $optRun =~ /profconeva/ ) {
 		($Lok,$msg)=
@@ -4626,68 +4797,11 @@ sub modFin {
                              $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
                              $fileHtmlFin);
 
-	    } elsif ( $optRun =~ /profbval_only/ ) {
-		($Lok,$msg)=
-                    &htmlFin($fileJobId,$dirWork,
-                             $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
-                             $envPP{"fileAppHtmlHeadProfBval"},$envPP{"fileAppEmpty"},
-                             $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
-                             $fileHtmlFin);
-
-	    }   elsif ( $optRun =~ /snap/ ) {
-		($Lok,$msg)=	
-                    &htmlFin($fileJobId,$dirWork,
-                             $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
-                             $envPP{"fileAppHtmlHeadSnap"},$envPP{"fileAppEmpty"},
-                             $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
-                             $fileHtmlFin);
-
-
-#	   }  elsif ( $optRun =~ /prenup|ucon/ ) {
-#		($Lok,$msg)=
-#                    &htmlFin($fileJobId,$dirWork,
-#                             $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
-#                             $envPP{"fileAppHtmlHeadPrenup"},$envPP{"fileAppEmpty"},
-#                             $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
-#                             $fileHtmlFin);
-
-	    }  elsif ( $optRun =~ /ecgo/ ) {
-		($Lok,$msg)=
-                    &htmlFin($fileJobId,$dirWork,
-                             $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
-                             $envPP{"fileAppHtmlHeadEcgo"},$envPP{"fileAppEmpty"},
-                             $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
-                             $fileHtmlFin);
-
-	    }	elsif ( $optRun =~ /agape_only/ ) {
-		($Lok,$msg)=
-                    &htmlFin($fileJobId,$dirWork,
-                             $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
-                             $envPP{"fileAppHtmlHeadAgape"},$envPP{"fileAppEmpty"},
-                             $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
-                             $fileHtmlFin);
-
-	    }	elsif ( $optRun =~ /conblast_only/ ) {
-		($Lok,$msg)=
-		    &htmlFin($fileJobId,$dirWork,
-			     $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
-			     $envPP{"fileAppHtmlHeadConBlast"},$envPP{"fileAppEmpty"},
-			     $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
-			     $fileHtmlFin);
-
-	    } elsif ( $optRun =~ /isis/ ) {
+	    } elsif ( $optRun =~ /isis_only/&& $optRun !~ /disis_only/) {
 		($Lok,$msg)=
                     &htmlFin($fileJobId,$dirWork,
                              $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
                              $envPP{"fileAppHtmlHeadIsis"},$envPP{"fileAppEmpty"},
-                             $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
-                             $fileHtmlFin);
-
-	    } elsif ( $optRun =~ /nlprot_only/ ) {
-		($Lok,$msg)=
-                    &htmlFin($fileJobId,$dirWork,
-                             $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
-                             $envPP{"fileAppHtmlHeadNLProt"},$envPP{"fileAppEmpty"},
                              $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
                              $fileHtmlFin);
 	    }else {
@@ -5328,33 +5442,14 @@ sub runDisulfind {
 	    $ENV{"DISULFIND"} = $dirDisulfind;
 	}
 
-				# check whether another cycpred is running
-				# due to common filename used by cycpred
-				# only one should be run for safety
-#	$exe_ps = $envPP{"exe_ps"};
-#	while ( 1 ) {
-#	    ($Lok, $njobs) =
-#		&envPP::isRunningEnv($exeCyspred,$exe_ps, $fhErrSbr);
-#	    if ( ! $Lok ) {
-#		return ( 0, "err=555","*** ERROR $sbr\n"."$njobs\n");
-#	    }
-#	    if ( $njobs == 0 ) {
-#	        print $fhErrSbr "--- $sbr: No cyspred is running, we are safe.\n";
-#		last;
-#	    } elsif ( $njobs >= 1 ) {
-#		return(1,"non-fatal","$sbr:$msg cyspred is running , skipping cyspred");
-#		print  $fhErrSbr "--- $sbr: Another cyspred is running, we'd better wait 5 sec.\n";
-#		sleep(5);
-#	    } else {
-#		return ( 0, "err=555","*** ERROR $sbr\n"."$njobs\n");
-#	    }
-#	}
+
 	$disulfindOutputFormat = "ascii";
 	$disulfindOutputFormat = "html" 	if ($optOut=~/ret html/);
 
 	$command="$nice $exeDisulfind ".
 #	    "$file{\"seq4cys\"} $fileAliPhdIn $file{\"disulfind\"}";
-	    "$file{\"seq4cys\"} $fileBlastMatTmb $file{\"disulfind\"} $disulfindOutputFormat";
+	    " $fileBlastMatTmb $fileJobId > $file{\"disulfind\"} ";
+#	    "$file{\"seq4cys\"} $fileBlastMatTmb $file{\"disulfind\"} $disulfindOutputFormat";
 	$msgHere="--- $sbr system '$exeDisulfind $command'";
 
 	
@@ -6761,7 +6856,6 @@ sub runProf {
     # final ...
     # check for existnace of cached results
 #    $Lok = &checkExistResult($file{"profRdb"});
-#    print "Line 6738: Lok=$Lok\n"x10;
 #    if ($Lok){
 #	print $fhOutSbr "--- profRdb file exists: $file{\"profRdb\"} Skipping running profRdb\n";
  #   }else{
@@ -7658,6 +7752,12 @@ sub ctrlAbortPred {
 	return(1,$msgHere);}	# is help request => end of it
 
 
+
+#### GY - Indicate error in database
+    $sqlDB->setJobState($DBid, 4,$dbg);
+    $sqlDB->close();		
+
+
 				# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 				# ------------------------------
@@ -7759,9 +7859,7 @@ sub ctrlAbortPred {
 
 
 
-#### GY - Indicate error in database
-    $sqlDB->setJobState($DBid, 4,$dbg);
-    $sqlDB->close();
+
 
 
 
@@ -7893,67 +7991,16 @@ sub ctrlCleanUp {		#
 	}
 
 
-	# Local PP mode - 
-	# TAR/Gzipped results file instead of providing one 
-	# cattenated file
-	if ($job{"out"} =~ /localpp/){
-	    foreach $kwd ('blastPsiAli','blastPsiRdb','phdPred','prodom','prosite','chop','profAscii', 'consurf', 'pfam'){
-		next if (!$kwd);
-		print "$envPP{\"dir_work\"}$fileJobId.$kwd\n";
-		next if (! -e "$envPP{\"dir_work\"}$fileJobId.$kwd"); 
-		$filesToTar .= " $fileJobId.$kwd ";
-#		$filesToCp .= " $fileJobId.$kwd ";
-	    }
-#	$dir=$envPP{"dir_resGT"} if ($fileJobId =~ /predict_s/);
-	    if ( $fileNameResStr  ){
-		$fileDestName = $fileNameResStr;
-	    }else{
-		$fileDestName = $fileJobId;
-	    }
 
-	    $fileTarBall = $envPP{"dir_work"}. $fileDestName.".tar";
-
-	    $command = "tar -cvf$fileTarBall  -C ".$envPP{"dir_work"}." $filesToTar ";
-
-	    ($Lok,$msgSys)=&sysSystem("$command");
-	    return(0,"$sbr claims an error happened:\n".
-		   "taring all files using the command\n $command\n led to:\n". 
-		   $msgSys."\n")  if (!$Lok);
-
-
-	    ($Lok,$msgSys)=&sysSystem("gzip $fileTarBall");
-	    $fileTarZipped=   $fileTarBall . ".gz"; 
-	    $fileFinal=$fileTarZipped;
-
-
-#	    $command = "cp $fileFinal /home/ppuser/nesg/work/$fileJobId/."; #xxyy put into config file
-#	    &ctrlDbgMsg("Line 7549: command= $command\n",$fhTrace,$Debug);
-
-#	    ($Lok,$msgSys)=&sysSystem("$command");
-#	    return(0,"$sbr claims an error happened:\n".
-#		   "copying files using the command\n $command\n led to:\n". 
-#		   $msgSys."\n")  if (!$Lok);
-
-	}
-	# End Cat Results File
 
 	$tmp=$fileFinal; $tmp=~s/^.*\///g; # purge dir
 	$name=$tmp; $name=$randomString if ($Lok &&  ($fileJobId !~ /predict_s/));
 				# add '.html' to name
 	
-	if ($job{"out"} =~ /localpp/){ # xx hack for localpp: suffix should be tar.gz
-	    $name.=".tar.gz";
-	}elsif ($job{"out"}=~/ret html/) {
-	    $name.=".html";
-	} else {
-	    $name.=".txt";
-	}
 
 
 	$dir=$envPP{"dir_resPub"}; 
 
-#	$command = "cp $fileFinal /home/ppuser/nesg/work/$fileJobId/."; #xxyy put into config file
-#	$dir=$envPP{"dir_resLocPP"}."$fileJobId/" if ($job{"out"} =~ /localpp/); 
 
 	$dir=$envPP{"dir_resGT"} if ($fileJobId =~ /predict_s/);
 
@@ -7970,6 +8017,24 @@ sub ctrlCleanUp {		#
 	    $UserProtName = $1;
 	}
 
+
+	## GY - This block stores results in the db and sends an email to the user
+	$fhfileStore = "FHFILESTORE";
+	$Lok=       &open_file($fhfileStore,$fileStore);
+	return(0,"*** ERROR $sbr: '$fileStore not opened\n") if (! $Lok);
+	undef $/;			# 'slurp' mode
+	$tmpContents = <$fhfileStore>;
+	close $fhfileStore;
+	$tmpfilePID = $filePID;
+	$tmpfilePID =~ s/ict//i;#       # xx GY hack revert back to original file to match in db
+	$/="\n";			# back to regular mode
+	($resId,$msg) = $sqlDB->setResults($randomString, $tmpContents,$tmpfilePID, $DBid);
+	$sqlDB->setJobState($DBid, 3,$dbg);
+	$sqlDB->close;
+
+
+
+
  	print $fhoutLoc 
 	    "PPhdr from: $userTmp\n",
 	    "PPhdr orig: $Origin\n",
@@ -7979,11 +8044,13 @@ sub ctrlCleanUp {		#
 	    "PPhdr desc: $UserProtName" if ($UserProtName);
 	print $fhoutLoc	    "\n";
 
-#	$urlRes = "http://cubic.bioc.columbia.edu/pp_res/".$name;
-#	$urlRes = "http://www.predictprotein.org/results/".$name;
-#	$urlRes = "http://www.predictprotein.org/results/test/results.php?req_id=".$randomString;
-	$urlRes = "http://www.predictprotein.org/get_results.php?req_id=".$randomString;
-#	$urlEspritRes = "http://www.predictprotein.org/cgi/pp/nph-ESPript_exe.cgi?FRAMES=YES&frompp=on&alnfile0=$urlRes";
+	if ($optRun=~/_only/){
+#	    $urlRes = "http://www.predictprotein.org/get_results_test.php?req_id=".$randomString;
+	    $urlRes = "http://www.predictprotein.org/get_results_test.php?req_id=".$resId;
+	}else{
+#	    $urlRes = "http://www.predictprotein.org/get_results.php?req_id=".$randomString;
+	    $urlRes = "http://www.predictprotein.org/get_results.php?req_id=".$resId;
+	}
 	$urlEspritRes = "http://www.predictprotein.org/cgi/pp/ESPript.cgi?FRAMES=YES&frompp=on&alnfile0=$urlRes";
  	print $fhoutLoc 
  	    "Since you requested this the result file is NOT emailed to you\n",
@@ -7994,8 +8061,8 @@ sub ctrlCleanUp {		#
 
 
 	# Add a link to the profbval graph maker
-	print $fhoutLoc "\nTo see a graph of these results:\nhttp://www.predictprotein.org/profbval/makeGraph.php?prot-name=$randomString&user-name=$UserProtName\n"	
-	    if ($job{"run"} =~ /profbval/   );
+#	print $fhoutLoc "\nTo see a graph of these results:\nhttp://www.predictprotein.org/profbval/makeGraph.php?prot-name=$randomString&user-name=$UserProtName\n"	
+	#    if ($job{"run"} =~ /profbval_only/   );
 
 
 
@@ -8023,22 +8090,7 @@ sub ctrlCleanUp {		#
 	close($fhoutLoc); 
 	
 
-	    ## GY - This block stores results in the db and sends an email to the user
-#	use lib '/nfs/data5/users/ppuser/server/scr/lib';
-#	require _PP_DB;
-#	$sqlDB = _PP_DB->new('bonsai.bioc.columbia.edu','PREDICTPROTEIN','yachdav','Y4chd4v');
-	$fhfileStore = "FHFILESTORE";
-	$Lok=       &open_file($fhfileStore,$fileStore);
-	return(0,"*** ERROR $sbr: '$fileStore not opened\n") if (! $Lok);
-	undef $/;			# 'slurp' mode
-	$tmpContents = <$fhfileStore>;
-	close $fhfileStore;
-	$tmpfilePID = $filePID;
-	$tmpfilePID =~ s/ict//i;#       # xx GY hack revert back to original file to match in db
-	$/="\n";			# back to regular mode
-	$sqlDB->setResults($randomString, $tmpContents,$tmpfilePID, $DBid);
-	$sqlDB->setJobState($DBid, 3,$dbg);
-	$sqlDB->close;
+
 	## GY - end of new block 
     }
 				# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -8046,7 +8098,6 @@ sub ctrlCleanUp {		#
 				# xx hack, for cafasp, we don't want to send
 				# back anything if error
 				# xx hack, for localpp dont need to send back anything - deprecated
-#	if ( $errMsgLoc =~ /cafasp/ || ($job{"out"} =~ /localpp/)) {	
 	if ( $errMsgLoc =~ /cafasp/ ) {	
 	    unlink $fileFinal;
 	} else {
@@ -8063,13 +8114,10 @@ sub ctrlCleanUp {		#
 	$message .= $_;
     }
     close $fhfileRes;
-    #undef $/;			# 'slurp' mode
-  #  $message = <$fhfileRes>;
-#    close $fhfileStore;
-#    $/="\n";			# back to regular mode
+
     $exe_mail=$envPP{"exe_mail"};
     ($Lok,$msgSys)=		# 
-	&sysSystem("echo '$message' | $exe_mail -s \'Results From PredictProtein\' $User_name");	    
+	&sysSystem("echo '$message' | $exe_mail -s \'Results From PredictProtein\' $User_name",0);	    
     $file{"fileResult"} =  $File_result;
     push(@kwdRm,"fileResult");
 
@@ -8137,7 +8185,7 @@ sub ctrlCleanUp {		#
 #		     $file{$kwd} eq $file_sv_pred);
 	    next if ($file{$kwd} eq $file_sv_pred);
 	    $msgHere.="$sbr unlink 1=".$file{$kwd}."\n";
-	    unlink($file{$kwd});
+	    unlink($file{$kwd}); # this is where all the tmp files get deleted
 	}
 				# ------------------------------
 				# list all remaining files
@@ -8191,15 +8239,15 @@ sub ctrlCleanUp {		#
 	    next if (! -e $file);
 	    unlink($file); 
 	} 
-}
+    }
 				# ------------------------------
 				# ok final delete:
 				#    delete the input file!!!
     ($Lok,$msgSys)=
 	&sysSystem("rm $File_name") if (! $Debug && -e $File_name);
 
-				# ------------------------------
-				# annotate possible errors here:
+    # ------------------------------
+    # annotate possible errors here:
     return(0,"$sbr claims an error happened:\n".
 	   $errMsgLoc."\n")     if ($Lerror);
 				# error happened just here
@@ -8393,14 +8441,30 @@ sub extrHdrOneLine {
 	return (0);
     }	
     
-   if ($lineLoc =~ /isis_only/  ){	       # only isis (dependents are maxhom and prof
-       $optRun = "maxhom,isis,prof";
-#       $optRun .=",prof,"                             if ($optSeq=~/ppOld/);
 
+
+
+
+
+    if ($lineLoc =~ /disis_only/  ){             # only disis (dependents are hssp,maxhom and prof
+	$optRun = "hssp, maxhom,disis_only,prof";
+
+	$optOut ="";
+        return (0);
+    }elsif ($lineLoc =~ /disis/){
+	$optRun.=",disis";	
+    }
+
+    if ($lineLoc =~ /isis_only/ && $lineLoc !~ /disis/ ){	       # only isis (dependents are maxhom and prof
+       $optRun = "blastp, maxhom,isis_only,prof";
        $optOut ="";
  	return (0);
-     }	    
-    	
+    }elsif ($lineLoc =~ /run isis/){
+	$optRun.=",isis"  ;
+    }
+  
+    
+
    if ($lineLoc =~ /agape_only/){	# Only AGAPE, ignore others
 	$optRun ="agape_only";
 	$optOut ="";
@@ -8428,8 +8492,14 @@ sub extrHdrOneLine {
        return (0);
     }	    
 
-    if ($lineLoc =~ /profbval_only/){	# Only CHOP, ignore others
+    if ($lineLoc =~ /profbval_only/){	# Only CHOPprofbvla, ignore others
 	$optRun ="profbval_only";
+	$optOut ="";
+	return (0);
+    }	    
+
+    if ($lineLoc =~ /norsnet_only/){	# Only CHOPprofbvla, ignore others
+	$optRun ="norsnet_only";
 	$optOut ="";
 	return (0);
     }	    
@@ -8510,7 +8580,7 @@ sub extrHdrOneLine {
     $optRun=~s/,nors//          if ($lineLoc=~/(no)\s*nors/i);
 				# NORS only
 
-    $optRun ="nors_only"        if ($lineLoc=~/(run|pred\S*|do)\s+nors_only/i);
+    $optRun ="nors_only"        if ($lineLoc=~/(run|ret|pred\S*|do)\s+nors_only/i);
 
                                 # PROF only
     $optRun ="prof_only"        if ($lineLoc=~/(run|pred\S*|do)\s+prof_only/i);
@@ -8604,22 +8674,14 @@ sub extrHdrOneLine {
     if ($lineLoc =~ /prof con/ || $lineLoc=~/profcon/){
 	if ($lineLoc=~/profconeva/){
 	    $optRun=",profconeva";  
-	}else{
-	    $optRun.=",profcon";
-	}
+	}elsif ($lineLoc =~ /(prof con|profcon)_only/){
+		$optRun.=",profcon_only";
+
+	    }else{
+		$optRun.=",profcon";
+	    }
 	return (0);
     }
-
-
-#    if ($lineLoc =~ /prenupcasp/ || $lineLoc=~/prenup/){
-#      if ($lineLoc=~/prenupcasp/){
-#	    $optRun=",profcon,prenupcasp";  
-#	}else{
-#	    $optRun=",profcon,prenup";
-#	}
-#	return (0);
-#    }
-
 
 
 
@@ -8628,14 +8690,29 @@ sub extrHdrOneLine {
 
 
                               # normal prenup
-    $optRun.=",profcon,prenup" if ($lineLoc =~ /prenup/ || $lineLoc =~ /ucon/);
+    if ($lineLoc =~ /ucon_only/){
+        $optRun.=",profcon,ucon_only";
+    }elsif($lineLoc =~ /ucon/){
+        $optRun.=",profcon,ucon";
+    }
 
+                            # normal mdisorder
+    if  ($lineLoc =~ /(mdisorder[\_only]+\_slow)/){
+	$optRun .= ",profcon,profbval, norsnet,$1 ";
+    }elsif($lineLoc =~ /(mdisorder[\_only]+)/){
+        $optRun.=",profbval, norsnet, $1";
+    }
+#    }elsif($lineLoc =~ /mdisorder/){
+#        $optRun.=",profcon,,profbval, norsnet, ucon, mdisorder";
+#    }
 
                               # normal ecgo
-    $optRun.=",ecgo" if ($lineLoc =~ /ecgo/);
+    $optRun.=",$1" if ($lineLoc =~ /(ecgo[\_only]+)/);
 
                               # normal profbval
     $optRun.=",profbval"          if ($lineLoc =~ /profbval/);
+                              # normal norsnet
+    $optRun.=",norsnet"          if ($lineLoc =~ /norsnet/);
 
 
                                 # normal snap
@@ -8759,7 +8836,7 @@ sub extrHdrOneLine {
 
    &extrHdrExpertSnap($lineLoc)  #
         if ($lineLoc=~/exp(ert)? snap |snap exp(ert)?/i &&
-            $lineLoc=~/(muts)\s*=/i);
+            $lineLoc=~/(muts|ri|acc)\s*=/i);
 
 
     
@@ -9148,10 +9225,10 @@ sub extrHdrExpertChop {
 	if (defined $tmp && length($tmp) >= 1) {
 	    $build.="domcov=$tmp,";}}
 
-    if ($lineLoc2=~ /minfrag=([0-9]+)/i ) {
-	undef $tmp; $tmp=$1 if ( defined $1);
-	if (defined $tmp && length($tmp) >= 1) {
-	    $build.="minfrag=$tmp,";}}
+#    if ($lineLoc2=~ /minfrag=([0-9]+)/i ) {
+#	undef $tmp; $tmp=$1 if ( defined $1);
+#	if (defined $tmp && length($tmp) >= 1) {
+#	    $build.="minfrag=$tmp,";}}
 
 
     $build=~s/\s//g;		# no blanks
@@ -9571,13 +9648,26 @@ sub extrHdrExpertSnap {
 				# --------------------------------------------------
     $build="";			
 
-    if ($lineLoc2=~ /muts=(.+)/i ) {
+    if ($lineLoc2=~ /muts=((\w+\,?)+)/i ) {
 	undef $tmp; $tmp=$1 if ( defined $1);
 	if (defined $tmp && length($tmp) >= 1) {
-	    $build.="muts=$tmp";}} # 
+	    $build.="muts=($tmp),";}}
 
+    if ($lineLoc2=~ /ri=(\d+)/i ) {
+	undef $tmp; $tmp=$1 if ( defined $1);
+	if (defined $tmp && length($tmp) >= 1) {
+	    $build.="ri=$tmp,";}} # 
+
+
+    if ($lineLoc2=~ /acc=(\d+)/i ) {
+	undef $tmp; $tmp=$1 if ( defined $1);
+	if (defined $tmp && length($tmp) >= 1) {
+	    $build.="acc=$tmp,";}} # 
+
+
+    
     $build=~s/\s//g;		# no blanks
-#    $build=~s/,$//g;		# final comma
+    $build=~s/,$//g;		# final comma
 
 				# ------------------------------
 				# close brackets for syntax
@@ -9587,16 +9677,6 @@ sub extrHdrExpertSnap {
  	$envPP{"para_Muts"}= "parSnap(".$build."),"; 
     }
 
-     # updtate the default chain parameter if it was specified by the user
-    
-#    if ($optRun=~/(muts\=.+)/){
-# 	$envPP{"para_defaultMuts"}=$1;
-#    }else{
-#	$envPP{"para_defaultMuts"}="";
-
-#    }
-
-#    print STDOUT "xx in $sbr  muts=	$envPP{\"para_Muts\"}\n";
 
 }		
 
@@ -9873,7 +9953,6 @@ sub runProfCon {
 	    $ENV{"PROFCON"} = $dirProfCon;
 	}
 
-#	print $fhTrace "profcondir=$ENV{\"PROFCON\"}\n"x10;
 
 	# Get Protein name(optional) 
 	# If protien name is not provided acquire job_id
@@ -9895,7 +9974,6 @@ sub runProfCon {
 	$command="$nice $exeProfCon ".$file{"seq4profcon"}." ". $fileJobId." ".  $UserProtName.
 	    " 1>".$file{"profcon"}." 2>/dev/null"; 
 #	    " 1>".$file{"profcon"}." 2>$fileErrTmp"; 
-#	print $fhTrace "$command\n"x10;
 
 # $file{\"hsspPsiFil\"} $file{\"profRdb\"}"." $UserProtName ". " 
 
@@ -9922,7 +10000,6 @@ sub runProfCon {
 	    $#tmpAppend=0;	  
 	    push(@tmpAppend,$envPP{"fileAppProfCon"},
 		 $file{"profcon"},$envPP{"fileAppLine"});
-#	    	print $fhTrace "$file{\"profcon\"}\n"x10;
 				# ------------------------------
 				# append HTML output
 				# ------------------------------
@@ -9930,6 +10007,7 @@ sub runProfCon {
 	    if ($optRun =~/profcon_only|profconeva/){
 		unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output profcon should only 
 		# have its own output
+		$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadProfCon"};
 	    }
 
 	    if ($optOut=~/ret html/ && -e $file{"profcon"}){ 
@@ -10151,9 +10229,11 @@ sub runPrenup {
 				# append HTML output
 				# ------------------------------
 
-#	    unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output prenup should only 
-	                                              # have its own output
-
+	    if ($optRun =~/ucon_only/) {
+		unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output prenup should only 
+				                          # have its own output
+		$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadPrenup"};   	
+	    }
 	    if ($optOut=~/ret html/ && -e $file{"prenup"}){ 
 		# append file
 		($Lok,$msg)=&htmlBuild($file{"prenup"},$fileHtmlTmp,$fileHtmlToc,1,"prenup");
@@ -10177,24 +10257,24 @@ sub runPrenup {
 	}
 
 
-#	if ($origin =~ /^mail|^html|^testPP/i){
-#	    $filePrenupTemp = $file{"prenup_temp"}=        $dirWork.$fileJobId.".prenup.temp";   
-#	    unlink $filePrenupTemp; # security
-#	    push(@kwdRm,"prenup_temp");
-#	    $#tmpAppend=0;	
-#	    push(@tmpAppend,$envPP{"fileAppEmpty"},$file{"prenup"},$envPP{"fileAppEmpty"});
-#	    if ($#tmpAppend>0){
-#		($Lok,$msg)=&sysCatfile("nonice",$Ldebug,$filePrenupTemp,@tmpAppend);
-#		return(0,"err=570",$msgErrIntern."\n". 
-#		       "prenup final appending...\n: $msg,\n"."$msgHere") if (! $Lok);
-#	    }
+	if ($origin =~ /^mail|^html|^testPP/i){
+	    $filePrenupTemp = $file{"prenup_temp"}=        $dirWork.$fileJobId.".prenup.temp";   
+	    unlink $filePrenupTemp; # security
+	    push(@kwdRm,"prenup_temp");
+	    $#tmpAppend=0;	
+	    push(@tmpAppend,$envPP{"fileAppEmpty"},$file{"prenup"},$envPP{"fileAppEmpty"});
+	    if ($#tmpAppend>0){
+		($Lok,$msg)=&sysCatfile("nonice",$Ldebug,$filePrenupTemp,@tmpAppend);
+		return(0,"err=570",$msgErrIntern."\n". 
+		       "prenup final appending...\n: $msg,\n"."$msgHere") if (! $Lok);
+	    }
 
 	    # --------------------------------------------------------------------------
 	    # HACK: rebuild result text files so they would contain only prenup results
 	    # --------------------------------------------------------------------------
 #	    open($fhinLoc, $filePrenupTemp);
 #	    open($fhoutLoc,">".$filePredTmp);
-#	    print $fhoutLoc
+##	    print $fhoutLoc
 #		"PPhdr from ".$User_name,"\n",
 #		"PPhdr resp "."MAIL","\n",
 #		"PPhdr orig ".$origin,"\n",
@@ -10204,7 +10284,7 @@ sub runPrenup {
 #	    }
 #	    close($fhinLoc);
 #	    close($fhoutLoc);
-#	}
+	}
     }
 
     return(1,"ok","$sbr:$msg");
@@ -10356,9 +10436,12 @@ sub runEcgo {
 				# ------------------------------
 				# append HTML output
 				# ------------------------------
+	    if ($optRun =~/ecgo_only/) { # HACK: remove previouse output profbval should only 
+		                                 # have its own output
+		unlink $fileHtmlTmp; unlink $fileHtmlToc;
+		$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadEcgo"};   
+	    }			
 
-	    unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output ecgo should only 
-	                                              # have its own output
 
 	    if ($optOut=~/ret html/ && -e $file{"ecgo"}){ 
 		# append file
@@ -10695,21 +10778,22 @@ sub runChop {
 	    if ($parChopExp =~ /domcov\=([0-9\.]+)/ ) {
 		$parChopDomCov = $1;
 	    }
-	    if ($parChopExp =~ /minfrag\=([0-9]+)/ ) {
-		$parChopMinFragLen = $1;
-	    }
+#	    if ($parChopExp =~ /minfrag\=([0-9]+)/ ) {
+#		$parChopMinFragLen = $1;
+#	    }
 	}
 
 	$arg = "";
 	$arg .= " -hmmerE ".$parChopHmmerE;
 	$arg .= " -blastE ".$parChopBlastE;
 	$arg .= " -minDomainCover ".$parChopDomCov;
-	$arg .= " -minFragLen2report ".$parChopMinFragLen;
+#	$arg .= " -minFragLen2report ".$parChopMinFragLen;
 	$arg .= " -i $file{\"seq4chop\"} ";
 	$arg .= " -o $file{\"chop\"} ";
-	if ( $optOut=~/ret html/ ) {
-	    $arg .= " -html ";
-	}
+ 	if ( $optOut=~/ret html/ ) {
+# 	    $arg .= " -html ";
+ 	    $arg .= " -of html";
+ 	}
 
 				# set env CHOP dir (required for the program)
 	if (! defined $ENV{"CHOP"} ) {
@@ -10747,12 +10831,12 @@ sub runChop {
 	
 	    if ($optOut=~/ret html/ && -e $file{"chop"}){ 
 		    # append file
-		($Lok,$msg)=&htmlBuild($file{"chop"},$fileHtmlTmp,$fileHtmlToc,0,"chop");
-		
-		
+		($Lok,$msg)=&htmlBuild($file{"chop"},$fileHtmlTmp,$fileHtmlToc,0,"chop");	
 		if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=chop)\n".$msg."\n";
 			      print $fhTrace $msg; # 
 			      return(0,"err=2250",$msg); }
+		
+		$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadChop"} if ($optRun =~/chop_only/);
 	    }
 	}	 
 	
@@ -10975,6 +11059,220 @@ sub runChopper {
     return(1,"ok","$sbr:$msg");
 }			# end runChopper
 
+#===============================================================================
+# GY ADDED 4-2008: DISIS module        
+#===============================================================================    
+
+sub runDisis {
+    local($origin,$date,$nice,$fileJobId,$fhOutSbr,$fhErrSbr,
+          $dirWork,$filePredTmp,$fileHtmlTmp,$fileHtmlToc,$Ldebug,$optRun,$optOut,
+          $exeMaxhom,$exeDisis,$dirDisis)=@_;
+
+    local($sbr,$msgHere,$msg,$fileOut,$Lok,$fileStripOutMod,
+          $fileAliList,$fileFastaSingle,@tmpAppend,$txt,$command, $fhcys, @tmp);
+    $[ =1 ;
+#-------------------------------------------------------------------------------                            
+#   runIsis                    : predict prot prot interaction                                              
+#       in:                     many                                                                        
+#       in GLOBAL:              $msgErr{""}, $file{""}, @kwdRm, $envPP{"file*"}                             
+#       in GLOBAL:              $file{"seqFasta"}     seq in FASTA format (from modInterpret)               
+#       err:                    ok=(1,'ok','blabla'), err=(0,errNumber,'msg')                               
+#-------------------------------------------------------------------------------                            
+    $sbr="runIsis";
+    $errTxt="err=541"; $msg="*** $sbr: not def ";
+    return(0,$errTxt,$msg."origin!")          if (! defined $origin);
+    return(0,$errTxt,$msg."date!")            if (! defined $date); #                                       
+    return(0,$errTxt,$msg."nice!")            if (! defined $nice); #                                       
+    return(0,$errTxt,$msg."fileJobId!")       if (! defined $fileJobId);
+    $fhOutSbr="STDOUT"                        if (! defined $fhOutSbr); #                                   
+    $fhErrSbr="STDOUT"                        if (! defined $fhErrSbr); #                                   
+    return(0,$errTxt,$msg."dirWork!")         if (! defined $dirWork); #                                    
+    return(0,$errTxt,$msg."filePredTmp!")     if (! defined $filePredTmp);
+    return(0,$errTxt,$msg."fileHtmlTmp!")     if (! defined $fileHtmlTmp); #                                
+    return(0,$errTxt,$msg."fileHtmlToc!")     if (! defined $fileHtmlToc); #                                
+    return(0,$errTxt,$msg."Ldebug!")          if (! defined $Ldebug); #                                     
+    return(0,$errTxt,$msg."optRun!")          if (! defined $optRun); #                                     
+    return(0,$errTxt,$msg."optOut!")          if (! defined $optOut); #                                     
+    return(0,$errTxt,$msg."exeDisis!")        if (! defined $exeDisis); #                                     
+    return(0,$errTxt,$msg."exeMaxhom!")        if (! defined $exeMaxhom); #                                 
+
+    $errTxt="err=542"; $msg="*** $sbr: no dir =";
+    return(0,$errTxt,$msg."$dirWork!")        if (! -d $dirWork);
+
+    $errTxt="err=543"; $msg="*** $sbr: no file=";
+    return(0,$errTxt,$msg."$filePredTmp!")    if (! -e $filePredTmp && ! -l $filePredTmp);
+                                #                                                                           
+    $errTxt="err=544"; $msg="*** $sbr: no exe =";
+    foreach $exe ($exeDisis) {   #                                                                           
+        return(0,$errTxt,$msg."$exe!")        if (! -e $exe && ! -l $exe); }
+
+    return(0,"err=545","*** $sbr: no seq =".$file{"seq"}."!")
+        if (! -e $file{"seq"} && ! -l $file{"seq"}); #                                                      
+
+
+    $msgErrIntern=    $msgErr{"internal"};
+    $msgErrConvert=   $msgErr{"align:convert"};
+    $msgHere="";                #                                                                           
+    $disisRunParams = "";
+    $disisRunParams = " ".$file{"ali"}." ";
+
+
+    
+                              # ------------------------------                                              
+                                # convert_seq -> FASTA (if not already)                                     
+    if (! defined $file{"seqFasta"}){
+        print $fhErrSbr "*** in $sbr file{seqFasta} not defined\n";
+        print $fhErrSbr "*** WATCH will change optRun ($optRun)!!\n" x 3;
+        $optRun=~s/isis,//g;}
+    elsif (! -e $file{"seqFasta"}){
+        print $fhErrSbr "*** in $sbr file{seqFasta} not existing (modInterpret lazy??)\n";
+        print $fhErrSbr "*** WATCH will change optRun ($optRun)!!\n" x 3;
+        $optRun=~s/isis,//g;}
+    elsif (! &isFasta($file{"seqFasta"})){
+        print $fhErrSbr
+            "*** in $sbr file{seqFasta}=",$file{"seqFasta"},
+            ", not in FASTA format (modInterpret lazy??)\n",
+            "*** WATCH will change optRun ($optRun)!!\n" x 3;
+        $optRun=~s/disis,//g;}
+
+                                # ---------------------------------------------                             
+                                # Disis can only take single sequence                                        
+                                # in case input is list, get the first fasta file                           
+                                # ---------------------------------------------                             
+    if ( $optSeq =~ /saf|msf/) {
+        $file{"seq4Disis"}=    $dirWork. $fileJobId.  ".fastaSingle";
+        push(@kwdRm,"seq4Disis");
+
+        ($Lok,$id,$seq)=&fastaRdGuide($file{"seqFasta"});
+	return(0,"err=551",$msgErrConvert."\n".$id."\n".
+	       "*** file{seq}=".$file{"seq"}."\n") if (! $Lok);
+        $seq=~s/[ \.\~\*]//g;   # remove non amino acids!                                                   
+
+        ($Lok,$msg)=&fastaWrt($file{"seq4Disis"},$id,$seq);
+        return(0,"err=552",$msgErrConvert."\n"."*** fastaWrt\n".$msg."*** id=$id, seq=$seq\n")
+            if (! $Lok);
+        return(0,"err=553",$msgErrConvert."\n"."*** fastaWrt\n"."*** id=$id, seq=$seq\n".
+               "*** no file '".$file{"seq4Disis"}."' written \n") if (! -e $file{"seq4Disis"});
+    } else {
+        $file{"seq4Disis"} = $file{"seqFasta"};
+    }
+
+
+
+    # ------------                                                                                          
+    # DISIS program                                                                                          
+    # ------------                                                                                          
+    if ($optRun =~/disis/) {
+        $file{"disis"}=        $dirWork.$fileJobId.".disis";
+        push(@kwdRm,"disis");
+
+                        # set env ISIS dir (required for the program)                                       
+        if (! defined $ENV{"DISIS"} ) {
+            $ENV{"DISIS"} = $dirDisis;
+        }
+
+
+        if ((defined $file{"dssp"} && -e $file{"dssp"}) ||
+            (defined $file{"profRdb"} && -e $file{"profRdb"})){
+            if (defined $file{"dssp"} && -e $file{"dssp"}){
+                $disisRunParams .= " ".$file{"dssp"}." ";
+            }else{
+                $disisRunParams .= " ".$file{"profRdb"}." ";
+            }
+
+	}else{
+            $errTxt="err=903"; $msg="*** $sbr: for sequence type $runSeq no file=";
+            return(0,$errTxt,$msg."fileDssp or fileProfRdb!")
+	    }
+
+        $command="$nice $exeDisis $disisRunParams > $file{\"disis\"}";
+        $msgHere="--- $sbr system '$exeDisis $command'";
+
+        # -----------                                                                                       
+        # do run ISIS                                                                                       
+        # -----------                                                                                       
+        ($Lok,$msgSys)=&sysSystem("$command");
+
+        return (0,"err=560","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
+	    if (! $Lok || ! -e $file{"disis"});
+
+        # -------------------------------------------------                                                 
+        # check result,                                                                                     
+        # -------------------------------------------------                                                 
+        $fhdisis = 'FHDISIS';
+        $Lok=       &open_file($fhisis,$file{"disis"});
+        return(0,"*** ERROR $sbr: '$file{\"disis\"}' not opened\n") if (! $Lok);
+
+        if ( $Lok == 1 ) {
+            $#tmpAppend=0;
+            push(@tmpAppend,$envPP{"fileAppDisis"},
+                 $file{"disis"},$envPP{"fileAppLine"});
+
+	    if ($optRun =~/disis_only/) {        # HACK: remove previouse output disis should only       
+                                                 # have its own output                                      
+		unlink $fileHtmlTmp; unlink $fileHtmlToc;
+		$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadDisis"};
+	    }
+
+
+
+            # ------------------------------                                                                
+            # append HTML output                                                                            
+            # ------------------------------                                                                
+            if ($optOut=~/ret html/ && -e $file{"disis"}){
+              #  unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output                   
+
+                # append file                                                                               
+                ($Lok,$msg)=&htmlBuild($file{"disis"},$fileHtmlTmp,$fileHtmlToc,1,"disis");
+                if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=disis)\n".$msg."\n";
+                              print $fhTrace $msg;
+                              return(0,"err=2250",$msg); }
+            }
+        }
+
+
+
+        # --------------------------------------------------                                                
+        # append files                                                                                      
+        # --------------------------------------------------                                                
+        if ($origin =~ /^mail|^html|^testPP/i){
+            $fileDisisTemp = $file{"disis_temp"}=        $dirWork.$fileJobId.".disis.temp";
+            unlink $fileDisisTemp; # security                                                                
+            push(@kwdRm,"disis_temp");
+            $#tmpAppend=0;
+            push(@tmpAppend,$envPP{"fileAppDisis"},$file{"disis"},$envPP{"fileAppLine"});
+	    if ($#tmpAppend>0){
+                ($Lok,$msg)=&sysCatfile("nonice",$Ldebug,$fileDisisTemp,@tmpAppend);
+                return(0,"err=570",$msgErrIntern."\n".
+                       "disis final appending...\n: $msg,\n"."$msgHere") if (! $Lok);
+            }
+
+
+            # -----------------------------------------------------------------------                       
+            # HACK: rebuild result text files so they would contain only isis results                       
+            # -----------------------------------------------------------------------                       
+            open($fhinLoc, $fileIsisTemp);
+            open($fhoutLoc,">".$filePredTmp);
+            print $fhoutLoc
+                "PPhdr from ".$User_name,"\n",
+                "PPhdr resp "."MAIL","\n",
+                "PPhdr orig ".$origin,"\n",
+                "PPhdr want "."unk","\n";
+            while(<$fhinLoc>){
+                print $fhoutLoc $_;
+            }
+            close($fhinLoc);
+            close($fhoutLoc);
+        }
+    }
+
+    undef $ENV{"DISIS"} if ( defined $ENV{"DISIS"} );
+    return(1,"ok","$sbr:$msg");
+
+} #sub runDisis                 
+
+
+
 
 #===============================================================================
 # GY ADDED 4-2004: ISIS module
@@ -11143,7 +11441,13 @@ sub runPredIsis {
 	    # append HTML output
 	    # ------------------------------
 	    if ($optOut=~/ret html/ && -e $file{"isis"}){ 
-		unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output
+
+		if ($optRun =~/isis_only/) {        # HACK: remove previouse output disis should only       
+		    # have its own output                                      
+		    unlink $fileHtmlTmp; unlink $fileHtmlToc;
+		    $envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadIsis"};
+		}
+
 	                                                  
 		# append file
 		($Lok,$msg)=&htmlBuild($file{"isis"},$fileHtmlTmp,$fileHtmlToc,1,"isis");
@@ -11498,6 +11802,7 @@ sub runProfBval {
 	    $mode +=2 if ($optRun =~/\,strict/ );
 	    $mode =-1 if ($optRun =~/casp-format/ );
 	    $mode =4 if ($optRun =~/snap/ );
+	    $mode =5 if ($optRun =~/norsnet/ );
 #	    print "$mode\n";
 	    $parProfBvalWindow = 1 if (!$parProfBvalWindow);
 	    $file{"ProfBval"}=        $dirWork.$fileJobId.".profbval";   
@@ -11515,8 +11820,8 @@ sub runProfBval {
 		$command .= $file{"hssp"}." "; 	    }
 	    $command .= $file{"ProfBval"}." ";
 	    $command .= $parProfBvalWindow if ( $parProfBvalWindow ); 
-	    $command .= " $mode"; #MOHD
-	    $command .= " $target_name" if ($target_name); #User specified target name
+	    $command .= " $mode "; #MOHD
+	    $command .= defined($target_name) ? $target_name : "default_target";
 	    $msgHere="--- $sbr system '$exeProfBval $command'";
 #        print STDOUT "in $sbr: $msgHere\n";
 	    # --------------------------------------------------
@@ -11541,13 +11846,13 @@ sub runProfBval {
 	    }
 	    if ( $Lok == 1 ) {
 		$#tmpAppend=0;	  
-		print "envPP{fileAppProfBval}=$envPP{\"fileAppProfBval\"}\n"x10;
 		push(@tmpAppend,$envPP{"fileAppProfBval"},
 		     $file{"ProfBval"},$envPP{"fileAppLine"});
 		
 		if ($optRun =~/profbval_only/) { # HACK: remove previouse output profbval should only 
 		                                 # have its own output
 		    unlink $fileHtmlTmp; unlink $fileHtmlToc;
+		    $envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadProfBval"};   
 		}
 
 
@@ -11558,80 +11863,421 @@ sub runProfBval {
 		if ($optOut=~/ret html/ && -e $file{"ProfBval"}){ 
 #		    unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output
 
+		    if ($optRun !~/norsnet|snap/ ){
+			($Lok, $file{"ProfBval"}) =  &getHtmlBval($file{"ProfBval"},$envPP{"fileAppHtmlHeadProfBval"});
+			return (0,"err=560","*** ERROR $sbr\n"."$file{\"ProfBval\"}\n"."$Lok\n")
+			    if (! $Lok || ! -e $file{"ProfBval"}); 
 
-
-		    ($Lok, $file{"ProfBval"}) =  &getHtmlBval($file{"ProfBval"});
-		    return (0,"err=560","*** ERROR $sbr\n"."$file{\"ProfBval\"}\n"."$Lok\n")
-			if (! $Lok || ! -e $file{"ProfBval"}); # 
-
-		    
-                    # append file
-		    ($Lok,$msg)=&htmlBuild($file{"ProfBval"},$fileHtmlTmp,$fileHtmlToc,0,"profbval");
-		    if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=profbval)\n".$msg."\n";
-				  print $fhTrace $msg;
-				  return(0,"err=2250",$msg); }
-
-
-
-
-#		    ($Lok, $file{"ProfBval"}) =  &getHtmlBval($file{"ProfBval"},  $envPP{"fileAppHtmlHeadProfBval"});
-#		    return (0,"err=560","*** ERROR $sbr\n"."$file{\"ProfBval\"}\n"."$Lok\n")
-#			if (! $Lok || ! -e $file{"ProfBval"});
-#		    print "Line 11506: file{ProfBval}:".$file{"ProfBval"}."\n"x10;
-		    
-                    # append file
-#		    $fileProfBvalTemp = $file{"profbval_temp"} =  $dirWork.$fileJobId.".profbval.temp"; 
-#		    ($Lok,$msg)=&sysCatfile("nonice",$Ldebug,$fileProfBvalTemp,@tmpAppend);
-#
-#		    ($Lok,$msg)=&htmlBuild($fileProfBvalTemp,$fileHtmlTmp,$fileHtmlToc,1,"profbval");
-		    
-#		    if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=profbval)\n".$msg."\n";
-#				  print $fhTrace $msg;
-#				  return(0,"err=2250",$msg); }
-#		    print "Line 11513: file{ProfBval}:".$file{"ProfBval"}."\n"x10;
+			
+			# append file
+			($Lok,$msg)=&htmlBuild($file{"ProfBval"},$fileHtmlTmp,$fileHtmlToc,0,"profbval");
+			if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=profbval)\n".$msg."\n";
+				      print $fhTrace $msg;
+				      return(0,"err=2250",$msg); }
+		    }
 		}
 	    }
 
-		
-	    # --------------------------------------------------
-	    # append files
-	    # --------------------------------------------------
-#	    if ($origin =~ /^mail|^html|^testPP/i){
-#		$fileProfBvalTemp = $file{"profbval_temp"} =  $dirWork.$fileJobId.".profbval.temp"; 
-#		unlink $fileProfBvalTemp; # security
-#		push(@kwdRm,"profbval_temp");
-#		$#tmpAppend=0;
-	
-
-
-#		print "Line 11529: file{ProfBval}:".$file{"ProfBval"}."\n"x10;
-#		push(@tmpAppend,$envPP{"fileAppProfBval"},$file{"ProfBval"},$envPP{"fileAppLine"});
-#		if ($#tmpAppend>0){	# 
-#		    # print "debug=$Ldebug; predTmp=$filePredTmp;tmpAp=@tmpAppend\n";
-#		    unlink $filePredTmp;  # HACK: remove previouse output
-#		    ($Lok,$msg)=&sysCatfile("nonice",$Ldebug,$fileProfBvalTemp,@tmpAppend);
-#		    return(0,"err=570",$msgErrIntern."\n". 
-#			   "prof bval final appending...\n: $msg,\n"."$msgHere") if (! $Lok);
-#		}
-	    # --------------------------------------------------------------------------
-	    # HACK: rebuild result text files so they would contain only profbval results
-	    # --------------------------------------------------------------------------
-#		open($fhinLoc, $fileProfBvalTemp);
-#		open($fhoutLoc,">".$filePredTmp);
-#		print $fhoutLoc
-#		    "PPhdr from ".$User_name,"\n",
-#		    "PPhdr resp "."MAIL","\n",
-#		    "PPhdr orig ".$origin,"\n",
-#		    "PPhdr want "."unk","\n";
-#		while(<$fhinLoc>){
-#		    print $fhoutLoc $_;
-#		}		 
-#		close($fhinLoc);
-#		close($fhoutLoc);
-#	    }			 
 	}
     return(1,"ok","$sbr:$msg");
 }				# end runProfBval
+
+#===============================================================================
+# GY ADDED 5-2008: NORSnet app
+#===============================================================================
+sub runNORSnet {
+    local($origin,$date,$nice,$fileJobId,$fhOutSbr,$fhErrSbr,
+	  $dirWork,$filePredTmp,$fileHtmlTmp,$fileHtmlToc,$Ldebug,$optRun,$optOut,
+	  $exeCopf,$exeNORSnet,$dirNORSnet)=@_;
+
+    local($sbr,$msgHere,$msg,$fileOut,$Lok,$fileStripOutMod,
+	  $fileAliList,$fileFastaSingle,@tmpAppend,$txt,$command, $fhcys, @tmp);
+    $[ =1 ;
+#-------------------------------------------------------------------------------
+#   runNORSnet                : NORSnet
+#       in:                     many
+#       in GLOBAL:              $msgErr{""}, $file{""}, @kwdRm, $envPP{"file*"}
+#       in GLOBAL:              $file{"seqFasta"}     seq in FASTA format (from modInterpret)
+#       err:                    ok=(1,'ok','blabla'), err=(0,errNumber,'msg')
+#-------------------------------------------------------------------------------
+    $sbr="runNORSnet";
+    $errTxt="err=541"; $msg="*** $sbr: not def ";
+    return(0,$errTxt,$msg."origin!")          if (! defined $origin);
+    return(0,$errTxt,$msg."date!")            if (! defined $date);
+    return(0,$errTxt,$msg."nice!")            if (! defined $nice);
+    return(0,$errTxt,$msg."fileJobId!")       if (! defined $fileJobId);
+    $fhOutSbr="STDOUT"                        if (! defined $fhOutSbr);
+    $fhErrSbr="STDOUT"                        if (! defined $fhErrSbr);
+    return(0,$errTxt,$msg."dirWork!")         if (! defined $dirWork);
+    return(0,$errTxt,$msg."filePredTmp!")     if (! defined $filePredTmp);
+    return(0,$errTxt,$msg."fileHtmlTmp!")     if (! defined $fileHtmlTmp);
+    return(0,$errTxt,$msg."fileHtmlToc!")     if (! defined $fileHtmlToc);
+    return(0,$errTxt,$msg."Ldebug!")          if (! defined $Ldebug);
+    return(0,$errTxt,$msg."optRun!")          if (! defined $optRun);
+    return(0,$errTxt,$msg."optOut!")          if (! defined $optOut);
+#   return(0,$errTxt,$msg."exeConvertSeq!")   if (! defined $exeConvertSeq);
+
+    return(0,$errTxt,$msg."exeNORSnet!")        if (! defined $exeNORSnet);
+#   return(0,$errTxt,$msg."fileAliPhdIn")     if (! defined $fileAliPhdIn);
+
+    $errTxt="err=542"; $msg="*** $sbr: no dir ="; # 
+    return(0,$errTxt,$msg."$dirWork!")        if (! -d $dirWork);
+
+    $errTxt="err=543"; $msg="*** $sbr: no file=";
+    return(0,$errTxt,$msg."$filePredTmp!")    if (! -e $filePredTmp && ! -l $filePredTmp);
+
+    $errTxt="err=544"; $msg="*** $sbr: no exe =";
+    foreach $exe ($exeNORSnet) {
+	return(0,$errTxt,$msg."$exe!")        if (! -e $exe && ! -l $exe); }
+
+    return(0,"err=545","*** $sbr: no seq =".$file{"seq"}."!")   
+	if (! -e $file{"seq"} && ! -l $file{"seq"});
+
+
+    $msgErrIntern=    $msgErr{"internal"}; 
+    $msgErrConvert=   $msgErr{"align:convert"};
+
+    $msgHere="";
+    $fileBlastMatBval = $dirWork.$fileJobId;
+    $fileBlastMatBval .=".blastPsiMatBval";
+
+                                # ------------------------------
+				# convert_seq -> FASTA (if not already)
+    if (! defined $file{"seqFasta"}){
+	print $fhErrSbr "*** in $sbr file{seqFasta} not defined\n";
+	print $fhErrSbr "*** WATCH will change optRun ($optRun)!!\n" x 3;
+	$optRun=~s/profbval,//g;}
+    elsif (! -e $file{"seqFasta"}){
+	print $fhErrSbr "*** in $sbr file{seqFasta} not existing (modInterpret lazy??)\n";
+	print $fhErrSbr "*** WATCH will change optRun ($optRun)!!\n" x 3;
+	$optRun=~s/profbval,//g;}
+    elsif (! &isFasta($file{"seqFasta"})){
+	print $fhErrSbr 
+	    "*** in $sbr file{seqFasta}=",$file{"seqFasta"},
+	    ", not in FASTA format (modInterpret lazy??)\n",
+	    "*** WATCH will change optRun ($optRun)!!\n" x 3;
+	$optRun=~s/profbval,//g;}
+    
+				# ---------------------------------------------
+				# NORSnet can only take single sequence
+				# in case input is list, get the first fasta file
+				# ---------------------------------------------
+    if ( $optSeq =~ /saf|msf/) {
+#	$file{"seq4NORSnet"}=    $dirWork. $fileJobId.  ".fastaSingle";
+	$file{"seq4NORSnet"}=    $dirWork. $fileJobId.  ".fasta";
+	push(@kwdRm,"seq4NORSnet");
+	
+	($Lok,$id,$seq)=&fastaRdGuide($file{"seqFasta"});
+	return(0,"err=551",$msgErrConvert."\n".$id."\n".
+	       "*** file{seq}=".$file{"seq"}."\n") if (! $Lok);
+	$seq=~s/[ \.\~\*]//g;	# remove non amino acids!
+	
+	($Lok,$msg)=&fastaWrt($file{"seq4NORSnet"},$id,$seq);
+	return(0,"err=552",$msgErrConvert."\n"."*** fastaWrt\n".$msg."*** id=$id, seq=$seq\n")
+	    if (! $Lok);
+	return(0,"err=553",$msgErrConvert."\n"."*** fastaWrt\n"."*** id=$id, seq=$seq\n".
+	       "*** no file '".$file{"seq4NORSnet"}."' written \n") if (! -e $file{"seq4NORSnet"});
+    } else {
+	$file{"seq4NORSnet"} = $file{"seqFasta"};
+    }
+
+				# --------------------------------------------------
+                                # NORSnet program
+				# -------------------------------------------------
+    if ($optRun =~/norsnet/) {
+	    if ($optSeq =~/description=(\w+)/){
+		$target_name = uc $1;}
+	    $file{"NORSnet"}=        $dirWork.$fileJobId.".norsnet";   
+	    push(@kwdRm,"NORSnet");
+	    $dirNORSnet = "$ENV{HOME}/server/pub/norsnet/";
+	    # set env ProfBval dir (required for the program)
+	    if (! defined $ENV{"NORSnet"} ) {
+		$ENV{"NORSnet"} = $dirNORSnet;}
+	    $command = "$nice $exeNORSnet " . $file{"seq4NORSnet"}. " ";
+	    $command .= $file{"profRdb"}. " "; # 
+	    if (-e $file{"hsspPsiFil"}){
+		$command .= $file{"hsspPsiFil"}." ";
+	    }else{
+		$command .= $file{"hssp"}." "; 	    }
+	    $command .= $file{"NORSnet"}." ";
+	    $command .= defined($target_name) ? $target_name : "default_target ";
+	    $command .= $file{"ProfBval"}." ";
+
+	    $msgHere="--- $sbr system '$exeNORSnet $command'";
+	    # --------------------------------------------------
+	    # do run NORSnet
+	    # --------------------------------------------------
+	    ($Lok,$msgSys)=&sysSystem("$command"); # 
+	    return (0,"err=560","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
+		if (! $Lok || ! -e $file{"NORSnet"});
+	                       # -------------------------------------------------
+				# check result, 
+				# -------------------------------------------------
+	    $fhpbval = 'FHPBVAL';
+	    $Lok=       &open_file($fhpbval,$file{"NORSnet"});
+	    return(0,"*** ERROR $sbr: '$file{\"NORSnet\"}' not opened\n") if (! $Lok);
+	    # TODO: in case there's nothing to return add a message!
+	    close $fhpbval;
+
+	    if ($mode == -1){            #casp hack to make sure that CASP output is only text and in CASP format
+		$optOut =~s/ret html//g;
+#		$envPP{"fileAppNORSnet"}= $envPP{"fileAppEmpty"};
+#		$envPP{"fileAppLine"}=  $envPP{"fileAppEmpty"};
+	    }
+	    if ( $Lok == 1 ) {
+		$#tmpAppend=0;	  
+		push(@tmpAppend,$envPP{"fileAppNORSnet"},
+		     $file{"NORSnet"},$envPP{"fileAppLine"});
+		
+		if ($optRun =~/NORSnet_only/) { # HACK: remove previouse output NORSnet should only 
+		                                 # have its own output
+		    unlink $fileHtmlTmp; unlink $fileHtmlToc;
+		    $envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadNORSnet"};   
+		}
+
+
+
+		# ------------------------------
+		# append HTML output
+		# ------------------------------
+		if ($optOut=~/ret html/ && -e $file{"NORSnet"}){ 
+#		    unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output
+
+
+#		    ($Lok, $file{"NORSnet"}) =  &getHtmlBval($file{"NORSnet"},$envPP{"fileAppHtmlHeadNORSnet"});
+#		    return (0,"err=560","*** ERROR $sbr\n"."$file{\"NORSnet\"}\n"."$Lok\n")
+#			if (! $Lok || ! -e $file{"NORSnet"}); # 
+
+		    
+                    # append file
+		    ($Lok,$msg)=&htmlBuild($file{"NORSnet"},$fileHtmlTmp,$fileHtmlToc,0,"norsnet");
+		    if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=norsnet)\n".$msg."\n";
+				  print $fhTrace $msg;
+				  return(0,"err=2250",$msg); }
+
+		}
+	    }
+
+	}
+    return(1,"ok","$sbr:$msg");
+}				# end runNORSnet
+
+
+
+#===============================================================================
+# GY ADDED 5-2008: Mdisorder app
+#===============================================================================
+sub runMdisorder {
+    local($origin,$date,$nice,$fileJobId,$fhOutSbr,$fhErrSbr,
+	  $dirWork,$filePredTmp,$fileHtmlTmp,$fileHtmlToc,$Ldebug,$optRun,$optOut,
+	  $exeCopf,$exeMdisorder,, $exeMdisorder_slow, $dirMdisorder)=@_;
+
+    local($sbr,$msgHere,$msg,$fileOut,$Lok,$fileStripOutMod,
+	  $fileAliList,$fileFastaSingle,@tmpAppend,$txt,$command, $fhcys, @tmp);
+    $[ =1 ;
+#-------------------------------------------------------------------------------
+#   runMdisorder                : Mdisorder
+#       in:                     many
+#       in GLOBAL:              $msgErr{""}, $file{""}, @kwdRm, $envPP{"file*"}
+#       in GLOBAL:              $file{"seqFasta"}     seq in FASTA format (from modInterpret)
+#       err:                    ok=(1,'ok','blabla'), err=(0,errNumber,'msg')
+#-------------------------------------------------------------------------------
+    $sbr="runMdisorder";
+    $errTxt="err=541"; $msg="*** $sbr: not def ";
+    return(0,$errTxt,$msg."origin!")          if (! defined $origin);
+    return(0,$errTxt,$msg."date!")            if (! defined $date);
+    return(0,$errTxt,$msg."nice!")            if (! defined $nice);
+    return(0,$errTxt,$msg."fileJobId!")       if (! defined $fileJobId);
+    $fhOutSbr="STDOUT"                        if (! defined $fhOutSbr);
+    $fhErrSbr="STDOUT"                        if (! defined $fhErrSbr);
+    return(0,$errTxt,$msg."dirWork!")         if (! defined $dirWork);
+    return(0,$errTxt,$msg."filePredTmp!")     if (! defined $filePredTmp);
+    return(0,$errTxt,$msg."fileHtmlTmp!")     if (! defined $fileHtmlTmp);
+    return(0,$errTxt,$msg."fileHtmlToc!")     if (! defined $fileHtmlToc);
+    return(0,$errTxt,$msg."Ldebug!")          if (! defined $Ldebug);
+    return(0,$errTxt,$msg."optRun!")          if (! defined $optRun);
+    return(0,$errTxt,$msg."optOut!")          if (! defined $optOut);
+#   return(0,$errTxt,$msg."exeConvertSeq!")   if (! defined $exeConvertSeq);
+
+    return(0,$errTxt,$msg."exeMdisorder!")        if (! defined $exeMdisorder);
+#   return(0,$errTxt,$msg."fileAliPhdIn")     if (! defined $fileAliPhdIn);
+
+    $errTxt="err=542"; $msg="*** $sbr: no dir ="; # 
+    return(0,$errTxt,$msg."$dirWork!")        if (! -d $dirWork);
+
+    $errTxt="err=543"; $msg="*** $sbr: no file=";
+    return(0,$errTxt,$msg."$filePredTmp!")    if (! -e $filePredTmp && ! -l $filePredTmp);
+
+    $errTxt="err=544"; $msg="*** $sbr: no exe =";
+    foreach $exe ($exeMdisorder) {
+	return(0,$errTxt,$msg."$exe!")        if (! -e $exe && ! -l $exe); }
+
+    return(0,"err=545","*** $sbr: no seq =".$file{"seq"}."!")   
+	if (! -e $file{"seq"} && ! -l $file{"seq"});
+
+
+    $msgErrIntern=    $msgErr{"internal"}; 
+    $msgErrConvert=   $msgErr{"align:convert"};
+
+    $msgHere="";
+    $fileBlastMatBval = $dirWork.$fileJobId;
+    $fileBlastMatBval .=".blastPsiMatBval";
+
+                                # ------------------------------
+				# convert_seq -> FASTA (if not already)
+    if (! defined $file{"seqFasta"}){
+	print $fhErrSbr "*** in $sbr file{seqFasta} not defined\n";
+	print $fhErrSbr "*** WATCH will change optRun ($optRun)!!\n" x 3;
+	$optRun=~s/mdisorder,//g;}
+    elsif (! -e $file{"seqFasta"}){
+	print $fhErrSbr "*** in $sbr file{seqFasta} not existing (modInterpret lazy??)\n";
+	print $fhErrSbr "*** WATCH will change optRun ($optRun)!!\n" x 3;
+	$optRun=~s/mdisorder,//g;}
+    elsif (! &isFasta($file{"seqFasta"})){
+	print $fhErrSbr 
+	    "*** in $sbr file{seqFasta}=",$file{"seqFasta"},
+	    ", not in FASTA format (modInterpret lazy??)\n",
+	    "*** WATCH will change optRun ($optRun)!!\n" x 3;
+	$optRun=~s/mdisorder,//g;}
+    
+				# ---------------------------------------------
+				# Mdisorder can only take single sequence
+				# in case input is list, get the first fasta file
+				# ---------------------------------------------
+    if ( $optSeq =~ /saf|msf/) {
+#	$file{"seq4Mdisorder"}=    $dirWork. $fileJobId.  ".fastaSingle";
+	$file{"seq4Mdisorder"}=    $dirWork. $fileJobId.  ".fasta";
+	push(@kwdRm,"seq4Mdisorder");
+	
+	($Lok,$id,$seq)=&fastaRdGuide($file{"seqFasta"});
+	return(0,"err=551",$msgErrConvert."\n".$id."\n".
+	       "*** file{seq}=".$file{"seq"}."\n") if (! $Lok);
+	$seq=~s/[ \.\~\*]//g;	# remove non amino acids!
+	
+	($Lok,$msg)=&fastaWrt($file{"seq4Mdisorder"},$id,$seq);
+	return(0,"err=552",$msgErrConvert."\n"."*** fastaWrt\n".$msg."*** id=$id, seq=$seq\n")
+	    if (! $Lok);
+	return(0,"err=553",$msgErrConvert."\n"."*** fastaWrt\n"."*** id=$id, seq=$seq\n".
+	       "*** no file '".$file{"seq4Mdisorder"}."' written \n") if (! -e $file{"seq4Mdisorder"});
+    } else {
+	$file{"seq4Mdisorder"} = $file{"seqFasta"};
+    }
+
+				# --------------------------------------------------
+                                # Mdisorder program
+				# -------------------------------------------------
+    if ($optRun =~/mdisorder/) {
+	    if ($optSeq =~/description=(\w+)/){
+		$target_name = uc $1;}
+	    $file{"Mdisorder"}=        $dirWork.$fileJobId.".mdisorder";   
+	    push(@kwdRm,"Mdisorder");
+	    $dirMdisorder = "$ENV{HOME}/server/pub/md/";
+	    # set env ProfBval dir (required for the program)
+	    if (! defined $ENV{"Mdisorder"} ) {
+		$ENV{"Mdisorder"} = $dirMdisorder;}
+	    $command  = "$nice ";
+	    if ($optRun =~/mdisorder[_only]+_slow/){
+		$command .= " $exeMdisorder_slow";
+		$command .= " profcon=".$file{"profcon"};
+	    }else{
+		$command .= " $exeMdisorder ";
+	    }
+#	    $command .= " $exeMdisorder ";
+	    $command .= "fasta=" . $file{"seq4Mdisorder"}. " ";
+#	    $command .= "disopred= ".$file{"disopred"}. " "; # 
+	    if (-e $file{"hsspPsiFil"}){ # 
+		$command .= "hssp=".$file{"hsspPsiFil"}." ";
+	    }else{
+		$command .= "hssp=".$file{"hssp"}." "; 	    }
+	    $command .= "prof=".$file{"profRdb"}. " ";
+	    $command .= "profbval_raw=".$file{"ProfBval"}." ";
+	    $command .= "norsnet=".$file{"NORSnet"}." ";
+#	    $command .= "ucon=".$file{"prenup"}." ";
+	    $command .= "chk=".$file{"blastPsiCheck"}." ";
+	    $command .= "out=".$file{"Mdisorder"}." ";
+	    $command .= " out_mode=1 ";
+	    
+	    $msgHere="--- $sbr system '$command'";
+	    # --------------------------------------------------
+	    # do run Mdisorder
+	    # --------------------------------------------------
+	    ($Lok,$msgSys)=&sysSystem("$command"); # 
+	    return (0,"err=560","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
+		if (! $Lok || ! -e $file{"Mdisorder"});
+	                       # -------------------------------------------------
+				# check result, 
+				# -------------------------------------------------
+	    $fhpbval = 'FHPBVAL';
+	    $Lok=       &open_file($fhpbval,$file{"Mdisorder"});
+	    return(0,"*** ERROR $sbr: '$file{\"Mdisorder\"}' not opened\n") if (! $Lok);
+	    # TODO: in case there's nothing to return add a message!
+	    close $fhpbval;
+
+	    if ( $Lok == 1 ) {
+		$#tmpAppend=0;	  
+
+		push(@tmpAppend,$envPP{"fileAppMdisorder"},
+		     $file{"Mdisorder"},$envPP{"fileAppLine"});
+		
+
+
+		# ------------------------------
+		# append HTML output
+		# ------------------------------
+		if ($optOut=~/ret html/ && -e $file{"Mdisorder"}){ 
+		    if ($optRun =~/mdisorder_only/) { # HACK: remove previouse output Mdisorder should only have its own output
+			unlink $fileHtmlTmp || warn "*** cannot unlink $fileHtmlTmp";
+			unlink $fileHtmlToc || warn "*** cannot unlink $fileHtmlToc";
+			$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadMdisorder"};
+		    }
+
+		    # append file
+		    ($Lok,$msg)=&htmlBuild($file{"Mdisorder"},$fileHtmlTmp,$fileHtmlToc,1,"mdisorder");
+		    if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=mdisorder)\n".$msg."\n";
+				  print $fhTrace $msg;
+				  return(0,"err=2250",$msg); }
+
+		}
+	    }
+
+
+	    # --------------------------------------------------
+	    # append files
+	    # --------------------------------------------------
+	    if ($origin =~ /^mail|^html|^testPP/i){
+		$fileMdisorderTemp = $file{"md_temp"} =  $dirWork.$fileJobId.".md.temp"; 
+		unlink $fileMdisorderTemp; # security
+		push(@kwdRm,"md_temp");
+		$#tmpAppend=0;
+		
+		unlink $filePredTmp  || warn "*** cannot unlink $filePredTmp";# if ($optRun =~/mdisorder_only/);;  # HACK: remove previouse output
+		$command = "cat ".$envPP{"fileAppMdisorder"} ." ". $file{"Mdisorder"}." ".$envPP{"fileAppLine"} ." > $fileMdisorderTemp";
+		$msgHere="--- $sbr system ' $command'";
+		($Lok,$msgSys)=&sysSystem("$command");
+		
+		return (0,"err=560","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
+		    if (! $Lok );
+	
+		
+	    # --------------------------------------------------------------------------
+	    # HACK: rebuild result text files so they would contain only md results
+	    # --------------------------------------------------------------------------
+		open($fhinLoc, $fileMdisorderTemp);
+		open($fhoutLoc,">".$filePredTmp);
+		print $fhoutLoc
+		    "PPhdr from ".$User_name,"\n",
+		    "PPhdr resp "."MAIL","\n",
+		    "PPhdr orig ".$origin,"\n",
+		    "PPhdr want "."unk","\n";
+		while(<$fhinLoc>){
+		    print $fhoutLoc $_;
+		}		 
+		close($fhinLoc);
+		close($fhoutLoc);
+	    }			 
+	}
+    return(1,"ok","$sbr:$msg");
+}				# end runMdisorder
 
 
 
@@ -11744,11 +12390,17 @@ sub runSnap {
 	    if ($optSeq =~/description=(\w+)/){
 		$target_name = uc $1;    }
 
-#	    print $envPP{"para_Muts"}."\n";
-	    if ($envPP{"para_Muts"}=~/muts\=(.+)\)/ ) {
+	    if ($envPP{"para_Muts"}=~/muts\=\(((\w+\,*)+)\)/){   #~/muts\=(\w+\,?)+\)/ ) {
 		$parSnapMuts = $1;    }
 
+	     if ($envPP{"para_Muts"}=~/ri\=(\w+)/ ) {
+		$parSnapRi = $1;    }
 
+	     if ($envPP{"para_Muts"}=~/acc\=(\w+)/ ) {
+		$parSnapAcc = $1;    }
+
+
+	    
 	    return(0,"err=554","*** $sbr: no mutants specified. Snap must have a mutant list!")   
 		if (!$parSnapMuts);
 
@@ -11778,8 +12430,10 @@ sub runSnap {
 	    $command .= "-b=".$file{"ProfBval"}." ";
 	    $command .= "-f=".$file{"hmmpfam"}." ";
 	    $command .= "-x=".$file{"blastPsiMatTmb"}." ";
-#	    $command .= "-m=".$file{"blastPsiMatTmb"}." ";
+	    $command .= "-c=".$file{"blastPsiCheck"}." ";
 	    $command .= "-m=$file{\"muts\"} ";
+	    $command .= "-r=".$parSnapRi." " if (defined $parSnapRi);
+	    $command .= "-e=".$parSnapAcc." " if (defined $parSnapAcc);
 
 #	    $command .= "-t=".$file{"mutant"}." ";
 #	    $command .= $target_name" if ($target_name); #User specified target name
@@ -11788,7 +12442,6 @@ sub runSnap {
 
 
 	    $msgHere="--- $sbr system ' $command'";
-#        print STDOUT "in $sbr: $msgHere\n";
 
 
 	    # --------------------------------------------------
@@ -11822,12 +12475,13 @@ sub runSnap {
 		# ------------------------------
 		if ($optOut=~/ret html/ && -e $file{"Snap"}){ 
 		    unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output
+		    $envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadSnap"};   
 		    return (0,"err=560","*** ERROR $sbr\n"."$file{\"Snap\"}\n"."$Lok\n")
 			if (! $Lok || ! -e $file{"Snap"});
 
 		    
                     # append file
-		    ($Lok,$msg)=&htmlBuild($file{"Snap"},$fileHtmlTmp,$fileHtmlToc,0,"snap");
+		    ($Lok,$msg)=&htmlBuild($file{"Snap"},$fileHtmlTmp,$fileHtmlToc,1,"snap");
 		    if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=snap)\n".$msg."\n";
 				  print $fhTrace $msg;
 				  return(0,"err=2250",$msg); }
@@ -12287,7 +12941,6 @@ sub runAgape {
 		     $file{"agape"},$envPP{"fileAppLine"});
 	    }
 	    
-#	    print STDOUT "debug=$Ldebug; predTmp=$filePredTmp;tmpAp=@tmpAppend\n"x5;	
 	    if ($#tmpAppend>0){	# 
 		print STDOUT "debug=$Ldebug; predTmp=$filePredTmp;tmpAp=@tmpAppend\n"x5;	
 		$fileAgapeTemp = $file{"agape_temp"}=        $dirWork.$fileJobId.".agape.temp";   
@@ -12303,6 +12956,7 @@ sub runAgape {
 	    if ($optRun =~/agape_only/) { # HACK: remove previouse output agape should only 
 		                          # have its own output
 		unlink $fileHtmlTmp; unlink $fileHtmlToc;
+		$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadAgape"};
 	    }
 
 	    if ($optOut=~/ret html/ && -e $file{"agape"}){ 
@@ -12510,6 +13164,7 @@ sub runConBlast {
 	if ($optRun =~/conblast_only/) { # HACK: remove previouse output conblast should only 
 	                                 # have its own output
 	    unlink $fileHtmlTmp; unlink $fileHtmlToc;
+	    $envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadConBlast"};
 	}
 
 	if ($optOut=~/ret html/ && -e $file{"conblast"}){ 
@@ -12690,7 +13345,6 @@ sub runNLProt {
 	    
 	    
 	    if ($#tmpAppend>0){	# 
-#		print STDOUT "debug=$Ldebug; predTmp=$filePredTmp;tmpAp=@tmpAppend\n"x5;
 		$fileNlprotTemp = $file{"nlprot_temp"}=        $dirWork.$fileJobId.".nlprot.temp";   
 		unlink $fileNlprotTemp; # security
 		push(@kwdRm,"nlprot_temp");
@@ -12704,6 +13358,7 @@ sub runNLProt {
 	    if ($optRun =~/nlprot_only/) { # HACK: remove previouse output nlprot should only 
 		                          # have its own output
 		unlink $fileHtmlTmp; unlink $fileHtmlToc;
+		$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadNLProt"};
 	    }
 
 	    if ($optOut=~/ret html/ && -e $file{"nlprot"}){ 
@@ -12895,7 +13550,6 @@ sub runR4S {
 	    
 	    
 	    if ($#tmpAppend>0){	# 
-#		print STDOUT "debug=$Ldebug; predTmp=$filePredTmp;tmpAp=@tmpAppend\n"x5;
 		$fileR4STemp = $file{"R4S_temp"}=        $dirWork.$fileJobId.".R4S.temp";   
 		unlink $fileR4STemp; # security
 		push(@kwdRm,"R4S_temp");
@@ -13016,9 +13670,264 @@ sub runDssp{
 }				# runDssp
 
 
+#===============================================================================
+sub convertToXML {
+
+    use warnings;
+    use Carp qw| cluck :DEFAULT |;
+#    use lib &{sub { $ENV{VISUALPP_LIBS} =~ /(.*)/o; return split(/:/o, $1 ); }}(); # a dirty trick!
+    use Getopt::Long;
+    use Data::Dumper;
+    use PPPerl::Parsers;
+    use PPPerl::PPPrediction;
+    use PPPerl::PPXMLWriter;
+    use Bio::SeqIO;
+    use IO::File;
+    use Scalar::Util; # tainted()
+
+
+
+    local($job_name,$fhTrace,$job_dir, $Ldebug)=@_;
+    local($sbrName,$fhinLoc,$fhoutLoc,$tmp,$Lok);
+    $sbrName = "convertToXML";
+
+    my $errMsg = "";
+    my $fastafile = $job_dir."/".$job_name.'.fasta';
+    if( !-e $fastafile ) { die("Error: job fasta file '$fastafile' does not exist!\n"); }
+
+	# Create a PPPerl::PPPrediction.
+    my $seq = Bio::SeqIO->new( '-format' => 'fasta' , -file => $fastafile )->next_seq(); # 
+    if( !$seq ) { die("Error: could not read FASTA sequence from '$fastafile'!"); } # 
+    $seq->display_id( $job_name );
+
+    my $ppprediction = new PPPerl::PPPrediction( { seq => $seq } );
+
+	# Check for component results, read them if present and set the results into the PPPerl::PPPrediction.
+	#   disis - TODO
+
+	#   disulfind
+    eval {
+	  my $inputfile = $job_dir."/".$job_name.'.disulfind';
+	  if( -e $inputfile )
+	  {
+	    my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+	    my $parser = new PPPerl::Parser::Disulfind();
+	    my $result = $parser->parse( { istream => $istream } );
+	    $ppprediction->disulfind( $result );
+	  }
+	};
+    if( $@ ) { warn(); $errMsg .= $@; }
+	
+	#   isis
+	eval {
+	  my $inputfile = $job_dir."/".$job_name.'.isis';
+	  if( -e $inputfile )
+	  {
+	    my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+	    my $parser = new PPPerl::Parser::Isis();
+	    my $result = $parser->parse( { istream => $istream } );
+	    $ppprediction->isis( $result );
+	  }
+	};
+	if( $@ ) { warn(); $errMsg .= $@; }
+	
+	#   loctree
+    eval {
+	my $inputfile = $job_dir."/".$job_name.'.loctar';
+	if( -e $inputfile )
+	{
+	    my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+	    my $parser = new PPPerl::Parser::Loctree();
+	    my $result = $parser->parse( { istream => $istream } );
+	    $ppprediction->loctree( $result ); # 
+	}
+    };
+    if( $@ ) { warn(); $errMsg .= $@; }
+
+	
+    #   md
+    eval {
+	my $inputfile = $job_dir."/".$job_name.'.md';
+	if( -e $inputfile )
+	{
+	    my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+	    my $parser = new PPPerl::Parser::Md();
+	    my $result = $parser->parse( { istream => $istream } ); # 
+	    $ppprediction->md( $result );
+	  }
+    };
+    if( $@ ) { warn(); $errMsg .= $@; }
+
+	
+	#   nls
+    eval {
+	my $inputfile = $job_dir."/".$job_name.'.nls';
+	if( -e $inputfile )
+	{
+	    my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+	    my $parser = new PPPerl::Parser::Nls();
+	    my $result = $parser->parse( { istream => $istream } );
+	    $ppprediction->nls( $result ); # 
+	  }
+    };
+    if( $@ ) { warn(); $errMsg .= $@; }	
+
+	
+	#   phdhtm
+    eval {
+	my $inputfile = $job_dir."/".$job_name.'.phdRdb';
+	if( -e $inputfile )
+	{
+	    my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+	    my $parser = new PPPerl::Parser::Phdhtm();
+	    my $result = $parser->parse( { istream => $istream } );
+	    $ppprediction->phdhtm( $result );
+	  }
+    };
+    if( $@ ) { warn(); $errMsg .= $@; }
+
+	
+	#   profbval - integrated into MD
+	#eval {
+	#  my $inputfile = $job_dir."/".$job_name.'.profbval';
+	#  if( -e $inputfile )
+	#  {
+	#    my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+	#    my $parser = new PPPerl::Parser::Profbval();
+	#    my $result = $parser->parse( { istream => $istream } );
+	#    $ppprediction->profbval( $result );
+	#  }
+	#};
+	#if( $@ ) { warn(); $errMsg .= $@; }
+	
+	#   prof
+    eval {
+	    my $inputfile = $job_dir."/".$job_name.'.profRdb';
+		if( -e $inputfile )
+		{
+	    	my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+		    my $parser = new PPPerl::Parser::Prof();
+		    my $result = $parser->parse( { istream => $istream } );
+	    	$ppprediction->prof( $result );
+		}
+		else
+		{
+			die("profRdb file '$inputfile' is absent");
+		}
+    };
+    if( $@ ) { warn(); $errMsg .= $@; }
+
+	
+	#   psiblast
+    eval {
+	#return;
+	my $inputfile = $job_dir."/".$job_name.'.blastPsiOutTmp';
+	if( -e $inputfile )
+	{
+	    my $istream = PPPerl::Parser::Psiblast::get_stream_to_last_round( { inputfile => $inputfile } );
+	    my $parser = new PPPerl::Parser::Psiblast(); # 
+	    my $result = $parser->parse( { istream => $istream } );
+	    $ppprediction->psiblast( $result );
+	#die( scalar( @$result ) );
+	#exit();
+	
+	    close( $istream );	# 
+	}
+    };
+    if( $@ ) { warn(); $errMsg .= $@; }
+
+	
+	#   ucon - integrated into MD
+	#eval {
+	#  my $inputfile = $job_dir."/".$job_name.'.prenup';
+	#  if( -e $inputfile )
+	#  {
+	#    my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+	#    my $parser = new PPPerl::Parser::Ucon();
+	#    my $result = $parser->parse( { istream => $istream } );
+	#    $ppprediction->ucon( $result );
+	#  }
+	#};
+	#if( $@ ) { warn(); $errMsg .= $@; }
+	
+	#print Dumper( $ppprediction );
+	
+	# Create a PPXMLWriter, write the PPPerl::PPPrediction out.
+    my $xmlBuffer;
+    open ($ostream, '>',\$xmlBuffer) || die ($!);
+    my $xmlwriter = new PPPerl::PPXMLWriter();
+    $xmlwriter->write( { ppprediction => $ppprediction, ostream => $ostream } );
+    close ($ostream); 
+
+    return ($xmlBuffer,$errMsg);
+
+
+
+
+
+
+
+
+
+
+
+
+#    $command = qq|$exe_convert2xml --job-dir=$dirWork --job-name=$jobId |;
+#    open (PIPE, '-|', $command);
+#    undef $/;		# 'slurp' mode
+#    $tmp = <PIPE>;
+#    close PIPE;
+
+#    return $tmp;
+#     @methodnames = (
+#	"sequence",
+#	"profRdb",
+#	"nors",
+#	"phdRdbHtm",
+##	"coils",
+#	"asp",
+#	"seg",
+#	"disulfind",
+#	"globeProf",
+#	"prosite"
+#  );
+
+
+#    $strParam = "";
+#    foreach $kwd(@methodnames){    
+	
+#	if ($kwd=~/sequence/ && -e $file{"seq"} && (-s $file{"seq"}>0)){
+#	    $strParam .= "sequence=".$file{"seq"};
+#	}elsif (-e $file{"$kwd"} && (-s $file{"$kwd"}>0)) {
+#	    $strParam .= " $kwd=".$file{$kwd};
+#	}
+
+#    }
+    
+
+ #   ($Lok,$msgSys)=&sysSystem("$command"); 
+ #   if (!$Lok){
+#	warn "-*- $packName'$sbr cannot complete conversion of results to XML. Only flat file results are avilable.\n".
+#             "-*- System message; $!\n";
+#	return 0; 
+#    }
+#    $file{"XML_res"}=        $dirWork.$fileJobId.".summary.xml";   
+#    if ((-e $file{"XML_res"}) && (-s $file{"XML_res"}>0) ){
+#	push(@kwdRm,"XML_res");
+#	return (1, $file{"XML_res"});
+#    }else{			 
+#	warn "-*- $packName'$sbr No XML file created. Only flat file results are avilable.\n".
+#	    "-*- System message; $!\n";
+#	return 0; 		 
+
+#    }				
+}				# convertToXML
+
+
 
 1;
 
+# vim:ts=4:et:
 #================================================================================
 #   end of perl script to run the PHD server
 #================================================================================
