@@ -2017,10 +2017,10 @@ sub iniHtmlBuild {
 	 'proftmb',	     "Prediction of transmembrane beta-barrelsfor entire proteomes (Bigelow, H., Petrey, D., Liu, J.,Przybylski, D. & Rost, B.)",
 	 'profbval',	     "PROFBval - Neural network-based prediction method of flexibility/rigidity from sequence.(Schlessinger A, Rost B)",
 	 'norsnet',	     "NORSnet - Natively unstructured loops differ from other loops",
-	 'snap',             "snap",
+	 'snap',             "SNAP - Evaluating effects of single amino acid substitutions on protein function (Bromberg Y, Rost B)",
 	 'loctar',	     "Loc Tar rajesh nair",
 	 'agape',	      "Improving fold recognition without folds (Przybylski,D, Rost B)",
-	 'conblast',	      "ConBlast (Przybylski,D, Rost B)",
+	 'conblast',	      "ConSequenceS (Consensus Sequence Searches)",
 	 'conseq',  	      "ConSeq/Rate4Site (Glaser, F., Pupko, T., Paz, I., Bell, R.E., Bechor-Shental, D.,Martz, E. and Ben-Tal, N.)",
 	 'isis',             "Predicted protein-protein interaction sites fromlocal sequence information.(Ofran Y, Rost B)",
 	 'disis',             " Prediction of DNA binding residues from sequence. (Ofran Y, Myso\
@@ -3126,7 +3126,10 @@ sub modInterpret {
 
     # SNAP_RUN - run only necessary dependendencies 
     # run only prof. this is the deafualt!
-    if ( $job{"run"} =~ /snap/ ) {
+      if ( $job{"run"} =~ /snap_only/ ) {
+#	$job{"run"}= "blastp,maxhom,blastpsi,filterAli,filterPhd,pfam,prof,profbval,snap";
+	$job{"run"}= "blastp,blastpsi,filterAli,filterPhd,pfam,prof,profbval,snap_only";
+    }elsif ( $job{"run"} =~ /snap/ ) {
 #	$job{"run"}= "blastp,maxhom,blastpsi,filterAli,filterPhd,pfam,prof,profbval,snap";
 	$job{"run"}= "blastp,blastpsi,filterAli,filterPhd,pfam,prof,profbval,snap";
     }
@@ -3143,11 +3146,14 @@ sub modInterpret {
     # ISIS/DISIS
     # ----
     if ( $job{"run"} =~ /disis_only/ ) {
-	$job{"run"}= "blastp, hssp,maxhom,prof,disis_only";
+	#$job{"run"}= "blastp, hssp,maxhom,prof,disis_only";
+	$job{"run"}.= ",disis_only";			
     }				# 
 
     if ( $job{"run"} =~ /isis_only/ && $job{"run"} !~ /disis_only/) {
-        $job{"run"}= "blastp, maxhom,prof,isis_only";
+     #   $job{"run"}= "blastp, maxhom,prof,isis_only";
+       #$job{"run"}= "blastp, prof,isis_only";
+      $job{"run"}.= ",isis_only";
     }
 
     if ( $job{"run"} =~ /disis/ ) {
@@ -8046,7 +8052,7 @@ sub ctrlCleanUp {		#
 
 	if ($optRun=~/_only/){
 #	    $urlRes = "http://www.predictprotein.org/get_results_test.php?req_id=".$randomString;
-	    $urlRes = "http://www.predictprotein.org/get_results_test.php?req_id=".$resId;
+	    $urlRes = "http://www.predictprotein.org/getServersResponse.php?req_id=".$resId;
 	}else{
 #	    $urlRes = "http://www.predictprotein.org/get_results.php?req_id=".$randomString;
 	    $urlRes = "http://www.predictprotein.org/get_results.php?req_id=".$resId;
@@ -8115,9 +8121,13 @@ sub ctrlCleanUp {		#
     }
     close $fhfileRes;
 
+    $mailSubject = "Results From PredictProtein";
+    $mailSubject .=  " for protein - ". $UserProtName if ($UserProtName);
+    
+    
     $exe_mail=$envPP{"exe_mail"};
     ($Lok,$msgSys)=		# 
-	&sysSystem("echo '$message' | $exe_mail -s \'Results From PredictProtein\' $User_name",0);	    
+	&sysSystem("echo '$message' | $exe_mail -s \' $mailSubject\' $User_name",0);	    
     $file{"fileResult"} =  $File_result;
     push(@kwdRm,"fileResult");
 
@@ -8447,8 +8457,8 @@ sub extrHdrOneLine {
 
 
     if ($lineLoc =~ /disis_only/  ){             # only disis (dependents are hssp,maxhom and prof
-	$optRun = "hssp, maxhom,disis_only,prof";
-
+	#$optRun = "hssp, maxhom,disis_only,prof";
+	$optRun = ",prof, disis_only";
 	$optOut ="";
         return (0);
     }elsif ($lineLoc =~ /disis/){
@@ -8456,9 +8466,11 @@ sub extrHdrOneLine {
     }
 
     if ($lineLoc =~ /isis_only/ && $lineLoc !~ /disis/ ){	       # only isis (dependents are maxhom and prof
-       $optRun = "blastp, maxhom,isis_only,prof";
+       #		$optRun = "blastp, maxhom,isis_only,prof";
+       #$optRun = "blastp, hssp,isis_only,prof";
+       $optRun = ",prof,isis_only";
        $optOut ="";
- 	return (0);
+ 	return (0);		
     }elsif ($lineLoc =~ /run isis/){
 	$optRun.=",isis"  ;
     }
@@ -8492,13 +8504,13 @@ sub extrHdrOneLine {
        return (0);
     }	    
 
-    if ($lineLoc =~ /profbval_only/){	# Only CHOPprofbvla, ignore others
+    if ($lineLoc =~ /profbval_only/){	# Only profbval, ignore others
 	$optRun ="profbval_only";
 	$optOut ="";
 	return (0);
     }	    
 
-    if ($lineLoc =~ /norsnet_only/){	# Only CHOPprofbvla, ignore others
+    if ($lineLoc =~ /norsnet_only/){	# Only norsnet, ignore others
 	$optRun ="norsnet_only";
 	$optOut ="";
 	return (0);
@@ -8716,8 +8728,8 @@ sub extrHdrOneLine {
 
 
                                 # normal snap
-    $optRun="blast,pfam,profbval,snap"            if ($lineLoc =~ /snap/);
-
+    #$optRun="blast,pfam,profbval,snap"            if ($lineLoc =~ /snap/);
+    $optRun="blast,pfam,profbval,$1" if ($lineLoc =~ /(snap[\_only]+)/);
 
     $optRun.=",strict"        if ($lineLoc=~/(run|do|use) (strict)/i);
     $optRun.=",nonstrict"        if ($lineLoc=~/(run|do|use) (non-strict)/i);
@@ -11114,7 +11126,8 @@ sub runDisis {
     $msgErrConvert=   $msgErr{"align:convert"};
     $msgHere="";                #                                                                           
     $disisRunParams = "";
-    $disisRunParams = " ".$file{"ali"}." ";
+    #$disisRunParams = " ".$file{"ali"}." ";
+    $disisRunParams = " ".$file{"aliFil4phd"}." ";
 
 
     
@@ -11328,7 +11341,7 @@ sub runPredIsis {
     $msgErrConvert=   $msgErr{"align:convert"};
     $msgHere="";		# 
     $isisRunParams = "";
-    $isisRunParams = " ".$file{"ali"}." ";
+    $isisRunParams = " ".$file{"aliFil4phd"}." ";
 
                               # ------------------------------
 				# convert_seq -> FASTA (if not already)
