@@ -1,0 +1,472 @@
+#!/usr/bin/perl -w
+use strict; 
+use warnings;
+use Getopt::Long;
+
+my $cmd_opts = {
+  help => 0,
+  verbose => 0,
+  debug	  => 0,
+};
+
+my @opt_spec = ( 'help|h!', 'verbose|v=i' , 'debug|d=i');
+
+__FILE__ =~ /([^\/]+)$/; my $myname = $1;
+
+my $getopt_result = GetOptions( $cmd_opts, @opt_spec );
+my $ret = 0;
+
+if( !$getopt_result || $cmd_opts->{'help'} )
+{
+  if( !$getopt_result ) { warn("Invalid options!\n"); $ret = 1; }
+  print STDERR qq|Usage: $myname [-h\|--help] [-v\|--verbose] [-d\|--debug]
+Run the PP main daemon
+|;
+  exit( $ret );
+}
+
+my $pp_daemon = new PP_Daemon(
+  { verbose => $cmd_opts->{'verbose'}, verbose => $cmd_opts->{'debug'} }
+);
+
+my $result = $pp_daemon->run( { istream => \*STDIN } );
+exit $ret;
+
+
+#=================================================================================================
+package PP_Daemon;
+
+
+sub            new
+{
+	my $this = shift;
+	my $class = ref($this) || $this;
+	my $self = {};
+	bless $self, $class;
+	my $res;
+	$self->_initialize( @_ );
+	return $self;
+}
+
+
+sub            _initialize
+{
+	use lib $ENV{PP_LIB};
+	require $ENV{PPENV};
+
+	#use lib '.';
+	require _PP_DB;
+	
+
+	my( $self, $__p ) = @_;
+	$self->verbose( $__p->{'verbose'} );
+	$self->debug( $__p->{'debug'} );
+	$self->{errMsg} = "";
+	$self->{sgeParamFile}= "sgeParams";
+	
+	use constant FAILED      =>   4;
+	use constant RUNNING     =>   3;
+	use constant COMPLETED   =>   2;
+	use constant PENDING     =>   1;
+	use constant NEW         =>   0;
+	
+	use constant DB_HOST => 	'cherry.bioc.columbia.edu';
+	use constant DB_SCHEMA =>	'PREDICTPROTEIN';
+	use constant DB_USER	=>	'phd';
+	use constant DB_PASS	=>	'Pr3d8ct';
+	
+		
+
+	my($Lok,$envPack,$dbPack);
+	my $envPP = {};
+	foreach my $des ("dir_work","dir_res", "file_scanLog", "exe_ppPredict" ){
+		$envPP->{$des}=&envPP'getLocal($des);                      # e.e'
+		die("*** CRITICAL ERROR"."failed to get environment variable from envPP{$des}") if (! defined $envPP->{$des});
+	}
+	$self->{env} = $envPP;
+	$self->{dbCon} = &init_db();
+
+	die ("Could not establish database connnection") if (!defined $self->{dbCon});
+	my $pid = $$;
+	open (FH, ">pid");
+	print FH $pid || die ("Could not log process ID reason: $!");
+	close FH;
+	
+}
+
+
+
+sub 		run
+{
+	my( $self, $__p ) = @_;
+	$SIG{INT} = \&catchZap;
+	
+	
+	if ($self->{dbCon}){
+	while (){
+		my $local_hashref = $self->{dbCon}->getNextJob(NEW);	 ## TODO make sure to limit to one job at a time i.e. LIMIT 1 in the SQL
+		
+		if ($local_hashref || defined $local_hashref){
+		foreach my $hashRef(@$local_hashref){
+			eval{	
+				my $prdFile = $self->writeJobFile($hashRef);
+				my ($user,$orig,$password, $dbid) = $self->extractdataFromFile($prdFile);
+				$self->submitJobToQueue($prdFile, $user,$orig,$dbid);
+				$self->{dbCon}->setJobStartTime($dbid);
+				$self->{dbCon}->setJobState($dbid, PENDING);
+	  
+			};
+			if ($@){
+				warn "-*-WARN-*-"," $@";
+			}
+		}
+		}else{
+			warn ("No batch jobs to process.\n") if ($self->{debug});
+		}
+		sleep (2);
+	}
+		$self->close_db($self->{dbCon});	 
+	}else {
+	
+	warn "*"x5,"Problem initializing scanner. $!\n";
+	}
+}
+
+
+sub 		submitJobToQueue
+{
+
+	my ($self, $fileFound,  $user, $orig, $dbid ) = @_;
+	my $sgeCommand = "";
+	my $env = $self->{env};
+	
+	my $fillerforPass = "pwd";
+	  				# build name of result file 
+    	my $fileFoundTmp=$fileFound;
+    	$fileFoundTmp=~s/^.*\///g;	# purge dir
+    	$env->{"dir_res"}=~s/\/$//g        if ($env->{"dir_res"}=~/\/$/);  # purge final slash
+   	my  $fileResult=   $env->{"dir_res"}."/".$fileFoundTmp . ".prd";
+   	$fileResult=~s/\/\//\//g;	# security '//' -> '/'
+	
+	
+	my $filePID=      $fileFound;		# get PID
+	$filePID=~s/^.*\///;$filePID=~s/\..*//;# remove path and extensions
+ 	#create a stub file to submiot to SGE
+	
+	my $ppCommand= qq| $env->{"exe_ppPredict"} $fileFound $fileResult $user $fillerforPass $orig $dbid -s |;
+	
+	
+	my $sgeSubmitFileName .= qq|$env->{"dir_work"}/$filePID.sge.sh|;
+	eval {
+		open (FO, ">$sgeSubmitFileName")|| die ("Could not open sgeSubmitFileName: $sgeSubmitFileName. System message $!");
+		print FO  qq |#!/bin/bash\n$ENV{HOME}/.profile\n|;
+		print FO  $ppCommand,"\n";
+		close FO;
+		chmod (0700,  $sgeSubmitFileName);
+	
+		my $tmpFileHandler = \*FI;
+		open (FI, $self->{sgeParamFile}) || die ("Could not open sgeparamfile: $self->{sgeParamFile} System message $!");
+		my $ref_sgePrefs = readParam($tmpFileHandler);
+		my %sgePrefs = %$ref_sgePrefs;
+		$sgeCommand =  $sgePrefs{exeSge}. " ";
+	#	$sgeCommand .= $sgePrefs{defaultPriority}. " ";
+		$sgeCommand .= $sgePrefs{outputlog}. " ";
+		$sgeCommand .= $sgePrefs{errorlog}. " ";
+		$sgeCommand .= $sgePrefs{shell}. " ";
+		$sgeCommand .= $sgePrefs{retainShellSettings}. " ";		
+		close ($tmpFileHandler);
+		};
+	if ($@){
+		die ($@);
+		
+	}
+	# Now do the actual submission
+	my ($Lok,$msgSys) =	&sysSystem ("$sgeCommand $sgeSubmitFileName");
+	chomp($msgSys);
+	# END of qeueue submission
+	#submissions to the SGE are logged in the scanner.log file
+	$msgSys=`echo '$msgSys $user' >> $env->{"file_scanLog"} `;
+	return (0);
+	
+}
+
+
+
+sub 		writeJobFile
+{
+    my ($self, $hashref_batch) = @_;
+    my ($prd_file);
+    my $env = $self->{env};
+    my $db  = $self->{dbCon};
+
+	if ( ($hashref_batch->{'NAME'}) &&  ($hashref_batch->{'INPUT'})   ){
+		$prd_file = $env->{"dir_work"}."/".$hashref_batch->{'NAME'};
+		
+		eval{
+			system ("touch $prd_file.lock") == 0 || die ("Unable to  touch lock file: $prd_file.lock.System message:$!");
+			open (PRDFILE,">$prd_file")||die("can't write to query file:$prd_file. System message:$!");
+			print PRDFILE "$hashref_batch->{'INPUT'}";
+			print PRDFILE "\n";
+			close PRDFILE;
+			unlink ("$prd_file.lock");
+			$db->setJobStartTime($hashref_batch->{'ID'});
+			#$db->setJobState($hashref_batch->{'ID'}, PENDING);
+		};
+		if ($@){
+		    $db->setJobState($hashref_batch->{'ID'}, FAILED);
+		    die($@);
+		}
+	
+	}
+	return ($prd_file);
+}
+
+
+
+#sub 		  init_db{ return _PP_DB->new('bonsai.bioc.columbia.edu','PREDICTPROTEIN','phd','Pr3d8ct');}
+sub 		  init_db{ return _PP_DB->new(DB_HOST,DB_SCHEMA,DB_USER,DB_PASS);}
+sub 		  close_db{    my ($self, $loc_db) = @_;    $loc_db->close;}
+sub               verbose { if( @_ > 1 ) { $_[0]->{_verbose} = $_[1]; } return $_[0]->{_verbose}; }
+sub               debug { if( @_ > 1 ) { $_[0]->{_debug} = $_[1]; } return $_[0]->{_debug}; }
+
+
+
+
+
+
+sub 		catchZap
+{
+
+	my( $self, $__p ) = @_;
+#-------------------------------------------------------------------------------
+# trigrred when a USER1 signal is sent to the scanner
+# will exit gracefuly by shutting down connection to the db
+#-------------------------------------------------------------------------------
+	close_db($self->dbCon);
+#	unlink 'pid' ||  warn "*"x5,"Could not unlink pid file. System message";	
+
+}
+
+sub 		readParam
+{
+	
+	my $cfgHangler = shift;
+	my %usrPrefs;
+	while (<$cfgHangler>) {
+		chomp;                  # no newline
+		s/#.*//;                # no comments
+		s/^\s+//;               # no leading white
+		s/\s+$//;               # no trailing white
+		next unless length;     # anything left?
+		my ($var, $value) = split(/\s*=\s*/, $_, 2);
+		$usrPrefs{$var} = $value;
+	} 
+	return \%usrPrefs;
+}
+
+sub 		extractdataFromFile
+{
+	my ($self, $fileFound,)=@_;
+	my $fileScanLogLoc = $self->{env}->{"file_scanLog"};
+
+
+    	my($sbrName3,$errMsg,$fileResult,$fileMailQuery,
+	  $user,$password,$orig,$resp,$dbid,$want,$msg,$cmd);
+	my ($Lok, $msgSys);
+   
+#-------------------------------------------------------------------------------
+#   scannerPredict_prepare      prepares running the file
+#                               - builds names of :
+#                                 fileFound:      input file
+#                               
+#       out:                    (1|0,$msg,$fileFound,$fileResult,$user,$orig,$password
+#       out:                    $fileFound=         input file to predict.pm
+#       out:                    $fileResult=      output from predict.pm
+#       err:                    (1,'ok'), (0,'message')
+#-------------------------------------------------------------------------------
+    my $tmp=$0;$tmp=~s/^.*\/|\.pl//g;$tmp.=":";$sbrName3=$tmp."scannerPredict_prepare";
+
+    
+				# ------------------------------
+				# extract data from input file
+    ($Lok,$user)=       &fileExtractHeader($fileFound,"PPhdr from");
+    print "-*- WARN $sbrName3: getting user ($fileFound)\n".  $user."\n"       if (! $Lok);
+    ($Lok,$orig)=       &fileExtractHeader($fileFound,"PPhdr orig");
+    print "-*- WARN $sbrName3: getting orig ($fileFound)\n"  .$orig."\n"       if (! $Lok);
+    ($Lok,$resp)=       &fileExtractHeader($fileFound,"PPhdr resp");
+    print "-*- WARN $sbrName3: getting resp ($fileFound)\n".  $resp."\n"       if (! $Lok);
+    ($Lok,$dbid)=       &fileExtractHeader($fileFound,"PPhdr dbref");
+    print "-*- WARN $sbrName3: getting dbref ($fileFound)\n".  $resp."\n"       if (! $Lok);
+				# note: returns password given || default password!
+    
+
+				# ******************************
+				# no user|origin -> return
+				# ******************************
+    if (! $user || ! $orig ) {
+	$msg=    "*** err=9640\n".
+	    "*** ERROR $sbrName3: bad format in $fileFound (user=$user, orig=$orig)";
+				# system call
+	($Lok,$msgSys)=&sysSystem("echo $msg >> $fileScanLogLoc");
+				# <--- <--- <--- <--- <--- <--- 
+				# RETURN: ERROR no user | origin
+	return(0,"bad format in $fileFound user=$user, orig=$orig,"); }
+				# <--- <--- <--- <--- <--- <--- 
+				# ******************************
+
+				# ------------------------------
+				# ok so far ->
+				# (A) get requested mail format
+    ($Lok,$want)=       &fileExtractHeader($fileFound,"PPhdr want");
+    print "-*- WARN $sbrName3: getting want ($fileFound)\n".  $want."\n"       if (! $Lok);
+				# ------------------------------
+				# (B) store trace of job
+    my $dateTmp=&sysDate();
+    $msg=  "--- predict: $dateTmp from=$user orig=$orig resp=$resp dbid=$dbid file=$fileFound";
+    $cmd="echo '$msg'";
+    ($Lok,$msgSys)=&sysSystem("$cmd >> $fileScanLogLoc");
+
+
+
+    return($user,$orig,$password, $dbid);
+}				# end of scannerPredict_prepare
+
+
+sub 		fileExtractHeader
+ {
+    my($file_name,$pattern) = @_;
+    my ($user);
+#-------------------------------------------------------------------------------
+#   fileExtractHeader           extract header of input file, expected syntax of
+#                               this file is:
+#                               
+#                               ------------------------------------------------
+#                               PPhdr from:   rost@columbia.edu
+#                               PPhdr resp:   <MAIL|HTML>
+#                               PPhdr orig:   <MAIL|HTML|TEST| ..
+#                               PPhdr want:   <ASCII|HTML>
+#                               PPhdr prio:   priority [0-9]
+#                               ------------------------------------------------
+#                               
+#                      NOTE:    this format is touched by:
+#                               * EmailprocPP
+#                               * www/submitPP.pl
+#                      NOTE2:   is greedy, i.e., first match finishes!
+#                               
+#       in:                     $file_to_predict,$pattern (<from|resp|orig|prio>)
+#       out:                    (1,$data) || (0,'error message')
+#       err:                    (1,$data) || (0,'error message')
+#-------------------------------------------------------------------------------
+    my $line=0;			# ini
+				# open file
+    open(FILE, $file_name) ||
+	return(0,"*** $0:fileExtractHeader cannot open old=$file_name\n");
+				# read file
+    while (<FILE>) {
+	next if ($_ !~ /^\s*$pattern/);
+	$line=$_; $line=~s/^\s*$pattern\s*[:]*\s*(\S+).*$/$1/g;
+	$line=~s/\n//g;$line=~s/\s//g;
+	last;}
+    close(FILE); 
+    $line="$pattern unknown"    if (! $line);
+    return(1,$line);
+}				# end of fileExtractHeader
+
+
+
+#===============================================================================
+sub 		sysDate 
+{
+#    local($sbrName,$fhinLoc,$tmp,$Lok);
+    $[ =1 ;
+#-------------------------------------------------------------------------------
+#   sysDate                     returns $Date
+#       out:                    $Date (May 30, 1998 59:39:03)
+#-------------------------------------------------------------------------------
+    my (@Date,$Date);
+    my @tmp=(			# HARD_CODED
+	  "/home/$ENV{USER}/perl/",
+	  "/home/$ENV{USER}/server/scr/lib/"
+	  );
+    my $exe_ctime="ctime.pl";	# local ctime library
+
+    my $Lok=0;
+				# ------------------------------
+				# get function
+    if (defined &localtime) {
+				# use system standard
+	$Lok=1	                if (defined &ctime && &ctime);
+				# use local library
+	$Lok=1                  if (! $Lok && -e $exe_ctime);
+
+	if (! $Lok) {		# search for it
+	    foreach my $tmp (@tmp){
+		my $exe_tmp=$tmp.$exe_ctime;
+		if (-e $tmp){
+		    $Lok=
+			require("$exe_tmp");
+		    last;}}}
+				# ------------------------------
+				# found one: use it
+	if ($Lok && 
+	    defined &ctime && &ctime && defined &localtime && &localtime){
+#       	$date is e.g.:		Oct:14:13:06:47:1993
+#       	@Date is e.g.:		Oct1413:06:471993
+#        	&ctime(time) is e.g.:	Thu Oct 14 13:06:47 1993
+	   
+	    @Date = split(' ',&ctime(time)) ; shift (@Date) ; 
+	    $Date="$Date[2] $Date[3], $Date[$#Date]  $Date[4]";
+	    return($Date);} }
+				# ------------------------------
+	 			# found none: take system
+    if (! $Lok) {
+	my $localtime=`date`;
+	@Date=split(/\s+/,$localtime);
+	$Date="$Date[2] $Date[3], $Date[$#Date] $Date[4]"; }
+    return($Date);
+}				# end of sysDate
+
+sub 		sysSystem 
+{
+    my ($cmdLoc,$fhLoc) = @_ ;
+    my ($sbrName,$Lok);
+    $[ =1 ;
+#-------------------------------------------------------------------------------
+#   sysSystem                   simple way of running system command + documenting them
+#       in:                     $cmd:   will do system($cmd)
+#       in:                     $fhLoc: will write trace onto fhLoc
+#                                 =<0|! defined> -> STDOUT
+#       out:                    <1|0>,<"value from system"|$errorMessag>
+#       err:                    (1,'ok'), (0,'message')
+#-------------------------------------------------------------------------------
+    my $tmp=$0;$tmp=~s/^.*\/|\.pl//g;$tmp.=":"; $sbrName=$tmp."sysSystem";
+				# no argument given
+    return(0,"*** ERROR $sbrName: no input argument (system command)")
+	if (! defined $cmdLoc || ! $cmdLoc);
+
+				# default
+    $fhLoc="STDOUT"             if (! defined $fhLoc);
+    
+				# ------------------------------
+				# write
+#    print $fhLoc "--- system: \t $cmdLoc\n" if ($fhLoc);
+    print  "--- system: \t $cmdLoc\n" if ($fhLoc);
+    
+
+				# ------------------------------
+				# run system
+    my $Lsystem=
+	system("$cmdLoc");
+
+    return(1,$Lsystem);
+}				# end of sysSystem
+
+
+
+__END__
+
+
+
+
+
+

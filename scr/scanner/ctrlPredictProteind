@@ -1,0 +1,175 @@
+#!/usr/bin/perl
+use CGI::Carp qw| cluck :DEFAULT |;
+use IO::File; 
+use Watchdog::Process;
+use Getopt::Long;
+use strict; 
+###############################
+#
+# Init PredictProtein Daemon
+#
+###############################
+
+  use constant STOP => 0;
+  use constant START => 1;
+  use constant RESTART => 2;
+  
+  use constant ALIVE => 0;
+  use constant DEAD => 1;
+  
+  
+  my $verbal_status = {
+    0 => "ALIVE", 
+    1 => "DEAD"
+  
+  };
+
+  use constant PIDFILE=>"pid";
+  
+  
+  my $ret = 0;
+  my $mode = 0;
+  my $cmd_opts = {
+  help => 0,
+  verbose => 0,
+  debug=>0, 
+  mode => ''
+  
+  };
+  
+  my @opt_spec = (
+		'help|h!', 
+		'verbose|v=i' , 
+		'mode|m=s', 
+		'debug|d=i'
+		);
+  
+  __FILE__ =~ /([^\/]+)$/; my $myname = $1;
+  
+  my $d=0;
+  my $path= $ENV{'PP_SCR'}."/scanner";
+  my $exe = $path."/PredictProteind";
+  my $logOutFile = $ENV{"PP_LOG"}."/scan.out";
+  my $logErrFile = $ENV{"PP_LOG"}."/scan.err";
+  
+  
+  my $getopt_result = GetOptions( $cmd_opts, @opt_spec );
+  
+  if( !$getopt_result || $cmd_opts->{'help'} )
+  # Command line params
+  #die "Usage: $0 start|stop|restart [debug]\n" if (@ARGV<1);
+  {
+  if( !$getopt_result ) { warn("Invalid options!\n"); $ret = 1; }
+  print STDERR qq|Usage: $myname [-h\|--help]  [-v\|--verbose] [-d\|--debug] [-m\|--mode]
+  Controls PredictProtein Daemon
+  status\|strart\|stop\|restart
+  |;
+  exit( $ret );
+  }
+  
+  
+  $d =1 if ($cmd_opts->{'debug'}==1 );
+  my $mode_opt=$cmd_opts->{'mode'};
+  
+  # 0 kill  | 1 = start | 2 = restart
+  $mode = STOP if ($mode_opt=~/stop/i);
+  $mode = START if ($mode_opt=~/start/i);
+  $mode = RESTART if ($mode_opt=~/restart/i);
+  
+  my $perlBin='/usr/bin/perl';chomp $perlBin;
+  my $pid = -1;
+  my $status;
+
+eval{ 
+  $status = &statusDaemon;
+  reportStauts($status);
+  if ($mode > 0 ){
+      stopDaemon($pid) if ( $status == ALIVE  && $mode == RESTART);     # if alive and restart -> kill	
+      $status = &statusDaemon;
+      reportStauts($status);
+      if ( $status == DEAD ){
+	my $rstring = "$perlBin $exe >>$logOutFile 2>>$logErrFile  &"; 
+	startDaemon($rstring); # if dead ->start
+	sleep(3);
+	$status = &statusDaemon;	
+	die ("Could not start daemon") if (&statusDaemon == DEAD);
+	reportStauts($status);
+      }
+  }else{
+    if ($status == ALIVE){
+	stopDaemon($pid); # kill
+	sleep (3);
+	$status = &statusDaemon;
+	die ("Could not stop daemon") if (&statusDaemon == ALIVE);
+	
+    }else{
+      warn "Server was already dead. pid file contains process id: $pid";
+    }
+  }
+};
+
+if ($@){
+  print $@;
+}
+  
+sub 			statusDaemon{
+    # return {1,0} - 1 proc dead
+    #                0 proc alive
+    $pid = &getPid;
+    return (DEAD) if ($pid==-1);
+   
+    my @args = ("/bin/ps $pid &>/dev/null;");
+    system (@args); #or die "system @args failed: $?";   
+    #my $proc_status = $?; 
+  
+    return ALIVE if ($?==ALIVE);
+    return DEAD;
+
+}  
+
+
+sub 			stopDaemon{
+    my $procidDaemon = shift;
+    my $cmdStop = "kill -USR1 $procidDaemon";
+    use POSIX 'strftime';
+    my $datestring = strftime '%x', localtime;
+    warn( "Stop cmd: $cmdStop" ) if $d;
+    system ($cmdStop);
+    warn( "PredictProtein Daemon killed at: $datestring" );
+    unlink (PIDFILE) || warn "Could not remove ".PIDFILE."\n";
+}
+  
+
+sub 			startDaemon{
+    my $cmdStart  = shift;
+    use POSIX 'strftime';
+    my $datestring = strftime '%x', localtime;
+    warn( "Start cmd: $cmdStart" ) if $d;
+    system ($cmdStart);
+    warn( "PredictProtein Daemon started at: $datestring" );
+}
+
+
+sub 			getPid{
+  my $pid_loc = -1; 
+  if (-e PIDFILE){
+    my $istream=new IO::File( PIDFILE, '<' ) || confess("could not open '".PIDFILE."': $!");    
+    $pid_loc=<$istream>;
+  }else{
+    warn("could not open '".PIDFILE."': $!") if $d;    
+  }
+  return $pid_loc; 
+}
+
+
+sub			reportStauts{
+  my $status_loc = shift;
+  warn( "Status = ".$verbal_status->{$status_loc}."\t pid = $pid" ) if $d;
+
+
+}
+
+1;
+
+
+# vim:et:ts=2:ai:hlsearch:incsearch:
