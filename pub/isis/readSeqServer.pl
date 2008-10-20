@@ -1,9 +1,10 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
+##!/usr/local/bin/perl
 $Fil="";
 $lsl="yes";
 
 if (!defined $ENV{'ISIS'}){
-    $ENV{"ISIS"} = "/home/ppuser/server/pub/isis";	  
+    $ENV{"ISIS"} = $ENV{'PP_ROOT'}."/pub/isis";	  
 }
 
 $dirIsis = $ENV{"ISIS"};
