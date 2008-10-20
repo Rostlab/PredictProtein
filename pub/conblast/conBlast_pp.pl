@@ -32,7 +32,7 @@ $par{"db_swiss_consensus_bin"}  = "/data/blast/swisscons";
 $par{"db_pdb_consensus_bin"}    = "/data/blast/pdbcons";
 $par{"db_swiss_raw_txt"}        = "/data/derived/big/swissraw";
 $par{"db_pdb_raw_txt"}          = "/data/derived/big/pdbraw";
-$par{"dir_work"}                = "/data2/ppuser/server/pub/conblast/work/";
+$par{"dir_work"}                = $ENV{'HOME'}."/server/pub/conblast/work/";
 #$par{"dir_work"}                = "/home/dudek/workTmp/";
 
 
@@ -93,12 +93,12 @@ $fileOutConsRaw  =$par{"dir_work"}.$prefix.$coreName.".raw".$$;
 $fileCheck       =$par{"dir_work"}.$prefix.$coreName.".check".$$;
 
 
-$cmd1=$blastpgp_exe." -i ".$qFasta." -d \"".$dbTrain."\" -C ".$fileCheck." -j 5 -F F -v 2000 -b 2000 -h 0.003 -e 0.003 > /dev/null";
+$cmd1=$blastpgp_exe." -i ".$qFasta." -d \"".$dbTrain."\" -C ".$fileCheck." -j 5 -F F -v 1000 -b 1000 -h 0.0005 -e 0.0005 -a 2 > /dev/null";
 print $cmd1,"\n\n" if($dbg);
 system($cmd1)==0 ||
     die "ERROR: command:\"$cmd1\" failed, stopped";
 
-$cmd2=$blastpgp_exe." -i ".$qFasta." -d \"".$dbConsBin."\" -R ".$fileCheck." -o ".$fileOutCons." -F F >& /dev/null";
+$cmd2=$blastpgp_exe." -i ".$qFasta." -d \"".$dbConsBin."\" -R ".$fileCheck." -o ".$fileOutCons." -F F -a 2 >& /dev/null";
 print $cmd2,"\n\n" if($dbg);
 system($cmd2)==0 ||
     die "ERROR: command:\"$cmd2\" failed, stopped";
@@ -128,10 +128,15 @@ open(FHOUT,">".$fileOutBoth) ||
 
 
 $headerBoth ="This file contains alignments of the query sequence with consensus sequences.\n";
-$headerBoth.="On the left side:  consensus sequences are translated back into raw (real) sequences.\n";
+$headerBoth.="On the left side:  consensus sequences are translated back into native (real) sequences.\n";
 $headerBoth.="On the right side: consensus sequences are not translated.\n";
+$headerBoth.="NOTE1: Only the sequences were translated; all scores, alignment residue identities, etc.\n";
+$headerBoth.=" pertain to the alignments of consensus sequences\n\n";
+$headerBoth.="NOTE2: it is known that PSI-BLAST profiles sometimes degenerate as the number of iterations\n";
+$headerBoth.=" increases (here we use 5 iterations) and retrieve many unrelated sequences. In such cases \n";$headerBoth.=" an additional search against consensus sequence databases is likely to retrieve even more\n";
+$headerBoth.=" unrelated sequences. The solution would be to somehow guard PSI-BLAST profiles.\n"; 
 $headerBoth.="                     *******\n\n";
-$headerRaw = "-------- Raw sequences  --------";
+$headerRaw = "-------- Native sequences  --------";
 $headerRaw = sprintf "%-82s", $headerRaw;
 $headerBoth.= $headerRaw." | "."-------- Consensus sequences (in the \"Sbjct:\" fields) --------\n";
 $tmp=" "; $tmp = sprintf "%-82s", $tmp;
