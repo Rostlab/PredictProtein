@@ -4,12 +4,16 @@
 #needed information for each sequence
 
 sub runAll{
-	my ($dir, $name, $file, $hssp) = @_;
+	my ($dir, $name, $file, $hssp, $ckp) = @_;
 	$prof = $hssp;
 	$prof =~ s/hssp.*/rdbProf/;
 	print "prof = $prof\n"x10;
 	$prof =~ s/(.+\/)*//;
 
+	if ($ckp){
+		print "/usr/pub/molbio/blast/blastpgp -i $dir/$name/$file -d /data/blast/big -e 0.001 -j 5 -Q $dir/$name/$name.asci -R $ckp -b 3000 -h 0.001 -o $dir/$name/$name.blastpgp\n";
+		`/usr/pub/molbio/blast/blastpgp -i $dir/$name/$file -d /data/blast/big -e 0.001 -j 5 -Q $dir/$name/$name.asci -R $ckp -b 3000 -h 0.001 -o $dir/$name/$name.blastpgp`
+	}
 	if (!(-e "$dir/$name/$name.blastswiss")){
 		`/usr/pub/molbio/blast/blastpgp -i $dir/$name/$file -d /data/blast/swiss -e 0.001 -o $dir/$name/$name.blastswiss`;	
 		if (!(-e "$dir/$name/$name.blastswiss")){
@@ -144,12 +148,12 @@ sub extractAll{
 					$temp[$pos-1] = $sub;
 					print MAIN ">$name.$org$pos$sub 0\n@temp\n";
 					if (!(-e "$dir/$name/$name.$org$pos$sub.rdbProf")){
-						open (OUT, ">$dir/$name/$name.$org$pos$sub.fasta") || die "Can't open $dir/$name/$name.$org$pos$sub.fasta\n";
-						print OUT ">$name.$org$pos$sub.fasta\n@temp";
+						open (OUT, ">$dir/$name/$name.$org$pos$sub.f") || die "Can't open $dir/$name/$name.$org$pos$sub.f\n";
+						print OUT ">$name.$org$pos$sub.f\n@temp";
 						close OUT;
-#						`/usr/pub/molbio/prof/prof $dir/$name/$name.$org$pos$sub.fasta dirOut=$dir/$name`;
-						print "/nfs/data5/users/ppuser/server/pub/prof/prof $dir/$name/$name.$org$pos$sub.fasta dirOut=$dir/$name\n";
-						`/nfs/data5/users/ppuser/server/pub/prof/prof $dir/$name/$name.$org$pos$sub.fasta dirOut=$dir/$name`;
+#						`/usr/pub/molbio/prof/prof $dir/$name/$name.$org$pos$sub.f dirOut=$dir/$name`;
+						print "/nfs/data5/users/ppuser/server/pub/prof/prof $dir/$name/$name.$org$pos$sub.f dirOut=$dir/$name\n";
+						`/nfs/data5/users/ppuser/server/pub/prof/prof $dir/$name/$name.$org$pos$sub.f dirOut=$dir/$name`;
 
 						if (!(-e "$dir/$name/$name.$org$pos$sub.rdbProf")){
 							$error = "Couldn't run prof to get $dir/$name/$name.$org$pos$sub.rdbProf";

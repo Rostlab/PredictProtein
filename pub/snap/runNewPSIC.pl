@@ -117,7 +117,7 @@ else{
 	#if dealing with nonempty file
 	if ($file =~ /\w/){	
 		print "processing blast\n";
-		@file = split (/\>/, $file_p);
+		@file = split (/\>[a-z]+\|/, $file_p);
 		#now we need to get the sequences
 		%seq = ();
 		$count = 1;
@@ -169,7 +169,7 @@ else{
 		$total = keys %seq;
 		print "Total keys gotten = $total\n";
 		close CLUST;
-		if ((!$rare) or (!$total) or ($total <= 10)){
+		if ((!$rare) or (!$total)){# or ($total <= 10)){
 			if ((!$total) and ($large == (@file-1))){
 				#EDIT AS NEEDED BLAST DIRECTORY AND DATABASE DIRECTORY
 				`/usr/pub/molbio/bin/blastpgp -d /data/blast/big -i $infile -j 1 -h 0.001 -o $blastdir/$blastfile -b 400`;
@@ -181,7 +181,7 @@ else{
 					exit;
 				}
 				else{
-					print "reran blast with more allowed matches\n";
+					print "reran blast with more allowed matches\nperl runNewPSIC.pl $infile $outDir $blastdir 1 $homeDir\n";
 					`perl runNewPSIC.pl $infile $outDir $blastdir 1 $homeDir`;
 					exit;
 				}

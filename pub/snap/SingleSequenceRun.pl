@@ -21,16 +21,19 @@ $Lok = GetOptions ('i=s' => \$seq_n,
                    'b=s'  => \$bval_file,
 		   'x=s' => \$asci_file,
                    'f=s'  => \$pfam_file,
+		   'c=s' => \$ckp3_file,
 		   'r=i' => \$min_ri,
 		   'e=i' => \$min_ep,
 		   'help' => \$help,
-                   );
+                   'name' => \$seq_name,   
+		);
 if ($help){
 	print STDERR "need\n";
 	print STDERR "-i Input fasta file\n";
 	print STDERR "-m Mutant file\n";
 	print STDERR "-o Output file name\n";
-	print STDERR "-p Prof, -b Bval, -x PSI-BLAST matrix, -f Pfam\n";
+	print STDERR "-name Sequence name\n";
+	print STDERR "-p Prof, -c CKP(3runs) -b Bval, -x PSI-BLAST matrix, -f Pfam\n";
 	exit(1);
 }
 if ( ! $Lok ) {
@@ -143,6 +146,95 @@ open (IN, "$pwd/$name/$name.muts") || die "2: Can't open $pwd/$name/$name.muts\n
 $muts = "@muts";
 close IN;
 
+#if we are doing a scan
+if ($muts =~ /[A-Za-z]{3}/){
+	$muts=~ s/[^A-Za-z0-9]//g;
+	$muts =~ tr/a-z/A-Z/;
+	if ($muts =~ /\d/){
+		$cr = 0;
+		while ($muts =~ /\d/){
+			$cr++;
+			$muts =~ s/([A-Z]{3})(\d+)//;
+			$score{$cr}{"res"} = $1;
+			$score{$cr}{"pos"} = $2;
+		}
+	}
+	else{
+		$score{"1"}{"res"} = $muts;
+		$score{"1"}{"pos"} = "all";
+	}	
+	$hash{"ALA"} = "A";
+	$hash{"CYS"} = "C";
+        $hash{"ASP"} = "D";
+        $hash{"GLU"} = "E";
+        $hash{"PHE"} = "F";
+        $hash{"GLY"} = "G";
+        $hash{"HIS"} = "H";
+        $hash{"ILE"} = "I";
+        $hash{"LYS"} = "K";
+        $hash{"LEU"} = "L";
+        $hash{"MET"} = "M";
+        $hash{"ASN"} = "N";
+        $hash{"PRO"} = "P";
+        $hash{"GLN"} = "Q";
+        $hash{"ARG"} = "R";
+        $hash{"SER"} = "S";
+        $hash{"THR"} = "T";
+        $hash{"VAL"} = "V";
+        $hash{"TRP"} = "W";
+        $hash{"TYR"} = "Y";
+	$temp =~ s/[^A-Z]//g;
+	$temp =~ s/(.)/$1 /g;
+	@temp = split (/\s+/, $temp);
+	@amino = ('A','R','N','D','C','Q','E','G','H','I','L','K','M','F','P','S','T','W','Y','V');
+	$muts = "";
+	foreach $key (keys %score){
+		if ($score{$key}{"res"} =~ /ALL/){
+			$flag = 0;
+		}
+		else{
+			$mt = $score{$key}{"res"};
+			$flag = $hash{$mt};
+		}	
+		$i = 1;
+		foreach $res (@temp){
+			if ($score{$key}{"pos"} =~ /all/){
+				$pos = $i;
+				$end = 0;
+			}
+			else{
+				$pos = $score{$key}{"pos"};
+				$end = 1;
+			}
+			if ($pos == $i){
+				if (!($res eq $flag)){
+					if ($flag =~ /[A-Z]/){
+						$muts .= $res.$i.$flag."\n";
+					}
+					else{
+						foreach $amino (@amino){
+							if (!($res eq $amino)){
+        			                	        $muts .= $res.$i.$amino."\n";
+                		        		}	
+						}
+					}
+				}
+			}
+			else{
+				$end = 0;
+			}
+			if ($end){
+				last;
+			}
+			$i++;
+		}
+	}
+	open (OUT, ">$pwd/$name/$name.muts") || die "2: Can't open $pwd/$name/$name.muts\n";
+	print OUT $muts;
+	close OUT;
+	#print $muts;
+}
+
 #print "Running extraction\n";
 #print "pwd=$pwd\n";
 #run the extraction itself for each of the mutants
@@ -150,8 +242,17 @@ $status = &extractAll($pwd, $name, $seq, $muts);
 if ($status =~ /[A-Za-z]/){
 	die "run of mutants extractions failed: $status\n";
 }
+
+if ($ckp3_file){
+        $asci = "$pwd/$name/$name.asci";
+}
+else{
+        $asci = $asci_file;
+	$ckp3_file = "";
+}
+
 #run all the needed files for the extraction
-$status = &runAll ($pwd, $name, $file_name, $hssp_file);
+$status = &runAll ($pwd, $name, $file_name, $hssp_file, $ckp3_file);
 if ($status =~ /[A-Za-z]/){
 	die "run of sequence extractions failed: $status\n";
 }
@@ -160,7 +261,7 @@ if ($status =~ /[A-Za-z]/){
 
 #extract everything for each mutant
 if ((!(-e "$pwd/$name/ProcessedJctE")) or (!(-e "$pwd/$name/ProcessedJctB")) or (!(-e "$pwd/$name/ProcessedJctI")) ){
-	`perl $pwd/extractAllSingle.pl $pwd/$name/$name.mutant_seqs $pwd $name $pwd/$name/$name.ArdbProf $bval_file $asci_file $pfam_file`;
+	`perl $pwd/extractAllSingle.pl $pwd/$name/$name.mutant_seqs $pwd $name $pwd/$name/$name.ArdbProf $bval_file $asci $pfam_file`;
 	#print "perl extractAllSingle.pl $name/$name.mutant_seqs $name\n";
 	#print "done processing. Getting ready to run networks\n";
 }
@@ -176,7 +277,12 @@ print OUT "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 print OUT "Yana Bromberg and Burkhard Rost\n";
 print OUT "NAR (2007)\n";
 print OUT "_______________________________\n";
-print OUT "#Query sequence  :  $name      \n";
+if ($seq_name){
+	print OUT "#Query sequence  :  $seq_name      \n";
+}
+else{
+	print OUT "#Query sequence  :  $name      \n";
+}
 print OUT "Including only predictions with:\n";
 print OUT " 	RI >= $min_ri \n";
 print OUT "	Expected Accuracy >= $min_ep%\n\n";
@@ -224,6 +330,9 @@ foreach $temp (@temp){
 		print STDERR "proc$temp doesn't contain data\n";
 	}
 }
+foreach $entry (sort {$a<=>$b} keys %total_hash){
+	print OUT $total_hash{$entry};
+}
 close OUT;
 #uncomment this to remove the folder where all work was done
 #`rm -r $pwd/$name`;
@@ -246,12 +355,19 @@ sub printStuff{
 		#print "$muts[$i] $test[$i] => $collection[$i] sum = $sum";
 	
 		$r = int(abs($sum)/10);
+		$temp_position = $muts[$i];
+		$temp_position =~ s/[^0-9]//g;
+		if (!(exists $total_hash{$temp_position})){
+                	$total_hash{$temp_position} = "";
+                }
 		if ($r >= $min_ri){
 			if (($sum >= $temp{$temp}{"cut"}) and ($acc{"non"}{$r} >= $min_ep)){
-				print OUT "$muts[$i]\tNon-neutral\t\t$r\t\t\t".$acc{"non"}{$r}."%\n";
+				#print OUT "$muts[$i]\tNon-neutral\t\t$r\t\t\t".$acc{"non"}{$r}."%\n";
+				$total_hash{$temp_position} .= "$muts[$i]\tNon-neutral\t\t$r\t\t\t".$acc{"non"}{$r}."%\n";
 			}
 			elsif ($acc{"neu"}{$r} >= $min_ep){
-				print OUT "$muts[$i]\t Neutral \t\t$r\t\t\t".$acc{"neu"}{$r}."%\n";
+				#print OUT "$muts[$i]\t Neutral \t\t$r\t\t\t".$acc{"neu"}{$r}."%\n";
+				$total_hash{$temp_position} .= "$muts[$i]\t Neutral \t\t$r\t\t\t".$acc{"neu"}{$r}."%\n";
 			}
 		}
 		$collection[$i] = "";
