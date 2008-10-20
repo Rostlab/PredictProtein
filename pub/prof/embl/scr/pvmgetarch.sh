@@ -26,7 +26,8 @@
 #
 # begin section that may need to be tuned.
 #
-ARCH=UNKNOWN
+#ARCH=UNKNOWN
+ARCH=LINUX
 
 if [ -f /bin/uname -o -f /usr/bin/uname ]; then
 	if [ -f /bin/uname ]; then

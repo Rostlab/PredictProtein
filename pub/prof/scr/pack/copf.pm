@@ -254,7 +254,8 @@ sub ini {
     $USERID=&sysGetUserLoc();
 
     if    (defined $USERID && $USERID=~/predictprotein|pp|phd/){
-	$par{"dirHome"}=            "/home/".$USERID."/server/pub/prof/";
+	#$par{"dirHome"}=            "/home/".$USERID."/server/pub/prof/";
+	$par{"dirHome"}=            $ENV{"HOME"}."/server/pub/prof/";
     }
     elsif (defined $USERID && $USERID=~/rost/){
 	$par{"dirHome"}=            "/home/rost/pub/";
@@ -623,7 +624,8 @@ sub iniDef {
 				# directories
 				# <<<<<<<<<<<<<<<<<<<<
 				# normal
-    $par{"dirSrc"}=             $par{"dirHome"}.   "lib/";   # all source except for binaries
+    #$par{"dirSrc"}=             $par{"dirHome"}.   "lib/";   # all source except for binaries
+    $par{"dirSrc"}=             $par{"dirHome"}.   "";   # all source except for binaries
     $par{"dirSrcMat"}=          $par{"dirSrc"}.    "mat/";   # general material
 				                             # perl libraries
     $par{"dirPerl"}=            $par{"dirSrc"}.    "perl/" if (! defined $par{"dirPerl"});
@@ -756,8 +758,8 @@ sub iniDef {
                                 # needed for conversion into HSSP format!
 				# --------------------
 				# executables
-    $par{"exeConvertSeq"}=      $par{"dirConvertSeq"}."convert_seq".".".$ARCH;
-    $par{"exeConvertSeqBig"}=   $par{"dirConvertSeq"}."convert_seq_big".".".$ARCH;
+    #$par{"exeConvertSeq"}=      $par{"dirConvertSeq"}."convert_seq".".".$ARCH;
+    $par{"exeConvertSeq"}= $par{"exeConvertSeqBig"}=   $par{"dirConvertSeq"}."convert_seq_big".".".$ARCH;
 #    $par{"exeFssp2daf"}=        $par{"dirPerlPack"}. "conv_fssp2daf_lh.pm";
     $par{"exeFssp2daf"}=        $par{"dirPerlScr"}.  "conv_fssp2daf_lh.pl";
     $par{"exeConvHssp2saf"}=    $par{"dirPerlPack"}. "conv_hssp2saf.pm";

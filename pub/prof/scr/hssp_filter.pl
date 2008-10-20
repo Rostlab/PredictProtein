@@ -26,9 +26,11 @@ if (! $packDef){
     $tmp2.="pack/hssp_filter.pm";
 }
 if (! $packDef){
-    $packDef=   "/nfs/data5/users/ppuser/server/pub/perl/scr/pack/hssp_filter.pm";
-    $packDef=   "pack/hssp_filter.pm";
+    $packDef = "$ENV{HOME}/server/pub/prof/";
+    $packDef.=   "scr/pack/hssp_filter.pm";
 }
+
+
 
 
 $pack="";

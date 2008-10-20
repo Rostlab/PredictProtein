@@ -31,7 +31,7 @@
 				# before doing the install 
 				# e.g. /home/you/
 #$par{"dirHome"}=                "/home/rost/pub/";
-$par{"dirHome"}=                " /nfs/data5/users/ppuser/server/pub";
+$par{"dirHome"}=                $ENV{'HOME'}."/server/pub";
                                 # -------------------------------------
 				# final directory with PHD 
                                 # resulting from 'tar -xvf phd.tar'
@@ -43,7 +43,7 @@ $LunderProf=0;
 if ($0=~/prof/){
     $LunderProf=1;
 #    $par{"dirPhd"}=             "/home/rost/pub/prof/" ;
-    $par{"dirPhd"}=             "/nfs/data5/users/ppuser/server/pub/prof/" ;
+    $par{"dirPhd"}=             $ENV{'HOME'}."/server/pub/prof/" ;
 }
                                 # -------------------------------------
 				# architecture to run PHD 
@@ -467,10 +467,11 @@ sub iniDef {
 				# ------------------------------
 				# binaries (fortran)
     $par{"exeHsspFilter"}=      $par{"dirPhdBin"}.  "filter_hssp.".     $ARCH;
-    $par{"exeHsspFilter"}=      $par{"dirPhdBin"}.  "filter_hssp.".     $ARCH;
+    $par{"exeHsspFilter"}=      $par{"dirPhdBin"}.  "filter_hssp_big.".     $ARCH;
     $par{"exeConvertSeq"}=      $par{"dirPhdBin"}.  "convert_seq.".     $ARCH;
-    $par{"exeConvertSeqBig"}=   $par{"dirPhdBin"}.  "convert_seq_big.". $ARCH;
-
+    $par{"exeConvertSeq"}=$par{"exeConvertSeqBig"}=   $par{"dirPhdBin"}.  "convert_seq_big.". $ARCH;
+    #warn $par{"exeConvertSeq"},"\t", $par{"exeConvertSeq"};
+    
 				# hack
     $par{"exeConvertSeqBig"}=   
 	$par{"exeConvertSeq"}   if (! -e $par{"exeConvertSeqBig"} &&

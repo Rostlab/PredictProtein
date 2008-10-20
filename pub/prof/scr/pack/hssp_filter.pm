@@ -138,7 +138,8 @@ sub ini {
 
 
     if    (defined $USERID && $USERID=~/predictprotein|pp|phd/){
-	$par{"dirHome"}=          "/nfs/data5/users/ppuser/server/pub/";
+	#$par{"dirHome"}=          "$ENV{HOME}/server/pub/";
+	$par{"dirHome"}=          "$ENV{HOME}/server/";
 	#"/home/".$USERID."/server/pub/";
     }
     elsif (defined $USERID && $USERID=~/rost/){
@@ -505,9 +506,11 @@ sub iniDef {
                                 # d.d
 				# --------------------
 				# directories
-    $par{"dirSrc"}=             $par{"dirHome"}. "lib/";   # all source except for binaries
+    #$par{"dirSrc"}=             $par{"dirHome"}. "lib/";   # all source except for binaries
+     $par{"dirSrc"}=             $par{"dirHome"}. "/pub/prof/";   # all source except for binaries
     $par{"dirSrcMat"}=          $par{"dirSrc"}.  "mat/";   # general material
-    $par{"dirPerl"}=            $par{"dirSrc"}.  "perl/"   # perl libraries
+    #$par{"dirPerl"}=            $par{"dirSrc"}.  "perl/"   # perl libraries
+    $par{"dirPerl"}=            $par{"dirSrc"}.  "scr/"   # perl libraries
         if (! defined $par{"dirPerl"});
     $par{"dirPerlScr"}=         $par{"dirPerl"}. "scr";    # perl scripts needed
     $par{"dirBin"}=             $par{"dirHome"}. "bin/";   # FORTRAN binaries of programs needed
@@ -535,7 +538,7 @@ sub iniDef {
 	$par{"dirBin"}=         "/nfs/data5/users/ppuser/server/pub/prof/". "bin/";   # FORTRAN binaries of programs needed
     }
 
-
+#	warn $par{"dirBin"};
 
     $par{"dirConvertSeq"}=      $par{"dirBin"};
 
@@ -612,7 +615,7 @@ sub iniDef {
 				# --------------------
 				# executables
 #    $par{"exeConvertSeq"}=      $par{"dirBin"}.  "convert_seq".".".$ARCH;
-    $par{"exeFilterHssp"}=      $par{"dirBin"}.  "filter_hssp".".".$ARCH; # FORTRAN excutable
+    $par{"exeFilterHssp"}=      $par{"dirBin"}.  "filter_hssp_big".".".$ARCH; # FORTRAN excutable
 #    $par{"exeFilterHssp"}=      "/home/rost/lion/src-lib/filter_hssp".".".$ARCH; # FORTRAN excutable
 }				# end of iniDef
 

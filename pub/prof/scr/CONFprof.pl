@@ -133,8 +133,8 @@ sub iniDefProf {
     $par{"exePhd1994"}=         $par{"dirEMBL"}."phd.pl";             # old PHD
 				# ------------------------------
 				# executables: binary
-    $par{"exeConvertSeqFor"}=   $par{"dirBin"}. "convert_seq". ".ARCH";    # binary for format conversion
-    $par{"exeFilterHsspFor"}=   $par{"dirBin"}. "filter_hssp". ".ARCH";    # binary for HSSP filtering
+    $par{"exeConvertSeqFor"}=   $par{"dirBin"}. "convert_seq_big". ".ARCH";    # binary for format conversion
+    $par{"exeFilterHsspFor"}=   $par{"dirBin"}. "filter_hssp_big". ".ARCH";    # binary for HSSP filtering
     $par{"exeProfFor"}=         $par{"dirBin"}. "prof".        ".ARCH";    # binary for neural network
     $par{"exePhd1994For"}=      $par{"dirBin"}. "phd1994".     ".ARCH";    # binary for neural network
 #    $par{"exePhd1994For"}=      $par{"dirBin"}. "phd1994tiny". ".ARCH";    # binary for neural network
