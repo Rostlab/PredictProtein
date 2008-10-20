@@ -1,3 +1,4 @@
+#!/usr/bin/perl
 #!/usr/local/bin/perl -w
 
 #scr to predict sub loc
