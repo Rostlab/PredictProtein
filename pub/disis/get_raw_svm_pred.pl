@@ -13,7 +13,7 @@
 
 # READ COMMAND-LINE PARAMETERS:
 if (@ARGV<6)
-{die "Usage: $0 input-dir protein-name output-dir SVM-model\n"}
+{die "Usage: $0 input-dir protein-name output-dir SVM-model hsspfile proffile\n"}
 @e=@ARGV;
 $INPUT_DIR = $e[0];
 $sfile = $e[1];
@@ -40,7 +40,7 @@ $lsl="yes";
 
 #$SVM_DIR = "/home/mysore/work/DNA-bind/SVM/PERL_SCRIPTS/PAPER/svm_light";
 #$SVM_DIR = "/home/nair/pub/svm-light";
-$SVM_DIR = "nfs/data5/users/ppuser/server/pub/LOCtarget_v1/svm-light/";
+$SVM_DIR = "/nfs/data5/users/ppuser/server/pub/LOCtarget_v1/svm-light/";
 
 #print "\n INPUT: $INPUT_DIR/hssp/$sfile.hssp and $INPUT_DIR/prof/$sfile.rdbProf ; OUTPUT: $OUTPUT_DIR/$sfile.svm-raw ;
 #UNUSED PARAMS: stretch=$sch , crowd_predictions=$cr , crowd_gs=$crgs , gap=$g , top_gap=$topgap , itr=$nitr\n";
@@ -158,6 +158,7 @@ for ($i=0;$i<scalar @{$list{seq}};$i++){
   push (@sam,@WGT);
 ################################################################################################
   printf I1 "%6s %8d\n","ITSAM: ",$st1;printf I1S "%6s %8d\n","ITSAM: ",$st1;
+  #foreach $i1l (`cat $OUTPUT_DIR/$sfile-tin_forTest.tmp`){print "exists: $i1l\n"}
   printf O1 "%8d ", $st1;
   print MAP "$st1 $list{pos}[$i] $list{seq}[$i] $list{ss}[$i] ";
   print MAP "@ACC @WGT $list{pp}[$i]\n";
@@ -187,7 +188,6 @@ for ($i=0;$i<scalar @{$list{seq}};$i++){
 }
 ################################################################################################
 print I1 "//\n";
-
 close (I1, ">$OUTPUT_DIR/$sfile-tin_forTest.tmp");
 close (O1, ">$OUTPUT_DIR/$sfile-tout_forTest.tmp");
 $st1--;

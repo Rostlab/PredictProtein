@@ -12,13 +12,13 @@ $crd=3;
 #$nitr=;
 #$PATH=`pwd`;
 #chop $PATH;
-if ($ENV{"PP_ROT"}){
-    $PATH=$ENV{"PP_ROT"}."/server/pub/disis";
+if ($ENV{"PP_ROOT"}){
+    $PATH=$ENV{"PP_ROOT"}."/pub/disis";
 }else{
     $PATH="/nfs/data5/users/ppuser/server/pub/disis";
 }
 ######################
-print "perl $PATH/get_raw_svm_pred.pl $PATH $sfile $PATH $PATH/30163.model $sfilehssp $sfilerdbProf > $PATH/SVM-$sfile.tmp\n";
+#print "perl $PATH/get_raw_svm_pred.pl $PATH $sfile $PATH $PATH/30163.model $sfilehssp $sfilerdbProf > $PATH/SVM-$sfile.tmp\n";
 system "perl $PATH/get_raw_svm_pred.pl $PATH $sfile $PATH $PATH/30163.model $sfilehssp $sfilerdbProf > $PATH/SVM-$sfile.tmp";
 foreach $l (`cat $PATH/SVM-$sfile.tmp`){
     if ($l=~/^seq/){($b,$seq)=split (/=/,$l)}

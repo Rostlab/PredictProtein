@@ -19,7 +19,7 @@ $seq=$e[5];
 $crgs=1;#crowd of gs
 $topgap=101;#maximal difference between outputnodes;
 #print "g=$g sch=$sch cr=$cr seq=$seq\n";
-printf "\nMaking $OUTPUT_FILE...";
+#printf "\nMaking $OUTPUT_FILE...";
 
 ##s############### RECORD PREDICTIED ###################
 $cpp=0;
