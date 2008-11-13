@@ -167,7 +167,7 @@ use strict;
 	my ($self, $job_id, $contents, $req_name, $dbid, $dbg) =@_;
 	my ($result, $msg);
 
-	my $sql  = "INSERT INTO  results (NAME,  TIMECREATED, REQ_NAME, REQ_ID ) VALUES ('$job_id',NOW(), '$req_name', $dbid)";
+	my $sql  = "INSERT INTO  results (NAME,  TIMECREATED, REQ_NAME, REQ_ID ) VALUES ('$job_id',NOW(), '$req_name', $dbid) ON DUPLICATE KEY UPDATE TIMECREATED = values(TIMECREATED)";
 	my $sql2 = "INSERT INTO  results_content (res_id, CONTENT) VALUES (?,COMPRESS(?))";  
 	
 	eval{ # Start TX
