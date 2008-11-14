@@ -439,6 +439,38 @@ sub blastpsiRun {
 				# ------------------------------
     $envBlastPsiDb .= "/"       if ( $envBlastPsiDb !~ /\/$/ );
     $dbBlastPsi = $envBlastPsiDb.$parBlastPsiDb;
+    
+    ## this will do an rsync to a local file system to speed blast a bit
+    ## TODO TO COMPLETE THIS SECTION FIND OUT WHICH FILES ARE NECESSARY FOR A BLAST RUN
+# 	$envBlastPsiDbTmp = "/tmp/";
+# 	$dbBlastPsiTmp = $envBlastPsiDbTmp.$parBlastPsiDb;
+# 	 $dirBlast = "/data/blast/";
+# 	 $dirDest= "/tmp/";
+# 	@ext = ('phr','pin','psq');
+# 	@db = ('big_80','big.00','big.01');
+# 	
+# 	$sizeOk = 1;
+# 	for $d(@db){			   
+# 		for $e(@ext){
+# 			$file = "$dirBlast/$d.".$e;
+# 			$fileDest = "$dirDest/$d.".$e;
+# 			$cmd = "/usr/bin/rsync $file $fileDest";
+# 			($Lok,$msgSys)=
+# 				&sysSystem("$cmd" ,$fhTraceLoc);
+# 			return(0,"*** ERROR $sbr '$Lok'\n".$msg."\n".$msgSys)
+# 				if (! $Lok);
+# 			return(0,"*** ERROR $sbr no output '$fileOutTmp'\n"."$msg")
+# 				if (! -e $fileOutTmp);
+# 			if (-s $file != -s $fileDest){
+# 				$sizeOk = 0;
+# 			}
+# 		}		
+# 	}
+# 	$dbBlastPsi = $dbBlastPsiTmp if ($sizeOk);
+# 
+#     
+    
+    ###
 
     $command="$niceLoc $exeBlastPsi $argBlast $dbBlastPsi -i $fileInLoc ".
 	" -o $fileOutTmp -C $fileOutCheck  ";

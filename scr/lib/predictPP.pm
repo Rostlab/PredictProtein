@@ -1739,7 +1739,7 @@ sub initPackEnv {
 		  "fileAppLocTar",         "fileAppPfam",         "fileAppAgape",
 		  "fileAppConBlast",       "fileAppR4S",          "fileAppPrenup", 
 		  "fileAppEcgo",           "fileAppConSurf",       "fileAppConSeq",
-		  "fileAppMdisorder",  
+		  "fileAppMdisorder",  "fileAppGoogleGroups", 
 				# note: PHD internal now
 #		  "fileAbbrPhd3",        "fileAbbrRdb3",        "fileAbbrPhdBoth",
 #		  "fileAbbrPhdSec",      "fileAbbrPhdAcc",      "fileAbbrPhdHtm",
@@ -2011,7 +2011,7 @@ sub iniHtmlBuild {
 	 'profcon',	     "Prof Con prediction (Marco Punta & Burkhard Rost)",
 	 'prenup',	     "Ucon - Prediction of Natively Unstructured Regions through Contacts",
 	 'ucon',	     "Ucon - Prediction of Natively Unstructured Regions through Contacts ",
-	 'mdisorder',	     "MD - ",
+	 'mdisorder',	     "MD - Protein disorder prediction based on orthogonal sources of information",
 	 'ecgo',	     "Ecgo",
 	 'pfam',	     "Pfam",
 	 'proftmb',	     "Prediction of transmembrane beta-barrelsfor entire proteomes (Bigelow, H., Petrey, D., Liu, J.,Przybylski, D. & Rost, B.)",
@@ -8041,11 +8041,12 @@ sub ctrlCleanUp {		#
 
 
 
- 	print $fhoutLoc 
-	    "PPhdr from: $userTmp\n",
-	    "PPhdr orig: $Origin\n",
-	    "PPhdr resp: MAIL\n",
-	    "PPhdr want: ASCII\n";
+ 	print $fhoutLoc  "Dear PredictProtein User,\n";
+			
+# 	    "PPhdr from: $userTmp\n",
+# 	    "PPhdr orig: $Origin\n",
+# 	    "PPhdr resp: MAIL\n",
+# 	    "PPhdr want: ASCII\n";
 	print $fhoutLoc	  
 	    "PPhdr desc: $UserProtName" if ($UserProtName);
 	print $fhoutLoc	    "\n";
@@ -8053,13 +8054,17 @@ sub ctrlCleanUp {		#
 	if ($optRun=~/_only/){
 #	    $urlRes = "http://www.predictprotein.org/get_results_test.php?req_id=".$randomString;
 	    $urlRes = "http://www.predictprotein.org/getServersResponse.php?req_id=".$resId;
+	    $urlRes .= "\n\nNEW (beta mode): visual results can now be accessed through: \nhttp://www.predictprotein.org/get_visual_results.php?req_id=".$resId;
+	    $urlRes .= "\n\nNEW: XML structured data of the results cab now be accessed through: \nhttp://www.predictprotein.org/visualPP_cgi-bin/predictprotein_xml_source?req_id=".$resId;
 	}else{
 #	    $urlRes = "http://www.predictprotein.org/get_results.php?req_id=".$randomString;
 	    $urlRes = "http://www.predictprotein.org/get_results.php?req_id=".$resId;
+	    $urlRes .= "\n\nNEW (beta mode): visual results can now be accessed through: \nhttp://www.predictprotein.org/get_visual_results.php?req_id=".$resId;
+	    $urlRes .= "\n\nNEW: XML structured data of the results cab now be accessed through: \nhttp://www.predictprotein.org/visualPP_cgi-bin/predictprotein_xml_source?req_id=".$resId;
 	}
 	$urlEspritRes = "http://www.predictprotein.org/cgi/pp/ESPript.cgi?FRAMES=YES&frompp=on&alnfile0=$urlRes";
  	print $fhoutLoc 
- 	    "Since you requested this the result file is NOT emailed to you\n",
+ 	    "Since you requested this the result file is NOT emailed to you. ",
  	    "Rather you may find it on our public site:\n",
  	    "\n",
  	    "$urlRes\n";
@@ -8089,11 +8094,15 @@ sub ctrlCleanUp {		#
 
 	print $fhoutLoc    
  	    "\n",
- 	    "NOTE: the results are storred for 3 months. For quick access please click on the 'My Account' link after logging in to the website.\n\n",
-	    "The PredictProtein Team";
+ 	    "NOTE: the results are stored for 3 months. For quick access please click on the 'My Account' link after logging in to the website.\n\n",
+	    "The PredictProtein Team\n\n\n";
 
 
 	close($fhoutLoc); 
+	
+	$command = "cat ".$envPP{"fileAppGoogleGroups"}  ." >> $fileFinal";
+		$msgHere="--- $sbr system ' $command'";
+		($Lok,$msgSys)=&sysSystem("$command");
 	
 
 
@@ -9983,8 +9992,7 @@ sub runProfCon {
 #	    "$file{\"seq4profcon\"} $file{\"hsspPsiFil\"} $file{\"profRdb\"} > $file{\"profcon\"} ";
 
 	$fileErrTmp  = "/nfs/data5/users/ppuser/server/work/profconerr.log";
-	$command="$nice $exeProfCon ".$file{"seq4profcon"}." ". $fileJobId." ".  $UserProtName.
-	    " 1>".$file{"profcon"}." 2>/dev/null"; 
+	$command="$nice $exeProfCon ".$file{"seq4profcon"}." ". $fileJobId." ".  $UserProtName." ".$dirWork." 2>/dev/null"; 
 #	    " 1>".$file{"profcon"}." 2>$fileErrTmp"; 
 
 # $file{\"hsspPsiFil\"} $file{\"profRdb\"}"." $UserProtName ". " 
@@ -12014,6 +12022,7 @@ sub runNORSnet {
 		$command .= $file{"hssp"}." "; 	    }
 	    $command .= $file{"NORSnet"}." ";
 	    $command .= defined($target_name) ? $target_name : "default_target ";
+	    $command .= " ";
 	    $command .= $file{"ProfBval"}." ";
 
 	    $msgHere="--- $sbr system '$exeNORSnet $command'";
@@ -12191,7 +12200,7 @@ sub runMdisorder {
 	    $command  = "$nice ";
 	    if ($optRun =~/mdisorder[_only]+_slow/){
 		$command .= " $exeMdisorder_slow";
-		$command .= " profcon=".$file{"profcon"};
+		$command .= " profcon=".$file{"profcon"}." ";
 	    }else{
 		$command .= " $exeMdisorder ";
 	    }
@@ -12229,8 +12238,9 @@ sub runMdisorder {
 	    if ( $Lok == 1 ) {
 		$#tmpAppend=0;	  
 
+		
 		push(@tmpAppend,$envPP{"fileAppMdisorder"},
-		     $file{"Mdisorder"},$envPP{"fileAppLine"});
+		     $file{"Mdisorder"});
 		
 
 
@@ -12264,7 +12274,7 @@ sub runMdisorder {
 		$#tmpAppend=0;
 		
 		unlink $filePredTmp  || warn "*** cannot unlink $filePredTmp";# if ($optRun =~/mdisorder_only/);;  # HACK: remove previouse output
-		$command = "cat ".$envPP{"fileAppMdisorder"} ." ". $file{"Mdisorder"}." ".$envPP{"fileAppLine"} ." > $fileMdisorderTemp";
+		$command = "cat ".$envPP{"fileAppMdisorder"}  ." > $fileMdisorderTemp";
 		$msgHere="--- $sbr system ' $command'";
 		($Lok,$msgSys)=&sysSystem("$command");
 		
@@ -13760,7 +13770,7 @@ sub convertToXML {
 	
     #   md
     eval {
-	my $inputfile = $job_dir."/".$job_name.'.md';
+	my $inputfile = $job_dir."/".$job_name.'.mdisorder';
 	if( -e $inputfile )
 	{
 	    my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
@@ -13940,7 +13950,7 @@ sub convertToXML {
 
 1;
 
-# vim:ts=4:et:
+# vim:ts=4:et:incsearch:hlsearch:
 #================================================================================
 #   end of perl script to run the PHD server
 #================================================================================

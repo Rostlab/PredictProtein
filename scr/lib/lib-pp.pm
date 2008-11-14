@@ -1943,12 +1943,13 @@ sub interpretPdb {
 	$seq.="\n"   if ($seq!~/\n$/); 
     }
     $len=length($seq);
+
 				# ------------------------------
 				# appears fine -> write file 
     $fhout="FHOUT_PDB";
     open("$fhout","> $fileOutLoc") ||
 	return(0,"*** $sbrName cannot open fileOutLoc=$fileOutLoc\n");
-#   print STDERR "---lib-pp: line 1799 fileout is $fileOutLoc\n";
+    #warn "---lib-pp: line 1799 fileout is $fileOutLoc\n";
     print $fhout  $seq; 
 #   print STDERR "************************************\n";
     close("$fhout");
