@@ -8054,13 +8054,13 @@ sub ctrlCleanUp {		#
 	if ($optRun=~/_only/){
 #	    $urlRes = "http://www.predictprotein.org/get_results_test.php?req_id=".$randomString;
 	    $urlRes = "http://www.predictprotein.org/getServersResponse.php?req_id=".$resId;
-	    $urlRes .= "\n\nNEW (beta mode): visual results can now be accessed through: \nhttp://www.predictprotein.org/get_visual_results.php?req_id=".$resId;
-	    $urlRes .= "\n\nNEW: XML structured data of the results cab now be accessed through: \nhttp://www.predictprotein.org/visualPP_cgi-bin/predictprotein_xml_source?req_id=".$resId;
+	    $urlRes .= "\n\nNEW (beta mode): visual results can now be accessed through: \nhttp://www.predictprotein.org/get_visual_results.php?res_id=".$resId;
+	    $urlRes .= "\n\nNEW: XML structured data of the results cab now be accessed through: \nhttp://www.predictprotein.org/visualpp-cgi-bin/predictprotein_xml_source?res_id=".$resId;
 	}else{
 #	    $urlRes = "http://www.predictprotein.org/get_results.php?req_id=".$randomString;
 	    $urlRes = "http://www.predictprotein.org/get_results.php?req_id=".$resId;
-	    $urlRes .= "\n\nNEW (beta mode): visual results can now be accessed through: \nhttp://www.predictprotein.org/get_visual_results.php?req_id=".$resId;
-	    $urlRes .= "\n\nNEW: XML structured data of the results cab now be accessed through: \nhttp://www.predictprotein.org/visualPP_cgi-bin/predictprotein_xml_source?req_id=".$resId;
+	    $urlRes .= "\n\nNEW (beta mode): visual results can now be accessed through: \nhttp://www.predictprotein.org/get_visual_results.php?res_id=".$resId;
+	    $urlRes .= "\n\nNEW: XML structured data of the results cab now be accessed through: \nhttp://www.predictprotein.org/visualpp-cgi-bin/predictprotein_xml_source?res_id=".$resId;
 	}
 	$urlEspritRes = "http://www.predictprotein.org/cgi/pp/ESPript.cgi?FRAMES=YES&frompp=on&alnfile0=$urlRes";
  	print $fhoutLoc 
