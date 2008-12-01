@@ -3027,7 +3027,7 @@ sub modInterpret {
 #    $job{"run"}.=",agape"       if ($job{"out"}=~ /agape/);
     
     				# Predict Cell Cycle
-    $job{"run"}.="pcc"           if ($job{"out"}=~ /pcc/);
+    $job{"run"}.="pcc"           if ($job{"out"}=~ /run pcc/);
 
     				# Predict ProtProt interaction isis
     $job{"run"}.="isis"           if ($job{"out"}=~ /run isis/);
@@ -3137,7 +3137,7 @@ sub modInterpret {
     # ---------------------------------------------------------------
     # predict cell cycle externally and doesnt use any of pp services
     # ---------------------------------------------------------------
-    if ( $job{"run"} =~ /pcc/ ) {
+    if ( $job{"run"} =~ /run pcc/ ) {
 	$job{"run"}= "pcc";
     }
       
@@ -8454,7 +8454,7 @@ sub extrHdrOneLine {
 	return (0);
     }
 
-    if ($lineLoc =~ /pcc/){	# only pcc ignore others
+    if ($lineLoc =~ /run pcc/){	# only pcc ignore others
 	$optRun ="pcc";
 	$optOut ="";
 	return (0);
