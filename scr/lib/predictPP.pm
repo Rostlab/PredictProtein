@@ -6265,8 +6265,7 @@ sub runPhd {
 	    $globeOut.="--- \n";
 	    $globeOut.="--- \n";
 	    $globeOut.="--- GLOBE: further explanations preliminaryily in:\n";
-	    $globeOut.="---        http://cubic.bioc.columbia.edu/papers/1999_globe/paper.html\n";
-#	    $globeOut.="---        http://www.columbia.edu/~rost/Papers/98globe.html\n";
+	    $globeOut.="---        http://rostlab.org/papers/1999_globe/paper.html\n";
 
 	    $globeOut.="--- \n";$globeOut.="--- END of GLOBE\n";
 #	    $msgHere.="--- $sbr '$globeOut'\n"; 
@@ -6937,8 +6936,8 @@ sub runProf {
 	    $globeOut.="--- \n";
 	    $globeOut.="--- \n";
 	    $globeOut.="--- GLOBE: further explanations preliminaryily in:\n";
-#	    $globeOut.="---        http://www.columbia.edu/~rost/Papers/98globe.html\n";
-	    $globeOut.="---        http://cubic.bioc.columbia.edu/papers/1999_globe/paper.html\n";
+	    $globeOut.="---        http://rostlab.org/papers/1999_globe/paper.html\n";
+
 	    $globeOut.="--- \n";$globeOut.="--- END of GLOBE\n";
 #	    $msgHere.="--- $sbr '$globeOut'\n"; 
 #	    print $fhOutSbr "--- $sbr (GLOBE out): \n$globeOut\n";
