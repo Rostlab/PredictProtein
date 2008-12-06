@@ -4,6 +4,19 @@
 ##!/usr/pub/bin/perl -w
 ##!/usr/pub/bin/perl5.00 -w
 ##! /usr/pub/bin/perl4
+#For testing - otherwise switch off, because there are too many warnings generated - this code is not prepared for warnings.
+#use warnings;
+#no warnings "once";
+use Carp qw| cluck :DEFAULT |;
+#use lib &{sub { $ENV{VISUALPP_LIBS} =~ /(.*)/o; return split(/:/o, $1 ); }}(); # a dirty trick!
+use Getopt::Long;
+use Data::Dumper;
+use PPPerl::Parsers;
+use PPPerl::PPPrediction;
+use PPPerl::PPXMLWriter;
+use Bio::SeqIO;
+use IO::File;
+use Scalar::Util; # tainted()
 #================================================================================ #
 #                                                                                 #
 #-------------------------------------------------------------------------------- #
@@ -1366,23 +1379,26 @@ sub predict {
 
 
     ($strXMLContents, $errMsg)   = &convertToXML($filePID,$fhTrace, $envPP{"dir_work"}, ,$Debug  );
-     if ( length($strXMLContents)>0 ||  length($errMsg)>0){
-#	 $fhfileXMLStore = "FHFILEXMLSTORE";
-#	 $Lok=       &open_file($fhfileXMLStore,$fileXMLStore) ||
-	 warn("*** warnning $sbr:convertToXML :$errMsg") if (length($errMsg)>0); 
-#	 if ($Lok){
-#	     undef $/;		# 'slurp' mode
-#	     $tmpXMLContents = <$fhfileXMLStore>;
-#	     close $fhfileXMLStore;
-#	     $/="\n";			# back to regular mode
-#	     # Put the XML file in the database
-#	     $errJconv =  $errUconv = "";
-#	     undef $tmpRes; 
-	 ($tmpRes,$msg) = $sqlDB->setXMLResults($DBid, $strXMLContents,$errMsg, $Debug);
-	 warn "-*- $packName'$sbr setXMLResults failed.System message:$msg \n" if (! defined $tmpRes);
-     } else {
-	 warn "-*- $packName'$sbr convertToXML failed.System message:$msg \n" if (! defined $tmpRes);
-     }
+    if ( length($strXMLContents)>0 ||  length($errMsg)>0)
+    {
+        my $XMLLINT_ERRNO = undef;
+        
+        if( length($errMsg)>0 ){ warn("*** warning $sbr:convertToXML :$errMsg"); }
+        else
+        {
+            # XML instance validation
+            $XMLLINT_ERRNO = do_xmllint( { schema => "$ENV{PP_ROOT}/resources/predictprotein.xsd", instance => $strXMLContents, debug => $Debug } );
+        }
+
+        if( $XMLLINT_ERRNO ) { warn "-*- $packName'$sbr:do_xmllint XML instance validation failed: $XMLLINT_ERRNO\n"; }
+        
+	    ($tmpRes,$msg) = $sqlDB->setXMLResults($DBid, $strXMLContents,$errMsg, $Debug, { XMLLINT_ERRNO => $XMLLINT_ERRNO } );
+    	warn "-*- $packName'$sbr setXMLResults failed.System message:$msg \n" if (! defined $tmpRes);
+    }
+    else
+    {
+        warn "-*- $packName'$sbr convertToXML failed.System message:$msg \n" if (! defined $tmpRes);
+    }
 	
      
 
@@ -1420,6 +1436,33 @@ sub predict {
     return(1,"ok","formatSend=html");
 
 }				# end of predict
+
+
+
+
+sub               do_xmllint
+{
+    # { schema => schema_path, instance => instance_str, debug => int }
+    my( $__p ) = @_;
+    my $errno = -1;
+
+    eval {
+        if( !-r $__p->{schema} ) { confess(qq|"$__p->{schema}" is not readable|); }
+    
+        my $cmd = qq|xmllint --noout --schema "$__p->{schema}" - 2>/dev/null|;
+
+            if( $__p->{debug} ) { warn( qq|--- system: "$cmd"| ); }
+        
+        open( OPIPE, '|-', $cmd ) || confess( "$!" );
+
+        print OPIPE $__p->{instance};
+        
+        close( OPIPE ); $errno = $? >> 8;
+    };
+    if( $@ ) { warn(); }
+    
+    return $errno;
+}
 
 
 
@@ -13695,20 +13738,6 @@ sub runDssp{
 #===============================================================================
 sub convertToXML {
 
-    use warnings;
-    use Carp qw| cluck :DEFAULT |;
-#    use lib &{sub { $ENV{VISUALPP_LIBS} =~ /(.*)/o; return split(/:/o, $1 ); }}(); # a dirty trick!
-    use Getopt::Long;
-    use Data::Dumper;
-    use PPPerl::Parsers;
-    use PPPerl::PPPrediction;
-    use PPPerl::PPXMLWriter;
-    use Bio::SeqIO;
-    use IO::File;
-    use Scalar::Util; # tainted()
-
-
-
     local($job_name,$fhTrace,$job_dir, $Ldebug)=@_;
     local($sbrName,$fhinLoc,$fhoutLoc,$tmp,$Lok);
     $sbrName = "convertToXML";
@@ -13725,7 +13754,32 @@ sub convertToXML {
     my $ppprediction = new PPPerl::PPPrediction( { seq => $seq } );
 
 	# Check for component results, read them if present and set the results into the PPPerl::PPPrediction.
-	#   disis - TODO
+
+    #   asp
+    eval {
+      my $inputfile = $job_dir."/".$job_name.'.asp';
+      if( -e $inputfile )
+      {
+        my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+        my $parser = new PPPerl::Parser::Asp();
+        my $result = $parser->parse( { istream => $istream } );
+        $ppprediction->asp( $result );
+      }
+    };
+    if( $@ ) { warn(); $errMsg .= $@; }
+
+    #   disis
+    eval {
+      my $inputfile = $job_dir."/".$job_name.'.disis';
+      if( -e $inputfile )
+      {
+        my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+        my $parser = new PPPerl::Parser::Disis();
+        my $result = $parser->parse( { istream => $istream } );
+        $ppprediction->disis( $result );
+      }
+    };
+    if( $@ ) { warn(); $errMsg .= $@; }
 
 	#   disulfind
     eval {
@@ -13740,6 +13794,19 @@ sub convertToXML {
 	};
     if( $@ ) { warn(); $errMsg .= $@; }
 	
+    #   globe/globeProf
+    eval {
+      my $inputfile = $job_dir."/".$job_name.'.globeProf';
+      if( -e $inputfile )
+      {
+        my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+        my $parser = new PPPerl::Parser::Globe();
+        my $result = $parser->parse( { istream => $istream } );
+        $ppprediction->globe( $result );
+      }
+    };
+    if( $@ ) { warn(); $errMsg .= $@; }
+
 	#   isis
 	eval {
 	  my $inputfile = $job_dir."/".$job_name.'.isis';
@@ -13765,7 +13832,6 @@ sub convertToXML {
 	}
     };
     if( $@ ) { warn(); $errMsg .= $@; }
-
 	
     #   md
     eval {
@@ -13779,7 +13845,6 @@ sub convertToXML {
 	  }
     };
     if( $@ ) { warn(); $errMsg .= $@; }
-
 	
 	#   nls
     eval {
@@ -13793,7 +13858,6 @@ sub convertToXML {
 	  }
     };
     if( $@ ) { warn(); $errMsg .= $@; }	
-
 	
 	#   phdhtm
     eval {
@@ -13808,6 +13872,18 @@ sub convertToXML {
     };
     if( $@ ) { warn(); $errMsg .= $@; }
 
+    #   prof
+    eval {
+      my $inputfile = $job_dir."/".$job_name.'.profRdb';
+      if( -e $inputfile )
+      {
+        my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+        my $parser = new PPPerl::Parser::Prof();
+        my $result = $parser->parse( { istream => $istream } );
+        $ppprediction->prof( $result );
+      }
+    };
+    if( $@ ) { warn(); $errMsg .= $@; }
 	
 	#   profbval - integrated into MD
 	#eval {
@@ -13822,24 +13898,19 @@ sub convertToXML {
 	#};
 	#if( $@ ) { warn(); $errMsg .= $@; }
 	
-	#   prof
+    #   proftmb
     eval {
-	    my $inputfile = $job_dir."/".$job_name.'.profRdb';
-		if( -e $inputfile )
-		{
-	    	my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
-		    my $parser = new PPPerl::Parser::Prof();
-		    my $result = $parser->parse( { istream => $istream } );
-	    	$ppprediction->prof( $result );
-		}
-		else
-		{
-			die("profRdb file '$inputfile' is absent");
-		}
+      my $inputfile = $job_dir."/".$job_name.'.proftmb';
+      if( -e $inputfile )
+      {
+        my $istream = new IO::File( $inputfile, '<' ) || confess("could not open '$inputfile': $!");
+        my $parser = new PPPerl::Parser::Proftmb();
+        my $result = $parser->parse( { istream => $istream } );
+        $ppprediction->proftmb( $result );
+      }
     };
     if( $@ ) { warn(); $errMsg .= $@; }
 
-	
 	#   psiblast
     eval {
 	#return;
@@ -13858,7 +13929,6 @@ sub convertToXML {
     };
     if( $@ ) { warn(); $errMsg .= $@; }
 
-	
 	#   ucon - integrated into MD
 	#eval {
 	#  my $inputfile = $job_dir."/".$job_name.'.prenup';
@@ -13949,7 +14019,7 @@ sub convertToXML {
 
 1;
 
-# vim:ts=4:et:incsearch:hlsearch:
+# vim:ts=4:et:incsearch:hlsearch:ai:
 #================================================================================
 #   end of perl script to run the PHD server
 #================================================================================

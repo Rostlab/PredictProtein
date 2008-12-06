@@ -191,12 +191,14 @@ use strict;
 
 
     sub setXMLResults{
-	my ($self,$dbid, $contents, $errConv,  $dbg) =@_;
+	my ($self,$dbid, $contents, $errConv,  $dbg, $__p ) =@_;
+	# $__p = { XMLLINT_ERRNO => str }
 	my $result;
 	my $sql;
 
 	eval{ # Start TX
-	    $sql = "REPLACE INTO  XMLRESULTS (REQUESTID, XML_CONTENT,UCONV_ERR) VALUES ($dbid, COMPRESS(?),".$self->{'dbh'}->quote($errConv).")";
+	    $sql = "REPLACE INTO  XMLRESULTS (REQUESTID, XML_CONTENT,UCONV_ERR, XMLLINT_ERRNO ) VALUES ($dbid, COMPRESS(?), ".$self->{'dbh'}->quote($errConv).
+			", ".$self->{'dbh'}->quote($__p->{XMLLINT_ERRNO}).")";
 	    $self->{'dbh'}->do($sql,undef,$contents, $errConv) || die ( $DBI::errstr);
 	    $result .= "updated results\n";
 	};
@@ -426,3 +428,4 @@ exit;
 #$statement->execute()
 #    or die "Couldn't execute query '$sql': $DBI::errstr\n";
 #$db_handle->disconnect();
+# vim:ai:ts=4:
