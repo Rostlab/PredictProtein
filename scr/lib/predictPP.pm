@@ -1383,21 +1383,21 @@ sub predict {
     {
         my $XMLLINT_ERRNO = undef;
         
-        if( length($errMsg)>0 ){ warn("*** warning $sbr:convertToXML :$errMsg"); }
+        if( length($errMsg)>0 ){ warn("*** warning:convertToXML :$errMsg"); }
         else
         {
             # XML instance validation
             $XMLLINT_ERRNO = do_xmllint( { schema => "$ENV{PP_ROOT}/resources/predictprotein.xsd", instance => $strXMLContents, debug => $Debug } );
         }
 
-        if( $XMLLINT_ERRNO ) { warn "-*- $packName'$sbr:do_xmllint XML instance validation failed: $XMLLINT_ERRNO\n"; }
+        if( $XMLLINT_ERRNO ) { warn "-*- do_xmllint XML instance validation failed: $XMLLINT_ERRNO\n"; }
         
 	    ($tmpRes,$msg) = $sqlDB->setXMLResults($DBid, $strXMLContents,$errMsg, $Debug, { XMLLINT_ERRNO => $XMLLINT_ERRNO } );
-    	warn "-*- $packName'$sbr setXMLResults failed.System message:$msg \n" if (! defined $tmpRes);
+    	warn "-*- setXMLResults failed.System message:$msg \n" if (! defined $tmpRes);
     }
     else
     {
-        warn "-*- $packName'$sbr convertToXML failed.System message:$msg \n" if (! defined $tmpRes);
+        warn "-*- convertToXML failed.System message:$msg \n" if (! defined $tmpRes);
     }
 	
      
