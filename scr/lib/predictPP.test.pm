@@ -6841,7 +6841,7 @@ sub runProsite {
     $cmd.=" ".$filePrositeData;
     $cmd.=" ".$fileSeqGCG;
     $cmd.=" >> ".$fileSeqProsite;
-    $msgHereLoc.="\n--- $sbr2 \t call prosite:\n--- system: \t ".$cmd."\n";
+    $msgHereLoc.="\n--- $sbr2 \t call prosite:\n--- ".__FILE__.':'.__LINE__." system: \t ".$cmd."\n";
 		
 
     ($Lok,$msgSys)=&sysSystem("$cmd");
@@ -6924,7 +6924,7 @@ sub runSegnorm {
 				# build up Segnorm command
     $cmd= $nice." ".$exeSeg." ".$fileSeqFasta." ".$parSeg;
     $cmd.=" >> ".$fileSegNorm;
-    $msgHereLoc.="\n--- $sbr2 \t call seg:\n--- system: \t ".$cmd."\n";
+    $msgHereLoc.="\n--- $sbr2 \t call seg:\n--- ".__FILE__.':'.__LINE__." system: \t ".$cmd."\n";
 				# run SEGNORM
     ($Lok,$msgSys)=&sysSystem("$cmd");
 
@@ -11772,7 +11772,7 @@ sub runDssp{
 
     $cmd= $nice." ".$exeDssp." ".$filePdb;
     $cmd.=" > ".$fileDssp;
-    $msgHereLoc.="\n--- $sbr2 \t call seg:\n--- system: \t ".$cmd."\n";
+    $msgHereLoc.="\n--- $sbr2 \t call seg:\n--- ".__FILE__.':'.__LINE__." system: \t ".$cmd."\n";
 				# run dssp
     ($Lok,$msgSys)=&sysSystem("$cmd");
 

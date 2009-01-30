@@ -4,8 +4,9 @@ use strict;
 {
 #    use lib '/data2/ppuser/meta/lib/perl5/site_perl/5.6.1/i386-linux';
 #    use lib '/data2/ppuser/meta/lib/perl5/site_perl/5.6.1';
-    use DBI;
     package _PP_DB;
+	use Carp qw| cluck :DEFAULT |;
+    use DBI;
 
     sub new{
 	my ($self, $host , $db_name, $user, $pass ) = @_;
@@ -166,26 +167,55 @@ use strict;
     sub setResults{
 	my ($self, $job_id, $contents, $req_name, $dbid, $dbg) =@_;
 	my ($result, $msg);
+	my $dbh = $self->{'dbh'};
+	if( !$dbid) { confess("no $dbid"); }
+
+	$dbh->do('lock tables results write, results_content write') || confess( $dbh->errstr );
+
+	# Do we have this `REQ_ID` already?
+	my $res_id = undef;
+	{
+		my $recs = $dbh->selectall_arrayref('select `ID` from results where `REQ_ID` = ?', undef, $dbid ) || confess( $dbh->errstr );
+		if( @$recs )
+		{
+			$res_id = $recs->[0]->[0];
+			warn "found result id ($res_id) for this REQ_ID ($dbid), will do update";
+		}
+		
+	}
 
 	my $sql  = "INSERT INTO  results (NAME,  TIMECREATED, REQ_NAME, REQ_ID ) VALUES ('$job_id',NOW(), '$req_name', $dbid) ON DUPLICATE KEY UPDATE TIMECREATED = values(TIMECREATED)";
 	my $sql2 = "INSERT INTO  results_content (res_id, CONTENT) VALUES (?,COMPRESS(?)) ON DUPLICATE KEY UPDATE CONTENT = values(CONTENT)";
 	
 	eval{ # Start TX
 	    my $sth  = $self->{'dbh'}->prepare($sql);
-	    my $sth2 = $self->{'dbh'}->prepare($sql2);
-	    $sth->execute( );
-	    my $res_id = $self->{'dbh'}->{ q{mysql_insertid}};
+		warn $sql;
+	    my $rv = $sth->execute() || confess( $dbh->errstr ); # "execute" returns the number of rows affected: 1 for an insert, 2 for an update, 0 for no change
 
+		if( $rv == 1 && $res_id ) { confess("the impossible has just happened: inserted a record with a duplicate REQ_ID: $dbid"); };
+		if( $rv == 2 && !$res_id ) { confess("the impossible has just happened: updated a record with no results.id (REQ_ID = $dbid)"); };
+
+		if( $rv == 1 )
+		{
+			$res_id = $dbh->selectrow_arrayref("select last_insert_id()") || confess( $dbh->errstr );
+			$res_id = $res_id->[0];
+		}
+
+	    my $sth2 = $self->{'dbh'}->prepare($sql2);
 	    $sth2->execute( $res_id,$contents );
 	    $result = $res_id;
 	    $msg = "updated results\n";
 	};
 	# if any errors ---> rollback
 	if ($@)	{
+		warn;
 	    $msg =  "Couldn't execute query '$sql': $DBI::errstr\n";
 	    $self->{'dbh'}->rollback();
+		$dbh->do('unlock tables') || confess( $dbh->errstr );
 	    return (undef,$msg); 
 	}
+# 	warn ($result,$msg);
+	$dbh->do('unlock tables') || confess( $dbh->errstr );
 	return ($result,$msg);
     }
 
@@ -197,10 +227,12 @@ use strict;
 	my $sql;
 
 	eval{ # Start TX
-	    $sql = "REPLACE INTO  XMLRESULTS (REQUESTID, XML_CONTENT,UCONV_ERR, XMLLINT_ERRNO ) VALUES ($dbid, COMPRESS(?), ".$self->{'dbh'}->quote($errConv).
-			", ".$self->{'dbh'}->quote($__p->{XMLLINT_ERRNO}).")";
-	    $self->{'dbh'}->do($sql,undef,$contents, $errConv) || die ( $DBI::errstr);
+	    $sql = "INSERT INTO  XMLRESULTS (REQUESTID, XML_CONTENT,UCONV_ERR, XMLLINT_ERRNO ) VALUES ($dbid, COMPRESS(?), ".$self->{'dbh'}->quote($errConv).
+			", ".$self->{'dbh'}->quote($__p->{XMLLINT_ERRNO}).") ON DUPLICATE KEY UPDATE XML_CONTENT = values(XML_CONTENT), UCONV_ERR = values(UCONV_ERR), XMLLINT_ERRNO = values(XMLLINT_ERRNO)";
+	    $self->{'dbh'}->do($sql,undef,$contents) || die ( $DBI::errstr);
 	    $result .= "updated results\n";
+
+            if( $dbg ) { warn( qq|--- DBI::do: "$sql"| ); }
 	};
          # if any errors ---> rollback
 	if ($@)	{

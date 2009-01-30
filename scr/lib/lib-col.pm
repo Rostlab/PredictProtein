@@ -173,6 +173,11 @@
 #==============================================================================
 # library collected (begin)
 #==============================================================================
+use Carp qw| cluck :DEFAULT |;
+use File::Spec;
+use Digest::MD5;
+use Fcntl qw|:flock :DEFAULT|;
+use File::stat qw||;
 
 #==============================================================================
 sub blastpExtrId {
@@ -353,7 +358,7 @@ sub blastpRun {
 #    $command="$niceLoc $exeBlastp $parBlastpDb $fileInLoc B=$nhits > $fileOutLoc";
     $command="$niceLoc $exeBlastp  -p blastp -d ".$ENV{'BLASTDB'}."$parBlastpDb -i $fileInLoc -B $nhits > $fileOutLoc";
     $msg="--- $sbr '$command'\n";
-
+warn $msg;
     ($Lok,$msgSys)=
 	&sysSystem("$command" ,$fhTraceLoc);
     if (! $Lok){
@@ -369,7 +374,7 @@ sub blastpRun {
     else {
 	$command="$niceLoc $exeBlastpFil $dirSwissSplit < $fileOutLoc > $fileOutFilLoc ";}
     $msg.="--- $sbr '$command'\n";
-    print "--- system: \t $command\n";
+    print "--- ".__FILE__.':'.__LINE__." system: \t $command\n";
     
     $msg=
 	system("$command");
@@ -439,7 +444,7 @@ sub blastpsiRun {
 				# ------------------------------
     $envBlastPsiDb .= "/"       if ( $envBlastPsiDb !~ /\/$/ );
     $dbBlastPsi = $envBlastPsiDb.$parBlastPsiDb;
-    
+
     ## this will do an rsync to a local file system to speed blast a bit
     ## TODO TO COMPLETE THIS SECTION FIND OUT WHICH FILES ARE NECESSARY FOR A BLAST RUN
 # 	$envBlastPsiDbTmp = "/tmp/";
@@ -476,14 +481,18 @@ sub blastpsiRun {
 	" -o $fileOutTmp -C $fileOutCheck  ";
     # GY - added 3/18/2004
     # Prof Tmb needs this added to the 
-    if (defined $fileBlastMatTmb && $fileBlastMatTmb){
+    #if (defined $fileBlastMatTmb && $fileBlastMatTmb){ # lkajan: always genearte this, it does not take more time and is not too big a file
 	$command .=" -Q $fileBlastMatTmb ";
-    }
+    #}
     # end additions
     $msg="--- $sbr '$command'\n";
+
+    # We need the sequence out of $fileInLoc in order to generate the right UUID for our cache:
+    my $inseq = Bio::SeqIO->new( -file => $fileInLoc, -format => 'Fasta' )->next_seq();
+    if( !$inseq ) { confess("failed to read FASTA sequence from ``$fileInLoc''"); }
     
     ($Lok,$msgSys)=
-	&sysSystem("$command" ,$fhTraceLoc);
+	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$exeBlastPsi $argBlast $dbBlastPsi -o -C -Q ".$inseq->seq(), md5files => [], cache_files => [ $fileOutTmp, $fileOutCheck, $fileBlastMatTmb ] } );
     return(0,"*** ERROR $sbr '$Lok'\n".$msg."\n".$msgSys)
 	if (! $Lok);
     return(0,"*** ERROR $sbr no output '$fileOutTmp'\n"."$msg")
@@ -499,7 +508,7 @@ sub blastpsiRun {
 
     $msg="--- $sbr '$command'\n";
     ($Lok,$msgSys)=
-	&sysSystem("$command" ,$fhTraceLoc);
+	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$exeBlastPsi $argBlastBig $dbBlastBig -o -Q ".$inseq->seq(), md5files => [ $fileOutCheck ], cache_files => [ $fileOutLoc, $fileOutMat ] } );
     return(0,"*** ERROR $sbr '$Lok'\n".$msg."\n".$msgSys)
 	if (! $Lok);
     return(0,"*** ERROR $sbr no output '$fileOutLoc'\n"."$msg")
@@ -6945,7 +6954,11 @@ sub sysSystem {
     
 				# ------------------------------
 				# write
-    print $fhLoc "--- system: \t $cmdLoc\n" if ($fhLoc);
+    if ($fhLoc)
+    {
+	print $fhLoc "---  system: \t $cmdLoc\n";
+	#cluck( "---  system: \t $cmdLoc" );
+    }
 
 				# ------------------------------
 				# run system
@@ -6954,6 +6967,155 @@ sub sysSystem {
 
     return(1,$Lsystem);
 }				# end of sysSystem
+
+#==============================================================================
+sub cachedBlastCall {
+    my( $cmdLoc, $fhLoc, $__p ) = @_;
+    my($sbrName,$Lok);
+    %$__p = ( md5string => '', md5files => [], cache_files => [], %$__p );
+    $[ =1 ;
+#-------------------------------------------------------------------------------
+#   cachedBlastCall             read cached Blast results if any, otherwise run
+#                               Blast, store results
+#       in:                     $cmdLoc: will do system($cmd)
+#       in:                     $fhLoc:  will write trace onto fhLoc
+#                                 =<! defined> -> STDOUT
+#                                 =0           -> no output
+#       __p => {
+#               md5string => string_to_md5_to_create_UUID,
+#               md5files => [ files_to_md5_to_create_UUID, ... ],
+#               cache_files => [ filepath0, ... ]
+#       }
+#       out:                    <1|0>,<"value from system"|$errorMessag>
+#       err:                    (1,'ok'), (0,'message')
+#-------------------------------------------------------------------------------
+    $tmp=$0;$tmp=~s/^.*\/|\.pl//g;$tmp.=":";$sbrName=$tmp."sysSystem";
+				# no argument given
+    return(0,"*** ERROR $sbrName: no input argument (system command)")
+	if (! defined $cmdLoc || ! $cmdLoc);
+
+				# default
+    $fhLoc="STDOUT"             if (! defined $fhLoc);
+    
+				# ------------------------------
+				# write
+    if ($fhLoc)
+    {
+	print $fhLoc "---  cachedBlastCall: \t $cmdLoc";
+	#cluck( "---  cachedBlastCall: \t $cmdLoc" );
+    }
+
+				# ------------------------------
+				# run system
+    # cmdLoc example:
+    # >  /nfs/data5/users/ppuser/server/bin/blastpgp.LINUX  -j 3 -b 2000 -e 1 -F F -h 1e-3 -d  /nfs/data5/users/ppuser/server/data/blast/big_80 -i /nfs/data5/users/ppuser/server/work/tquick.fasta  -o /nfs/data5/users/ppuser/server/work/tquick.blastPsiOutTmp -C /nfs/data5/users/ppuser/server/work/tquick.blastPsiCheck   -Q /nfs/data5/users/ppuser/server/work/tquick.blastPsiMatTmb   <
+    # >  /nfs/data5/users/ppuser/server/bin/blastpgp.LINUX  -b 1000 -e 1 -F F -d  /nfs/data5/users/ppuser/server/data/blast/big -i /nfs/data5/users/ppuser/server/work/tquick.fasta  -o /nfs/data5/users/ppuser/server/work/tquick.blastPsiAli -R /nfs/data5/users/ppuser/server/work/tquick.blastPsiCheck -Q /nfs/data5/users/ppuser/server/work/tquick.blastPsiMat  <
+    # -C: Output File for PSI-BLAST Checkpointing
+    # -Q: Output File for PSI-BLAST Matrix in ASCII
+    # -R: Input File for PSI-BLAST Restart
+
+    my $rerun = 1;
+    my $cache_dir = undef;
+    my $cmd_cache_dir = undef;
+    my $Lsystem = undef;
+
+    my $blastcmdmd5 = Digest::MD5->new();
+    $blastcmdmd5->add( $__p->{md5string} );
+    foreach my $md5file ( @{$__p->{md5files}} ) { my $fh; open( $fh, '<', $md5file ) || confess( $! ); $blastcmdmd5->addfile( $fh ); close( $fh ); }
+
+    if( $ENV{PP_ROOT} && @{$__p->{cache_files}} )
+    {
+        $cache_dir = "$ENV{PP_ROOT}/blastcache";
+        if( -d $cache_dir )
+        {
+            remove_old_files({ root => $cache_dir, mmin => '+480' });
+
+            $cmd_cache_dir = $cache_dir.'/'.$blastcmdmd5->hexdigest();
+            if( -d $cmd_cache_dir )
+            {
+                $rerun = 0;
+                for( my $f_i = 0; $f_i < @{$__p->{cache_files}}; ++$f_i )
+                {
+                    #my $path = $__p->{cache_files}->[$f_i]; my( undef, $dirpath, $filename ) = File::Spec->splitpath( $path );
+                    my $cachedfilename = sprintf( "cached_%03d.gz", $f_i ); my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename;
+                    if( !-e $cachefilepath || -z $cachefilepath ) { $rerun = 1; last; }
+                }
+            }
+        }
+        else { warn("no cache dir ``$cache_dir''"); }
+    }
+    else { warn("no \$ENV{PP_ROOT}"); }
+
+    if( $rerun )
+    {
+        ( undef, $Lsystem ) = sysSystem( $cmdLoc, $fhLoc );
+
+        if( $cache_dir && -d $cache_dir && @{$__p->{cache_files}} )
+        {
+            if( $fhLoc ){ print $fhLoc " caching into $cmd_cache_dir"; }
+        
+            my @cmd = ( '/bin/mkdir', '-p', $cmd_cache_dir ); system( @cmd ) == 0 or confess( join(' ', @cmd).": $!" );
+
+            for( my $f_i = 0; $f_i < @{$__p->{cache_files}}; ++$f_i )
+            {
+                my $path = $__p->{cache_files}->[$f_i];
+                my $cachedfilename = sprintf( "cached_%03d", $f_i ); my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename;
+                { my @cmd = ( '/bin/cp', '-a', $path, $cachefilepath ); system( @cmd ) == 0 or cluck( join(' ', @cmd).": $!" ); }
+                { my @cmd = ( '/bin/gzip', '--force', $cachefilepath ); system( @cmd ) == 0 or cluck( join(' ', @cmd).": $!" ); }
+            }
+        }
+    }
+    else
+    {
+        if( $fhLoc ){ print $fhLoc " cache hit ($cmd_cache_dir)"; }
+
+        for( my $f_i = 0; $f_i < @{$__p->{cache_files}}; ++$f_i )
+        {
+            my $path = $__p->{cache_files}->[$f_i];
+            my $cachedfilename = sprintf( "cached_%03d.gz", $f_i ); my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename;
+            { my @cmd = ( '/bin/cp', '-a', $cachefilepath, $path.'.gz' ); system( @cmd ) == 0 or confess( join(' ', @cmd).": $!" ); }
+            { my @cmd = ( '/bin/gunzip', '--force', $path.'.gz' ); system( @cmd ) == 0 or confess( join(' ', @cmd),": $!" ); }
+        }
+        $Lsystem = 0;
+    }
+
+    if( $fhLoc ){ print $fhLoc "\n"; }
+    return(1,$Lsystem);
+}				# end of sysSystem
+
+#==============================================================================
+sub remove_old_files
+{
+    # Careful here!: we do not want more than one find here, and we do not want
+    # finds too often either.
+    my( $__p ) = @_;
+    # { root => look_for_files_under_this_root, mmin => find_mmin_condition }
+    %$__p = ( mmin => '+1440', %$__p );
+    if( !$__p->{root} ) { cluck("no ``root''"); return; }
+
+    # do not blow up if this fails - what we implement here is quite unimportant
+    eval {
+        my $lockfile = $__p->{root}."/.remove_lock";
+
+        if( !-e $lockfile || time() - File::stat::stat($lockfile)->mtime() > 3600 )
+        {
+            my $lh = undef;
+            open( $lh, '>>', $lockfile ) || confess( $! );
+            if( flock( $lh, LOCK_EX | LOCK_NB ) )
+            {
+                # we got the lock
+                seek( $lh, 0, 0 ); truncate( $lh, 0 ); print $lh $$, "\n";
+                
+                my @cmd = ( '/usr/bin/find', $__p->{root}, '-mmin', $__p->{mmin}, '-exec', '/bin/rm', '-rf', '{}', ';' );
+                system( @cmd ); # we get a 1 when we delete directories and the contents also vanish (/usr/bin/find: ...: No such file or directory), but that is all right.
+                #
+                flock( $lh, LOCK_UN ); close( $lh );
+            }
+        }
+    };
+    if( $@ ){ warn; }
+}
+
 
 #==============================================================================
 sub topitsWrtOwn {
@@ -7909,3 +8071,5 @@ sub wrt_ppcol {
 #==============================================================================
 
 1;
+
+# vim:ai:et:syntax=perl:

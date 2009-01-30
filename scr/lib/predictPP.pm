@@ -143,6 +143,7 @@ INIT: {
 
 # init datbase connection
     use lib '/nfs/data5/users/ppuser/server/scr/lib';
+    use PP_Checkpoint;
     require _PP_DB;
 #    $sqlDB = _PP_DB->new('bonsai.bioc.columbia.edu','PREDICTPROTEIN','yachdav','Y4chd4v');
     $sqlDB = _PP_DB->new('cherry.bioc.columbia.edu','PREDICTPROTEIN','yachdav','Y4chd4v');
@@ -403,8 +404,9 @@ sub predict {
 		      );
 
 	if (!$Lok){		# 
-	    &ctrlAbortPred($err,"abort ".$msg);  print $fhTrace "$msg2\n"
-		if ($Debug && ! $Lok);
+	    ($Lok,$msg2)=
+	    &ctrlAbortPred($err,"abort ".( $msg || '<undef>' ) ); 
+        if ($Debug && ! $Lok) { print $fhTrace "err: ".( $err || '<undef>' ).' msd2: '.( $msg2 || '<undef>' )."\n"; }
 				# **************************************************
 	    return(0,"$msg");}  # <<<<< ****** this is bad end 4
 				# **************************************************
@@ -1451,7 +1453,7 @@ sub               do_xmllint
     
         my $cmd = qq|xmllint --noout --schema "$__p->{schema}" - 2>/dev/null|;
 
-            if( $__p->{debug} ) { warn( qq|--- system: "$cmd"| ); }
+            if( $__p->{debug} ) { warn( "--- ".__FILE__.':'.__LINE__." system: `$cmd'" ); }
         
         open( OPIPE, '|-', $cmd ) || confess( "$!" );
 
@@ -3758,7 +3760,7 @@ sub modConvert {
 
 	($Lok,$msgSys)=
 	    &sysSystem("$command");
-	$msgHere = "--- $sbr system $command";
+	$msgHere = "--- ".__FILE__.':'.__LINE__." $sbr system $command";
 	return(0,"err=311",$msgErrIntern."\n*** could not extract sequence from dssp. header:".
 	       $file{"dssp"}."\n"."$Lok"."\n"."$msgHere") if(!$Lok);
 	$msgHere.=$msg; 
@@ -3846,7 +3848,7 @@ sub modConvert {
 
 				# ext prog hssp_extr_header.pl (reads header of HSSP file)
 	$command="$exeHsspExtrHdr4pp ".$file{"ali"}." ".$file{"aliHdr"};
-	$msgHere.="\n--- $sbr system '$command'\n";
+	$msgHere.="\n--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	($Lok,$msgSys)=
 	    &sysSystem("$command");
 	return(0,"err=311",$msgErrIntern."\n*** could not extract HSSP header:".
@@ -4326,11 +4328,13 @@ sub modAlign {
 	$msgHere.="\n--- $sbr \t run BLASTP ($dirData,$dirSwiss,$exeBlast,$exeBlastFilter,".
 	    "$envBlastMat,$envBlastDb,$parBlastNhits,$parBlastDb,".
 		$file{"seqBlast"}.",".$file{"aliBlastp"}.",".$file{"aliBlastpFil"}.",$fhErrSbr)\n";
+	
 	($Lok,$msg)=
 	    &blastpRun($nice,$dirData,$dirSwiss,$exeBlast,$exeBlastFilter,
 		       $envBlastMat,$envBlastDb,$parBlastNhits,$parBlastDb,
 		       $file{"seqBlast"},$file{"aliBlastp"},$file{"aliBlastpFil"},$fhErrSbr);
 				# none found
+	
 	if    ($Lok==2 && $msg=~/none/) {
 	    unlink($file{"aliBlastpFil"}) if (-e $file{"aliBlastpFil"});
 	    $cmd="echo ".$file{"seqBlast"}." > ".$file{"aliBlastpFil"};
@@ -4609,7 +4613,7 @@ sub modAlign {
 	    $db_version.="--- \n";
 	    $file{"dbVersion"}=$dirWork.$fileJobId.".version_db"; push(@kwdRm,"version_db");
 	    $command="echo '$db_version' >> ".$file{"dbVersion"};
-	    $msgHere.="\n--- $sbr system '$command'\n";
+	    $msgHere.="\n--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	    ($Lok,$msgSys)=&sysSystem("$command");}
 				# ------------------------------
 				# (5) ret blastp ?
@@ -4641,7 +4645,7 @@ sub modAlign {
 		$command .= " $urlSrs " if ( defined $urlSrs );
 	    }
 	   
-	    $msgHere.="\n--- $sbr system '$command'\n";
+	    $msgHere.="\n--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	    ($Lok,$msgSys)=&sysSystem("$command");
 	    return(0,"err=422",$msgErrIntern."\n*** could not extract RDB file for BLAST:".
 		   $file{"blastPsiRdb"}."\n".$Lok."\n".$msgHere) 
@@ -4716,7 +4720,7 @@ sub modAlign {
 		$command .= " html $urlSrs " if ( defined $urlSrs );
 	    }
 	   
-	    $msgHere.="\n--- $sbr system '$command'\n";
+	    $msgHere.="\n--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	    ($Lok,$msgSys)=&sysSystem("$command");
 	    return(0,"err=422",$msgErrIntern."\n*** could not extract HSSP header:".
 		   $file{"aliFilOut"}."\n".$Lok."\n".$msgHere) if (! -e $file{"aliHdr"});
@@ -4947,7 +4951,7 @@ sub getCachedResults {
 
     $command = "$nice $exeGetCachedResults $seq $fileJobId $dirWork";
 
-    $msgHere="--- $sbr system '$command'";
+    $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$command'";
     ($Lok,$msgSys)=&sysSystem("$command");
 
     return (0,"err=645","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
@@ -5044,7 +5048,7 @@ sub runAsp {
 	$arg .= " -err ".$file{"errAsp"};
 
 	$command = "$nice $exeAsp $arg ";
-	$msgHere="--- $sbr system '$command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$command'";
 	($Lok,$msgSys)=&sysSystem("$command");
 
 	return (0,"err=645","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
@@ -5181,7 +5185,7 @@ sub runCafaspThreader {
 	
 	$command="$nice $exeThreader ".
 	    $file{"seqFasta"}." ".$file{"threader"}.' '. $Ldebug;
-	$msgHere="--- $sbr system '$command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$command'";
 				# --------------------------------------------------
 				# do run CAFASP threader
 				# --------------------------------------------------
@@ -5499,7 +5503,7 @@ sub runDisulfind {
 #	    "$file{\"seq4cys\"} $fileAliPhdIn $file{\"disulfind\"}";
 	    " $fileBlastMatTmb $fileJobId > $file{\"disulfind\"} ";
 #	    "$file{\"seq4cys\"} $fileBlastMatTmb $file{\"disulfind\"} $disulfindOutputFormat";
-	$msgHere="--- $sbr system '$exeDisulfind $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeDisulfind $command'";
 
 	
 				# --------------------------------------------------
@@ -5642,7 +5646,7 @@ sub runEvalsec {
     $command="$nice $exeEvalsec ".
 	"$file_in $exeEvalsecFor out=".$file{"pred"}." title=$title dirdef=$dirWork".
 	    " tmp=".$file{"predTmp"};
-    $msgHere="--- $sbr system '$exeEvalsec $command'";
+    $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeEvalsec $command'";
 				# --------------------------------------------------
 				# do run EVALSEC
 				# --------------------------------------------------
@@ -5772,7 +5776,7 @@ sub runNls {
 	}
 
 	$command = "$nice $exeNls $arg ";
-	$msgHere="--- $sbr system '$command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$command'";
 	($Lok,$msgSys)=&sysSystem("$command");
 
 	return (0,"err=560",$msgErrNls."*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
@@ -5922,7 +5926,7 @@ sub runNorsp {
 	}
 
 	$command = "$nice $exeNors $arg ";
-	$msgHere="--- $sbr system '$command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$command'";
 	($Lok,$msgSys)=&sysSystem("$command");
 
 	return (0,"err=688","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
@@ -6242,8 +6246,8 @@ sub runPhd {
 #    $cmd="$exePhdPl $fileHssp $optPhd $opt verbose $optAdd dbg";
 
     $msgHere="";
-#    $msgHere.="--- $sbr system '$cmd'\n";
-#    print $fhOutSbr "--- $sbr system \t '$cmd'\n";
+#    $msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system '$cmd'\n";
+#    print $fhOutSbr "--- ".__FILE__.':'.__LINE__." $sbr system \t '$cmd'\n";
 
 				# ==================================================
 				# running PHD
@@ -6430,7 +6434,7 @@ sub runPhd {
 	$kwd="phdDssp";
 	$file{$kwd}=          $dirWork.$fileJobId.".$kwd";push(@kwdRm,"$kwd");
 	$command="$nice $exePhd2dssp ".$file{"phdRdb"}." file_out=".$file{$kwd};
-	$msgHere.="--- $sbr system '$command'\n";
+	$msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	($Lok,$msgSys)=&sysSystem("$command",$fhOutSbr);
 	if (! $Lok || ! -e $file{$kwd}){
 #		return(0,"err=614",$msgErrDssp."\n"."Lok=$Lok $msgHere");
@@ -6445,7 +6449,7 @@ sub runPhd {
 	if ($optPhd eq "3") {	# if all 3, first both, then htm
 				# (1) for both
 	    $command="$nice $exeRdb2kg ".$file{"phdRdb"}." ".$file{$kwd}." both";
-	    $msgHere.="--- $sbr system '$command'\n";
+	    $msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	    ($Lok,$msgSys)=&sysSystem("$command",$fhOutSbr);
 	    if (! $Lok || ! -e $file{$kwd}){
 #		return(0,"err=613",$msgErrRdb2kg."\n"."Lok=$Lok $msgHere");
@@ -6457,7 +6461,7 @@ sub runPhd {
 	    $kwd2="phdRetKgHtm";
 	    $file{$kwd2}=     $dirWork.$fileJobId.".$kwd";push(@kwdRm,"$kwd2");
 	    $command="$nice $exeRdb2kg ".$file{"phdRdb"}." ".$file{$kwd2}." htm";
-	    $msgHere.="--- $sbr system '$command'\n";
+	    $msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	    ($Lok,$msgSys)=&sysSystem("$command",$fhOutSbr);
 	    if    (! $Lok || ! -e $file{$kwd2}){ # dont leave if not existing!!
 #		return(0,"err=614",$msgErrRdb2kg."\n"."Lok=$Lok $msgHere");
@@ -6470,7 +6474,7 @@ sub runPhd {
                                 # --------------------
 	else {                  # else: simply convert
 	    $command="$nice $exeRdb2kg ".$file{"phdRdb"}." ".$file{$kwd}." $optPhd";
-	    $msgHere.="--- $sbr system '$command'\n";
+	    $msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	    ($Lok,$msgSys)=&sysSystem("$command",$fhOutSbr);
 	    if (! $Lok || ! -e $file{$kwd}){
 		return(0,"err=615",$msgErrRdb2kg."\n"."Lok=$Lok $msgHere");}
@@ -6528,7 +6532,7 @@ sub runPhd {
 	if (! $Lskip){
 	    $command="$nice $exePhd2msf fileMsf=".$file{$kwd2}." filePhd=".$file{"phdRdb"}.
 		" fileOut=".$file{$kwd}." charPerLine=$charPerLineMsf notScreen";
-	    $msgHere.="--- $sbr system '$command'\n";
+	    $msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	    ($Lok,$msgSys)=&sysSystem("$command",$fhOutSbr);
 	    if (! $Lok || ! -e $file{$kwd}){
 #		return(0,"err=619",$msgErrMsf."\n"."Lok=$Lok $msgHere");
@@ -6560,7 +6564,7 @@ sub runPhd {
 				# (2) run exePhd2casp2
 	$command="$nice $exePhd2casp2 ".$file{"phdRdb"}.
 	    " fileOut=".$file{$kwd}." nali=$nali notScreen";
-	$msgHere.="--- $sbr system '$command'\n";
+	$msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	($Lok,$msgSys)=&sysSystem("$command",$fhOutSbr);
 	if (! $Lok || ! -e $file{$kwd}){
 #	    return(0,"err=620",$msgErrCasp2."\n"."Lok=$Lok $msgHere");
@@ -6910,7 +6914,7 @@ sub runProf {
 	$cmd="$exeProfPl $fileHssp $optProf $opt $optAdd >> ".$file{"screenProf"};
 	
 	$msgHere="";
-#    print "--- $sbr system \t '$cmd'\n";
+#    print "--- ".__FILE__.':'.__LINE__." $sbr system \t '$cmd'\n";
 
 	# ==================================================
 	# running PROF
@@ -7006,7 +7010,7 @@ sub runProf {
     else {
 	$command.=" nodet nograph";}
 	
-    $msgHere.="--- $sbr system '$command'\n";
+    $msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
     ($Lok,$msgSys)=&sysSystem("$command",$fhOutSbr);
 
     return(0,"err=662",$msgErrProf."\n"."*** ERROR $sbr: no ASCII file after\n".
@@ -7093,7 +7097,7 @@ sub runProf {
 	$kwd="profDssp";
 	$file{$kwd}=          $dirWork.$fileJobId.".".$kwd;push(@kwdRm,$kwd);
 	$command="$nice $exeProfConv ".$file{"profRdb"}." dssp noascii nohtml fileOut=".$file{$kwd};
-	$msgHere.="--- $sbr system '$command'\n";
+	$msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	($Lok,$msgSys)=&sysSystem("$command",$fhOutSbr);
 	$file{"phdDssp"} = $file{"profDssp"};
 	if (! $Lok || ! -e $file{$kwd}){
@@ -7144,7 +7148,7 @@ sub runProf {
 #	$command.=" fileAli=".$file{$kwd2}." fileOut=".$file{$kwd}." nresPerRow=$charPerLineMsf dbg";
 #	$command.=" extHssp=.aliMsf";
 #	$command.=" fileAli=".$file{$kwd2}." fileOut=".$file{$kwd}." nresPerRow=$charPerLineMsf";
-	$msgHere.="--- $sbr system '$command'\n";
+	$msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	($Lok,$msgSys)=&sysSystem("$command",$fhOutSbr);
 				# ERROR?
 	if    (! $Lok){
@@ -7190,7 +7194,7 @@ sub runProf {
 	$command= "$nice $exeProfConv ".$file{"profRdb"};
 	$command.=" casp fileOutCasp=".$file{$kwd}." nohtml noascii";
 	    
-	$msgHere.="--- $sbr system '$command'\n";
+	$msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system '$command'\n";
 	($Lok,$msgSys)=&sysSystem("$command",$fhOutSbr);
 	$msgHere.="*** WARN $sbr after $exeProfConv no fileOut($kwd)=".$file{$kwd}."!\n".$msgErrCasp."\n"
 	    if (! $Lok || ! -e $file{$kwd});
@@ -7296,7 +7300,7 @@ sub runProsite {
     $cmd.=" ".$filePrositeData;
     $cmd.=" ".$fileSeqGCG;
     $cmd.=" >> ".$fileSeqProsite;
-    $msgHereLoc.="\n--- $sbr2 \t call prosite:\n--- system: \t ".$cmd."\n";
+    $msgHereLoc.="\n--- ".__FILE__.':'.__LINE__." $sbr2 \t call prosite:\nsystem: \t ".$cmd."\n";
 		
 
     ($Lok,$msgSys)=&sysSystem("$cmd");
@@ -7379,7 +7383,7 @@ sub runSegnorm {
 				# build up Segnorm command
     $cmd= $nice." ".$exeSeg." ".$fileSeqFasta." ".$parSeg;
     $cmd.=" >> ".$fileSegNorm;
-    $msgHereLoc.="\n--- $sbr2 \t call seg:\n--- system: \t ".$cmd."\n";
+    $msgHereLoc.="\n--- ".__FILE__.':'.__LINE__." $sbr2 \t call seg:\nsystem: \t ".$cmd."\n";
 				# run SEGNORM
     ($Lok,$msgSys)=&sysSystem("$cmd");
 
@@ -7600,8 +7604,8 @@ sub runTopits {
 #    $cmd="$exeTopits $arg  dbg >> ".$file{"screenTopits"};
 #    $cmd="$exeTopits $arg  dbg ";
     $cmd="$exeTopits $arg >> ".$file{"screenTopits"};
-#    $msgHere.="--- $sbr system \t '$cmd'\n";
-#    print $fhOutSbr "--- $sbr system \t $cmd\n";
+#    $msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system \t '$cmd'\n";
+#    print $fhOutSbr "--- ".__FILE__.':'.__LINE__." $sbr system \t $cmd\n";
 
 #    $cmd="$exeTopits $arg  dbg >> x.tmp " if ($User_name =~/^rost/);
 
@@ -7641,8 +7645,8 @@ sub runTopits {
 	$cmd.=" fileOut=".$file{"stripTopitsPP"};
 	$cmd.=" incl=1-$optExpNhits mix=$optExpMix noScreen";
 
-	print $fhOutSbr "--- $sbr system \t '$cmd'\n" if ($Ldebug);
-	$msgHere.="--- $sbr system \t '$cmd'\n";
+	print $fhOutSbr "--- ".__FILE__.':'.__LINE__." $sbr system \t '$cmd'\n" if ($Ldebug);
+	$msgHere.="--- ".__FILE__.':'.__LINE__." $sbr system \t '$cmd'\n";
 	($Lok,$msgSys)=
 	    &sysSystem($cmd,$fhOutSbr);
 	$Lok=0                 if (! -e $file{"stripTopitsPP"});
@@ -8143,7 +8147,7 @@ sub ctrlCleanUp {		#
 	close($fhoutLoc); 
 	
 	$command = "cat ".$envPP{"fileAppGoogleGroups"}  ." >> $fileFinal";
-		$msgHere="--- $sbr system ' $command'";
+		$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system ' $command'";
 		($Lok,$msgSys)=&sysSystem("$command");
 	
 
@@ -9853,7 +9857,7 @@ sub runHmmPfam {
 	$pfamArgs= "--acc --cpu 1 /data/pfam/Pfam_ls ";
 	$command="$nice $exeHmmpfam $pfamArgs".
 	    "$file{\"seq4pfam\"} > $file{\"hmmpfam\"}";
-	$msgHere="--- $sbr system '$exeHmmpfam $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeHmmpfam $command'";
 				# --------------------------------------------------
 				# do run HMMPFAM
 				# --------------------------------------------------
@@ -10039,7 +10043,7 @@ sub runProfCon {
 
 # $file{\"hsspPsiFil\"} $file{\"profRdb\"}"." $UserProtName ". " 
 
-	$msgHere="--- $sbr system '$exeProfCon $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeProfCon $command'";
 
 				# --------------------------------------------------
 				# do run ProfCon
@@ -10263,7 +10267,7 @@ sub runPrenup {
 
 # $file{\"hsspPsiFil\"} $file{\"profRdb\"}"." $UserProtName ". " 
 
-	$msgHere="--- $sbr system '$exePrenup $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exePrenup $command'";
 
 				# --------------------------------------------------
 				# do run Prenup
@@ -10471,7 +10475,7 @@ sub runEcgo {
 
 
 	$command="/usr/bin/python $exeEcgo -pp=$file{\"seq4ecgo\"},$file{\"profRdb\"},$file{\"hsspPsiFil\"}  -name=".$UserProtName." > $file{\"ecgo\"}";
-	$msgHere="--- $sbr system '$exeEcgo $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeEcgo $command'";
 
 				# --------------------------------------------------
 				# do run Ecgo
@@ -10666,7 +10670,7 @@ sub runPredCC {
 
 
 	$command="$nice $exePcc ". "$file{\"seq4pcc\"} > $file{\"pcc\"}";
-	$msgHere="--- $sbr system '$exePcc $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exePcc $command'";
 				# --------------------------------------------------
 				# do run Predict Cell Cycle
 				# --------------------------------------------------
@@ -10863,7 +10867,7 @@ sub runChop {
 	}
 
 	$command="$nice $exeChop $arg";
-	$msgHere="--- $sbr system '$exeChop $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeChop $command'";
 				# --------------------------------------------------
 				# do run  CHOP
 				# --------------------------------------------------
@@ -11055,7 +11059,7 @@ sub runChopper {
 	}
 
 	$command="$nice $exeChopper $arg";
-	$msgHere="--- $sbr system '$exeChopper $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeChopper $command'";
 				# --------------------------------------------------
 				# do run  CHOPPER
 				# --------------------------------------------------
@@ -11249,7 +11253,7 @@ sub runDisis {
 	    }
 
         $command="$nice $exeDisis $disisRunParams > $file{\"disis\"}";
-        $msgHere="--- $sbr system '$exeDisis $command'";
+        $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeDisis $command'";
 
         # -----------                                                                                       
         # do run ISIS                                                                                       
@@ -11478,7 +11482,7 @@ sub runPredIsis {
 	}
 
 	$command="$nice $exeIsis $isisRunParams $file{\"isis\"}";
-	$msgHere="--- $sbr system '$exeIsis $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeIsis $command'";
 
 	# -----------
 	# do run ISIS
@@ -11697,7 +11701,7 @@ sub runProfTmb {
 	    $command = "$nice $exeProfTmb \@".$ENV{"ProfTmb"}."options -d $ENV{\"ProfTmb\"} -q $fileBlastMatTmb -o ".$file{"ProfTmb"}." ";
 #	$command="$nice $exeProfTmb "."$ProfTmbProtName ".
 #	    "$file{\"seq4ProfTmb\"} $file{\"hsspPsiFil\"} $file{\"profRdb\"} > $file{\"ProfTmb\"} ";
-	    $msgHere="--- $sbr system '$exeProfTmb $command'";
+	    $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeProfTmb $command'";
 
 	    # --------------------------------------------------
 	    # do run ProfTmb
@@ -11885,7 +11889,7 @@ sub runProfBval {
 	    $command .= $parProfBvalWindow if ( $parProfBvalWindow ); 
 	    $command .= " $mode "; #MOHD
 	    $command .= defined($target_name) ? $target_name : "default_target";
-	    $msgHere="--- $sbr system '$exeProfBval $command'";
+	    $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeProfBval $command'";
 #        print STDOUT "in $sbr: $msgHere\n";
 	    # --------------------------------------------------
 	    # do run ProfBval
@@ -12067,7 +12071,7 @@ sub runNORSnet {
 	    $command .= " ";
 	    $command .= $file{"ProfBval"}." ";
 
-	    $msgHere="--- $sbr system '$exeNORSnet $command'";
+	    $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeNORSnet $command'";
 	    # --------------------------------------------------
 	    # do run NORSnet
 	    # --------------------------------------------------
@@ -12261,7 +12265,7 @@ sub runMdisorder {
 	    $command .= "out=".$file{"Mdisorder"}." ";
 	    $command .= " out_mode=1 ";
 	    
-	    $msgHere="--- $sbr system '$command'";
+	    $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$command'";
 	    # --------------------------------------------------
 	    # do run Mdisorder
 	    # --------------------------------------------------
@@ -12317,7 +12321,7 @@ sub runMdisorder {
 		
 		unlink $filePredTmp  || warn "*** cannot unlink $filePredTmp";# if ($optRun =~/mdisorder_only/);;  # HACK: remove previouse output
 		$command = "cat ".$envPP{"fileAppMdisorder"}  ." > $fileMdisorderTemp";
-		$msgHere="--- $sbr system ' $command'";
+		$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system ' $command'";
 		($Lok,$msgSys)=&sysSystem("$command");
 		
 		return (0,"err=560","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
@@ -12506,7 +12510,7 @@ sub runSnap {
 
 
 
-	    $msgHere="--- $sbr system ' $command'";
+	    $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system ' $command'";
 
 
 	    # --------------------------------------------------
@@ -12578,7 +12582,7 @@ sub runSnap {
 		
 		unlink $filePredTmp;  # HACK: remove previouse output
 		$command = "cat ".$envPP{"fileAppSnap"} ." ". $file{"Snap"}." ".$envPP{"fileAppLine"} ." > $fileSnapTemp";
-		$msgHere="--- $sbr system ' $command'";
+		$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system ' $command'";
 		($Lok,$msgSys)=&sysSystem("$command");
 		
 		return (0,"err=560","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
@@ -12754,7 +12758,7 @@ sub runLocTar {
 	$command.=" orgType=".$parLoctarOrgType." " if (defined $parLoctarOrgType && $parLoctarOrgType);
 	$command.=" protId=".$parLoctarProtId." "  if (defined $parLoctarProtId &&  $parLoctarProtId);
 #.$file{"hsspPsiFil"}." fileProf=".$file{"profRdb"};
-	$msgHere="--- $sbr system '$exeLocTar $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeLocTar $command'";
 				# --------------------------------------------------
 				# do run Predict Loc Target
 				# --------------------------------------------------
@@ -12964,7 +12968,7 @@ sub runAgape {
 #	}
 
 	$command="$nice $exeAgape $fileJobId $file{\"seq4agape\"} $dirWork dbg";
-	$msgHere="--- $sbr system ' $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system ' $command'";
 
 
 				# --------------------------------------------------
@@ -13191,7 +13195,7 @@ sub runConBlast {
 	}
 
 	$command="$nice $exeConBlast $file{\"seq4conblast\"} $fileJobId $file{\"conblast\"} $parConBlastDB";
-	$msgHere="--- $sbr system '$exeConBlast $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeConBlast $command'";
 
 				# --------------------------------------------------
 				# do run ConBlast
@@ -13350,7 +13354,7 @@ sub runNLProt {
     
     ($Lok,$msgSys)=&sysSystem("$command");
 
-    $msgHere="--- $sbr system '$command'";    
+    $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$command'";    
     return (0,"err=560","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
 	if (! $Lok || ! -e $file{"txt4nlprot"});
 
@@ -13385,7 +13389,7 @@ sub runNLProt {
 	$command .= " -i ".$file{"txt4nlprot"};
 	$command .= " -o ".$file{"nlprot"};
 	$command .= " -d ".$parNlprotdb;
-	$msgHere="--- $sbr system '$exeNlprot $command'";
+	$msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeNlprot $command'";
 #	print $msgHere,"\n";
 				# --------------------------------------------------
 				# do run Nlprot
@@ -13588,7 +13592,7 @@ sub runR4S {
     $command .= " -Qf -Mj ";
     $command .= " -o ".$file{"R4S"};
 
-    $msgHere="--- $sbr system '$exeR4S $command'";
+    $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeR4S $command'";
 #	print $msgHere,"\n";
 				# --------------------------------------------------
 				# do run R4S
@@ -13721,7 +13725,7 @@ sub runDssp{
 
     $cmd= $nice." ".$exeDssp." ".$filePdb;
     $cmd.=" > ".$fileDssp;
-    $msgHereLoc.="\n--- $sbr2 \t call seg:\n--- system: \t ".$cmd."\n";
+    $msgHereLoc.="\n--- ".__FILE__.':'.__LINE__." $sbr2 \t call seg:\nsystem: \t ".$cmd."\n";
 				# run dssp
     ($Lok,$msgSys)=&sysSystem("$cmd");
 
