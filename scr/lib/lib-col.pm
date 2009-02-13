@@ -494,7 +494,8 @@ sub blastpsiRun {
     if( !$inseq ) { confess("failed to read FASTA sequence from ``$fileInLoc''"); }
     
     ($Lok,$msgSys)=
-	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$command_base -o -C -Q --seq=".$inseq->seq(), md5files => [], cache_files => [ $fileOutTmp, $fileOutCheck, $fileBlastMatTmb ] } );
+	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$command_base -o -C -Q --seq=".$inseq->seq(), md5files => [], cache_files => {
+                'blres' => $fileOutTmp, 'checkpoint' => $fileOutCheck, 'matrix' => $fileBlastMatTmb } } );
         #&sysSystem( $command, $fhTraceLoc );
     return(0,"*** ERROR $sbr '$Lok'\n".$msg."\n".$msgSys)
 	if (! $Lok);
@@ -512,7 +513,8 @@ sub blastpsiRun {
 
     $msg="--- $sbr '$command'\n";
     ($Lok,$msgSys)=
-	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$command_base -o -Q --seq=".$inseq->seq(), md5files => [ $fileOutCheck ], cache_files => [ $fileOutLoc, $fileOutMat ] } );
+	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$command_base -o -Q --seq=".$inseq->seq(), md5files => [ $fileOutCheck ], cache_files => {
+                'blres' => $fileOutLoc, 'matrix' => $fileOutMat } } );
         #&sysSystem( $command, $fhTraceLoc );
     return(0,"*** ERROR $sbr '$Lok'\n".$msg."\n".$msgSys)
 	if (! $Lok);
@@ -6977,7 +6979,7 @@ sub sysSystem {
 sub cachedBlastCall {
     my( $cmdLoc, $fhLoc, $__p ) = @_;
     my($sbrName,$Lok);
-    %$__p = ( md5string => '', md5files => [], cache_files => [], %$__p );
+    %$__p = ( md5string => '', md5files => [], cache_files => {}, %$__p );
     $[ =1 ;
 #-------------------------------------------------------------------------------
 #   cachedBlastCall             read cached Blast results if any, otherwise run
@@ -6989,8 +6991,10 @@ sub cachedBlastCall {
 #       __p => {
 #               md5string => string_to_md5_to_create_UUID,
 #               md5files => [ files_to_md5_to_create_UUID, ... ],
-#               cache_files => [ filepath0, ... ]
+#               cache_files => { filename_in_cache0 => filepath0, ... }
 #       }
+#       filename_in_cache0 must be of: [[:alnum:]_], other characters are deleted
+#
 #       out:                    <1|0>,<"value from system"|$errorMessag>
 #       err:                    (1,'ok'), (0,'message')
 #-------------------------------------------------------------------------------
@@ -7028,7 +7032,15 @@ sub cachedBlastCall {
     $blastcmdmd5->add( $__p->{md5string} );
     foreach my $md5file ( @{$__p->{md5files}} ) { my $fh; open( $fh, '<', $md5file ) || confess( $! ); $blastcmdmd5->addfile( $fh ); close( $fh ); }
 
-    if( $ENV{PP_ROOT} && @{$__p->{cache_files}} )
+    # Sanitize $__p->{cache_files}:
+    if( keys(%{$__p->{cache_files}}) )
+    {
+        my $tmp = {}; %$tmp = %{$__p->{cache_files}}; %{$__p->{cache_files}} = ();
+        foreach my $key (keys(%$tmp)) { my $val = $tmp->{$key}; $key =~ s/[^[:alnum:]_]//go; $__p->{cache_files}->{$key} = $val; }
+    }
+#warn(Data::Dumper::Dumper( $__p->{cache_files} ));
+
+    if( $ENV{PP_ROOT} && keys(%{$__p->{cache_files}}) )
     {
         $cache_dir = "$ENV{PP_ROOT}/blastcache";
         if( -d $cache_dir )
@@ -7039,10 +7051,9 @@ sub cachedBlastCall {
             if( -d $cmd_cache_dir )
             {
                 $rerun = 0;
-                for( my $f_i = $[; $f_i < @{$__p->{cache_files}}+$[; ++$f_i )
+                foreach my $cachedfilename (keys(%{$__p->{cache_files}}))
                 {
-                    #my $path = $__p->{cache_files}->[$f_i]; my( undef, $dirpath, $filename ) = File::Spec->splitpath( $path );
-                    my $cachedfilename = sprintf( "cached_%03d.gz", $f_i ); my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename;
+                    my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename.'.gz';
                     if( !-e $cachefilepath || -z $cachefilepath ) { $rerun = 1; last; }
                 }
             }
@@ -7055,17 +7066,17 @@ sub cachedBlastCall {
     {
         ( undef, $Lsystem ) = sysSystem( $cmdLoc, $fhLoc );
 
-        if( $cache_dir && -d $cache_dir && @{$__p->{cache_files}} )
+        if( $cache_dir && -d $cache_dir && keys(%{$__p->{cache_files}}) )
         {
             if( $fhLoc ){ print $fhLoc " caching into $cmd_cache_dir"; }
         
             my @cmd = ( '/bin/mkdir', '-p', $cmd_cache_dir ); system( @cmd ) == 0 or confess( join(' ', @cmd).": $!" );
 
 #warn(Data::Dumper::Dumper( $__p->{cache_files} ));
-            for( my $f_i = $[; $f_i < @{$__p->{cache_files}}+$[; ++$f_i )
+            foreach my $cachedfilename (keys(%{$__p->{cache_files}}))
             {
-                my $path = $__p->{cache_files}->[$f_i];
-                my $cachedfilename = sprintf( "cached_%03d", $f_i ); my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename;
+                my $path = $__p->{cache_files}->{$cachedfilename};
+                my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename;
                 { my @cmd = ( '/bin/cp', '-a', $path, $cachefilepath ); system( @cmd ) == 0 or cluck( join(' ', @cmd).": $!" ); }
 #warn("*** zipping: $path $cachefilepath");
                 { my @cmd = ( '/bin/gzip', '--force', $cachefilepath ); system( @cmd ) == 0 or cluck( join(' ', @cmd).": $!" ); }
@@ -7076,10 +7087,10 @@ sub cachedBlastCall {
     {
         if( $fhLoc ){ print $fhLoc " cache hit ($cmd_cache_dir)"; }
 
-        for( my $f_i = $[; $f_i < @{$__p->{cache_files}}+$[; ++$f_i )
+        foreach my $cachedfilename (keys(%{$__p->{cache_files}}))
         {
-            my $path = $__p->{cache_files}->[$f_i];
-            my $cachedfilename = sprintf( "cached_%03d.gz", $f_i ); my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename;
+            my $path = $__p->{cache_files}->{$cachedfilename};
+            my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename.'.gz';
             { my @cmd = ( '/bin/cp', '-a', $cachefilepath, $path.'.gz' ); system( @cmd ) == 0 or confess( join(' ', @cmd).": $!" ); }
             { my @cmd = ( '/bin/gunzip', '--force', $path.'.gz' ); system( @cmd ) == 0 or confess( join(' ', @cmd),": $!" ); }
         }
