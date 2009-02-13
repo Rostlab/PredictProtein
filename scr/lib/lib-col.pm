@@ -178,6 +178,7 @@ use File::Spec;
 use Digest::MD5;
 use Fcntl qw|:flock :DEFAULT|;
 use File::stat qw||;
+use Data::Dumper qw||;
 
 #==============================================================================
 sub blastpExtrId {
@@ -477,8 +478,9 @@ sub blastpsiRun {
     
     ###
 
-    $command="$niceLoc $exeBlastPsi $argBlast $dbBlastPsi -i $fileInLoc ".
-	" -o $fileOutTmp -C $fileOutCheck  ";
+    my $command_base = "$exeBlastPsi $argBlast $dbBlastPsi";
+    $command=qq|$niceLoc $command_base -i "$fileInLoc" |.
+	qq| -o "$fileOutTmp" -C "$fileOutCheck"  |;
     # GY - added 3/18/2004
     # Prof Tmb needs this added to the 
     #if (defined $fileBlastMatTmb && $fileBlastMatTmb){ # lkajan: always genearte this, it does not take more time and is not too big a file
@@ -492,7 +494,8 @@ sub blastpsiRun {
     if( !$inseq ) { confess("failed to read FASTA sequence from ``$fileInLoc''"); }
     
     ($Lok,$msgSys)=
-	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$exeBlastPsi $argBlast $dbBlastPsi -o -C -Q ".$inseq->seq(), md5files => [], cache_files => [ $fileOutTmp, $fileOutCheck, $fileBlastMatTmb ] } );
+	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$command_base -o -C -Q --seq=".$inseq->seq(), md5files => [], cache_files => [ $fileOutTmp, $fileOutCheck, $fileBlastMatTmb ] } );
+        #&sysSystem( $command, $fhTraceLoc );
     return(0,"*** ERROR $sbr '$Lok'\n".$msg."\n".$msgSys)
 	if (! $Lok);
     return(0,"*** ERROR $sbr no output '$fileOutTmp'\n"."$msg")
@@ -502,13 +505,15 @@ sub blastpsiRun {
 				# Now the second run against big DB
 				# ---------------------------------
     $dbBlastBig = $envBlastPsiDb.$parBlastPsiDbBig;
+    $command_base = "$exeBlastPsi $argBlastBig $dbBlastBig";
     $command="$niceLoc $exeBlastPsi $argBlastBig $dbBlastBig -i $fileInLoc ".
 	" -o $fileOutLoc -R $fileOutCheck -Q $fileOutMat";
     
 
     $msg="--- $sbr '$command'\n";
     ($Lok,$msgSys)=
-	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$exeBlastPsi $argBlastBig $dbBlastBig -o -Q ".$inseq->seq(), md5files => [ $fileOutCheck ], cache_files => [ $fileOutLoc, $fileOutMat ] } );
+	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$command_base -o -Q --seq=".$inseq->seq(), md5files => [ $fileOutCheck ], cache_files => [ $fileOutLoc, $fileOutMat ] } );
+        #&sysSystem( $command, $fhTraceLoc );
     return(0,"*** ERROR $sbr '$Lok'\n".$msg."\n".$msgSys)
 	if (! $Lok);
     return(0,"*** ERROR $sbr no output '$fileOutLoc'\n"."$msg")
@@ -7034,7 +7039,7 @@ sub cachedBlastCall {
             if( -d $cmd_cache_dir )
             {
                 $rerun = 0;
-                for( my $f_i = 0; $f_i < @{$__p->{cache_files}}; ++$f_i )
+                for( my $f_i = $[; $f_i < @{$__p->{cache_files}}+$[; ++$f_i )
                 {
                     #my $path = $__p->{cache_files}->[$f_i]; my( undef, $dirpath, $filename ) = File::Spec->splitpath( $path );
                     my $cachedfilename = sprintf( "cached_%03d.gz", $f_i ); my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename;
@@ -7056,11 +7061,13 @@ sub cachedBlastCall {
         
             my @cmd = ( '/bin/mkdir', '-p', $cmd_cache_dir ); system( @cmd ) == 0 or confess( join(' ', @cmd).": $!" );
 
-            for( my $f_i = 0; $f_i < @{$__p->{cache_files}}; ++$f_i )
+#warn(Data::Dumper::Dumper( $__p->{cache_files} ));
+            for( my $f_i = $[; $f_i < @{$__p->{cache_files}}+$[; ++$f_i )
             {
                 my $path = $__p->{cache_files}->[$f_i];
                 my $cachedfilename = sprintf( "cached_%03d", $f_i ); my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename;
                 { my @cmd = ( '/bin/cp', '-a', $path, $cachefilepath ); system( @cmd ) == 0 or cluck( join(' ', @cmd).": $!" ); }
+#warn("*** zipping: $path $cachefilepath");
                 { my @cmd = ( '/bin/gzip', '--force', $cachefilepath ); system( @cmd ) == 0 or cluck( join(' ', @cmd).": $!" ); }
             }
         }
@@ -7069,7 +7076,7 @@ sub cachedBlastCall {
     {
         if( $fhLoc ){ print $fhLoc " cache hit ($cmd_cache_dir)"; }
 
-        for( my $f_i = 0; $f_i < @{$__p->{cache_files}}; ++$f_i )
+        for( my $f_i = $[; $f_i < @{$__p->{cache_files}}+$[; ++$f_i )
         {
             my $path = $__p->{cache_files}->[$f_i];
             my $cachedfilename = sprintf( "cached_%03d.gz", $f_i ); my $cachefilepath = $cmd_cache_dir.'/'.$cachedfilename;

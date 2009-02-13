@@ -1099,7 +1099,8 @@ sub predict {
 				# Run ISIS
 				# -----------------------------------------------
 
-    if ($job{"run"} =~/isis/i && $job{"run"} !~ /disis/ ) {
+#     if ($job{"run"} =~/\sisis\s/i && $job{"run"} !~ /disis/ ) {
+  if ($job{"run"} =~/\,isis\,/i ){   # NOTE the token isis needs to be seperated by spaces, otherwise the system will confuse it with disis
 	($Lok,$err,$msg)=
 	    &runPredIsis  ($Origin,$Date,$niceRun,$filePID,$fhOut,$fhTrace,
 			 $envPP{"dir_work"},$filePredTmp,$fileHtmlTmp,$fileHtmlToc,
@@ -5390,7 +5391,8 @@ sub runDisulfind {
 
     local($sbr,$msgHere,$msg,$fileOut,$Lok,$fileStripOutMod,
 	  $fileAliList,$fileFastaSingle,@tmpAppend,$txt,$command, $fhcys, @tmp);
-    $[ =1 ;
+    $[ =1; 
+			
 #-------------------------------------------------------------------------------
 #   runDisulfind                : disulfind
 #       in:                     many
@@ -5576,6 +5578,7 @@ sub runDisulfind {
 	# --------------------------------------------------
 	# append files
 	# --------------------------------------------------
+
 	if ($origin =~ /^mail|^html|^testPP/i){
 	    if ($#tmpAppend>0){	# 
 		# print "debug=$Ldebug; predTmp=$filePredTmp;tmpAp=@tmpAppend\n";
@@ -5584,7 +5587,8 @@ sub runDisulfind {
 		       "align final appending...\n: $msg,\n"."$msgHere") if (! $Lok);}
 	}
     }
-
+	print Carp::longmess("disulfind stack");
+ 
     return(1,"ok","$sbr:$msg");
 }				# end runDisulfind
 
@@ -5602,7 +5606,7 @@ sub runEvalsec {
 #--------------------------------------------------------------------------------
 #   runEvalsec                  runs the program EVALSEC
 #       in:                     $file_in,$file_out,$exeEvalsec,$exeEvalsecForor,$dir_default
-#       out:                    $file_out: extract from Tableqils of EVALSEC
+v#       out:                    $file_out: extract from Tableqils of EVALSEC
 #--------------------------------------------------------------------------------
     $sbr="runEvalsec";
     $srvName = "EVALSEC";
@@ -8101,12 +8105,12 @@ sub ctrlCleanUp {		#
 #	    $urlRes = "http://www.predictprotein.org/get_results_test.php?req_id=".$randomString;
 	    $urlRes = "http://www.predictprotein.org/getServersResponse.php?req_id=".$resId;
 	    $urlRes .= "\n\nNEW (beta mode): visual results can now be accessed through: \nhttp://www.predictprotein.org/get_visual_results.php?res_id=".$resId;
-	    $urlRes .= "\n\nNEW: XML structured data of the results cab now be accessed through: \nhttp://www.predictprotein.org/visualpp-cgi-bin/predictprotein_xml_source?res_id=".$resId;
+	    $urlRes .= "\n\nNEW: XML structured data of the results can now be accessed through: \nhttp://www.predictprotein.org/visualpp-cgi-bin/predictprotein_xml_source?res_id=".$resId;
 	}else{
 #	    $urlRes = "http://www.predictprotein.org/get_results.php?req_id=".$randomString;
 	    $urlRes = "http://www.predictprotein.org/get_results.php?req_id=".$resId;
 	    $urlRes .= "\n\nNEW (beta mode): visual results can now be accessed through: \nhttp://www.predictprotein.org/get_visual_results.php?res_id=".$resId;
-	    $urlRes .= "\n\nNEW: XML structured data of the results cab now be accessed through: \nhttp://www.predictprotein.org/visualpp-cgi-bin/predictprotein_xml_source?res_id=".$resId;
+	    $urlRes .= "\n\nNEW: XML structured data of the results can now be accessed through: \nhttp://www.predictprotein.org/visualpp-cgi-bin/predictprotein_xml_source?res_id=".$resId;
 	}
 	$urlEspritRes = "http://www.predictprotein.org/cgi/pp/ESPript.cgi?FRAMES=YES&frompp=on&alnfile0=$urlRes";
  	print $fhoutLoc 
@@ -8784,7 +8788,8 @@ sub extrHdrOneLine {
 
                                 # normal snap
     #$optRun="blast,pfam,profbval,snap"            if ($lineLoc =~ /snap/);
-    $optRun="blast,pfam,profbval,$1" if ($lineLoc =~ /(snap[\_only]+)/);
+    $optRun="blast,pfam,profbval,$1" if ($lineLoc =~ /(snap[\_only]*)/); #NOTE: xxgy when snap is integrated into the main PP interface this needs to be tweaked in a way 
+                                                                         #    that the additional programs are added to the run process and dont replace the requested programs 
 
     $optRun.=",strict"        if ($lineLoc=~/(run|do|use) (strict)/i);
     $optRun.=",nonstrict"        if ($lineLoc=~/(run|do|use) (non-strict)/i);

@@ -184,7 +184,7 @@ use strict;
 		
 	}
 
-	my $sql  = "INSERT INTO  results (NAME,  TIMECREATED, REQ_NAME, REQ_ID ) VALUES ('$job_id',NOW(), '$req_name', $dbid) ON DUPLICATE KEY UPDATE TIMECREATED = values(TIMECREATED)";
+	my $sql  = "INSERT INTO  results (NAME,  TIMECREATED, REQ_NAME, REQ_ID ) VALUES ('$job_id',NOW(), '$req_name', $dbid) ON DUPLICATE KEY UPDATE NAME = values(NAME), TIMECREATED = values(TIMECREATED)";
 	my $sql2 = "INSERT INTO  results_content (res_id, CONTENT) VALUES (?,COMPRESS(?)) ON DUPLICATE KEY UPDATE CONTENT = values(CONTENT)";
 	
 	eval{ # Start TX
