@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- *****************************************************************************
 	PredictProtein
-	Version: 	$Revision: 1.1 $
-	Date:		$Date: 2008/11/17 18:00:00 $
+	Version: 	$Revision: 1.2.2 $
+	Date:		$Date: 2009/02/13 19:30:00 $
 
 	Copyright (c) 2008 László Kaján
 	Some rights reserved.
@@ -16,6 +16,13 @@
          -DecisionSoft XML schema Validator (also validates XML schema instances), http://tools.decisionsoft.com/schemaValidate/index.jsp
          -Validome XML-DTD and Schema Validator, http://www.validome.org/grammar/validate/
     -->
+    <xs:complexType name="entryKeyType">
+        <xs:annotation><xs:documentation>If `entryKey' is an element, we can collect all keys very efficiently using the Element::getElementsByTagName() DOM method.
+            This would not be the case with a `entryKey' property. However the actual value of the key is better stored in a property.
+        </xs:documentation></xs:annotation>
+        <xs:attribute name="entryKeyValue" type="xs:string" use="required"/>
+    </xs:complexType>
+
     <!--  Name definition begins  -->
     <xs:complexType name="geneNameType">
         <xs:annotation>
@@ -331,11 +338,11 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
+            <xs:element name="entryKey" type="entryKeyType"/>
             <xs:element name="citation" type="citationType"/>
             <xs:group ref="sptrCitationGroup"/>
         </xs:sequence>
         <xs:attribute name="evidence" type="xs:string" use="optional"/>
-        <xs:attribute name="key" type="xs:string" use="required"/>
     </xs:complexType>
     <!--  Citation type section ends  -->
     <!--  Comment definition begins  -->
@@ -605,6 +612,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
+            <xs:element name="entryKey" type="entryKeyType"/>
             <xs:element name="predText" type="xs:string" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>Unstructured prediction string for simple predictions: ``your protein appears as compact, as a globular domain'' |
@@ -634,9 +642,7 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:attribute name="run" type="xs:nonNegativeInteger" use="required"/> <!-- At present there always is only one run (run 0) -->
         <xs:attribute name="ref" type="xs:string" use="optional"/> <!-- ref to publication -->
-        <xs:attribute name="key" type="xs:string" use="required"/>
     </xs:complexType>
     <xs:complexType name="predictionRunGroupType">
         <xs:annotation>
@@ -649,7 +655,7 @@
                 <xs:complexType>
                     <xs:complexContent>
                         <xs:extension base="predictionRunType">
-                            <xs:sequence>
+                            <xs:sequence minOccurs="0"> <!-- when there are no regions predicted, we also do not get the parameters -->
                                 <xs:element name="parameters">
                                     <xs:complexType>
                                         <xs:sequence>
@@ -674,7 +680,7 @@
                     </xs:complexContent>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="predRunGLOBE" type="predictionRunType" minOccurs="0" maxOccurs="unbounded"/> <!-- GLOBE run - globularity prediction -->
+            <xs:element name="predRunGLOBE" type="predictionRunType" minOccurs="0" maxOccurs="unbounded" /> <!-- GLOBE run - globularity prediction -->
             <xs:element name="predRunProfTMB" minOccurs="0" maxOccurs="unbounded"> <!-- ProfTMB run - transmembrane beta barrel prediction -->
                 <xs:complexType>
                     <xs:complexContent>
@@ -696,6 +702,7 @@
             <xs:documentation>Database cross-references, equivalent to the flatfile format's DR line.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
+            <xs:element name="entryKey" type="entryKeyType"/>
             <xs:element name="property" type="propertyType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="type" type="xs:string" use="required">
@@ -709,7 +716,6 @@
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="evidence" type="xs:string" use="optional"/>
-        <xs:attribute name="key" type="xs:string" use="required"/>
     </xs:complexType>
     <xs:complexType name="propertyType">
         <xs:attribute name="type" type="xs:string" use="required"/>
@@ -742,7 +748,7 @@
             <xs:documentation>Alignment, a form of database cross-reference.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="dbReference" type="dbReferenceType" maxOccurs="unbounded"/>
+            <xs:element name="dbReference" type="dbReferenceType" maxOccurs="1"/>
             <!--xs:element name="alignedBy" minOccurs="0">
                 <xs:complexType>
                     <xs:attribute name="value" type="xs:string" use="required"/>
@@ -914,17 +920,17 @@
         <xs:attribute name="ref" type="xs:string" use="optional"/>
         <xs:attribute name="soTermId" type="xs:string" use="optional"/> <!-- Sequence Ontology (SO, http://www.sequenceontology.org/) term id, optional for now -->
     </xs:complexType>
-    <xs:complexType name="solventAccessibilityFeatureType">
+    <xs:complexType name="disorderedRegionFeatureType">
         <xs:sequence>
             <xs:element name="location" type="locationType"/>
             <xs:element name="featureString">
                 <xs:annotation>
-                    <xs:documentation>10 state accessibility (0-1, 1-4, 4-9, 9-16, 16-25, 25-36, 36-49, 49-64, 64-81, 81-100)</xs:documentation>
+                    <xs:documentation>D - disorder, '-' - order</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
                         <xs:whiteSpace value="collapse"/>
-                        <xs:pattern value="([\s0-9])+"/>
+                        <xs:pattern value="[\sD-]+"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -935,7 +941,34 @@
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
                         <xs:whiteSpace value="collapse"/>
-                        <xs:pattern value="([\s0-9])+"/>
+                        <xs:pattern value="[\s0-9]+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="solventAccessibilityFeatureType">
+        <xs:sequence>
+            <xs:element name="location" type="locationType"/>
+            <xs:element name="featureString">
+                <xs:annotation>
+                    <xs:documentation>10 state accessibility (0-1, 1-4, 4-9, 9-16, 16-25, 25-36, 36-49, 49-64, 64-81, 81-100)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:whiteSpace value="collapse"/>
+                        <xs:pattern value="[\s0-9]+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="reliability">
+                <xs:annotation>
+                    <xs:documentation>10 state reliability</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:whiteSpace value="collapse"/>
+                        <xs:pattern value="[\s0-9]+"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -951,7 +984,7 @@
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
                         <xs:whiteSpace value="collapse"/>
-                        <xs:pattern value="([\sEHL])+"/>
+                        <xs:pattern value="[\sEHL]+"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -974,7 +1007,7 @@
             <xs:documentation>Group for alignments from a certain provider.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="alignment" type="alignmentType" maxOccurs="unbounded"/>
+            <xs:element name="alignment" type="alignmentType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="provider" type="xs:string" use="required"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
@@ -1016,17 +1049,19 @@
         </xs:annotation>
         <xs:sequence>
             <xs:element name="feature" type="featureType" minOccurs="0" maxOccurs="unbounded"/> <!-- allow 'nothing was predicted' -->
+            <xs:element name="disorderedRegion" type="disorderedRegionFeatureType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="secondaryStructures" type="secondaryStructureFeatureType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="solventAccessibility" type="solventAccessibilityFeatureType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="provider" type="xs:string" use="required"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
-        <xs:attribute name="ref" type="xs:string" use="optional"/>
-        <xs:attribute name="predRunRef" type="xs:string" use="optional"/> <!-- Reference to the "key" attribute of the respective prediction run -->
+        <xs:attribute name="ref" type="xs:string" use="optional"/> <!-- Reference to the `entryKey' of the respective reference -->
+        <xs:attribute name="predRunRef" type="xs:string" use="optional"/> <!-- Reference to the `entryKey' of the respective prediction run -->
     </xs:complexType>
     <!--  Organism definition begins  -->
     <xs:complexType name="organismType">
         <xs:sequence>
+            <xs:element name="entryKey" type="entryKeyType"/>
             <xs:element name="name" type="organismNameType" maxOccurs="unbounded"/>
             <xs:element name="dbReference" type="dbReferenceType" maxOccurs="unbounded"/>
             <xs:element name="lineage" minOccurs="0">
@@ -1037,7 +1072,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:attribute name="key" type="xs:string" use="required"/>
     </xs:complexType>
     <!--  Organism definition ends  -->
 
@@ -1104,6 +1138,9 @@
         <xs:annotation>
             <xs:documentation>The evidence element is equivalent to the actual evidence (**EV line).</xs:documentation>
         </xs:annotation>
+        <xs:sequence>
+            <xs:element name="entryKey" type="entryKeyType"/>
+        </xs:sequence>
         <xs:attribute name="category" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
@@ -1116,7 +1153,6 @@
         <xs:attribute name="type" use="required" type="xs:string"/>
         <xs:attribute name="attribute" type="xs:string" use="optional"/>
         <xs:attribute name="date" type="xs:date" use="required"/>
-        <xs:attribute name="key" type="xs:string" use="required"/>
     </xs:complexType>
     <!--  Evidence definition ends  -->
     <!--  Protein Existence definition starts -->
@@ -1187,10 +1223,16 @@
             <xs:attribute name="modified" type="xs:date" use="required"/>
             <xs:attribute name="version" type="xs:integer" use="required"/>
         </xs:complexType>
+
+        <!-- key -->
+        <xs:unique name="entryKey">
+            <xs:annotation><xs:documentation>`entryKey' is the unique id attribute in a predictprotein element instance. It is not required on all elements, but if given it must be unique.</xs:documentation></xs:annotation>
+            <xs:selector xpath=".//*"/> <!-- libxml2 does not seem to validate ".//key" "@value" type of keys - it always validates the document -->
+            <xs:field xpath="@entryKeyValue"/>
+        </xs:unique>
     </xs:element>
-
-
     <xs:element name="copyright" type="xs:string"/>
+
     <!--  Definition of the content of the root element "predictprotein"  -->
     <xs:element name="predictprotein">
         <xs:annotation>
@@ -1203,6 +1245,7 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
 </xs:schema>
 
 <!--
