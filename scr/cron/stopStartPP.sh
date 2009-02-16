@@ -6,7 +6,7 @@
 #
 #=============================================================
 #
-. $HOME/.bashrc
+. $HOME/.profile
 echo `date` >> $HOME/server/log/crontab.log
 echo 'run $HOME/server/scr/scannerPPctrl.pl stop' >> $HOME/server/log/crontab.log
 $HOME/server/scr/scannerPPctrl.pl stop >> $HOME/server/log/crontab.log

@@ -2,6 +2,7 @@
 use strict; 
 use warnings;
 use Getopt::Long;
+use Carp qw| cluck :DEFAULT |;
 
 my $cmd_opts = {
   help => 0,
@@ -51,10 +52,13 @@ sub            new
 
 sub            _initialize
 {
-	use lib $ENV{PP_LIB};
-	require $ENV{PPENV};
+	use lib $ENV{HOME}.'/server/scr/lib';
+	use lib $ENV{HOME}.'/server/scr/';
+	
+	#require $ENV{HOME}.'/server/scr/envPP.pm';
 
 	#use lib '.';
+	require envPP;
 	require _PP_DB;
 	
 
@@ -62,7 +66,7 @@ sub            _initialize
 	$self->verbose( $__p->{'verbose'} );
 	$self->debug( $__p->{'debug'} );
 	$self->{errMsg} = "";
-	$self->{sgeParamFile}= "sgeParams";
+	$self->{sgeParamFile}= $ENV{HOME}."/server/scr/scanner/sgeParams";
 	
 	use constant FAILED      =>   4;
 	use constant RUNNING     =>   3;
@@ -88,7 +92,8 @@ sub            _initialize
 
 	die ("Could not establish database connnection") if (!defined $self->{dbCon});
 	my $pid = $$;
-	open (FH, ">pid");
+	my $pidFile = $ENV{"HOME"}."/server/scr/scanner/pid";
+	open (FH, ">$pidFile");
 	print FH $pid || die ("Could not log process ID reason: $!");
 	close FH;
 	
@@ -167,7 +172,14 @@ sub 		submitJobToQueue
 		my $tmpFileHandler = \*FI;
 		open (FI, $self->{sgeParamFile}) || die ("Could not open sgeparamfile: $self->{sgeParamFile} System message $!");
 		my $ref_sgePrefs = readParam($tmpFileHandler);
+		
+		
 		my %sgePrefs = %$ref_sgePrefs;
+# 		$ENV{SGE_ROOT}= $sgePrefs{sgeRoot};   #important: eed to set env variable for sge otherwise it would die	
+# 		$ENV{SGE_CELL}=$sgePrefs{sgeCell};
+# 		$ENV{SGE_ARCH}=$sgePrefs{sgeArch};
+# 		$ENV{SGE_QMASTER_PORT}= $sgePrefs{sgeQmasterPort};	
+# 		$ENV{SGE_EXECD_PORT}= $sgePrefs{sgeExecdPort};
 		$sgeCommand =  $sgePrefs{exeSge}. " ";
 	#	$sgeCommand .= $sgePrefs{defaultPriority}. " ";
 		$sgeCommand .= $sgePrefs{outputlog}. " ";
@@ -385,8 +397,8 @@ sub 		sysDate
 #-------------------------------------------------------------------------------
     my (@Date,$Date);
     my @tmp=(			# HARD_CODED
-	  "/home/$ENV{USER}/perl/",
-	  "/home/$ENV{USER}/server/scr/lib/"
+	  "$ENV{HOME}/perl/",
+	  "$ENV{HOME}/server/scr/lib/"
 	  );
     my $exe_ctime="ctime.pl";	# local ctime library
 
@@ -449,8 +461,12 @@ sub 		sysSystem
     
 				# ------------------------------
 				# write
-#    print $fhLoc "--- system: \t $cmdLoc\n" if ($fhLoc);
-    print  "--- system: \t $cmdLoc\n" if ($fhLoc);
+#    print $fhLoc "--- ".__FILE__.':'.__LINE__." system: \t $cmdLoc\n" if ($fhLoc);
+    if($fhLoc)
+    {
+        print  "---  system: \t $cmdLoc\n";
+        #cluck( "---  system: \t $cmdLoc" );
+    }
     
 
 				# ------------------------------
@@ -463,7 +479,7 @@ sub 		sysSystem
 
 
 
-__END__
+1;
 
 
 

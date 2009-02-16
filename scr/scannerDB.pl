@@ -50,7 +50,8 @@ sub submit{
 
 
 sub init_db{
-    return _PP_DB->new('bonsai.bioc.columbia.edu','PREDICTPROTEIN','phd','Pr3d8ct');
+#    return _PP_DB->new('bonsai.bioc.columbia.edu','PREDICTPROTEIN','phd','Pr3d8ct');
+    return _PP_DB->new('cherry.bioc.columbia.edu','PREDICTPROTEIN','phd','Pr3d8ct');
 }
 
 sub close_db{

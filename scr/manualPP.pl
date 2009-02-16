@@ -179,7 +179,10 @@ if (-e $file_result) {
 				# ------------------------------
 				# run it (system call)
 				# ------------------------------
-$cmd="$exe_ppPredict $fileTo_pred $file_result $usr $pwd $mode 3155 $debug";
+$cmd="$exe_ppPredict $fileTo_pred $file_result $usr $pwd $mode 90000 $debug";
+# Something like this:
+#/nfs/data5/users/ppuser/server/scr/predictPP.pl /nfs/data5/users/ppuser/server/scr/tst/NCYM_HUMAN /nfs/data5/users/ppuser/server/scr/tst/NCYM_HUMAN.pred rost@columbia.columbia.edu pwd testPP 3155 -d
+if( $debug eq '-d' ) { warn( $cmd ); }
 system("$cmd");
 
 exit;

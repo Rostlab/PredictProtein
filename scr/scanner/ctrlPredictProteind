@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 use CGI::Carp qw| cluck :DEFAULT |;
 use IO::File; 
-use Watchdog::Process;
 use Getopt::Long;
 use strict; 
 ###############################
@@ -24,7 +23,7 @@ use strict;
   
   };
 
-  use constant PIDFILE=>"pid";
+  use constant PIDFILE=>$ENV{"HOME"}."/server/scr/scanner/pid";
   
   
   my $ret = 0;
@@ -47,10 +46,10 @@ use strict;
   __FILE__ =~ /([^\/]+)$/; my $myname = $1;
   
   my $d=0;
-  my $path= $ENV{'PP_SCR'}."/scanner";
+  my $path= $ENV{"HOME"}."/server/scr/scanner/";
   my $exe = $path."/PredictProteind";
-  my $logOutFile = $ENV{"PP_LOG"}."/scan.out";
-  my $logErrFile = $ENV{"PP_LOG"}."/scan.err";
+  my $logOutFile = $ENV{"HOME"}."/server/log/scan.out";
+  my $logErrFile = $ENV{"HOME"}."/server/log/scan.err";
   
   
   my $getopt_result = GetOptions( $cmd_opts, @opt_spec );

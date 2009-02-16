@@ -213,6 +213,8 @@ INIT:{
 #    $dppScrMail=   $dppScrSrv.  "ut/";       # procmail scripts: note only for .procmail!!!
     $dppScrTxt=     $dppScrSrv. "txt/";	     # all kinds of blabla
     $dppScrUt=      $dppScrSrv. "ut/";       # utilities for server scripts
+    $dppScrVPP=      $dppScrSrv. "visualPP_scripts/";       # utilities for server scripts
+
 				# ------------------------------
 				# other programs
 				# ------------------------------
@@ -245,12 +247,15 @@ INIT:{
     # GY Added 2004_01_30
     $dppPrgProfCon    = $dppScrPub.	"profcon/";                    # profcon
     $dppPrgPrenup     = $dppScrPub.	"prenup/";                    # prenup
+    $dppPrgMdisorder     = $dppScrPub.	"md/";                        # MD - meta disorder 
     $dppPrgEcgo        = $dppScrPub.	"ecgo/";                    # ecgo
     $dppPrgPcc        = $dppScrPub.	"pcc/";                        # predict cell cycle
     $dppPrgChop       = $dppScrPub.	"chopper/";                       # CHOP
     $dppPrgChopper    = $dppScrPub.     "chopper/";                    # CHOPPER
     $dppPrgIsis       = $dppScrPub.	"isis/";                       # ISIS
+    $dppPrgDisis       = $dppScrPub.    "disis/";                       # DISIS                  
     $dppPrgProfBval   = $dppScrPub.	"profbval/";                   # PROFbval
+    $dppPrgNORSnet    = $dppScrPub.	"norsnet/";                    # NORSnet
     $dppPrgSnap   =    $dppScrPub.	"snap/";                                # snap
     $dppPrgProfTmb    = $dppScrPub.	"proftmb/";                    # proftmb
     $dppPrgLocTar      = $dppScrPub.	"LOCtarget_v1/";               # locTarget
@@ -398,6 +403,10 @@ INIT:{
 				                                     #   - shorten log
 	   'exe_status',        $dppScrUt.   "wwwStatusPP.pl",       # writes status file for WWW display
 #	   'exe_svcSubmitter',  $dppPpLoc.   "submit2Svcs.pl",       # script to submit to third party services
+
+
+#	   'exe_convert2xml',   $dppScrUt.   "pptoxml.sh",       # shell script to run javaclasses to convert results to XXML
+	   'exe_convert2xml',   $dppScrVPP.   "flat2xml.pl",       # shell script to run javaclasses to convert results to XXML
 
                                 # ----------------------------------------
 				# PERL SCRIPTS AND PACKAGES
@@ -710,15 +719,17 @@ INIT:{
 				# ==================================================
 				# Alignment Blast
 				# ==================================================
-	   'exeBlastp',         $dppScrBin.   "blastp."            .$ARCH,
+				
+#	   'exeBlastp',         $dppScrBin.   "blastp."            .$ARCH, # XX GY 052008 blastp running through blastall now
+	   'exeBlastp',         $dppScrBin.   "blastall_latest."            .$ARCH,
 #	   'exeBlastp',         $dppPrgBlastp."bin/blastp."        .$ARCH,
 #	   'exeBlastpFilter',   $dppPrgMax.   "scr/filter_blastp.pl",
 	   'exeBlastpFilter',   $dppPrgMax.   "scr/filter_blastp_big.pl",
 
 	   'envBlastMat',       $dppPrgBlastp."blastapp/matrix/",
-	   'envBlastDb',        $dppData.     "blast",
+	   'envBlastDb',        $dppData.     "blast/",
 	   
-	   'parBlastDb',        "swiss",     # database to run BLASTP against
+	   'parBlastDb',         "swiss",     # database to run BLASTP against
 	   'parBlastDbPdb',     "pdb",
 	   'parBlastDbSwiss',   "swiss",
 	   'parBlastDbTrembl',  "trembl",
@@ -830,7 +841,7 @@ INIT:{
 	   'parMaxhomSort',     "DISTANCE",  # standard job
 	   'parMaxhomProfOut',  "NO",        # standard job
 
-	   'parMaxhomTimeOut',  600,         # secnd ~ 10min, then: send alarm MaxHom suicide!
+	   'parMaxhomTimeOut',  5,         # secnd ~ 10min, then: send alarm MaxHom suicide!
 
 	   'parMinLaliPdb',     30,          # minimal length of ali to report: 'has 3D homo'
 	   
@@ -893,7 +904,8 @@ INIT:{
 #	   'parProdomBlastDb',  $dppPrgProdom.  "mat/prodom_36",
 #	   'parProdomBlastDb',  $dppPrgProdom.  "mat/prodom_99_1",
 #	   'parProdomBlastDb',  $dppPrgProdom.  "mat/prodom_99_2",
-	   'parProdomBlastDb',  $dppPrgProdom.  "mat/prodom_00_1",
+#	   'parProdomBlastDb',  $dppPrgProdom.  "mat/prodom_00_1",
+	   'parProdomBlastDb',  $dppData.       "blast/prodom",
 	   'parProdomBlastN',   "500",
 	   'parProdomBlastE',   "0.001",       # E=0.1 when calling BLASTP (PRODOM)
 	   'parProdomBlastP',   "0.001",       # probability cut-off for PRODOM
@@ -932,23 +944,28 @@ INIT:{
 				# ==================================================
 				# other jobs: profcon
 				# ==================================================
-	   'exeProfCon',        $dppPrgProfCon. "run_prof08_CASP.pl", #this is the default profcon
-#	   'exeProfCon',        $dppPrgProfCon. "run_prof08.pl",
+	   'exeProfCon',        $dppPrgProfCon. "run-PROFcon-2008.pl", #this is the default profcon
 	   'dirProfCon',        $dppPrgProfCon,
 
 
 				# ==================================================
-				# other jobs: prenup
+				# other jobs: ucon (aka prenup)
 				# ==================================================
-	   'exePrenup',         $dppPrgPrenup. "runPreNUP.pl", #this is the default profcon
-#	   'exeProfCon',        $dppPrgProfCon. "run_prof08.pl",
+	   'exePrenup',         $dppPrgPrenup. "runPreNUP.pl", #this is the default ucon
 	   'dirPrenup',        $dppPrgPrenup,
+
+				# ==================================================
+				# other jobs: Mdisorder
+				# ==================================================
+	   #'exeMdisorder',      $dppPrgMdisorder. "runMDnoCont.pl", #this is the default Mdisorder
+	   'exeMdisorder',      $dppPrgMdisorder. "runMDnoCont_temp.pl", #this is the default Mdisorder
+	   'exeMdisorder_slow',  $dppPrgMdisorder. "runMD.pl",
+	   'dirMdisorder',      $dppPrgMdisorder,
 
 				# ==================================================
 				# other jobs: ecgo
 				# ==================================================
-	   'exeEcgo',           $dppPrgEcgo. "ecgo.py", #this is the default profcon
-#	   'exeProfCon',        $dppPrgProfCon. "run_prof08.pl",
+	   'exeEcgo',           $dppPrgEcgo. "ecgo.py", #this is the default ecgo
 	   'dirEcgo',           $dppPrgEcgo,
 
 
@@ -974,6 +991,14 @@ INIT:{
 	   'parSolved',            "no",# defualt: find solved is false 
 
 
+                                # ==================================================             
+                                # other jobs: Predict Prot-Prot interaction DISIS YO             
+                                # ==================================================             
+           'exeDisis',            $dppPrgDisis. "readSeqDNA-SVM-server.pl",
+           'dirDisis',            $dppPrgDisis,
+
+
+
 				# ==================================================
 				# other jobs: NL-Prot
 				# ==================================================
@@ -994,6 +1019,14 @@ INIT:{
 #           'exeProfTmb',            $dppPrgProfTmb. "proftmb.pl",
            'exeProfBval',            $dppPrgProfBval. "runPROFbval.pl",
            'dirProfBval',            $dppPrgProfBval,
+
+
+
+                               # ==================================================
+				# other jobs: Predict NORSnet
+                                # ==================================================
+           'exeNORSnet',            $dppPrgNORSnet. "runNORSnet.pl",
+           'dirNORSnet',            $dppPrgNORSnet,
 
                                 # ==================================================
 				# other jobs: snap
@@ -1152,15 +1185,18 @@ INIT:{
 	   'fileAppHtmlHeadChop',      $dppScrTxt."app/". "HtmlHead_chop.html",
 	   'fileAppHtmlHeadProfCon',   $dppScrTxt."app/". "HtmlHead_profcon.html",
 	   'fileAppHtmlHeadPrenup',    $dppScrTxt."app/". "HtmlHead_prenup.html",
+	   'fileAppHtmlHeadMdisorder',    $dppScrTxt."app/". "HtmlHead_Mdisorder.html",
 	   'fileAppHtmlHeadEcgo',    $dppScrTxt."app/". "HtmlHead_ecgo.html",
 	   'fileAppHtmlHeadProfBval',   $dppScrTxt."app/". "HtmlHead_profbval.html",
+	   'fileAppHtmlHeadNORSnet',   $dppScrTxt."app/". "HtmlHead_norsnet.html",
 	   'fileAppHtmlHeadSnap',   $dppScrTxt."app/". "HtmlHead_snap.html",
 	   'fileAppHtmlHeadIsis',      $dppScrTxt."app/". "HtmlHead_isis.html",
+           'fileAppHtmlHeadDisis',      $dppScrTxt."app/". "HtmlHead_disis.html",
 #	   'fileAppHtmlHeadProfBval',      $dppScrTxt."app/". "HtmlHead_ptofbval.html",
 	   'fileAppHtmlHeadNLProt',   $dppScrTxt."app/". "HtmlHead_nlprot.html",
 	   'fileAppHtmlHeadAgape',      $dppScrTxt."app/"."HtmlHead_agape.html",
            'fileAppHtmlHeadConBlast',      $dppScrTxt."app/"."HtmlHead_conblast.html",
-	   'fileAppHtmlHeadProfBval',  $dppScrTxt."app/"."HtmlHead_profbval.html",
+#	   'fileAppHtmlHeadProfBval',  $dppScrTxt."app/"."HtmlHead_profbval.html",
 	   'fileAppHtmlHeadSnap'    ,  $dppScrTxt."app/"."HtmlHead_snap.html",
 	   'fileAppHtmlFoot',          $dppScrTxt."app/". "HtmlFoot.html",
 	   'fileAppHtmlMviewStyles',   $dppScrTxt."app/". "HtmlMviewStyles.html",
@@ -1210,10 +1246,10 @@ INIT:{
 		  "fileAppDisulfind",      "fileAppSegNorm",      "fileAppSegGlob",      
 		  "fileAppMsfWarning",   "fileAppSafWarning",   "fileAppWarnSingSeq",
 		  "fileAppTopitsNohom",  "fileAppIlyaPdb",      "fileAppMembrane",
-		  "fileAppThreader",     "fileAppProfCon",     "fileAppPcc", "fileAppChop", "fileAppPrenup", "fileAppEcgo",
-		  "fileAppChopper", "fileAppIsis","fileAppNLProt", "fileAppR4S","fileAppConSurf","fileAppConSeq",
+		  "fileAppThreader",     "fileAppProfCon",     "fileAppPcc", "fileAppChop", "fileAppPrenup","fileAppMdisorder", "fileAppEcgo","fileAppGoogleGroups",
+		  "fileAppChopper", "fileAppIsis", "fileAppDisis", "fileAppNLProt", "fileAppR4S","fileAppConSurf","fileAppConSeq",
 		  "fileAppProfTmb",      "fileAppLocTar",      "fileAppPfam", "fileAppAgape",  "fileAppConBlast", 
-		  "fileAppRetBlastp",    "fileAppRetBlastPsi", "fileAppProfBval","fileAppSnap",
+		  "fileAppRetBlastp",    "fileAppRetBlastPsi", "fileAppProfBval","fileAppSnap", "fileAppNORSnet",
 		  "fileAppRetMsf",       "fileAppRetNoali",
 
 		  "fileAppRetTopitsOwn", "fileAppRetTopitsHssp","fileAppRetTopitsStrip",
@@ -1442,8 +1478,8 @@ sub envMethods {
 	     'task'    => 'alignment and database search: iterated, profile-based search',
 	     'taskabbr'=> 'ali',
 	     'admin'   => 'BLASTP admin,blast-help@ncbi.nlm.nih.gov',
-	     'doneby'  => 'S F Altschul, T L Madden, A A Schäffer, J Zhang, Z Zhang, W Miller, and D J Lipman',
-	     'quote'   => 'S F Altschul, T L Madden, A A Schäffer, J Zhang, Z Zhang, W Miller, and D J Lipman:: Gapped BLAST and PSI-BLAST: a new generation of protein database search programs. Nucleic Acids Res, 25,3389-3402, 1997',
+	     'doneby'  => 'S F Altschul, T L Madden, A A Schï¿½ffer, J Zhang, Z Zhang, W Miller, and D J Lipman',
+	     'quote'   => 'S F Altschul, T L Madden, A A Schï¿½ffer, J Zhang, Z Zhang, W Miller, and D J Lipman:: Gapped BLAST and PSI-BLAST: a new generation of protein database search programs. Nucleic Acids Res, 25,3389-3402, 1997',
 	     'des',    => 'PSIblast is a fast, yet sensitive database search program', 
 	     'abbr'    => 'PSIblast',
 	     'version' => '2000_06'

@@ -163,6 +163,7 @@
 #    - a not mail result file is old ---> remove it
 #
 #------------------------------------------------------------------------------#
+use Carp qw| cluck :DEFAULT |;
 
 $[ =1 ;				# start counting at 1
 				# --------------------------------------------------
@@ -952,19 +953,24 @@ sub scannerPredict {
 #	$tmpHack =`grep conblast $fileNew`; $prmPriority = " -p 0 "   if ($tmpHack);
 	# == END TMP HACK
 
-# 	$sgeExe = "$qsubBin -o /tmp -e /tmp -S /bin/bash "; 
+#	$sgeExe = "$qsubBin -o /tmp -e /tmp -S /bin/bash "; 
+#	$sgeExe = "$qsubBin -o /tmp -e /tmp -b yes "; 
 # 	$sgeExe = "$qsubBin -S /bin/bash "; 
-	$sgeExe = "$qsubBin -o /dev/null -e /dev/null -S /bin/bash  "; 
-#	$sgeExe = "$qsubBin ";
+
+	#$sgeExe = "$qsubBin -b yes -o /dev/null -e /dev/null -S /bin/bash  -V  "; 
+	$sgeExe = "$qsubBin -b yes -o /tmp -e /tmp -S /bin/bash  -V  "; 
+#	$sgeExe = "$qsubBin ";/nfs/data5/users/ppuser/
 #	$sgeExe .= $prmPriority;
 
 
 	$sgeSubmitFileName .= $filePID.".sge.sh";
 	open ($sgeFileHandle,">$sgeSubmitFileName");
 	print $sgeFileHandle "#!/bin/bash\n";
-	print  $sgeFileHandle "$cmd\n";
+	print $sgeFileHandle ". /nfs/data5/users/ppuser/.profile \n";
+	print $sgeFileHandle "$cmd\n";
 	close $sgeFileHandle;  
 	$cmd = "$sgeExe $sgeSubmitFileName"; 
+	chmod (0700,  $sgeSubmitFileName);
 
 # END of qeueue submission
 
@@ -972,7 +978,7 @@ sub scannerPredict {
 	# the email address of the user is loged as well for lookup 
 	# purposes later
 #	($Lok,$msgSys)=&sysSystem("$cmd");
-	# using a direct pipe to copy system response.
+	# using 4160a direct pipe to copy system response.
 	$msgSys=`$cmd`;	chomp($msgSys);
 	# xx TODO add safety mechnism in case of failure
 	$qID = $msgSys;
@@ -2499,7 +2505,11 @@ sub sysSystem {
     
 				# ------------------------------
 				# write
-    print $fhLoc "--- system: \t $cmdLoc\n" if ($fhLoc);
+    if( $fhLoc )
+    {
+        print $fhLoc "---  system: \t $cmdLoc\n";
+        #cluck( "---  system: \t $cmdLoc" );
+    }
     
 
 				# ------------------------------
@@ -2516,3 +2526,4 @@ sub sysSystem {
 
 
 
+# vim:ai:

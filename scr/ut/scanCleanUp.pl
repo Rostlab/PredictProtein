@@ -64,10 +64,10 @@ $fileLog=$dirRun.$$.".tmp";	# HARD_CODED
 $fhin="FHIN";
 				# ------------------------------
 				# list files
-print "--- system \t 'ls -l $dirRun >> $fileLog'\n"      if ($Lscreen);
+print "--- ".__FILE__.':'.__LINE__." system \t 'ls -l $dirRun >> $fileLog'\n"      if ($Lscreen);
 system("ls -l $dirRun >> $fileLog");
 
-print "--- system \t 'ls -l $dirRunErr >> $fileLog'\n" if ($Lscreen);
+print "--- ".__FILE__.':'.__LINE__." system \t 'ls -l $dirRunErr >> $fileLog'\n" if ($Lscreen);
 
 system("ls -l $dirRunErr >> $fileLog");
 	    
@@ -86,14 +86,14 @@ while (<$fhin>) {
 	$fileDel=$dirUnixError."$file" if (! -e $fileDel);
 	next if (-d $fileDel); # skip if directory
 	if (-e $fileDel){
-	    print "--- system \t '\\rm $fileDel'\n" if ($Lscreen);
+	    print "--- ".__FILE__.':'.__LINE__." system \t '\\rm $fileDel'\n" if ($Lscreen);
 	    system("\\rm $fileDel");}}
     elsif (($dateIn =~/\d+/)&&($day != $dateIn)){
 	$fileDel=$dirUnix."$file";
 	$fileDel=$dirUnixError."$file" if (! -e $fileDel);
 	next if (-d $fileDel); # skip if directory
 	if (-e $fileDel){
-	    print "--- system \t '\\rm $fileDel'\n" if ($Lscreen);
+	    print "--- ".__FILE__.':'.__LINE__." system \t '\\rm $fileDel'\n" if ($Lscreen);
 	    system("\\rm $fileDel");}}
     else {
 	print "--- keep \t '$file' (from today)\n"  if ($Lscreen);

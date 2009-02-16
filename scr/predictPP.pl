@@ -168,7 +168,7 @@ $hname= `hostname`;open (FO, ">$fileTo_pred.$hname");close FO;
 
 
 ($Lok,$txt)=
-    &predictPP'predict($fileTo_pred,$file_result,$submitter,$password,$origin,$dbid, $debug); # '
+    &predictPP::predict($fileTo_pred,$file_result,$submitter,$password,$origin,$dbid, $debug);
 
 &ctrlAbort("*** $scrName failed to return 1\n***        instead gave ok=$Lok, txt=$txt\n".
 	   "*** err=5") 
