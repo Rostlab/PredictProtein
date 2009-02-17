@@ -258,13 +258,15 @@ sub ini {
 	$par{"dirHome"}=            $ENV{"HOME"}."/server/pub/prof/";
     }
     elsif (defined $USERID && $USERID=~/rost/){
-	$par{"dirHome"}=            "/home/rost/pub/";
+	#$par{"dirHome"}=            "/home/rost/pub/";
+	$par{"dirHome"}=            "/nfs/data5/users/ppuser/server/pub/";
     }
     elsif ($0=~/molbio\/maxhom/){
 	$par{"dirHome"}=            "/usr/pub/molbio/maxhom/";
     }
     elsif ($0=~/maxhom/){
-	$par{"dirHome"}=            "/home/rost/pub/maxhom/";
+	#$par{"dirHome"}=            "/home/rost/pub/maxhom/";
+	$par{"dirHome"}=            "/nfs/data5/users/ppuser/server/pub/maxhom/";
     }
     else {
 	$par{"dirHome"}=            "/usr/pub/molbio/prof/";
@@ -625,12 +627,22 @@ sub iniDef {
 				# <<<<<<<<<<<<<<<<<<<<
 				# normal
     #$par{"dirSrc"}=             $par{"dirHome"}.   "lib/";   # all source except for binaries
-    $par{"dirSrc"}=             $par{"dirHome"}.   "";   # all source except for binaries
-    $par{"dirSrcMat"}=          $par{"dirSrc"}.    "mat/";   # general material
-				                             # perl libraries
-    $par{"dirPerl"}=            $par{"dirSrc"}.    "perl/" if (! defined $par{"dirPerl"});
-    $par{"dirPerlScr"}=         $par{"dirPerl"}.   "scr/";   # perl scripts needed
-    $par{"dirBin"}=             $par{"dirHome"}.   "bin/";   # FORTRAN binaries of programs needed
+
+    $par{"dirSrc"}=             $par{"dirHome"}. "";   # all source except for binaries
+    $par{"dirSrcMat"}=          $par{"dirSrc"}.  "mat/";   # general material
+	warn     ($par{"dirSrc"});
+#$par{"dirPerl"}=            $par{"dirSrc"}.  "perl/"   # perl libraries
+    $par{"dirPerl"}=            $par{"dirSrc"}.  "scr/"   # perl libraries
+        if (! defined $par{"dirPerl"});
+    #$par{"dirPerlScr"}=         $par{"dirPerl"}. "scr";    # perl scripts needed
+    $par{"dirPerlScr"}=         $par{"dirHome"}. "scr/";    # perl scripts needed
+    $par{"dirBin"}=             $par{"dirHome"}. "bin/";   # FORTRAN binaries of programs needed
+#     $par{"dirSrc"}=             $par{"dirHome"}.   "";   # all source except for binaries
+#     $par{"dirSrcMat"}=          $par{"dirSrc"}.    "mat/";   # general material
+# 				                             # perl libraries
+#     $par{"dirPerl"}=            $par{"dirSrc"}.    "perl/" if (! defined $par{"dirPerl"});
+#     $par{"dirPerlScr"}=         $par{"dirPerl"}.   "scr/";   # perl scripts needed
+#     $par{"dirBin"}=             $par{"dirHome"}.   "bin/";   # FORTRAN binaries of programs needed
 
     if ($0=~/maxhom/){
 	$par{"dirSrc"}=         $par{"dirHome"}.   "scr/";   # all source except for binaries
