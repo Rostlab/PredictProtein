@@ -19,12 +19,15 @@ sub extract_preds {
  
     while (<PROFIN>) {
 	chomp;
+	### Run only when data section has started
 	if ($datastarted) {
 	    @temp = split /\t/;
 	    for ($c=0; $c<$last_col; $c++) {
 		$str[$c] .= $temp[$col[$c]];
 	    }
 	}
+
+	### Detect start of data section and parse column headers
 	if (/^No/) { 
 	    #if ($prots++ > 100) {exit;}
 	    $datastarted = 1; 
@@ -32,11 +35,15 @@ sub extract_preds {
 	    %fields = ();
 	    $i=0;
 	    foreach $x (@temp) {
-		$fields{$x} = $i++;
+		$fields{$x} = $i++; # creat column # lookup for column name $x in %fields
 	    }
 	    for ($c=0; $c<$last_col; $c++) {
 		$str[$c] = "";
-		$col[$c] = $fields{$extract_cols[$c]};
+		if (exists $fields{$extract_cols[$c]}) {
+		    $col[$c] = $fields{$extract_cols[$c]};
+		}else{
+		    return (1, "### extract_preds: Column header $extract_cols[$c] not found in file $file");
+		}
 	    }
 	    @temp = split /\-/, $file;
 	    $fileroot = $temp[0];
@@ -46,7 +53,7 @@ sub extract_preds {
     for ($c=0; $c<$last_col; $c++) {
 	$output .= $extract_cols[$c]."\t$str[$c]\n";
     }
-    return $output;
+    return (0, $output);
 }
 
 return 1;

@@ -59,11 +59,15 @@ else {$length=$ii+1;}
 
 close(INFASTA);
 
-$iter=(($length-5)*($length-5)/90000);
+
+#### NOT USED #####
+$iter=int(($length-5)*($length-5)/90000);
+if ( ($iter*90000) < (($length-5)*($length-5)/90000) ) {$iter=$iter+1;}
+#################
 
 ##### generate .seg file from fasta file ######
 
-system("${root_dir}/PROGS/seg $input_fasta -x > ${root_dir}/${user_name}.seg");
+system("${root_dir}/PROGS-2008/seg $input_fasta -x > ${root_dir}/${user_name}.seg");
 
 
 $checkfile="${root_dir}/333333.blastpgp";
@@ -72,14 +76,14 @@ if (!-e $checkfile) {
 
 ##### run psi-blast - old 2001 version and prof #######
 
-system ("${root_dir}/PROGS/blastpgp.pl $input_fasta saf maxAli=3000 eSaf=1 exe=/usr/pub/molbio/blast-2.2.2/blastpgp dirOut=${root_dir}/ 1>/dev/null");
+system ("${root_dir}/PROGS-2008/blastpgp.pl $input_fasta saf maxAli=3000 eSaf=1 exe=/usr/pub/molbio/blast-2.2.2/blastpgp dirOut=${root_dir}/ 1>/dev/null");
 
 	} # end of if (!-e $checkfile)
 
 else {
 $filetmp="$root_dir/${user_name}.profcon";
 open(TMP,">$filetmp");
-print TMP "BLAST failed! Sorry, no output from PROFcon"\n";
+print TMP "BLAST failed! Sorry, no output from PROFcon","\n";
 close(TMP);
 die;
 	} # end of else
@@ -93,8 +97,8 @@ $checkfile="${root_dir}/333333-fil.hssp";
 
 if (!-e $checkfile) {
 
-system ("${root_dir}/PROGS/copf.pl ${root_dir}/${user_name}.saf hssp fileOut=${root_dir}/${user_name}.hssp 1>/dev/null");
-system ("${root_dir}/PROGS/hssp_filter.pl ${root_dir}/${user_name}.hssp red=80 fileOut=${root_dir}/${user_name}-fil.hssp 1>/dev/null");
+system ("${root_dir}/PROGS-2008/copf.pl ${root_dir}/${user_name}.saf hssp fileOut=${root_dir}/${user_name}.hssp 1>/dev/null");
+system ("${root_dir}/PROGS-2008/hssp_filter.pl ${root_dir}/${user_name}.hssp red=80 fileOut=${root_dir}/${user_name}-fil.hssp 1>/dev/null");
 
 	} # end of if (!-e $checkfile)
 
@@ -113,7 +117,7 @@ $checkfile="${root_dir}/333333-fil.rdbProf";
 
 if (!-e $checkfile) {
 
-system ("${root_dir}/PROGS/prof ${root_dir}/${user_name}-fil.hssp fileOut=${root_dir}/${user_name}-fil.rdbProf 1>/dev/null");
+system ("${root_dir}/PROGS-2008/prof ${root_dir}/${user_name}-fil.hssp fileOut=${root_dir}/${user_name}-fil.rdbProf 1>/dev/null");
 	
 		} # end of if (!-e $checkfile)
 
@@ -126,18 +130,18 @@ die;
         } # end of else
 
 
-else {print STDOUT "PROF failed!","\n"; die;}
+#else {print STDOUT "PROF failed!","\n"; die;}
 
-system("${root_dir}/COPY/PROGS/gen_nn_input.pl $user_name ${root_dir}/${user_name}-fil.hssp ${root_dir}/${user_name}-fil.rdbProf ${root_dir}/${user_name}.seg");
+system("${root_dir}/PROGS-2008/gen_nn_input-2008.pl $user_name ${root_dir}/${user_name}-fil.hssp ${root_dir}/${user_name}-fil.rdbProf ${root_dir}/${user_name}.seg $iter");
 
-#system("${root_dir}/PROGS/gen_nn_input.pl $user_name ${root_dir}/${user_name}-fil.hssp ${root_dir}/${user_name}-fil.rdbProf ${root_dir}/${user_name}.seg");
+#system("${root_dir}/PROGS-2008/gen_nn_input.pl $user_name ${root_dir}/${user_name}-fil.hssp ${root_dir}/${user_name}-fil.rdbProf ${root_dir}/${user_name}.seg");
 
         } # end of if (system ("grep \"*** No hits found 
 
 else {print STDOUT "NO hits! run with one sequence","\n";
-       system ("${root_dir}/PROGS/prof $input_fasta");
+       system ("${root_dir}/PROGS-2008/prof $input_fasta");
        system ("mv ${root_dir}/${user_name}.rdbProf ${root_dir}/${user_name}-fil.rdbProf");
-system("${root_dir}/PROGS/gen_nn_input_SINGLE.pl $user_name $input_fasta ${root_dir}/${user_name}-fil.rdbProf ${root_dir}/${user_name}.seg");
+system("${root_dir}/PROGS-2008/gen_nn_input_SINGLE.pl $user_name $input_fasta ${root_dir}/${user_name}-fil.rdbProf ${root_dir}/${user_name}.seg $iter");
     }
 
 
@@ -171,9 +175,11 @@ $iterations=$iterations+1;
 
 for ($ii=1; $ii<($iterations+1); $ii++) {
 
-system("${root_dir}/PROGS/titles.pl $user_name $position[$ii]");
+system("${root_dir}/PROGS-2008/titles.pl $user_name $position[$ii]");
 
 system("cat ${root_dir}/${user_name}_TEST_${ii}.sample_all >> ${root_dir}/${user_name}_TEST_TITLE.sample_all");
+
+system("rm ${root_dir}/${user_name}_TEST_${ii}.sample_all");
 
 system("mv ${root_dir}/${user_name}_TEST_TITLE.sample_all ${root_dir}/${user_name}.sample_all");
 
@@ -214,21 +220,21 @@ close (IN);
 
 ##### RUN NN IN switch MODE ##############
 
-system("${root_dir}/PROGS/NetRun.LINUX switch $nn_input 100 2 $nn_samples 100 ${root_dir}/${user_name}.sample_all ${root_dir}/JCT_TRAIN/jct_train.in ${root_dir}/out_${user_name}");
+system("${root_dir}/PROGS-2008/NetRun.LINUX switch $nn_input 100 2 $nn_samples 100 ${root_dir}/${user_name}.sample_all ${root_dir}/JCT_TRAIN/jct_train.in ${root_dir}/out_${user_name}");
 
 #system("cat ${root_dir}/out_${user_name}_${ii} >> ${root_dir}/tmp_out_${user_name}");
 
 
 #### FILTER NN OUTPUT  #######
 
-system("${root_dir}/PROGS/filter.pl $user_name");
+system("${root_dir}/PROGS-2008/filter.pl $user_name");
 
 system("rm ${root_dir}/out_${user_name}");
 
 
 ####  ORDER FILTERED OUTPUT PREDICTIONS ####
 
-system("${root_dir}/PROGS/order_2007.pl $user_name $input_fasta $ii");
+system("${root_dir}/PROGS-2008/order_2007.pl $user_name $input_fasta $ii");
 
 system("rm ${root_dir}/out-fil_${user_name}");
 
@@ -249,7 +255,12 @@ else {$score{$nn1.",".$nn2.",".$nn3.",".$nn4}=$nn5;}
 
 		} # end of while(<DAT>)
 
+system("rm ${root_dir}/${user_name}_${ii}.dat");
+system("rm ${root_dir}/${user_name}_NUMB_all_${ii}.dat");
+
 	} # end of for ($ii=1; $ii<($iterations+2); $ii++)
+
+system("rm ${root_dir}/${user_name}_position.dat");
 
 
 $newdat=${root_dir}."/".${user_name}.".dat";
@@ -268,7 +279,7 @@ print NEW_DAT $nn1,"\t",$nn2,"\t",$nn3,"\t",$nn4,"\t",$score{$score_key},"\n";
 #### WRITE OUTPUT PREDICTIONS IN THE EVA FORMAT ##############
 
 
-system("${root_dir}/PROGS/format_CASP.pl $user_name_true $user_name $input_fasta");
+system("${root_dir}/PROGS-2008/format_CASP.pl $user_name_true $user_name $input_fasta");
 
 
 ################################################################
@@ -299,11 +310,11 @@ open(STD,"<$to_stdout");
 
 #system("rm $root_dir/${user_name}.profcon 2>>$root_dir/log.err");
 
-system("rm $root_dir/${user_name}.sample_all 2>>$root_dir/log.err");
+#system("rm $root_dir/${user_name}.sample_all 2>>$root_dir/log.err");
 
-system("rm $root_dir/${user_name}_NUMB_all.dat 2>>$root_dir/log.err");
+#system("rm $root_dir/${user_name}_NUMB_all.dat 2>>$root_dir/log.err");
 
-system("rm $root_dir/${user_name}.dat 2>>$root_dir/log.err");
+#system("rm $root_dir/${user_name}.dat 2>>$root_dir/log.err");
 
 system("rm $root_dir/${user_name}-fil.hssp 2>>$root_dir/log.err");
 

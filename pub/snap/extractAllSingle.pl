@@ -286,7 +286,7 @@ sub extractSwiss{
 		#print "$file\n";
 		#<STDIN>;
 		#print "choosing itself\n";
-		$file =~ s/^swiss.+|$gene.*\s+(0\.0|\d*e\-\d+)\s*\n//;
+		$file =~ s/\|$gene.*\s+(0\.0|\d*e\-\d+)\s*\n//;
 		$temp = $1;
 		$name_k = $gene;
 		$f = 1;
@@ -299,10 +299,16 @@ sub extractSwiss{
 	}
 	if ($f == 0){
 		#print "$file\n";
-		$file =~ s/[^\>]+\>[^\s\|]+\|[^\s\|]+\|([^\s]+)\s+([^\>]+)(\>|Database\:)//;
-		$name_k = $1;
-		$temp = $2;
-		$file =~ s/^swiss.+\|$name_k.+\s+(0\.0|\d*e\-\d+)\s*\n//;
+		if ($file =~ /No hits found/){
+        	        print " there are no good scores\n";
+        	        print OUT "0\t0\t0\t0\t0\t0\t";
+        	        return;
+	        }
+
+		$file =~ s/[^\>]+\>([^\s\|]+\|)+([^\s]+)\s+([^\>]+)(\>|Database\:)//;
+		$name_k = $2;
+		$temp = $3;
+		$file =~ s/\|$name_k.+\s+(0\.0|\d*e\-\d+)\s*\n//;
 		$e = $1;
 		if (!$e){
 			print "$file e = $e\n";
@@ -985,6 +991,7 @@ sub extractPfam{
 			$e = $3;
 			#if the alignment contains the mutant
 			if (($pos >= $s) and ($pos <= $e)){
+				$part =~ s/\s+CS\s+.+\n//;
 				$part =~ s/\s+RF\s+(x|\s)*\n//g;
 				#@pf contains the three lines of alignment
 				#0 -- seed

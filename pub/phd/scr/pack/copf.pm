@@ -255,7 +255,9 @@ sub ini {
     $USERID=&sysGetUserLoc();
 
     if    (defined $USERID && $USERID=~/predictprotein|pp|phd/){
-	$par{"dirHome"}=            "/nfs/data5/users/".$USERID."/server/pub/prof/";
+	#$par{"dirHome"}=            "/nfs/data5/users/".$USERID."/server/pub/prof/";
+	$par{"dirHome"}=            $ENV{"HOME"}."/server/pub/prof/";
+	
 #	$par{"dirHome"}=            "/nfs/data5/users/ppuser/server/pub/prof/";
     }
     elsif (defined $USERID && $USERID=~/rost/){
@@ -612,11 +614,14 @@ sub iniDef {
 				# directories
 				# <<<<<<<<<<<<<<<<<<<<
 				# normal
-    $par{"dirSrc"}=             $par{"dirHome"}.   "lib/";   # all source except for binaries
+    $par{"dirSrc"}=             $par{"dirHome"}.   "";   # all source except for binaries
     $par{"dirSrcMat"}=          $par{"dirSrc"}.    "mat/";   # general material
 				                             # perl libraries
-    $par{"dirPerl"}=            $par{"dirSrc"}.    "perl/" if (! defined $par{"dirPerl"});
-    $par{"dirPerlScr"}=         $par{"dirPerl"}.   "scr/";   # perl scripts needed
+      $par{"dirPerl"}=            $par{"dirSrc"}.  "scr/"   # perl libraries
+        if (! defined $par{"dirPerl"});
+#     $par{"dirPerl"}=            $par{"dirSrc"}.    "perl/" if (! defined $par{"dirPerl"});
+    $par{"dirPerlScr"}=         $par{"dirHome"}.   "scr/";   # perl scripts needed
+ 
     $par{"dirBin"}=             $par{"dirHome"}.   "bin/";   # FORTRAN binaries of programs needed
 
     if ($0=~/maxhom/){
@@ -629,7 +634,7 @@ sub iniDef {
 				# <<<<<<<<<<<<<<<<<<<<
 				# for porting PHD asf
 #    if ($USERID !~/phd|pp|predictprotein/ &&
-    if ($USERID !~/phd|predictprotein/ &&
+    if ($USERID !~/phd|pp|predictprotein/ &&
 	$0=~/phd/){
 	$par{"dirSrcMat"}=      "/nfs/data5/users/ppuser/server/pub/phd/". "mat/";   # general material
 	$par{"dirPerl"}=        "/nfs/data5/users/ppuser/server/pub/phd/". "scr/";   # perl libraries
@@ -637,7 +642,7 @@ sub iniDef {
 	$par{"dirBin"}=         "/nfs/data5/users/ppuser/server/pub/phd/". "bin/";   # FORTRAN binaries of programs needed
     }
 #    elsif ($USERID !~/phd|pp|predictprotein/ &&
-    elsif ($USERID !~/phd|predictprotein/ &&
+    elsif ($USERID !~/phd|pp|predictprotein/ &&
 	$0=~/prof/){
 	$par{"dirSrcMat"}=      "/nfs/data5/users/ppuser/server/pub/prof/". "mat/";   # general material
 	$par{"dirPerl"}=        "/nfs/data5/users/ppuser/server/pub/prof/". "scr/";   # perl libraries

@@ -712,8 +712,8 @@ sub iniDef {
 
 				# --------------------
 				# executables
-    $par{"exeConvertSeq"}=      $par{"dirConvertSeq"}."convert_seq".".".$ARCH;
-    $par{"exeConvertSeqBig"}=   $par{"dirConvertSeq"}."convert_seq_big".".".$ARCH;
+   # $par{"exeConvertSeq"}=      $par{"dirConvertSeq"}."convert_seq".".".$ARCH;
+     $par{"exeConvertSeq"}= $par{"exeConvertSeqBig"}=   $par{"dirConvertSeq"}."convert_seq_big".".".$ARCH;
 #    $par{"exeFssp2daf"}=        $par{"dirPerlPack"}. "conv_fssp2daf_lh.pm";
     $par{"exeFssp2daf"}=        $par{"dirPerlScr"}.  "conv_fssp2daf_lh.pl";
     $par{"exeConvHssp2saf"}=    $par{"dirPerlPack"}. "conv_hssp2saf.pm";
@@ -7573,6 +7573,7 @@ sub sysRunProg {
     return(0,"*** ERROR $sbrName: argument program ($cmd) not defined\n") 
 	if (! defined $cmd || length($cmd)<1);
     $fhErrLoc=0                 if (! defined $fhErrLoc);
+  
     $fileScrLoc=0               if (! defined $fileScrLoc);
 
 				# ------------------------------
@@ -7584,6 +7585,8 @@ sub sysRunProg {
     elsif ($fhErrLoc) {
 	print $fhErrLoc 
 	    "--- $sbrName: system cmd=\n$prog\n--- $sbrName: fileOut=$fileScrLoc cmd IN:\n$cmd\n";}
+	    
+    warn  "--- $sbrName: system cmd=\n$prog\n--- $sbrName: fileOut=$fileScrLoc cmd IN:\n$cmd\n";
 				# ------------------------------
 				# pipe output into file?
     $Lpipe=0;

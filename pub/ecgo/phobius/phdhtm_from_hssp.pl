@@ -1,6 +1,10 @@
 #!/usr/bin/perl
 
-unshift (@INC, "/home/kernytsky/pack/perl/");
+#unshift (@INC, "/home/kernytsky/pack/perl/");
+BEGIN{
+    #unshift (@INC, "$homedir/enzyme/data/"); 
+    unshift (@INC, "/nfs/data5/users/ppuser/server/pub/ecgo"); 
+}
 require prof;
 use Cwd;
 
@@ -37,7 +41,7 @@ sub run_phd {
     $filename_our_result = $workfileroot.".phd_human";
     if (! -e $filename_prof_result) {
 	print "### Running PHD\n";
-	command ("/home/kernytsky/phd/phd.pl htm ".$seq_filename);
+	command ("/nfs/data5/users/ppuser/server/pub/phd/phd.pl htm ".$seq_filename);
     }
     open ($RESULT, ">$filename_our_result") or die "couldn't open output file $filename_our_result\n";
     if (-e $filename_prof_result) {

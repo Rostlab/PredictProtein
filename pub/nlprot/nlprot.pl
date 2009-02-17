@@ -1,5 +1,5 @@
 #!/usr/local/bin/perl
-$path_app = '/data2/ppuser/server/pub/nlprot/';
+$path_app = $ENV{HOME}."/server/pub/nlprot/";
 $path_app_tmp = $path_app . "tmp/";
 $path_app_db = $path_app . "name_dbs/";
 $path_app_data = $path_app . "data/";
@@ -315,7 +315,8 @@ else { # test input file for right format
 # ------------------------------------------
 # read dictionary
 # ------------------------------------------
-open(IN, "<${path_app_data}dictionary.txt") or die2("could not open dictionary.txt for reading\n");
+
+open(IN, "<${path_app_data}dictionary.txt") or die2("could not open dictionary.txt for reading. \npath=${path_app_data}dictionary.txt \n$!\n");
 while (<IN>) {
 #	chomp();
 	if (/^(.+)\t(.+)/) {
@@ -328,17 +329,17 @@ close IN;
 # ------------------------------------------
 # read swissprot-trembl curation list
 # ------------------------------------------
-open(IN, "<${path_app_data}dictionary_sp_tr_curation.txt") or die2("could not open dictionary_sp_tr_curation.txt for reading\n");
-while (<IN>) {
-#	chomp();
-	if (/^(.+)\t(.+)/) {
-		$sp_tr_names_curate{$1} = 1;
-	}
-	elsif (/^END/) {
-		close IN;
-	}
-}
-close IN;
+# open(IN, "<${path_app_data}dictionary_sp_tr_curation.txt") or die2("could not open dictionary_sp_tr_curation.txt for reading\n");
+# while (<IN>) {
+# #	chomp();
+# 	if (/^(.+)\t(.+)/) {
+# 		$sp_tr_names_curate{$1} = 1;
+# 	}
+# 	elsif (/^END/) {
+# 		close IN;
+# 	}
+# }
+# close IN;
 # ------------------------------------------
 
 # ------------------------------------------
@@ -2026,10 +2027,10 @@ sub get_protein_dic_entry {
 	$name2 =~ s/([a-z])(\d)/\1-\2/ig;
 	$name2 =~ s/(\d)([a-z])/\1-\2/ig;
 	$name2 =~ s/^\W+|\W+$//g;
-	$curate = $sp_tr_names_curate{$name2};
-	if ($curate) {
-		return(0, "");
-	}
+# 	$curate = $sp_tr_names_curate{$name2};
+# 	if ($curate) {
+# 		return(0, "");
+# 	}
 	$entry = $sp_tr_names{$name2};
 	if ($entry) {
 		$score = length($name2) / 25;

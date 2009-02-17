@@ -8,12 +8,11 @@ if (defined $ENV{'PROFCON'}){
 }
 
 
-if (@ARGV<2){ die "Usage: $0 protein_name input_fasta \n";}
+if (@ARGV<1){ die "Usage: $0 protein_name input_fasta \n";}
 
 @e=@ARGV;
 $user_name=$e[0];
 $input_fasta=$e[1];
-$iter=$e[2];
 
 ###### READ SEQ LENGTH ######
 
@@ -51,7 +50,7 @@ undef %val;
 undef @combo;
 
 
-$numb_all=$root_dir."/".${user_name}."_NUMB_all_${iter}.dat";
+$numb_all=$root_dir."/".${user_name}."_NUMB_all.dat";
 open(NUMB_F,"<$numb_all");
 
 
@@ -94,7 +93,6 @@ $line=$_;
 
 $val{($numb+1)/2-1}=$left; chomp($val{($numb+1)/2-1});
 
-
 			} # end of if ($parity==0)
 
 		} # end of OUT: while(<TEST>)
@@ -102,7 +100,7 @@ $val{($numb+1)/2-1}=$left; chomp($val{($numb+1)/2-1});
 
 $out_pred=0;
 
-$out=$root_dir."/".$user_name."_".$iter.".dat";
+$out=$root_dir."/".$user_name.".dat";
 open(OUTPUT,">$out");
 foreach $val_key (sort { $val{$b} <=> $val{$a} } keys %val) {
 

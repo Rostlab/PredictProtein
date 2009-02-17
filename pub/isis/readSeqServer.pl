@@ -7,7 +7,13 @@ if (!defined $ENV{'ISIS'}){
     $ENV{"ISIS"} = $ENV{'PP_ROOT'}."/pub/isis";	  
 }
 
+
 $dirIsis = $ENV{"ISIS"};
+
+if ($ARGV[3]){
+    $dirIsis = $ARGV[3];
+}
+
 
 if (@ARGV<3){die "Usage: $0 file_name.hssp [file_name.rdbProf|file_name.dssp] output.file\n"}
 @e=@ARGV;

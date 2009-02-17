@@ -126,7 +126,6 @@ system("${root_dir}/PROGS/filter.pl $user_name");
 
 system("rm ${root_dir}/out_${user_name}");
 
-
 ####  ORDER FILTERED OUTPUT PREDICTIONS ####
 
 system("${root_dir}/PROGS/order_CASP.pl $user_name $input_fasta");

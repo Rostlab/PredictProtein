@@ -1,1 +1,1 @@
-/home/rost/perl/rs-lib-cgi.pl
+/razor/2/home/rost/perl/rs-lib-cgi.pl
