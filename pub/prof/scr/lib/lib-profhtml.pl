@@ -472,8 +472,8 @@ sub convProf2html_ini {
 
 
 				# solvent accessibility
-	 'OREL',   "observed relative solvent accessibility (acc) in 10 states: a value of n (=0-9) corresponds to a relative acc. of between n*n % and (n+1)*(n+1) % (e.g. for n=5: 16-25%).",
-	 'PREL',   "PROF predicted relative solvent accessibility (acc) in 10 states: a value of n (=0-9) corresponds to a relative acc. of between n*n % and (n+1)*(n+1) % (e.g. for n=5: 16-25%).",
+	 'OREL',   "observed relative solvent accessibility (acc) in 10 states: a value of n (=0-9) corresponds to a relative acc. of between n*n % and (n+1)*(n+1) % (e.g. for n=4: 16-25%).",
+	 'PREL',   "PROF predicted relative solvent accessibility (acc) in 10 states: a value of n (=0-9) corresponds to a relative acc. of between n*n % and (n+1)*(n+1) % (e.g. for n=4: 16-25%).",
 	 'Obe',    "observerd relative solvent accessibility (acc) in 2 states: b = 0-16%, e = 16-100%.",
 	 'Obie',   "observerd relative solvent accessibility (acc) in 3 states: b = 0-9%, i = 9-36%, e = 36-100%.",
 	 'Pbe',    "PROF predicted  relative solvent accessibility (acc) in 2 states: b = 0-16%, e = 16-100%.",

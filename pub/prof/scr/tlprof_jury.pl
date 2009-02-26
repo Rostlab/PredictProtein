@@ -194,11 +194,11 @@ sub ini {
     $par{"notation","OACC"}=       "observed solvent accessibility in square Angstroem ";
     $par{"notation","OREL"}=       "observed relative solvent accessibility (acc) in 10 states: ".
 	"\na value of n (0-9) corresponds to a relative acc. of between n*n % and (n+1)*(n+1) % ".
-	    "\n(e.g. for n=5: 16-25%).";
+	    "\n(e.g. for n=4: 16-25%).";
     $par{"notation","PACC"}=       "PHD predicted solvent accessibility in square Angstroem ";
     $par{"notation","PREL"}=       "PHD predicted relative solvent accessibility (acc) in 10 states: ".
 	"\na value of n (0-9) corresponds to a relative acc. of between n*n % and (n+1)*(n+1) % ".
-	    "\n(e.g. for n=5: 16-25%). ".
+	    "\n(e.g. for n=4: 16-25%). ".
 		"\nPHD: Profile-based neural network prediction originally from HeiDelberg";
     $par{"notation","Obe"}=        "observed relative solvent accessibility (acc) in 2 states: ".
 	"b=0-".$par{"acc2Thresh"}."% , e= ".$par{"acc2Thresh"}."-100%.";

@@ -618,10 +618,10 @@ sub iniDefProf {
     $par{"notation","PACC"}=       "PROF predicted solvent accessibility (acc) in square Angstroem";
     $par{"notation","OREL"}=       "observed relative solvent accessibility (acc) in 10 states: ".
 	"a value of n (=0-9) corresponds to a relative acc. of between n*n % and (n+1)*(n+1) % ".
-	    "(e.g. for n=5: 16-25%).";
+	    "(e.g. for n=4: 16-25%).";
     $par{"notation","PREL"}=       "PROF predicted relative solvent accessibility (acc) in 10 states: ".
 	"a value of n (=0-9) corresponds to a relative acc. of between n*n % and (n+1)*(n+1) % ".
-	    "(e.g. for n=5: 16-25%).";
+	    "(e.g. for n=4: 16-25%).";
     $par{"notation","Obe"}=        "observerd relative solvent accessibility (acc) in 2 states: ".
 	"b = 0-".$par{"acc2Thresh"}."%, e = ".$par{"acc2Thresh"}."-100%.";
     $par{"notation","Obie"}=       "observerd relative solvent accessibility (acc) in 3 states: ".
