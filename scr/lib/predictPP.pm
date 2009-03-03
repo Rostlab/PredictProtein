@@ -1100,7 +1100,10 @@ sub predict {
 				# -----------------------------------------------
 
 #     if ($job{"run"} =~/\sisis\s/i && $job{"run"} !~ /disis/ ) {
-  if ($job{"run"} =~/\,isis\,/i ){   # NOTE the token isis needs to be seperated by spaces, otherwise the system will confuse it with disis
+    warn $job{"run"};
+#  if ($job{"run"} =~/[\,]isis[_only]\,/i ){   # NOTE the token isis needs to be seperated by spaces, otherwise the system will confuse it with disis
+if ($job{"run"} =~/isis/i ){ 
+    
 	($Lok,$err,$msg)=
 	    &runPredIsis  ($Origin,$Date,$niceRun,$filePID,$fhOut,$fhTrace,
 			 $envPP{"dir_work"},$filePredTmp,$fileHtmlTmp,$fileHtmlToc,
@@ -11395,7 +11398,7 @@ sub runPredIsis {
     return(0,"err=545","*** $sbr: no seq =".$file{"seq"}."!")   
 	if (! -e $file{"seq"} && ! -l $file{"seq"}); # 
 
-       
+
     $msgErrIntern=    $msgErr{"internal"}; 
     $msgErrConvert=   $msgErr{"align:convert"};
     $msgHere="";		# 

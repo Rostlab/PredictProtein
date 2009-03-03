@@ -7045,7 +7045,7 @@ sub cachedBlastCall {
         $cache_dir = "$ENV{PP_ROOT}/blastcache";
         if( -d $cache_dir )
         {
-            remove_old_files({ root => $cache_dir, mmin => '+480' });
+            remove_old_files({ root => $cache_dir, mmin => '+720' });
 
             $cmd_cache_dir = $cache_dir.'/'.$blastcmdmd5->hexdigest();
             if( -d $cmd_cache_dir )
