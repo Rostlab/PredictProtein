@@ -5,7 +5,7 @@ use strict;
 #    use lib '/data2/ppuser/meta/lib/perl5/site_perl/5.6.1/i386-linux';
 #    use lib '/data2/ppuser/meta/lib/perl5/site_perl/5.6.1';
     package _PP_DB;
-	use Carp qw| cluck :DEFAULT |;
+	use CGI::Carp qw| cluck :DEFAULT |;
     use DBI;
 
     sub new{
@@ -295,7 +295,7 @@ use strict;
 #	}
 	my  $sth = $self->{'dbh'}->prepare("$sql");
 
-	$sth->execute() || die "Couldn't execute query '$sql': $DBI::errstr\n"; 
+	$sth->execute() || confess("Couldn't execute query '$sql': $DBI::errstr");
 	return 1;
     }
 

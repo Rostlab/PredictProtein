@@ -17,6 +17,7 @@ use PPPerl::PPXMLWriter;
 use Bio::SeqIO;
 use IO::File;
 use Scalar::Util; # tainted()
+use File::chdir;
 #================================================================================ #
 #                                                                                 #
 #-------------------------------------------------------------------------------- #
@@ -1140,7 +1141,8 @@ if ($job{"run"} =~/isis/i ){
 
     if ($job{"run"} =~/loctar/i) {
         ($Lok,$err,$msg)=
-            &runLocTar  ($Origin,$Date,$niceRun,$filePID,$fhOut,$fhTrace,
+            &runLocTar_safe(
+                         $Origin,$Date,$niceRun,$filePID,$fhOut,$fhTrace,
                          $envPP{"dir_work"},$filePredTmp,$fileHtmlTmp,$fileHtmlToc,
                          $Debug,$job{"run"},$job{"out"},
                          $envPP{"exeCopf"},$envPP{"exeLocTar"},
@@ -1384,12 +1386,13 @@ if ($job{"run"} =~/isis/i ){
 		$fhTrace,$Debug);
 
 
-    ($strXMLContents, $errMsg)   = &convertToXML($filePID,$fhTrace, $envPP{"dir_work"}, ,$Debug  );
+    my $errMsg = ''; # make it local to this block - otherwise it could change value in any of the calls
+    ($strXMLContents, $errMsg)   = &convertToXML($filePID,$fhTrace, $envPP{"dir_work"}, $Debug );
     if ( length($strXMLContents)>0 ||  length($errMsg)>0)
     {
         my $XMLLINT_ERRNO = undef;
         
-        if( length($errMsg)>0 ){ warn("*** warning:convertToXML :$errMsg"); }
+        if( length($errMsg)>0 ){ warn("*** warning:convertToXML '$filePID' '$envPP{dir_work}':$errMsg"); }
         else
         {
             # XML instance validation
@@ -12629,6 +12632,53 @@ sub runSnap {
 
 
 
+sub               runLocTar_safe
+{
+    # kajla: We need this because loctar removes at least the
+    #   .hsspMax4phd
+    #   .profRdb
+    # files as it runs.
+    # We want to preserve these files since some of the XML results
+    # may be generated from it.
+    # We can preserve designated files.
+    # Perhaps a better solution would be to preserve all job files and restore them after the loctar run...
+    my( undef, undef, undef, $job_file_name, undef, undef, $job_file_dir ) = @_;
+    my @ret = ();
+    my @filenames = ();
+#warn( Data::Dumper::Dumper( \@_ ) );
+
+    {
+        local $CWD = $job_file_dir;
+        @filenames = glob( "$job_file_name.*" );
+    }
+    
+    my $tinpath = "/tmp/pp_${job_file_name}_$ENV{HOSTNAME}_$$.tar";
+    {
+        warn( "--- preserving results into '$tinpath' before calling loctar" );
+        my @cmd = ( 'tar', '-cf', $tinpath, '-C', $job_file_dir, @filenames );
+        system( @cmd ) == 0 || cluck( "@cmd failed: $!" );
+    }
+
+    eval {
+        @ret = runLocTar( @_ );
+    };
+
+    {
+        warn( "--- carefully restoring results from '$tinpath' after calling loctar" );
+        # options here are:
+        # --keep-newer-files (does not create files if removed)
+        # --keep-old-files (never overwrite)
+        # <none> (overwrite) <- this is the safest - can break only loctar, so we choose this
+        my @cmd = ( 'tar', '-xf', $tinpath, '-C', $job_file_dir, '--preserve' );
+        #open( OLDERR, '>&', \*STDERR ) || confess(); open( STDERR, '>', '/dev/null' ) || confess();
+        my $et = system( @cmd );
+        #open( STDERR, '>&', \*OLDERR ) || confess();
+        if( ( $et >> 8 ) != 0 && ( $et >> 8 ) != 1 ) { cluck( "@cmd failed: $!, ".( $et >> 8 ) ); }
+    }
+    unlink( $tinpath );
+
+    return @ret;
+}
 
 #===============================================================================
 # GY ADDED 3-2004: Localization Target
