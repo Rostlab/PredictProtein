@@ -12664,7 +12664,7 @@ sub               runLocTar_safe
     };
 
     {
-        warn( "--- carefully restoring results from '$tinpath' after calling loctar" );
+        warn( "--- restoring results from '$tinpath' after calling loctar" );
         # options here are:
         # --keep-newer-files (does not create files if removed)
         # --keep-old-files (never overwrite)
