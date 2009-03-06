@@ -36,6 +36,7 @@ exit $ret;
 
 #=================================================================================================
 package PP_Daemon;
+use Carp qw| cluck :DEFAULT |;
 
 
 sub            new
@@ -158,16 +159,26 @@ sub 		submitJobToQueue
 	$filePID=~s/^.*\///;$filePID=~s/\..*//;# remove path and extensions
  	#create a stub file to submiot to SGE
 	
-	my $ppCommand= qq| $env->{"exe_ppPredict"} $fileFound $fileResult $user $fillerforPass $orig $dbid -s |;
+	my $ppCommand= qq|$env->{"exe_ppPredict"} $fileFound $fileResult $user $fillerforPass $orig $dbid -s |;
 	
 	
-	my $sgeSubmitFileName .= qq|$env->{"dir_work"}/$filePID.sge.sh|;
+	my $sgeSubmitFileName = qq|$filePID.sge.sh|;
+	my $sgeSubmitFilePath = qq|$env->{"dir_work"}/$sgeSubmitFileName|;
 	eval {
-		open (FO, ">$sgeSubmitFileName")|| die ("Could not open sgeSubmitFileName: $sgeSubmitFileName. System message $!");
-		print FO  qq |#!/bin/bash\n$ENV{HOME}/.profile\n|;
+		open (FO, ">$sgeSubmitFilePath")|| die ("Could not open sgeSubmitFilePath: $sgeSubmitFilePath. System message $!");
+		print FO  qq|#!/bin/bash\n$ENV{HOME}/.profile\n|;
 		print FO  $ppCommand,"\n";
 		close FO;
-		chmod (0700,  $sgeSubmitFileName);
+		chmod (0700,  $sgeSubmitFilePath);
+
+		# kajla:
+		# We cut through the Gordian knot here and just save a copy of $sgeSubmitFilePath into $ENV{PP_ROOT}/trace so we
+		# can restart jobs and examine where weird results come from.
+		#
+		# Carefully deleting all traces of failed jobs is a remarkable idea.
+		#
+		my @cmd = ( 'cp', '-a', $sgeSubmitFilePath, "$ENV{PP_ROOT}/trace/$sgeSubmitFileName" );
+		system( @cmd ) == 0 || cluck( "@cmd: $!" );
 	
 		my $tmpFileHandler = \*FI;
 		open (FI, $self->{sgeParamFile}) || die ("Could not open sgeparamfile: $self->{sgeParamFile} System message $!");
@@ -193,7 +204,7 @@ sub 		submitJobToQueue
 		
 	}
 	# Now do the actual submission
-	my ($Lok,$msgSys) =	&sysSystem ("$sgeCommand $sgeSubmitFileName");
+	my ($Lok,$msgSys) =	&sysSystem ("$sgeCommand $sgeSubmitFilePath");
 	chomp($msgSys);
 	# END of qeueue submission
 	#submissions to the SGE are logged in the scanner.log file
