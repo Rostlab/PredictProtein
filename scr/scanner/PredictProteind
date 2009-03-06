@@ -84,7 +84,7 @@ sub            _initialize
 	my($Lok,$envPack,$dbPack);
 	my $envPP = {};
 	foreach my $des ("dir_work","dir_res", "file_scanLog", "exe_ppPredict" ){
-		$envPP->{$des}=&envPP'getLocal($des);                      # e.e'
+		$envPP->{$des}=&envPP::getLocal($des);
 		die("*** CRITICAL ERROR"."failed to get environment variable from envPP{$des}") if (! defined $envPP->{$des});
 	}
 	$self->{env} = $envPP;
@@ -180,12 +180,12 @@ sub 		submitJobToQueue
 # 		$ENV{SGE_ARCH}=$sgePrefs{sgeArch};
 # 		$ENV{SGE_QMASTER_PORT}= $sgePrefs{sgeQmasterPort};	
 # 		$ENV{SGE_EXECD_PORT}= $sgePrefs{sgeExecdPort};
-		$sgeCommand =  $sgePrefs{exeSge}. " ";
+		$sgeCommand =  $sgePrefs{exeSge}. " "; 				# "/opt/gridengine/bin/lx26-amd64/qsub "
 	#	$sgeCommand .= $sgePrefs{defaultPriority}. " ";
-		$sgeCommand .= $sgePrefs{outputlog}. " ";
-		$sgeCommand .= $sgePrefs{errorlog}. " ";
-		$sgeCommand .= $sgePrefs{shell}. " ";
-		$sgeCommand .= $sgePrefs{retainShellSettings}. " ";		
+		$sgeCommand .= $sgePrefs{outputlog}. " ";			# "-o  /dev/null "
+		$sgeCommand .= $sgePrefs{errorlog}. " ";			# "-e  /dev/null "
+		$sgeCommand .= $sgePrefs{shell}. " ";				# "-S /bin/bash "
+		$sgeCommand .= $sgePrefs{retainShellSettings}. " ";		# "-V "
 		close ($tmpFileHandler);
 		};
 	if ($@){
