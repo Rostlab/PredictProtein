@@ -12654,7 +12654,7 @@ sub               runLocTar_safe
         @filenames = glob( "$job_file_name.*" );
     
         $tinfh = File::Temp->new( TEMPLATE => "pptin_${job_file_name}_XXXXXXXX", DIR => "$ENV{PP_ROOT}/tmp",
-            UNLINK => 0,
+            UNLINK => 1,
             SUFFIX => '.tar' ) || cluck( $! );
         if( $tinfh )
         {
@@ -12672,7 +12672,7 @@ sub               runLocTar_safe
     {
         local $CWD = $job_file_dir;
 
-        warn( "--- restoring results from '".$tinfh->filename."' after calling loctar" );
+        warn( "--- restoring results from '".$tinfh->filename."' to '$job_file_dir' after calling loctar" );
         # options here are:
         # --keep-newer-files (does not create files if removed)
         # --keep-old-files (never overwrite)

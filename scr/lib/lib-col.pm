@@ -7100,7 +7100,7 @@ sub cachedBlastCall {
 
     if( $fhLoc ){ print $fhLoc "\n"; }
     return(1,$Lsystem);
-}				# end of sysSystem
+}				# end of cachedBlastCall
 
 #==============================================================================
 sub remove_old_files
