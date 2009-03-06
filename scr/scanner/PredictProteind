@@ -2,7 +2,7 @@
 use strict; 
 use warnings;
 use Getopt::Long;
-use Carp qw| cluck :DEFAULT |;
+use CGI::Carp qw| cluck :DEFAULT |;
 
 my $cmd_opts = {
   help => 0,
@@ -36,7 +36,7 @@ exit $ret;
 
 #=================================================================================================
 package PP_Daemon;
-use Carp qw| cluck :DEFAULT |;
+use CGI::Carp qw| cluck :DEFAULT |;
 
 
 sub            new
@@ -177,7 +177,8 @@ sub 		submitJobToQueue
 		#
 		# Carefully deleting all traces of failed jobs is a remarkable idea.
 		#
-		my @cmd = ( 'cp', '-a', $sgeSubmitFilePath, "$ENV{PP_ROOT}/trace/$sgeSubmitFileName" );
+		my $jobtracefile = "$ENV{PP_ROOT}/trace/job_${filePID}.tgz";
+		my @cmd = ( 'tar', '-czf', $jobtracefile, $sgeSubmitFilePath, $fileFound );
 		system( @cmd ) == 0 || cluck( "@cmd: $!" );
 	
 		my $tmpFileHandler = \*FI;
@@ -496,4 +497,4 @@ sub 		sysSystem
 
 
 
-
+# vim:ai:
