@@ -5,7 +5,7 @@ use strict;
 #    use lib '/data2/ppuser/meta/lib/perl5/site_perl/5.6.1/i386-linux';
 #    use lib '/data2/ppuser/meta/lib/perl5/site_perl/5.6.1';
     package _PP_DB;
-	use CGI::Carp qw| cluck :DEFAULT |;
+	use Carp qw| cluck :DEFAULT |;
     use DBI;
 
     sub new{
@@ -130,7 +130,7 @@ use strict;
    sub getNextJob{
 	my ($self, $state,$dbg) = @_;
 #	my $sql = "SELECT * FROM batches WHERE id = (select min(id) from batches where  STATE < $max_state)";
-	my $sql = "select * from requests where id = (SELECT min(ID) FROM requests WHERE STATE =$state)";
+	my $sql = "select ID, NAME, USERID, STATE, TIMECREATED, TIMEMODIFIED, INPUT, SEQUENCE, PROTNAME, PRIORITY from requests where id = (SELECT min(ID) FROM requests WHERE STATE =$state)";
 #	print $sql,"\n";
 #	_META_PP->_msg ("SQL: $sql") if ($dbg); 
 	my $ref_result = $self->select($sql);

@@ -18,6 +18,7 @@ use Bio::SeqIO;
 use IO::File;
 use Scalar::Util; # tainted()
 use File::chdir;
+use File::Temp qw||;
 #================================================================================ #
 #                                                                                 #
 #-------------------------------------------------------------------------------- #
@@ -12647,35 +12648,43 @@ sub               runLocTar_safe
     my @filenames = ();
 #warn( Data::Dumper::Dumper( \@_ ) );
 
+    my $tinfh = undef;
     {
         local $CWD = $job_file_dir;
         @filenames = glob( "$job_file_name.*" );
-    }
     
-    my $tinpath = "/tmp/pp_${job_file_name}_$ENV{HOSTNAME}_$$.tar";
-    {
-        warn( "--- preserving results into '$tinpath' before calling loctar" );
-        my @cmd = ( 'tar', '-cf', $tinpath, '-C', $job_file_dir, @filenames );
-        system( @cmd ) == 0 || cluck( "@cmd failed: $!" );
+        $tinfh = File::Temp->new( TEMPLATE => "pptin_${job_file_name}_XXXXXXXX", DIR => "$ENV{PP_ROOT}/tmp",
+            UNLINK => 0,
+            SUFFIX => '.tar' ) || cluck( $! );
+        if( $tinfh )
+        {
+            warn( "--- preserving results into '".$tinfh->filename."' before calling loctar" );
+            my @cmd = ( 'tar', '-cf', $tinfh->filename, '-C', $job_file_dir, @filenames );
+            system( @cmd ) == 0 || cluck( "@cmd failed: $!" );
+        }
     }
 
     eval {
         @ret = runLocTar( @_ );
     };
 
+    if( $tinfh )
     {
-        warn( "--- restoring results from '$tinpath' after calling loctar" );
+        local $CWD = $job_file_dir;
+
+        warn( "--- restoring results from '".$tinfh->filename."' after calling loctar" );
         # options here are:
         # --keep-newer-files (does not create files if removed)
         # --keep-old-files (never overwrite)
         # <none> (overwrite) <- this is the safest - can break only loctar, so we choose this
-        my @cmd = ( 'tar', '-xf', $tinpath, '-C', $job_file_dir, '--preserve' );
+        my @cmd = ( 'tar', '-xf', $tinfh->filename, '-C', $job_file_dir, '--preserve' );
         #open( OLDERR, '>&', \*STDERR ) || confess(); open( STDERR, '>', '/dev/null' ) || confess();
         my $et = system( @cmd );
         #open( STDERR, '>&', \*OLDERR ) || confess();
         if( ( $et >> 8 ) != 0 && ( $et >> 8 ) != 1 ) { cluck( "@cmd failed: $!, ".( $et >> 8 ) ); }
+
+        undef( $tinfh );
     }
-    unlink( $tinpath );
 
     return @ret;
 }
