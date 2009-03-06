@@ -179,7 +179,10 @@ sub 		submitJobToQueue
 		#
 		my $jobtracefile = "$ENV{PP_ROOT}/trace/job_${filePID}.tgz";
 		my @cmd = ( 'tar', '-czf', $jobtracefile, $sgeSubmitFilePath, $fileFound );
+			# silence ``Removing leading `/' from member names''
+			open( OLDERR, '>&', \*STDERR ) || cluck( $! ); open( STDERR, '>', "/dev/null" ) || cluck( $! );
 		system( @cmd ) == 0 || cluck( "@cmd: $!" );
+			open( STDERR, '>&', \*OLDERR ) || confess( $! );
 	
 		my $tmpFileHandler = \*FI;
 		open (FI, $self->{sgeParamFile}) || die ("Could not open sgeparamfile: $self->{sgeParamFile} System message $!");
