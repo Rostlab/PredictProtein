@@ -4,9 +4,10 @@
 ##!/usr/pub/bin/perl -w
 ##!/usr/pub/bin/perl5.00 -w
 ##! /usr/pub/bin/perl4
+package predictPP;
 #For testing - otherwise switch off, because there are too many warnings generated - this code is not prepared for warnings.
 #use warnings;
-#no warnings "once";
+no warnings "once";
 use Carp qw| cluck :DEFAULT |;
 #use lib &{sub { $ENV{VISUALPP_LIBS} =~ /(.*)/o; return split(/:/o, $1 ); }}(); # a dirty trick!
 use Getopt::Long;
@@ -17,8 +18,9 @@ use PPPerl::PPXMLWriter;
 use Bio::SeqIO;
 use IO::File;
 use Scalar::Util; # tainted()
-use File::chdir;
 use File::Temp qw||;
+use File::chdir;
+
 #================================================================================ #
 #                                                                                 #
 #-------------------------------------------------------------------------------- #
@@ -111,8 +113,6 @@ use File::Temp qw||;
 #  
 #  
 #--------------------------------------------------------------------------------#
-
-package predictPP;
 
 INIT: {
 				# --------------------------------------------------
@@ -12651,16 +12651,24 @@ sub               runLocTar_safe
     my $tinfh = undef;
     {
         local $CWD = $job_file_dir;
-        @filenames = glob( "$job_file_name.*" );
-    
-        $tinfh = File::Temp->new( TEMPLATE => "pptin_${job_file_name}_XXXXXXXX", DIR => "$ENV{PP_ROOT}/tmp",
-            UNLINK => 1,
-            SUFFIX => '.tar' ) || cluck( $! );
-        if( $tinfh )
+        @filenames = glob("${job_file_name}.*");
+
+        if( @filenames )
         {
-            warn( "--- preserving results into '".$tinfh->filename."' before calling loctar" );
-            my @cmd = ( 'tar', '-cf', $tinfh->filename, '-C', $job_file_dir, @filenames );
-            system( @cmd ) == 0 || cluck( "@cmd failed: $!" );
+            $tinfh = File::Temp->new( TEMPLATE => "pptin_${job_file_name}_XXXXXXXX", DIR => "$ENV{PP_ROOT}/tmp",
+                UNLINK => 1,
+                SUFFIX => '.tar' ) || cluck( $! );
+            if( $tinfh )
+            {
+                warn( "--- preserving results into '".$tinfh->filename."' before calling loctar" );
+                my @cmd = ( 'tar', '-cf', $tinfh->filename, '-C', $job_file_dir, @filenames );
+                system( @cmd ) == 0 || cluck( "@cmd failed: $!" );
+            }
+        }
+        else
+        {
+            confess("--- oddly there are no '${job_file_name}.*' in '$job_file_dir' pwd=".`pwd`);
+            exit(1);
         }
     }
 

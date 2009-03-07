@@ -37,6 +37,9 @@ exit $ret;
 #=================================================================================================
 package PP_Daemon;
 use CGI::Carp qw| cluck :DEFAULT |;
+use Fcntl qw|:flock :DEFAULT|;
+use File::stat qw||;
+#use Data::Dumper qw||;
 
 
 sub            new
@@ -177,6 +180,9 @@ sub 		submitJobToQueue
 		#
 		# Carefully deleting all traces of failed jobs is a remarkable idea.
 		#
+		# remove old trace files
+		$self->remove_old_trace_files({ root => "$ENV{PP_ROOT}/trace", name => 'job_*.tgz', mtime => '+7' });
+		
 		my $jobtracefile = "$ENV{PP_ROOT}/trace/job_${filePID}.tgz";
 		my @cmd = ( 'tar', '-czf', $jobtracefile, $sgeSubmitFilePath, $fileFound );
 			# silence ``Removing leading `/' from member names''
@@ -492,6 +498,35 @@ sub 		sysSystem
     return(1,$Lsystem);
 }				# end of sysSystem
 
+		
+sub               remove_old_trace_files
+{
+    my( $self, $__p ) = @_;
+    # { root => "$ENV{PP_ROOT}/trace", name => 'job_*.tgz', mtime => '+7' }
+    %$__p = ( root => "$ENV{PP_ROOT}/trace", name => 'job_*.tgz', mtime => '+7', %$__p );
+
+    eval {
+        my $lockfile = $__p->{root}."/.remove_lock";
+
+        if( !-e $lockfile || time() - File::stat::stat($lockfile)->mtime() > 3600 )
+        {
+            my $lh = undef;
+            open( $lh, '>>', $lockfile ) || confess( $! );
+            if( flock( $lh, LOCK_EX | LOCK_NB ) )
+            {
+                # we got the lock
+                seek( $lh, 0, 0 ); truncate( $lh, 0 ); print $lh $$, "\n";
+                
+                my @cmd = ( '/usr/bin/find', $__p->{root}, '-maxdepth', '1', '-name', $__p->{name}, '-mtime', $__p->{mtime}, '-exec', '/bin/rm', '-f', '{}', ';' );
+                system( @cmd ); # we get a 1 when we delete directories and the contents also vanish (/usr/bin/find: ...: No such file or directory), but that is all right.
+                #
+                flock( $lh, LOCK_UN ); close( $lh );
+            }
+        }
+
+    };
+}
+
 
 
 1;
@@ -500,4 +535,4 @@ sub 		sysSystem
 
 
 
-# vim:ai:
+# vim:ai:et:ts=4:
