@@ -19,7 +19,7 @@ use Bio::SeqIO;
 use IO::File;
 use Scalar::Util; # tainted()
 use File::Temp qw||;
-use File::chdir;
+use File::pushd qw||;
 
 #================================================================================ #
 #                                                                                 #
@@ -12650,7 +12650,7 @@ sub               runLocTar_safe
 
     my $tinfh = undef;
     {
-        local $CWD = $job_file_dir;
+        my $cwd = File::pushd::pushd( $job_file_dir );
         @filenames = glob("${job_file_name}.*");
 
         if( @filenames )
@@ -12678,7 +12678,7 @@ sub               runLocTar_safe
 
     if( $tinfh )
     {
-        local $CWD = $job_file_dir;
+        my $cwd = File::pushd::pushd( $job_file_dir );
 
         warn( "--- restoring results from '".$tinfh->filename."' to '$job_file_dir' after calling loctar" );
         # options here are:
