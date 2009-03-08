@@ -1102,7 +1102,6 @@ sub predict {
 				# -----------------------------------------------
 
 #     if ($job{"run"} =~/\sisis\s/i && $job{"run"} !~ /disis/ ) {
-    warn $job{"run"};
 #  if ($job{"run"} =~/[\,]isis[_only]\,/i ){   # NOTE the token isis needs to be seperated by spaces, otherwise the system will confuse it with disis
 if ($job{"run"} =~/isis/i ){ 
     
@@ -3024,19 +3023,21 @@ sub modInterpret {
     $job{"run"}.=",coils"       if ($job{"out"}!~ /no coils/);
 
 				# PROFCON  
-    if ($job{"out"}=~ /prof_only/){
+    if ($job{"out"}=~ /profcon_only/){
 	$job{"run"}.=",profcon_only";
     }elsif($job{"out"}=~ /profcon/){ # 
 	$job{"run"}.=",profcon";
     }
 
+   
     				# MD
-     if  ($job{"out"} =~ /(mdisorder[\_only]+\_slow)/){
+     if  ($job{"out"} =~ /(mdisorder(\_only)+\_slow)/){
 	$job{"run"}  .= ",profcon,profbval, norsnet,ucon,$1 ";
-    }elsif($job{"out"} =~ /(mdisorder[\_only]+)/){
-        $job{"run"}  .=",profbval, norsnet, $1";
+    }elsif($job{"out"} =~ /(mdisorder(\_only)+)/){
+	$job{"run"}  .=",profbval, norsnet, $1";
     }
 
+    
 				# PRENUP  
     if ($job{"out"}=~ /ucon_only/){
 	$job{"run"}.=",profcon,ucon_only";
@@ -8775,14 +8776,12 @@ sub extrHdrOneLine {
     }
 
                             # normal mdisorder
-    if  ($lineLoc =~ /(mdisorder[\_only]+\_slow)/){
+    if  ($lineLoc =~ /(mdisorder(\_only)?\_slow)/){
 	$optRun .= ",profcon,profbval, norsnet,$1 ";
-    }elsif($lineLoc =~ /(mdisorder[\_only]+)/){
-        $optRun.=",profbval, norsnet, $1";
+    }elsif($lineLoc =~ /(mdisorder(\_only)?)/){
+	$optRun.=",profbval, norsnet, $1";
     }
-#    }elsif($lineLoc =~ /mdisorder/){
-#        $optRun.=",profcon,,profbval, norsnet, ucon, mdisorder";
-#    }
+
 
                               # normal ecgo
     $optRun.=",$1" if ($lineLoc =~ /(ecgo[\_only]+)/);
