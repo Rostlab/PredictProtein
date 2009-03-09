@@ -188,7 +188,7 @@ sub 		submitJobToQueue
 			# silence ``Removing leading `/' from member names''
 			open( OLDERR, '>&', \*STDERR ) || cluck( $! ); open( STDERR, '>', "/dev/null" ) || cluck( $! );
 		system( @cmd ) == 0 || cluck( "@cmd: $!" );
-			open( STDERR, '>&', \*OLDERR ) || confess( $! );
+			open( STDERR, '>&', \*OLDERR ) || cluck( $! );
 	
 		my $tmpFileHandler = \*FI;
 		open (FI, $self->{sgeParamFile}) || die ("Could not open sgeparamfile: $self->{sgeParamFile} System message $!");

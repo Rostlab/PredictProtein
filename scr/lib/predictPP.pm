@@ -20,6 +20,8 @@ use IO::File;
 use Scalar::Util; # tainted()
 use File::Temp qw||;
 use File::pushd qw||;
+use Fcntl qw|:flock :DEFAULT|;
+use File::stat qw||;
 
 #================================================================================ #
 #                                                                                 #
@@ -7967,6 +7969,13 @@ sub ctrlCleanUp {		#
 	  $finCsystem,$finSystem,$name,$urlRes,$urlEspritRes);
     $[=1;
 #----------------------------------------------------------------------
+# Kajla:
+# Cleaning up after a job like this is misguided. There is no way this script
+# can know when a developer wishes to examine the run.
+# So instead we store output - at least STDERR and OUT - for a few days
+# before the file gets removed by this method.
+#----------------------------------------------------------------------
+#----------------------------------------------------------------------
 #   ctrlCleanUp                 delete files (unless Debug flag is set)
 #       in:                     $Lerror,$LerrUsrLoc
 #                               1st = 'real error', e.g. 0 for help, input format error
@@ -8243,6 +8252,18 @@ sub ctrlCleanUp {		#
 	    $User_name,$Password,$Origin,$fileTmp,$diff,$dateTmp,$short;
 	close(LOGFILE);}
 				# --------------------------------------------------
+				# kajla: store certain files in $ENV{PP_ROOT}/trace
+				# --------------------------------------------------
+    preserve_err_out({ 
+        jobid => $jobid,
+        preserve => [
+            $file_error, # ERRpp*
+            $file_outpp  # SCRpp*
+        ],
+        root => "$ENV{PP_ROOT}/trace",
+        mtime => '+7'
+    });
+				# --------------------------------------------------
 				# remove files not wanted...
 				# --------------------------------------------------
     if (! $Debug){
@@ -8334,6 +8355,64 @@ sub ctrlCleanUp {		#
 
     return(1,"ok $sbr");
 }				# end of ctrlCleanUp
+
+#===============================================================================
+sub               preserve_err_out
+{
+    my( $__p ) = @_;
+    #{
+    #    jobid => $jobid,
+    #    preserve => [
+    #        $file_error, # ERRpp
+    #        $file_outpp  # SCRpp
+    #    ],
+    #    root => "$ENV{PP_ROOT}/trace",
+    #    mtime => '+7'
+    #}
+    eval {
+        %$__p = ( jobid => undef, preserve => [], root => "$ENV{PP_ROOT}/trace", mtime => '+7', %$__p );
+    
+        remove_old_err_out_files({ root => $__p->{root}, name => 'log_*.tgz', mtime => $__p->{mtime} });
+
+        my $logtracefile = "$ENV{PP_ROOT}/trace/log_$__p->{jobid}.tgz";
+        if( @{$__p->{preserve}} )
+        {
+            my @cmd = ( 'tar', '-czf', $logtracefile, @{$__p->{preserve}} );
+                # silence ``Removing leading `/' from member names''
+                open( OLDERR, '>&', \*STDERR ) || cluck( $! ); open( STDERR, '>', "/dev/null" ) || cluck( $! );
+            my $ec = system( @cmd ); my $em = $!;
+                open( STDERR, '>&', \*OLDERR ) || cluck( $! );
+            if( $ec != 0 ) { cluck( "@cmd: $em" ); }
+        }
+    };
+}
+
+sub               remove_old_err_out_files
+{
+    my( $self, $__p ) = @_;
+    # { root => $__p->{root}, name => 'log_*.tgz', mtime => $__p->{mtime} }
+    %$__p = ( root => "$ENV{PP_ROOT}/trace", name => 'log_*.tgz', mtime => '+7', %$__p );
+
+    eval {
+        my $lockfile = $__p->{root}."/.log_remove_lock";
+
+        if( !-e $lockfile || time() - File::stat::stat($lockfile)->mtime() > 3600 )
+        {
+            my $lh = undef;
+            open( $lh, '>>', $lockfile ) || confess( $! );
+            if( flock( $lh, LOCK_EX | LOCK_NB ) )
+            {
+                # we got the lock
+                seek( $lh, 0, 0 ); truncate( $lh, 0 ); print $lh $$, "\n";
+                
+                my @cmd = ( '/usr/bin/find', $__p->{root}, '-maxdepth', '1', '-name', $__p->{name}, '-mtime', $__p->{mtime}, '-exec', '/bin/rm', '-f', '{}', ';' );
+                system( @cmd ); # we get a 1 when we delete directories and the contents also vanish (/usr/bin/find: ...: No such file or directory), but that is all right.
+                #
+                flock( $lh, LOCK_UN ); close( $lh );
+            }
+        }
+    };
+}
 
 #===============================================================================
 sub ctrlGetErrCode {
@@ -14097,7 +14176,7 @@ sub convertToXML {
 
 1;
 
-# vim:ts=4:et:incsearch:hlsearch:ai:
+# vim:ts=8:et:incsearch:hlsearch:ai:
 #================================================================================
 #   end of perl script to run the PHD server
 #================================================================================
