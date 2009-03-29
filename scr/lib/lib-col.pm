@@ -5244,7 +5244,7 @@ sub maxhomRunLoop {
 
 				# ------------------------------
 				# set the elapse time in seconds before an alarm is sent
-#    $paraTimeOutL= 10000;	# ~ 3 heures
+#    $paraTimeOutL= 1;	# ~ 3 heures
     $msgHere="";
 				# ------------------------------
 				# (1) build up MaxHom input
@@ -5296,10 +5296,11 @@ sub maxhomRunLoop {
 				# **************************************************
 				# NOTE this SBR is PP specific
 				# **************************************************
-		&ctrlAlarm("SUICIDE: In max_loop for more than $alarm_timer... (killer!)".
-			   "$msgHere");
+#		&ctrlAlarm("SUICIDE: In max_loop for more than $alarm_timer... (killer!)".
+#			   "$msgHere");
 		$alarm_sent=1;
-		return(0,"maxhom SUICIDE on $fileHsspOutL".$msgHere,0); }
+#		return(0,"maxhom SUICIDE on $fileHsspOutL".$msgHere,0); 
+	    }
 				# create a trace file
 	    open("NOHSSP","> $fileFlagNoHsspL") || 
 		warn "-*- $sbrName WARNING cannot open $fileFlagNoHsspL: $!\n";

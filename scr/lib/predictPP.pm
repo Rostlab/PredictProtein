@@ -1069,34 +1069,34 @@ sub predict {
                                # Run DISIS                                                                                
                                # -----------------------------------------------                                          
 
-    if ($job{"run"} =~/disis/i) {
-        ($Lok,$err,$msg)=
-            &runDisis  ($Origin,$Date,$niceRun,$filePID,$fhOut,$fhTrace,
-			   $envPP{"dir_work"},$filePredTmp,$fileHtmlTmp,$fileHtmlToc,
-			   $Debug,$job{"run"},$job{"out"},
-			   $envPP{"exeMaxhom"},$envPP{"exeDisis"},
-			   $envPP{"dirDisis"});
-        if (!$Lok){
-            print $fhTrace "*** ERROR in runDisis\n*** err=$err\n*** msg=$msg\n" if ($Debug);
-            print "*** ERROR in runDisis\n*** err=$err\n*** msg=$msg\n";
+   #  if ($job{"run"} =~/disis/i) {
+#         ($Lok,$err,$msg)=
+#             &runDisis  ($Origin,$Date,$niceRun,$filePID,$fhOut,$fhTrace,
+# 			   $envPP{"dir_work"},$filePredTmp,$fileHtmlTmp,$fileHtmlToc,
+# 			   $Debug,$job{"run"},$job{"out"},
+# 			   $envPP{"exeMaxhom"},$envPP{"exeDisis"},
+# 			   $envPP{"dirDisis"});
+#         if (!$Lok){
+#             print $fhTrace "*** ERROR in runDisis\n*** err=$err\n*** msg=$msg\n" if ($Debug);
+#             print "*** ERROR in runDisis\n*** err=$err\n*** msg=$msg\n";
 
-            # Add error message to result file                                                                             
-            $msg = "--- Attempt to run DISIS failed. Please contact the service administrator\n";
-            $command = "echo $msg>>";
-            if ($job{"out"}=~/ret html/){ $command .= $fileHtmlTmp;}
-            else{ $command .= $filePredTmp;}
-            ($Lok,$msgSys)=&sysSystem("$command");
+#             # Add error message to result file                                                                             
+#             $msg = "--- Attempt to run DISIS failed. Please contact the service administrator\n";
+#             $command = "echo $msg>>";
+#             if ($job{"out"}=~/ret html/){ $command .= $fileHtmlTmp;}
+#             else{ $command .= $filePredTmp;}
+#             ($Lok,$msgSys)=&sysSystem("$command");
 
-            if (0){
-                ($Lok,$msg2)=
-                    &ctrlAbortPred($err,"abort ".$msg);  print $fhTrace "$msg2\n"
-		    if ($Debug && ! $Lok);
-                                # **************************************************                                       
-                return(0,"$msg");} # <<<<< ****** this is bad end                                                          
-                                # **************************************************                                       
-	}
-    }
-    &ctrlDbgMsg("end of (6j) runDisis: $packName",$fhTrace,$Debug);
+#             if (0){
+#                 ($Lok,$msg2)=
+#                     &ctrlAbortPred($err,"abort ".$msg);  print $fhTrace "$msg2\n"
+# 		    if ($Debug && ! $Lok);
+#                                 # **************************************************                                       
+#                 return(0,"$msg");} # <<<<< ****** this is bad end                                                          
+#                                 # **************************************************                                       
+# 	}
+#     }
+#     &ctrlDbgMsg("end of (6j) runDisis: $packName",$fhTrace,$Debug);
 
 
 				# -----------------------------------------------
@@ -1112,7 +1112,7 @@ if ($job{"run"} =~/isis/i ){
 			 $envPP{"dir_work"},$filePredTmp,$fileHtmlTmp,$fileHtmlToc,
 			 $Debug,$job{"run"},$job{"out"},
 			 $envPP{"exeMaxhom"},$envPP{"exeIsis"}, 
-			 $envPP{"dirIsis"});
+			 $envPP{"dirIsis"},$envPP{"exeDisis"},   $envPP{"dirDisis"});
  	if (!$Lok){
  	    print $fhTrace "*** ERROR in runPredIsis\n*** err=$err\n*** msg=$msg\n" if ($Debug);
  	    print "*** ERROR in runPredIsis\n*** err=$err\n*** msg=$msg\n";
@@ -2076,8 +2076,8 @@ sub iniHtmlBuild {
 	 'agape',	      "Improving fold recognition without folds (Przybylski,D, Rost B)",
 	 'conblast',	      "ConSequenceS (Consensus Sequence Searches)",
 	 'conseq',  	      "ConSeq/Rate4Site (Glaser, F., Pupko, T., Paz, I., Bell, R.E., Bechor-Shental, D.,Martz, E. and Ben-Tal, N.)",
-	 'isis',             "Predicted protein-protein interaction sites fromlocal sequence information.(Ofran Y, Rost B)",
-	 'disis',             " Prediction of DNA binding residues from sequence. (Ofran Y, Myso\
+	 'isis',             "Predicted protein-protein interaction sites from local sequence information.(Ofran Y, Rost B)",
+	 'disis',             "Prediction of DNA binding residues from sequence. (Ofran Y, Myso\
 re V, Yachdav G & Rost B; submitted)",
 
 	 'nlprot',            "NLProt (Mika S, Rost B)",
@@ -2801,7 +2801,7 @@ sub modInterpret {
 	elsif ($LokWrt==4){$retVal=3;$errn="err=210";$msgRet=" ".$msgErrGene  .", \n$msg";}
 	else              {$retVal=1;$seqStatus="OK ";$SeqDescription="normal PP format";}
 	$lenSeq=$lenTmp         if (defined $lenTmp && $lenTmp=~/^\d+$/);
-#		$job{"run"}.=",blastp,blastpsi";} # output file keyword
+	#$job{"run"}.=",blastp,blastpsi";} # output file keyword
 	$job{"run"}.=",blastp,maxhom,blastpsi";} # output file keyword
 				# ------------------------------
     elsif  ($optSeq =~/pdb/){	# pdb format
@@ -3088,7 +3088,7 @@ sub modInterpret {
     				# Predict ProtProt interaction isis
     $job{"run"}.="isis"           if ($job{"out"}=~ /run isis/);
     				# Predict ProtProt interaction isis
-    $job{"run"}.="disis"           if ($job{"out"}=~ /disis/);
+    $job{"run"}.="isis"           if ($job{"out"}=~ /disis/);
 
   				# CHOP
 #    $job{"run"}.="chop"           if ($job{"out"}=~ /chop/);
@@ -3201,19 +3201,14 @@ sub modInterpret {
     # ----
     # ISIS/DISIS
     # ----
-    if ( $job{"run"} =~ /disis_only/ ) {
-	#$job{"run"}= "blastp, hssp,maxhom,prof,disis_only";
-	$job{"run"}.= ",disis_only";			
-    }				# 
+  
 
-    if ( $job{"run"} =~ /isis_only/ && $job{"run"} !~ /disis_only/) {
-     #   $job{"run"}= "blastp, maxhom,prof,isis_only";
-       #$job{"run"}= "blastp, prof,isis_only";
+    if ( $job{"run"} =~ /isis_only/ || $job{"run"} =~ /disis_only/) {
       $job{"run"}.= ",isis_only";
     }
 
     if ( $job{"run"} =~ /disis/ ) {
-	$job{"run"}.= ",disis";
+	$job{"run"}.= ",isis";
     }				# 
 
     if ( $job{"run"} =~ /run isis/ ) {
@@ -3639,17 +3634,17 @@ sub modConvert {
 	       $msgErrPirList."\n"."$msg") if (! $Lok);
 				# --------------------------------------------------
 				# loop over MaxHom runs
-	($Lok,$pdbidFound,$LisSelf)=
-	    &maxhomRunLoop($date,$nice,$exeMax,$file{"maxDef"},$fileJobId,$dirWork,
-			   $file{"seq"},$file{"aliList"},$file{"ali"},
-			   $fileMaxMetr,$dirMaxPdb,$Lprof,
-			   $paraMaxSmin,$paraMaxSmax,$paraMaxGo,$paraMaxGe,
-			   $paraMaxWeight1,$paraMaxWeight2,$paraMaxIndel1,$paraMaxIndel2,
-			   $paraMaxNali,$paraMaxThreshMod,$paraMaxSort,$paraMaxProfOut,
-			   $fileStripOutMod,$file{"aliMissing"},$paraMinLaliPdb,$paraMaxTimeOut,
-			   $fhErrSbr,$fileScreenLoc);
+#	($Lok,$pdbidFound,$LisSelf)=
+#	    &maxhomRunLoop($date,$nice,$exeMax,$file{"maxDef"},$fileJobId,$dirWork,
+#			   $file{"seq"},$file{"aliList"},$file{"ali"},
+#			   $fileMaxMetr,$dirMaxPdb,$Lprof,
+#			   $paraMaxSmin,$paraMaxSmax,$paraMaxGo,$paraMaxGe,
+#			   $paraMaxWeight1,$paraMaxWeight2,$paraMaxIndel1,$paraMaxIndel2,
+#			   $paraMaxNali,$paraMaxThreshMod,$paraMaxSort,$paraMaxProfOut,
+#			   $fileStripOutMod,$file{"aliMissing"},$paraMinLaliPdb,$paraMaxTimeOut,
+#			   $fhErrSbr,$fileScreenLoc);
 				# note pdbidFound: not necessary here!
-	return(0,"err=317",$msgErrPirList."\n"."$pdbidFound") if (! $Lok);
+#	return(0,"err=317",$msgErrPirList."\n"."$pdbidFound") if (! $Lok);
 		# convert 2 msf for check
 	$LdoExpandLoc=0;
 	($Lok,$msg)=
@@ -4844,7 +4839,7 @@ sub modFin {
 				# ------------------------------
 	if ($optOut=~/ret html/ && -e $fileHtmlTmp){
 
-	    if ( $optRun =~ /(chop|profcon|profbval|norsnet|ucon|mdisorder|agape|conblast|disis|nlprot|ecgo|only|snap)_only/ ) {
+	    if ( $optRun =~ /(chop|profcon|profbval|norsnet|ucon|mdisorder|agape|conblast|isis|nlprot|ecgo|only|snap)_only/ ) {
 		($Lok,$msg)=
                     &htmlFin($fileJobId,$dirWork,
                              $filePredTmp,$fileHtmlTmp,$envPP{"fileAppEmpty"},
@@ -4861,13 +4856,13 @@ sub modFin {
                              $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
                              $fileHtmlFin);
 
-	    } elsif ( $optRun =~ /isis_only/&& $optRun !~ /disis_only/) {
-		($Lok,$msg)=
-                    &htmlFin($fileJobId,$dirWork,
-                             $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
-                             $envPP{"fileAppHtmlHeadIsis"},$envPP{"fileAppEmpty"},
-                             $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
-                             $fileHtmlFin);
+# 	    } elsif ( $optRun =~ /isis_only/&& $optRun !~ /disis_only/) {
+# 		($Lok,$msg)=
+#                     &htmlFin($fileJobId,$dirWork,
+#                              $filePredTmp,$fileHtmlTmp,$fileHtmlToc,
+#                              $envPP{"fileAppHtmlHeadIsis"},$envPP{"fileAppEmpty"},
+#                              $envPP{"fileAppEmpty"},  $envPP{"fileAppEmpty"},
+#                              $fileHtmlFin);
 	    }else {
 		($Lok,$msg)=
 		    &htmlFin($fileJobId,$dirWork,
@@ -8602,23 +8597,20 @@ sub extrHdrOneLine {
 
 
 
-    if ($lineLoc =~ /disis_only/  ){             # only disis (dependents are hssp,maxhom and prof
-	#$optRun = "hssp, maxhom,disis_only,prof";
-	$optRun = ",prof, disis_only";
-	$optOut ="";
-        return (0);
-    }elsif ($lineLoc =~ /disis/){
-	$optRun.=",disis";	
-    }
+#     if ($lineLoc =~ /disis_only/  ) { # only disis (dependents are hssp,maxhom and prof
+#       $optRun = ",prof, disis_only";
+#       $optOut ="";
+#       return (0);
+#     } elsif ($lineLoc =~ /disis/) {
+#       $optRun.=",disis";	
+#     }
 
-    if ($lineLoc =~ /isis_only/ && $lineLoc !~ /disis/ ){	       # only isis (dependents are maxhom and prof
-       #		$optRun = "blastp, maxhom,isis_only,prof";
-       #$optRun = "blastp, hssp,isis_only,prof";
+    if ($lineLoc =~ /isis_only/ || $lineLoc =~ /disis_only/ ){	       # only isis (dependents are maxhom and prof
        $optRun = ",prof,isis_only";
        $optOut ="";
  	return (0);		
-    }elsif ($lineLoc =~ /run isis/){
-	$optRun.=",isis"  ;
+    }elsif ($lineLoc =~ /run d?isis/){
+	$optRun.=",isis";
     }
   
     
@@ -8643,9 +8635,6 @@ sub extrHdrOneLine {
 	    $parNLProt = "";
 	}
 	$optRun= "nlprot_only, $parNLProt";
-	print "Line 7532 optRun=$optRun\n";
-
-#       $optRun  =",nlprot_only";
        $optOut ="";
        return (0);
     }	    
@@ -11219,225 +11208,226 @@ sub runChopper {
 # GY ADDED 4-2008: DISIS module        
 #===============================================================================    
 
-sub runDisis {
-    local($origin,$date,$nice,$fileJobId,$fhOutSbr,$fhErrSbr,
-          $dirWork,$filePredTmp,$fileHtmlTmp,$fileHtmlToc,$Ldebug,$optRun,$optOut,
-          $exeMaxhom,$exeDisis,$dirDisis)=@_;
+# sub runDisis {
+#     local($origin,$date,$nice,$fileJobId,$fhOutSbr,$fhErrSbr,
+#           $dirWork,$filePredTmp,$fileHtmlTmp,$fileHtmlToc,$Ldebug,$optRun,$optOut,
+#           $exeMaxhom,$exeDisis,$dirDisis)=@_;
 
-    local($sbr,$msgHere,$msg,$fileOut,$Lok,$fileStripOutMod,
-          $fileAliList,$fileFastaSingle,@tmpAppend,$txt,$command, $fhcys, @tmp);
-    $[ =1 ;
-#-------------------------------------------------------------------------------                            
-#   runIsis                    : predict prot prot interaction                                              
-#       in:                     many                                                                        
-#       in GLOBAL:              $msgErr{""}, $file{""}, @kwdRm, $envPP{"file*"}                             
-#       in GLOBAL:              $file{"seqFasta"}     seq in FASTA format (from modInterpret)               
-#       err:                    ok=(1,'ok','blabla'), err=(0,errNumber,'msg')                               
-#-------------------------------------------------------------------------------                            
-    $sbr="runIsis";
-    $errTxt="err=541"; $msg="*** $sbr: not def ";
-    return(0,$errTxt,$msg."origin!")          if (! defined $origin);
-    return(0,$errTxt,$msg."date!")            if (! defined $date); #                                       
-    return(0,$errTxt,$msg."nice!")            if (! defined $nice); #                                       
-    return(0,$errTxt,$msg."fileJobId!")       if (! defined $fileJobId);
-    $fhOutSbr="STDOUT"                        if (! defined $fhOutSbr); #                                   
-    $fhErrSbr="STDOUT"                        if (! defined $fhErrSbr); #                                   
-    return(0,$errTxt,$msg."dirWork!")         if (! defined $dirWork); #                                    
-    return(0,$errTxt,$msg."filePredTmp!")     if (! defined $filePredTmp);
-    return(0,$errTxt,$msg."fileHtmlTmp!")     if (! defined $fileHtmlTmp); #                                
-    return(0,$errTxt,$msg."fileHtmlToc!")     if (! defined $fileHtmlToc); #                                
-    return(0,$errTxt,$msg."Ldebug!")          if (! defined $Ldebug); #                                     
-    return(0,$errTxt,$msg."optRun!")          if (! defined $optRun); #                                     
-    return(0,$errTxt,$msg."optOut!")          if (! defined $optOut); #                                     
-    return(0,$errTxt,$msg."exeDisis!")        if (! defined $exeDisis); #                                     
-    return(0,$errTxt,$msg."exeMaxhom!")        if (! defined $exeMaxhom); #                                 
+#     local($sbr,$msgHere,$msg,$fileOut,$Lok,$fileStripOutMod,
+#           $fileAliList,$fileFastaSingle,@tmpAppend,$txt,$command, $fhcys, @tmp);
+#     $[ =1 ;
+# #-------------------------------------------------------------------------------                            
+# #   runIsis                    : predict prot prot interaction                                              
+# #       in:                     many                                                                        
+# #       in GLOBAL:              $msgErr{""}, $file{""}, @kwdRm, $envPP{"file*"}                             
+# #       in GLOBAL:              $file{"seqFasta"}     seq in FASTA format (from modInterpret)               
+# #       err:                    ok=(1,'ok','blabla'), err=(0,errNumber,'msg')                               
+# #-------------------------------------------------------------------------------                            
+#     $sbr="runIsis";
+#     $errTxt="err=541"; $msg="*** $sbr: not def ";
+#     return(0,$errTxt,$msg."origin!")          if (! defined $origin);
+#     return(0,$errTxt,$msg."date!")            if (! defined $date); #                                       
+#     return(0,$errTxt,$msg."nice!")            if (! defined $nice); #                                       
+#     return(0,$errTxt,$msg."fileJobId!")       if (! defined $fileJobId);
+#     $fhOutSbr="STDOUT"                        if (! defined $fhOutSbr); #                                   
+#     $fhErrSbr="STDOUT"                        if (! defined $fhErrSbr); #                                   
+#     return(0,$errTxt,$msg."dirWork!")         if (! defined $dirWork); #                                    
+#     return(0,$errTxt,$msg."filePredTmp!")     if (! defined $filePredTmp);
+#     return(0,$errTxt,$msg."fileHtmlTmp!")     if (! defined $fileHtmlTmp); #                                
+#     return(0,$errTxt,$msg."fileHtmlToc!")     if (! defined $fileHtmlToc); #                                
+#     return(0,$errTxt,$msg."Ldebug!")          if (! defined $Ldebug); #                                     
+#     return(0,$errTxt,$msg."optRun!")          if (! defined $optRun); #                                     
+#     return(0,$errTxt,$msg."optOut!")          if (! defined $optOut); #                                     
+#     return(0,$errTxt,$msg."exeDisis!")        if (! defined $exeDisis); #                                     
+#     return(0,$errTxt,$msg."exeMaxhom!")        if (! defined $exeMaxhom); #                                 
 
-    $errTxt="err=542"; $msg="*** $sbr: no dir =";
-    return(0,$errTxt,$msg."$dirWork!")        if (! -d $dirWork);
+#     $errTxt="err=542"; $msg="*** $sbr: no dir =";
+#     return(0,$errTxt,$msg."$dirWork!")        if (! -d $dirWork);
 
-    $errTxt="err=543"; $msg="*** $sbr: no file=";
-    return(0,$errTxt,$msg."$filePredTmp!")    if (! -e $filePredTmp && ! -l $filePredTmp);
-                                #                                                                           
-    $errTxt="err=544"; $msg="*** $sbr: no exe =";
-    foreach $exe ($exeDisis) {   #                                                                           
-        return(0,$errTxt,$msg."$exe!")        if (! -e $exe && ! -l $exe); }
+#     $errTxt="err=543"; $msg="*** $sbr: no file=";
+#     return(0,$errTxt,$msg."$filePredTmp!")    if (! -e $filePredTmp && ! -l $filePredTmp);
+#                                 #                                                                           
+#     $errTxt="err=544"; $msg="*** $sbr: no exe =";
+#     foreach $exe ($exeDisis) {   #                                                                           
+#         return(0,$errTxt,$msg."$exe!")        if (! -e $exe && ! -l $exe); }
 
-    return(0,"err=545","*** $sbr: no seq =".$file{"seq"}."!")
-        if (! -e $file{"seq"} && ! -l $file{"seq"}); #                                                      
+#     return(0,"err=545","*** $sbr: no seq =".$file{"seq"}."!")
+#         if (! -e $file{"seq"} && ! -l $file{"seq"}); #                                                      
 
 
-    $msgErrIntern=    $msgErr{"internal"};
-    $msgErrConvert=   $msgErr{"align:convert"};
-    $msgHere="";                #                                                                           
-    $disisRunParams = "";
-    #$disisRunParams = " ".$file{"ali"}." ";
-    $disisRunParams = " ".$file{"aliFil4phd"}." ";
+#     $msgErrIntern=    $msgErr{"internal"};
+#     $msgErrConvert=   $msgErr{"align:convert"};
+#     $msgHere="";                #                                                                           
+#     $disisRunParams = "";
+#     #$disisRunParams = " ".$file{"ali"}." ";
+#     $disisRunParams = " ".$file{"aliFil4phd"}." ";
 
 
     
-                              # ------------------------------                                              
-                                # convert_seq -> FASTA (if not already)                                     
-    if (! defined $file{"seqFasta"}){
-        print $fhErrSbr "*** in $sbr file{seqFasta} not defined\n";
-        print $fhErrSbr "*** WATCH will change optRun ($optRun)!!\n" x 3;
-        $optRun=~s/isis,//g;}
-    elsif (! -e $file{"seqFasta"}){
-        print $fhErrSbr "*** in $sbr file{seqFasta} not existing (modInterpret lazy??)\n";
-        print $fhErrSbr "*** WATCH will change optRun ($optRun)!!\n" x 3;
-        $optRun=~s/isis,//g;}
-    elsif (! &isFasta($file{"seqFasta"})){
-        print $fhErrSbr
-            "*** in $sbr file{seqFasta}=",$file{"seqFasta"},
-            ", not in FASTA format (modInterpret lazy??)\n",
-            "*** WATCH will change optRun ($optRun)!!\n" x 3;
-        $optRun=~s/disis,//g;}
+#                               # ------------------------------                                              
+#                                 # convert_seq -> FASTA (if not already)                                     
+#     if (! defined $file{"seqFasta"}){
+#         print $fhErrSbr "*** in $sbr file{seqFasta} not defined\n";
+#         print $fhErrSbr "*** WATCH will change optRun ($optRun)!!\n" x 3;
+#         $optRun=~s/isis,//g;}
+#     elsif (! -e $file{"seqFasta"}){
+#         print $fhErrSbr "*** in $sbr file{seqFasta} not existing (modInterpret lazy??)\n";
+#         print $fhErrSbr "*** WATCH will change optRun ($optRun)!!\n" x 3;
+#         $optRun=~s/isis,//g;}
+#     elsif (! &isFasta($file{"seqFasta"})){
+#         print $fhErrSbr
+#             "*** in $sbr file{seqFasta}=",$file{"seqFasta"},
+#             ", not in FASTA format (modInterpret lazy??)\n",
+#             "*** WATCH will change optRun ($optRun)!!\n" x 3;
+#         $optRun=~s/disis,//g;}
 
-                                # ---------------------------------------------                             
-                                # Disis can only take single sequence                                        
-                                # in case input is list, get the first fasta file                           
-                                # ---------------------------------------------                             
-    if ( $optSeq =~ /saf|msf/) {
-        $file{"seq4Disis"}=    $dirWork. $fileJobId.  ".fastaSingle";
-        push(@kwdRm,"seq4Disis");
+#                                 # ---------------------------------------------                             
+#                                 # Disis can only take single sequence                                        
+#                                 # in case input is list, get the first fasta file                           
+#                                 # ---------------------------------------------                             
+#     if ( $optSeq =~ /saf|msf/) {
+#         $file{"seq4Disis"}=    $dirWork. $fileJobId.  ".fastaSingle";
+#         push(@kwdRm,"seq4Disis");
 
-        ($Lok,$id,$seq)=&fastaRdGuide($file{"seqFasta"});
-	return(0,"err=551",$msgErrConvert."\n".$id."\n".
-	       "*** file{seq}=".$file{"seq"}."\n") if (! $Lok);
-        $seq=~s/[ \.\~\*]//g;   # remove non amino acids!                                                   
+#         ($Lok,$id,$seq)=&fastaRdGuide($file{"seqFasta"});
+# 	return(0,"err=551",$msgErrConvert."\n".$id."\n".
+# 	       "*** file{seq}=".$file{"seq"}."\n") if (! $Lok);
+#         $seq=~s/[ \.\~\*]//g;   # remove non amino acids!                                                   
 
-        ($Lok,$msg)=&fastaWrt($file{"seq4Disis"},$id,$seq);
-        return(0,"err=552",$msgErrConvert."\n"."*** fastaWrt\n".$msg."*** id=$id, seq=$seq\n")
-            if (! $Lok);
-        return(0,"err=553",$msgErrConvert."\n"."*** fastaWrt\n"."*** id=$id, seq=$seq\n".
-               "*** no file '".$file{"seq4Disis"}."' written \n") if (! -e $file{"seq4Disis"});
-    } else {
-        $file{"seq4Disis"} = $file{"seqFasta"};
-    }
-
-
-
-    # ------------                                                                                          
-    # DISIS program                                                                                          
-    # ------------                                                                                          
-    if ($optRun =~/disis/) {
-        $file{"disis"}=        $dirWork.$fileJobId.".disis";
-        push(@kwdRm,"disis");
-
-                        # set env ISIS dir (required for the program)                                       
-        if (! defined $ENV{"DISIS"} ) {
-            $ENV{"DISIS"} = $dirDisis;
-        }
-
-
-        if ((defined $file{"dssp"} && -e $file{"dssp"}) ||
-            (defined $file{"profRdb"} && -e $file{"profRdb"})){
-            if (defined $file{"dssp"} && -e $file{"dssp"}){
-                $disisRunParams .= " ".$file{"dssp"}." ";
-            }else{
-                $disisRunParams .= " ".$file{"profRdb"}." ";
-            }
-
-	}else{
-            $errTxt="err=903"; $msg="*** $sbr: for sequence type $runSeq no file=";
-            return(0,$errTxt,$msg."fileDssp or fileProfRdb!")
-	    }
-
-        $command="$nice $exeDisis $disisRunParams > $file{\"disis\"}";
-        $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeDisis $command'";
-
-        # -----------                                                                                       
-        # do run ISIS                                                                                       
-        # -----------                                                                                       
-        ($Lok,$msgSys)=&sysSystem("$command");
-
-        return (0,"err=560","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
-	    if (! $Lok || ! -e $file{"disis"});
-
-        # -------------------------------------------------                                                 
-        # check result,                                                                                     
-        # -------------------------------------------------                                                 
-        $fhdisis = 'FHDISIS';
-        $Lok=       &open_file($fhisis,$file{"disis"});
-        return(0,"*** ERROR $sbr: '$file{\"disis\"}' not opened\n") if (! $Lok);
-
-        if ( $Lok == 1 ) {
-            $#tmpAppend=0;
-            push(@tmpAppend,$envPP{"fileAppDisis"},
-                 $file{"disis"},$envPP{"fileAppLine"});
-
-	    if ($optRun =~/disis_only/) {        # HACK: remove previouse output disis should only       
-                                                 # have its own output                                      
-		unlink $fileHtmlTmp; unlink $fileHtmlToc;
-		$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadDisis"};
-	    }
+#         ($Lok,$msg)=&fastaWrt($file{"seq4Disis"},$id,$seq);
+#         return(0,"err=552",$msgErrConvert."\n"."*** fastaWrt\n".$msg."*** id=$id, seq=$seq\n")
+#             if (! $Lok);
+#         return(0,"err=553",$msgErrConvert."\n"."*** fastaWrt\n"."*** id=$id, seq=$seq\n".
+#                "*** no file '".$file{"seq4Disis"}."' written \n") if (! -e $file{"seq4Disis"});
+#     } else {
+#         $file{"seq4Disis"} = $file{"seqFasta"};
+#     }
 
 
 
-            # ------------------------------                                                                
-            # append HTML output                                                                            
-            # ------------------------------                                                                
-            if ($optOut=~/ret html/ && -e $file{"disis"}){
-              #  unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output                   
+#     # ------------                                                                                          
+#     # DISIS program                                                                                          
+#     # ------------                                                                                          
+#     if ($optRun =~/disis/) {
+#         $file{"disis"}=        $dirWork.$fileJobId.".disis";
+#         push(@kwdRm,"disis");
 
-                # append file                                                                               
-                ($Lok,$msg)=&htmlBuild($file{"disis"},$fileHtmlTmp,$fileHtmlToc,1,"disis");
-                if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=disis)\n".$msg."\n";
-                              print $fhTrace $msg;
-                              return(0,"err=2250",$msg); }
-            }
-        }
+#                         # set env ISIS dir (required for the program)                                       
+#         if (! defined $ENV{"DISIS"} ) {
+#             $ENV{"DISIS"} = $dirDisis;
+#         }
 
 
+#         if ((defined $file{"dssp"} && -e $file{"dssp"}) ||
+#             (defined $file{"profRdb"} && -e $file{"profRdb"})){
+#             if (defined $file{"dssp"} && -e $file{"dssp"}){
+#                 $disisRunParams .= " ".$file{"dssp"}." ";
+#             }else{
+#                 $disisRunParams .= " ".$file{"profRdb"}." ";
+#             }
 
-        # --------------------------------------------------                                                
-        # append files                                                                                      
-        # --------------------------------------------------                                                
-        if ($origin =~ /^mail|^html|^testPP/i){
-            $fileDisisTemp = $file{"disis_temp"}=        $dirWork.$fileJobId.".disis.temp";
-            unlink $fileDisisTemp; # security                                                                
-            push(@kwdRm,"disis_temp");
-            $#tmpAppend=0;
-            push(@tmpAppend,$envPP{"fileAppDisis"},$file{"disis"},$envPP{"fileAppLine"});
-	    if ($#tmpAppend>0){
-                ($Lok,$msg)=&sysCatfile("nonice",$Ldebug,$fileDisisTemp,@tmpAppend);
-                return(0,"err=570",$msgErrIntern."\n".
-                       "disis final appending...\n: $msg,\n"."$msgHere") if (! $Lok);
-            }
+# 	}else{
+#             $errTxt="err=903"; $msg="*** $sbr: for sequence type $runSeq no file=";
+#             return(0,$errTxt,$msg."fileDssp or fileProfRdb!")
+# 	    }
+
+#         $command="$nice $exeDisis $disisRunParams > $file{\"disis\"}";
+#         $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeDisis $command'";
+
+#         # -----------                                                                                       
+#         # do run ISIS                                                                                       
+#         # -----------                                                                                       
+#         ($Lok,$msgSys)=&sysSystem("$command");
+
+#         return (0,"err=560","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
+# 	    if (! $Lok || ! -e $file{"disis"});
+
+#         # -------------------------------------------------                                                 
+#         # check result,                                                                                     
+#         # -------------------------------------------------                                                 
+#         $fhdisis = 'FHDISIS';
+#         $Lok=       &open_file($fhisis,$file{"disis"});
+#         return(0,"*** ERROR $sbr: '$file{\"disis\"}' not opened\n") if (! $Lok);
+
+#         if ( $Lok == 1 ) {
+#             $#tmpAppend=0;
+#             push(@tmpAppend,$envPP{"fileAppDisis"},
+#                  $file{"disis"},$envPP{"fileAppLine"});
+
+# 	    if ($optRun =~/disis_only/) {        # HACK: remove previouse output disis should only       
+#                                                  # have its own output                                      
+# 		unlink $fileHtmlTmp; unlink $fileHtmlToc;
+# 		$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadDisis"};
+# 	    }
 
 
-            # -----------------------------------------------------------------------                       
-            # HACK: rebuild result text files so they would contain only isis results                       
-            # -----------------------------------------------------------------------                       
-            open($fhinLoc, $fileIsisTemp);
-            open($fhoutLoc,">".$filePredTmp);
-            print $fhoutLoc
-                "PPhdr from ".$User_name,"\n",
-                "PPhdr resp "."MAIL","\n",
-                "PPhdr orig ".$origin,"\n",
-                "PPhdr want "."unk","\n";
-            while(<$fhinLoc>){
-                print $fhoutLoc $_;
-            }
-            close($fhinLoc);
-            close($fhoutLoc);
-        }
-    }
 
-    undef $ENV{"DISIS"} if ( defined $ENV{"DISIS"} );
-    return(1,"ok","$sbr:$msg");
+#             # ------------------------------                                                                
+#             # append HTML output                                                                            
+#             # ------------------------------                                                                
+#             if ($optOut=~/ret html/ && -e $file{"disis"}){
+#               #  unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output                   
 
-} #sub runDisis                 
+#                 # append file                                                                               
+#                 ($Lok,$msg)=&htmlBuild($file{"disis"},$fileHtmlTmp,$fileHtmlToc,1,"disis");
+#                 if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=disis)\n".$msg."\n";
+#                               print $fhTrace $msg;
+#                               return(0,"err=2250",$msg); }
+#             }
+#         }
+
+
+
+#         # --------------------------------------------------                                                
+#         # append files                                                                                      
+#         # --------------------------------------------------                                                
+#         if ($origin =~ /^mail|^html|^testPP/i){
+#             $fileDisisTemp = $file{"disis_temp"}=        $dirWork.$fileJobId.".disis.temp";
+#             unlink $fileDisisTemp; # security                                                                
+#             push(@kwdRm,"disis_temp");
+#             $#tmpAppend=0;
+#             push(@tmpAppend,$envPP{"fileAppDisis"},$file{"disis"},$envPP{"fileAppLine"});
+# 	    if ($#tmpAppend>0){
+#                 ($Lok,$msg)=&sysCatfile("nonice",$Ldebug,$fileDisisTemp,@tmpAppend);
+#                 return(0,"err=570",$msgErrIntern."\n".
+#                        "disis final appending...\n: $msg,\n"."$msgHere") if (! $Lok);
+#             }
+
+
+#             # -----------------------------------------------------------------------                       
+#             # HACK: rebuild result text files so they would contain only isis results                       
+#             # -----------------------------------------------------------------------                       
+#             open($fhinLoc, $fileIsisTemp);
+#             open($fhoutLoc,">".$filePredTmp);
+#             print $fhoutLoc
+#                 "PPhdr from ".$User_name,"\n",
+#                 "PPhdr resp "."MAIL","\n",
+#                 "PPhdr orig ".$origin,"\n",
+#                 "PPhdr want "."unk","\n";
+#             while(<$fhinLoc>){
+#                 print $fhoutLoc $_;
+#             }
+#             close($fhinLoc);
+#             close($fhoutLoc);
+#         }
+#     }
+
+#     undef $ENV{"DISIS"} if ( defined $ENV{"DISIS"} );
+#     return(1,"ok","$sbr:$msg");
+
+# } #sub runDisis  
+
 
 
 
 
 #===============================================================================
-# GY ADDED 4-2004: ISIS module
+# GY ADDED 4-2004: D/ISIS modules
 #===============================================================================
 sub runPredIsis {
     local($origin,$date,$nice,$fileJobId,$fhOutSbr,$fhErrSbr,
 	  $dirWork,$filePredTmp,$fileHtmlTmp,$fileHtmlToc,$Ldebug,$optRun,$optOut,
-	  $exeMaxhom,$exeIsis,$dirIsis)=@_;
+	  $exeMaxhom,$exeIsis,$dirIsis,$exeDisis,$dirDisis)=@_;
 
     local($sbr,$msgHere,$msg,$fileOut,$Lok,$fileStripOutMod,
 	  $fileAliList,$fileFastaSingle,@tmpAppend,$txt,$command, $fhcys, @tmp);
@@ -11465,6 +11455,7 @@ sub runPredIsis {
     return(0,$errTxt,$msg."optRun!")          if (! defined $optRun); # 
     return(0,$errTxt,$msg."optOut!")          if (! defined $optOut); # 
     return(0,$errTxt,$msg."exeIsis!")        if (! defined $exeIsis); # 
+    return(0,$errTxt,$msg."exeDisis!")        if (! defined $exeDisis); #
     return(0,$errTxt,$msg."exeMaxhom!")        if (! defined $exeMaxhom); # 
     
     $errTxt="err=542"; $msg="*** $sbr: no dir =";
@@ -11474,7 +11465,7 @@ sub runPredIsis {
     return(0,$errTxt,$msg."$filePredTmp!")    if (! -e $filePredTmp && ! -l $filePredTmp);
     				# 
     $errTxt="err=544"; $msg="*** $sbr: no exe =";
-    foreach $exe ($exeIsis) {	# 
+    foreach $exe ($exeIsis, $exeDisis) {	# 
 	return(0,$errTxt,$msg."$exe!")        if (! -e $exe && ! -l $exe); }
     
     return(0,"err=545","*** $sbr: no seq =".$file{"seq"}."!")   
@@ -11530,6 +11521,8 @@ sub runPredIsis {
     if ($optRun =~/isis/) {
 	$file{"isis"}=        $dirWork.$fileJobId.".isis";   
 	push(@kwdRm,"isis");	
+	$file{"disis"}=        $dirWork.$fileJobId.".disis";   
+	push(@kwdRm,"disis");	
 	
 	# extract expert options
 	if ( $optRun =~/parIsis\(([^\(]+)\)/ ) {
@@ -11547,24 +11540,26 @@ sub runPredIsis {
     }
 
     # ------------
-    # ISIS program
+    # D/ISIS program
     # ------------
     if ($optRun =~/isis/) {
-	$file{"isis"}=        $dirWork.$fileJobId.".isis";   
-	push(@kwdRm,"isis");
 
 			# set env ISIS dir (required for the program)
 	if (! defined $ENV{"ISIS"} ) {
 	    $ENV{"ISIS"} = $dirIsis;
 	}
 
+	if (! defined $ENV{"DISIS"} ) {
+	    $ENV{"DISIS"} = $dirDisis;
+	}
+
 
 	if ((defined $file{"dssp"} && -e $file{"dssp"}) ||
 	    (defined $file{"profRdb"} && -e $file{"profRdb"})){
 	    if (defined $file{"dssp"} && -e $file{"dssp"}){ 
-		$isisRunParams .= " ".$file{"dssp"}." ";
+		$disisRunParams .= $isisRunParams .= " ".$file{"dssp"}." ";
 	    }else{
-		$isisRunParams .= " ".$file{"profRdb"}." ";
+		$disisRunParams .= $isisRunParams .= " ".$file{"profRdb"}." ";
 	    }
 	}else{
 	    $errTxt="err=903"; $msg="*** $sbr: for sequence type $runSeq no file=";
@@ -11582,6 +11577,20 @@ sub runPredIsis {
 	return (0,"err=560","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
 	if (! $Lok || ! -e $file{"isis"});
 
+	# -----------
+	# do run DISIS
+	# -----------
+	$command="$nice $exeDisis $disisRunParams > $file{\"disis\"}";
+        $msgHere="--- ".__FILE__.':'.__LINE__." $sbr system '$exeDisis $command'";
+	
+	($Lok,$msgSys)=&sysSystem("$command");
+
+	return (0,"err=560","*** ERROR $sbr\n"."$msgHere\n"."$Lok\n")
+	if (! $Lok || ! -e $file{"disis"});
+
+
+
+
 	# -------------------------------------------------
 	# check result, 
 	# -------------------------------------------------
@@ -11589,15 +11598,20 @@ sub runPredIsis {
 	$Lok=       &open_file($fhisis,$file{"isis"});
 	return(0,"*** ERROR $sbr: '$file{\"isis\"}' not opened\n") if (! $Lok);
 
+	$fhdisis = 'FHDISIS';
+        $Lok=       &open_file($fhisis,$file{"disis"});
+        return(0,"*** ERROR $sbr: '$file{\"disis\"}' not opened\n") if (! $Lok);
+
 	if ( $Lok == 1 ) {
 	    $#tmpAppend=0;	  
 	    push(@tmpAppend,$envPP{"fileAppIsis"},
-		 $file{"isis"},$envPP{"fileAppLine"});
+		 $file{"isis"},$envPP{"fileAppLine"},$envPP{"fileAppDisis"},
+                 $file{"disis"},$envPP{"fileAppLine"});
 	    
 	    # ------------------------------
 	    # append HTML output
 	    # ------------------------------
-	    if ($optOut=~/ret html/ && -e $file{"isis"}){ 
+	    if ($optOut=~/ret html/ && -e $file{"isis"} && -e $file{"disis"}){ 
 
 		if ($optRun =~/isis_only/) {        # HACK: remove previouse output disis should only       
 		    # have its own output                                      
@@ -11611,6 +11625,13 @@ sub runPredIsis {
 		if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=isis)\n".$msg."\n";
 			      print $fhTrace $msg;
 			      return(0,"err=2250",$msg); }
+
+
+		$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadIsis"};
+		($Lok,$msg)=&htmlBuild($file{"disis"},$fileHtmlTmp,$fileHtmlToc,1,"disis");
+		if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=disis)\n".$msg."\n";
+			      print $fhTrace $msg;
+			      return(0,"err=2250",$msg); }
 	    }
 	}
 
@@ -11621,7 +11642,9 @@ sub runPredIsis {
 	# --------------------------------------------------
 	if ($origin =~ /^mail|^html|^testPP/i){
 	    $fileIsisTemp = $file{"isis_temp"}=        $dirWork.$fileJobId.".isis.temp";   
-	    unlink $fileIsisTemp; # security
+	    $fileDisisTemp = $file{"disis_temp"}=        $dirWork.$fileJobId.".disis.temp";   
+	    unlink $fileIsisTemp;unlink $fileDisisTemp; # security
+
 	    push(@kwdRm,"isis_temp");
 	    $#tmpAppend=0;	
 	    push(@tmpAppend,$envPP{"fileAppIsis"},$file{"isis"},$envPP{"fileAppLine"});
@@ -11629,6 +11652,14 @@ sub runPredIsis {
 		($Lok,$msg)=&sysCatfile("nonice",$Ldebug,$fileIsisTemp,@tmpAppend);
 		return(0,"err=570",$msgErrIntern."\n". 
 		       "isis final appending...\n: $msg,\n"."$msgHere") if (! $Lok);
+	    }
+	    push(@kwdRm,"disis_temp");
+	    $#tmpAppend=0;	
+	    push(@tmpAppend,$envPP{"fileAppDisis"},$file{"disis"},$envPP{"fileAppLine"});
+	    if ($#tmpAppend>0){
+		($Lok,$msg)=&sysCatfile("nonice",$Ldebug,$fileIsisTemp,@tmpAppend);
+		return(0,"err=570",$msgErrIntern."\n". 
+		       "disis final appending...\n: $msg,\n"."$msgHere") if (! $Lok);
 	    }
 
 
@@ -11648,18 +11679,10 @@ sub runPredIsis {
 	    close($fhinLoc);
 	    close($fhoutLoc);
 	}
-
-
-#	if ($origin =~ /^mail|^html|^testPP/i){
-#	    if ($#tmpAppend>0){	# 
-		# print "debug=$Ldebug; predTmp=$filePredTmp;tmpAp=@tmpAppend\n";
-#		($Lok,$msg)=&sysCatfile("nonice",$Ldebug,$filePredTmp,@tmpAppend);
-#		return(0,"err=570",$msgErrIntern."\n". 
-#		       "align final appending...\n: $msg,\n"."$msgHere") if (! $Lok);}
-#	}
     }
     
     undef $ENV{"ISIS"} if ( defined $ENV{"ISIS"} ); 
+    undef $ENV{"DISIS"} if ( defined $ENV{"DISIS"} ); 
     return(1,"ok","$sbr:$msg");
 
 } #sub runPred Isis
