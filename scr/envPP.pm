@@ -849,15 +849,17 @@ INIT:{
 				# ==================================================
 				# Alignment utilities: Convert_seq
 				# ==================================================
-	   'exeCopf',           $dppPrgPhd.   "scr/copf.pl",
-	   'exeConvertSeq',     $dppScrBin.   "convert_seq."       .$ARCH,
+#	   'exeCopf',           $dppPrgPhd.   "scr/copf.pl",
+	   'exeCopf',           $dppPrgProf.   "scr/copf.pl",
+	   'exeConvertSeq',     $dppScrBin.   "convert_seq_big."       .$ARCH,
 #	   'exeConvertSeq',     $dppPrgMax.   "bin/convert_seq."   .$ARCH,
 
 				# ==================================================
 				# Alignment utilities: Filter_hssp
 				# ==================================================
-	   'exeHsspFilter',     $dppPrgPhd.   "scr/hssp_filter.pl",
-	   'exeHsspFilterFor',  $dppScrBin.   "filter_hssp."       .$ARCH,
+	   'exeHsspFilter',     $dppPrgProf.   "scr/hssp_filter.pl",
+#	   'exeHsspFilter',     $dppPrgPhd.   "scr/hssp_filter.pl",
+	   'exeHsspFilterFor',  $dppScrBin.   "filter_hssp_big."       .$ARCH,
 #	   'exeHsspFilterFor',  $dppPrgMax.   "bin/filter_hssp."   .$ARCH,
                                 # ----------------------------------------
 				# ali filter: parameters
