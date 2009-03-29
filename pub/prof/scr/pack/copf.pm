@@ -630,7 +630,6 @@ sub iniDef {
 
     $par{"dirSrc"}=             $par{"dirHome"}. "";   # all source except for binaries
     $par{"dirSrcMat"}=          $par{"dirSrc"}.  "mat/";   # general material
-	warn     ($par{"dirSrc"});
 #$par{"dirPerl"}=            $par{"dirSrc"}.  "perl/"   # perl libraries
     $par{"dirPerl"}=            $par{"dirSrc"}.  "scr/"   # perl libraries
         if (! defined $par{"dirPerl"});
