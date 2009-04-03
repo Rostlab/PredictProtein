@@ -483,9 +483,10 @@ sub blastpsiRun {
 	qq| -o "$fileOutTmp" -C "$fileOutCheck"  |;
     # GY - added 3/18/2004
     # Prof Tmb needs this added to the 
-    #if (defined $fileBlastMatTmb && $fileBlastMatTmb){ # lkajan: always genearte this, it does not take more time and is not too big a file
-	$command .=" -Q $fileBlastMatTmb ";
-    #}
+    if( $fileBlastMatTmb )
+    {
+	$command .=" -Q $fileBlastMatTmb";
+    }
     # end additions
     $msg="--- $sbr '$command'\n";
 
@@ -494,8 +495,8 @@ sub blastpsiRun {
     if( !$inseq ) { confess("failed to read FASTA sequence from ``$fileInLoc''"); }
     
     ($Lok,$msgSys)=
-	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$command_base -o -C -Q --seq=".$inseq->seq(), md5files => [], cache_files => {
-                'blres' => $fileOutTmp, 'checkpoint' => $fileOutCheck, 'matrix' => $fileBlastMatTmb } } );
+	&cachedBlastCall( $command, $fhTraceLoc, { md5string => "$command_base -o -C".( $fileBlastMatTmb ? ' -Q' : '' )." --seq=".$inseq->seq(), md5files => [], cache_files => {
+                'blres' => $fileOutTmp, 'checkpoint' => $fileOutCheck, ( $fileBlastMatTmb ? ( 'matrix' => $fileBlastMatTmb ) : () ) } } );
         #&sysSystem( $command, $fhTraceLoc );
     return(0,"*** ERROR $sbr '$Lok'\n".$msg."\n".$msgSys)
 	if (! $Lok);
