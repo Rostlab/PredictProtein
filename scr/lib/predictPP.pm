@@ -11627,7 +11627,7 @@ sub runPredIsis {
 			      return(0,"err=2250",$msg); }
 
 
-		$envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadIsis"};
+		# $envPP{"fileAppHtmlHead"} = $envPP{"fileAppHtmlHeadIsis"};
 		($Lok,$msg)=&htmlBuild($file{"disis"},$fileHtmlTmp,$fileHtmlToc,1,"disis");
 		if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=disis)\n".$msg."\n";
 			      print $fhTrace $msg;

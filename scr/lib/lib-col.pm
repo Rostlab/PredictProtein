@@ -5277,39 +5277,39 @@ sub maxhomRunLoop {
 				# --------------------------------------------------
 				# the thing that does IT!
 				# --------------------------------------------------
-    while ( ! -f $fileHsspOutL ) { 
-	$msgHere.="--- $sbrName \t first trial to get $fileHsspOutL, run:\n";
-	$msgHere.="$maxCmdL\n";
+#    while ( ! -f $fileHsspOutL ) { 
+#	$msgHere.="--- $sbrName \t first trial to get $fileHsspOutL, run:\n";
+#	$msgHere.="$maxCmdL\n";
 
 #	$Lok=
 #	    &run_program($maxCmdL,$fhTraceLoc); # its running!
-	($Lok,$msg)=
-	    &sysRunProg($maxCmdL,$fileScreenLoc,$fhTraceLoc);
+#	($Lok,$msg)=
+#	    &sysRunProg($maxCmdL,$fileScreenLoc,$fhTraceLoc);
 
 				# ------------------------------
 				# no HSSP file -> loop
-	if ( ! -f $fileHsspOutL ) {
-	    if (! $start_at) {	# switch a timer on
-		$start_at= time(); }
+#	if ( ! -f $fileHsspOutL ) {
+#	    if (! $start_at) {	# switch a timer on
+#		$start_at= time(); }
 				# test if an alarm is needed
-	    if (! $alarm_sent && (time() - $start_at) > $paraTimeOutL) {
+#	    if (! $alarm_sent && (time() - $start_at) > $paraTimeOutL) {
 				# **************************************************
 				# NOTE this SBR is PP specific
 				# **************************************************
 #		&ctrlAlarm("SUICIDE: In max_loop for more than $alarm_timer... (killer!)".
 #			   "$msgHere");
-		$alarm_sent=1;
+#		$alarm_sent=1;
 #		return(0,"maxhom SUICIDE on $fileHsspOutL".$msgHere,0); 
-	    }
+#	    }
 				# create a trace file
-	    open("NOHSSP","> $fileFlagNoHsspL") || 
-		warn "-*- $sbrName WARNING cannot open $fileFlagNoHsspL: $!\n";
-	    print NOHSSP " problem with maxhom ($fileHsspOutL)\n"," $date\n";
-	    print NOHSSP `ps -ela`;
-	    sleep 10;
-	    close(NOHSSP);
-	    unlink ($fileFlagNoHsspL); }
-    }				# end of loop 
+#	    open("NOHSSP","> $fileFlagNoHsspL") || 
+#		warn "-*- $sbrName WARNING cannot open $fileFlagNoHsspL: $!\n";
+#	    print NOHSSP " problem with maxhom ($fileHsspOutL)\n"," $date\n";
+#	    print NOHSSP `ps -ela`;
+#	    sleep 10;
+#	    close(NOHSSP);
+#	unlink ($fileFlagNoHsspL); }
+#    }				# end of loop 
 
 				# --------------------------------------------------
     if (-e $fileHsspOutL){	# is HSSP file -> check
