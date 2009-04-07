@@ -12222,23 +12222,17 @@ sub runNORSnet {
 		# append HTML output
 		# ------------------------------
 		if ($optOut=~/ret html/ && -e $file{"NORSnet"}){ 
-#		    unlink $fileHtmlTmp; unlink $fileHtmlToc; # HACK: remove previouse output
 
-
-#		    ($Lok, $file{"NORSnet"}) =  &getHtmlBval($file{"NORSnet"},$envPP{"fileAppHtmlHeadNORSnet"});
-#		    return (0,"err=560","*** ERROR $sbr\n"."$file{\"NORSnet\"}\n"."$Lok\n")
-#			if (! $Lok || ! -e $file{"NORSnet"}); # 
-
-		    
-                    # append file
-		    ($Lok,$msg)=&htmlBuild($file{"NORSnet"},$fileHtmlTmp,$fileHtmlToc,0,"norsnet");
-		    if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=norsnet)\n".$msg."\n";
-				  print $fhTrace $msg;
-				  return(0,"err=2250",$msg); }
-
+			if ($optRun !~/mdisorder/){
+			
+				# append file
+				($Lok,$msg)=&htmlBuild($file{"NORSnet"},$fileHtmlTmp,$fileHtmlToc,0,"norsnet");
+				if (! $Lok) { $msg="*** err=2250 ($sbr: htmlBuild failed on kwd=norsnet)\n".$msg."\n";
+						print $fhTrace $msg;
+						return(0,"err=2250",$msg); }
+			}
 		}
 	    }
-
 	}
     return(1,"ok","$sbr:$msg");
 }				# end runNORSnet
