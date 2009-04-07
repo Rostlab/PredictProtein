@@ -259,7 +259,7 @@ sub write_clustal {
 	$i=0;
 
         while($i<$align->{alen}) {
-	    printf OUT "%-10s ";
+	    #printf OUT "%-10s ";
 	    for ($z = 1; $z <=50; $z++) {
 		if ($z == 50) {
 		    print OUT ($i+50)/10 ;
