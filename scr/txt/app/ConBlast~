@@ -1,0 +1,37 @@
+***                                                                          ***
+********************************************************************************
+***                                                                          ***
+***   Result of CONSENSUS			                             ***
+***   ~~~~~~~~~~~~~~~~~~~                      			             ***
+***                                                                          ***
+***  "Consensus sequences improve PSI-BLAST searches"                        ***
+***  Dariusz Przybylski & Burkhard Rost                                      ***
+***  PLoS Computational Biology. submitted.                                  ***
+***                                                                          ***
+________________________________________________________________________________
+
+***                                                                          ***
+
+
+
+Results from ConSequenceS (Consensus Sequence Searches - PSI-BLAST
+profile against databases of consensus sequences). The databases were
+derived from the non-redundant versions of PDB and SWISS-PROT).
+
+
+If you find the results or databases useful please cite the following:
+1) Consensus sequences improve PSI-BLAST through mimicking
+profile-profile alignments. Nucleic Acids Res. 2007; 35(7):2238-46.
+2) Powerful fusion: PSI-BLAST and consensus sequences. Bioinformatics
+2008 Aug4 [Epub ahead of print].
+
+
+This file contains alignments of the query sequence with consensus sequences.
+On the left side:  consensus sequences are translated back into raw
+(real) sequences.
+On the right side: consensus sequences are not translated.
+NOTE! Only the sequences were translated, all scores, sequence
+identities, etc. pertain to alignments of consensus sequences.
+
+
+

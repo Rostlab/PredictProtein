@@ -1,0 +1,6 @@
+# Perl-RDB
+# NNout_err             file from FORTRAN NN.f (error)
+# PARA: STPINF =            1
+   NO	    STEP	   ERROR	  ERRBIN
+   5N	      8N	    8.4F	    8.4F
+    1	       1	  0.1688	 75.8621

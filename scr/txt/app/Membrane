@@ -1,0 +1,28 @@
+***                                                                          ***
+********************************************************************************
+***                                                                          ***
+***   Prediction of transmembrane regions (PHDhtm)                           ***
+***   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                           ***
+***                                                                          ***
+***                                                                          ***
+***   Note: The accuracy of predicting helical trans-membrane regions is     ***
+***   some 95%.  In a test on 69 proteins only one was not predicted to be   ***
+***   a trans-membrane protein (2mlt).  PHDsec for the prediction of glo-    ***
+***   bular proteins predicted this protein more accuractely, than PHDhtm    ***
+***   for trans-membrane proteins.  Vice versa, about 5% out of 300 globu-   ***
+***   lar proteins were missclassified as trans-membrane molecules.  These   ***
+***   results have two practical consequences:                               ***
+***   (i)  	if you know that your sequence is partly in a membrane and   ***
+***    		PHDhtm does not predict a clear membrane region:             ***
+***   	    -> 	try PHDsec, it may be more accurate although in general not  ***
+***   		suited for membrane proteins.                                ***
+***   (ii)	if you assume your sequence is not at all in a membrane and  ***
+***   		PHDhtm does predict a membrane segment:                      ***
+***   	    ->	ignore the trans-membrane prediction.                        ***
+***                                                                          ***
+***   For residues predicted to be outside of the lipid bilayer (predicted   ***
+***   as loop, PHDsec should give reasonably accurate results, provided the  ***
+***   regions sticking out of the membrane or long enough.    		     ***
+***                                                                          ***
+________________________________________________________________________________
+
