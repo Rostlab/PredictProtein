@@ -6,6 +6,7 @@ then
 	exit 1
 fi
 
+#rootdir=$PWD
 rootdir=$PP_PUB/disulfind
 bindir=$rootdir/bin
 wdir=$rootdir/tmp/
@@ -27,7 +28,6 @@ fastafile=$fastadir/$qfile
 
 # save query to queryfile
 cp $query $queryfile 
-
 
 ### Parse query file and get user data ###
 idseq=""
@@ -66,6 +66,7 @@ fi
 
 # send output to stdout
 cat $answerdir/$qfile
+
 # remove tempfiles
 unlink $answerdir/$qfile
 unlink $pdir/All/$qfile
