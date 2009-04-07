@@ -1,0 +1,39 @@
+# --------------------------------------------------------------------------------
+#cron jobs to start server
+# --------------------------------------------------------------------------------
+USER=ppuser
+
+# ------------------------------
+# every 20 minutes: 
+#   -> start if down
+# 
+*/20 * * * *  (. $HOME/.profile; $HOME/server/scr/scanner/ctrlPredictProteind --mode=start -d=1 2>>$HOME/server/log/cronExe.log)
+
+# remove temp file
+*/20 * * * * rm -f $HOME/* 2>/dev/null
+
+
+# ------------------------------
+# every day: 
+#   -> restart
+# 
+0 5 * * *   (. $HOME/.profile; $HOME/server/scr/scanner/ctrlPredictProteind --mode=start -d=1 2>>$HOME/server/log/cronExe.log)
+
+# ------------------------------
+# once a day:
+#   ->  mail the errorlog
+#
+0 6 * * *  if test -x $HOME/server/log/cronExe.log; then ( /bin/mail gy47@columbia.edu < $HOME/server/log/cronExe.log; \rm $HOME/server/log/cronExe.log ) >& /dev/null
+
+#---------------------------------
+# every hour
+# remove outdated lock files so the queue can keep going
+#20 * * * * $HOME/server/scr/cron/releaseLock.pl >> $HOME/server/log/releaseLock.log
+
+
+# --------------------------------------------------------------------------------
+# cleaning up working files
+# --------------------------------------------------------------------------------
+## starting at 07:07 every day
+7  7 * * * $HOME/server/scr/ut/cleanUpPP.pl auto >>  $HOME/server/log/cronExe.log
+
