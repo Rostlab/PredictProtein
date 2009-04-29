@@ -1,3 +1,0 @@
->prot (#) default: single protein sequence description=t0359 /home/ppuser/server/work/predict_h28422
-SMSETFDVEL TKNVQGLGIT IAGYIGDKKL EPSGIFVKSI TKSSAVEHDG
-RIQIGDQIIA VDGTNLQGFT NQQAVEVLRH TGQTVLLTLM RRGETSV
