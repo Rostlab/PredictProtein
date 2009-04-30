@@ -103,7 +103,7 @@ INIT:{
 				# --------------------------------------------------
 
     $dppHome=       "/nfs/data5/users/$ENV{USER}/server/";		# central directory for server
-    $main::vpproot =							# allow full customisation, but allow to fall back to some reasonable default
+    $envPP::vpproot =							# allow full customisation, but allow to fall back to some reasonable default
 		    $ENV{VPP_ROOT} || "$ENV{HOME}/visualPP" || "/nfs/data5/users/ppuser/visualPP";
     # kajla: $dppHome."work/" - what a neat way to hide intentions. Did the writer mean a subdirectory 'work' in $dppHome, or was the intention to designate a same level dir with a modified name? You can not know unless you analyse the whole code.
     # Even then $dppHome may depend on parameters or the environment for a '/' at the end, so the meaning is clear at runtime only.
@@ -219,8 +219,8 @@ INIT:{
 #    $dppScrMail=   $dppScrSrv.  "/ut/";       # procmail scripts: note only for .procmail!!!
     $dppScrTxt=     $dppScrSrv. "/txt/";	     # all kinds of blabla
     $dppScrUt=      $dppScrSrv. "/ut/";       # utilities for server scripts
-    $main::dppScrVPP=
-		    $ENV{VPP_SCRIPTS} || "$main::vpproot/scripts" || "$ENV{HOME}/visualPP/scripts" || "/nfs/data5/users/ppuser/visualPP/scripts"; # Visual PredictProtein (VPP) utilities
+    $envPP::dppScrVPP=
+		    $ENV{VPP_SCRIPTS} || "$envPP::vpproot/scripts" || "$ENV{HOME}/visualPP/scripts" || "/nfs/data5/users/ppuser/visualPP/scripts"; # Visual PredictProtein (VPP) utilities
 
 				# ------------------------------
 				# other programs
