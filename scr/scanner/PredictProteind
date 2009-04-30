@@ -207,6 +207,7 @@ sub 		submitJobToQueue
 		$sgeCommand .= $sgePrefs{errorlog}. " ";			# "-e  /dev/null "
 		$sgeCommand .= $sgePrefs{shell}. " ";				# "-S /bin/bash "
 		$sgeCommand .= $sgePrefs{retainShellSettings}. " ";		# "-V "
+		$sgeCommand .= $sgePrefs{memoryMgmnt}. " ";		# "-l h_vmem= "
 		close ($tmpFileHandler);
 		};
 	if ($@){

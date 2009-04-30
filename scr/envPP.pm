@@ -102,15 +102,21 @@ INIT:{
 				# primary directories
 				# --------------------------------------------------
 
-    $dppHome=       "/nfs/data5/users/$ENV{USER}/server/";           # central directory for server
-    $dirWork=       $dppHome."work/";      # HARD_CODED ..
+    $dppHome=       "/nfs/data5/users/$ENV{USER}/server/";		# central directory for server
+    $main::vpproot =							# allow full customisation, but allow to fall back to some reasonable default
+		    $ENV{VPP_ROOT} || "$ENV{HOME}/visualPP" || "/nfs/data5/users/ppuser/visualPP";
+    # kajla: $dppHome."work/" - what a neat way to hide intentions. Did the writer mean a subdirectory 'work' in $dppHome, or was the intention to designate a same level dir with a modified name? You can not know unless you analyse the whole code.
+    # Even then $dppHome may depend on parameters or the environment for a '/' at the end, so the meaning is clear at runtime only.
+    # The present expression $dppHome."work/" is error prone and makes debugging unnecessarily hard. I am changing all of these in the hope that <dir>/"work" was meant.
+    #$dirWork=       $dppHome."work/";      # HARD_CODED ..
+    $dirWork=       $dppHome."/work/";      # HARD_CODED ..
 #    $tempWorkStr =  "echo $dirWork >> /nfs/data5/users/ppuser/tempLogFile";
 #    system($tempWorkStr);
     $dppWWW=        $dppHome;                      # www stuff
 				                   #    other day to avoid eating disk space)
 	                                           # note: cgi scripts only used in WWW HTML pages!
     $dppWWWcgi=     "/nfs/data5/users/www/cgi/pp/";	   # www cgi-scripts (links)
-    $dppWWWdoc=     $dppWWW."doc/";                # www documents
+    $dppWWWdoc=     $dppWWW."/doc/";                # www documents
     $dppData=       "/nfs/data5/users/$ENV{USER}/server/data/";      # all protein data
     $dppMolbio=     "/usr/pub/molbio/";
 #Merged Additions 2003_08-24
@@ -126,9 +132,9 @@ INIT:{
 				# --------------------------------------------------
 				# web documents
 				# ------------------------------
-    $dppWWWdoc=     $dppWWW.    "www_doc/";        # www HTML pages
-    $dppWWWdemo=    $dppWWW.    "www_demo/";       # www demo
-    $dppWWWlog=     $dppWWW.    "www_doc/Dlog/";   # log for PP status
+    $dppWWWdoc=     $dppWWW.    "/www_doc/";        # www HTML pages
+    $dppWWWdemo=    $dppWWW.    "/www_demo/";       # www demo
+    $dppWWWlog=     $dppWWW.    "/www_doc/Dlog/";   # log for PP status
 
 				# ------------------------------
 				# ftp'able result directory
@@ -144,32 +150,32 @@ INIT:{
 				# ------------------------------
     $dppRun=        $dppHome;	             # working files, logs, asf
   #  $dppRunDodo=   $dppHomeDodo;
-#    $dppXch=        $dppRun.    "xch/";      # files for communication (input, output)
+#    $dppXch=        $dppRun.    "/xch/";      # files for communication (input, output)
 
-    $dppXch=        $dppRun.    "xch/";      # files for communication (input, output)
-   # $dppXchDodo =  $dppRunDodo. "xch/";
-#    $dppBup=        $dppRun.    "bup/";      # back up of run files
+    $dppXch=        $dppRun.    "/xch/";      # files for communication (input, output)
+   # $dppXchDodo =  $dppRunDodo. "/xch/";
+#    $dppBup=        $dppRun.    "/bup/";      # back up of run files
 
-    $dppBup=        $dppRun.    "bup/";      # back up of run files
-    $dppErr=        $dppBup.    "err/";      # dir with bup of errors
+    $dppBup=        $dppRun.    "/bup/";      # back up of run files
+    $dppErr=        $dppBup.    "/err/";      # dir with bup of errors
 
     $dppTrash=     "/nfs/data5/users/$ENV{USER}/server/bup/trash/";  # trash (overflow of files, clean every
 
 
-    $dppLog=        $dppRun.    "log/";      # all log files
+    $dppLog=        $dppRun.    "/log/";      # all log files
 				             # NOTE: MUST be writable for WWW
                                              #       (or change wwwPredict)
 
 				# communication (input, output files)
     
-    $dppPrd=        $dppXch.    "prd/";      # put files from cgi script OR email
+    $dppPrd=        $dppXch.    "/prd/";      # put files from cgi script OR email
 				             #       (procmail)
-#    $dppPrdDodo=  $dppXchDodo. "prd/";       # MERGED
+#    $dppPrdDodo=  $dppXchDodo. "/prd/";       # MERGED
 				             # NOTE: MUST be writable for WWW
                                              #       (or change wwwPredict)
-    $dppRes=        $dppXch.    "res/";      # dir with all results
+    $dppRes=        $dppXch.    "/res/";      # dir with all results
 
-    $dppResPub=     $dppXch.    "res_pub/";   # dir with all results stored for users
+    $dppResPub=     $dppXch.    "/res_pub/";   # dir with all results stored for users
 				             #    rather than sending a mail!
 	                                     # files will be moved to maple's web dir
 
@@ -183,93 +189,94 @@ INIT:{
                                                                   #  dir with the results of genetegrate run
     				                                  # the scanner on the web machine will pick the 
                                                                   # the result file and dump it to an appropriate directory
-  #  $dppResDodo=   $dppXchDodo. "res/";      # MERGED
+  #  $dppResDodo=   $dppXchDodo. "/res/";      # MERGED
 
-   # $dppResPubDodo= $dppXchDodo."res_pub/";  # MERGED
+   # $dppResPubDodo= $dppXchDodo."/res_pub/";  # MERGED
 
 
-    $dppLicense=    $dppXch.    "lic/";      # dir with all results
+    $dppLicense=    $dppXch.    "/lic/";      # dir with all results
 				             # NOTE: MUST be writable for WWW  
                                              #       (or change wwwPredict)
-    $dppMail=       $dppXch.    "mail/";     # all outgoing stuff
+    $dppMail=       $dppXch.    "/mail/";     # all outgoing stuff
 				             # NOTE: MUST be writable for WWW  
                                              #       (or change wwwPredict)
-  #  $dppMailDodo=  $dppXchDodo. "mail/";     # MERGED
-    $dppInProc=     $dppXch.     "inProc/";  # dir with procmail stuff 
+  #  $dppMailDodo=  $dppXchDodo. "/mail/";     # MERGED
+    $dppInProc=     $dppXch.     "/inProc/";  # dir with procmail stuff 
                                              #       (temp, while procmail works)
 				# ------------------------------
 				# PP scripts
 				# ------------------------------
     $dppScr=        $dppHome;                # sources, programs
 				             # all server specific scripts
-    $dppScrSrv=     $dppScr.    "scr/" if (! defined $dppScrSrv || ! $dppScrSrv);
-    $dppScrBin=     $dppScr.    "bin/";      # all binaries
+    $dppScrSrv=     $dppScr.    "/scr/" if (! defined $dppScrSrv || ! $dppScrSrv);
+    $dppScrBin=     $dppScr.    "/bin/";      # all binaries
 
-    $dppScrLib=     $dppScrSrv. "lib/";	     # perl libraries
+    $dppScrLib=     $dppScrSrv. "/lib/";	     # perl libraries
 
 				# note: cgi scripts only used in WWW HTML pages!
-#    $dppScrCgi=    $dppScrSrv.  "www/";      # www cgi-perl scripts
+#    $dppScrCgi=    $dppScrSrv.  "/www/";      # www cgi-perl scripts
 
-#    $dppScrMail=   $dppScrSrv.  "ut/";       # procmail scripts: note only for .procmail!!!
-    $dppScrTxt=     $dppScrSrv. "txt/";	     # all kinds of blabla
-    $dppScrUt=      $dppScrSrv. "ut/";       # utilities for server scripts
-    $dppScrVPP=      $dppScrSrv. "visualPP_scripts/";       # utilities for server scripts
+#    $dppScrMail=   $dppScrSrv.  "/ut/";       # procmail scripts: note only for .procmail!!!
+    $dppScrTxt=     $dppScrSrv. "/txt/";	     # all kinds of blabla
+    $dppScrUt=      $dppScrSrv. "/ut/";       # utilities for server scripts
+    $main::dppScrVPP=
+		    $ENV{VPP_SCRIPTS} || "$main::vpproot/scripts" || "$ENV{HOME}/visualPP/scripts" || "/nfs/data5/users/ppuser/visualPP/scripts"; # Visual PredictProtein (VPP) utilities
 
 				# ------------------------------
 				# other programs
 				# ------------------------------
-    $dppScrPub=     $dppScr.    "pub/";	     # central site for programs run
-    $dppPrgPhd=     $dppScrPub. "phd/";	     # PHD
-    $dppPrgProf=    $dppScrPub. "prof/";     # PROF
-    $dppPrgTopits=  $dppScrPub. "topits/";   # TOPITS
-    $dppPrgEvalsec= $dppScrPub. "evalsec/";  # EvalSec
-    $dppPrgThreader=$dppScrPub. "threader/"; # Dudek's threader
+    $dppScrPub=     $dppScr.    "/pub/";	     # central site for programs run
+    $dppPrgPhd=     $dppScrPub. "/phd/";	     # PHD
+    $dppPrgProf=    $dppScrPub. "/prof/";     # PROF
+    $dppPrgTopits=  $dppScrPub. "/topits/";   # TOPITS
+    $dppPrgEvalsec= $dppScrPub. "/evalsec/";  # EvalSec
+    $dppPrgThreader=$dppScrPub. "/threader/"; # Dudek's threader
 
 				             # note: GLOBE is subroutine of PHD at moment
-#    $dppPrgGlobe=  $dppScrPub.  "globe/";   # Globe
+#    $dppPrgGlobe=  $dppScrPub.  "/globe/";   # Globe
 
-    $dppPrgMax=     $dppScrPub. "max/";	     # MaxHom
-    $dppPrgBlastp=  $dppScrPub. "blastp/";   # BlastP
-    $dppPrgBlastPsi=$dppScrPub. "blastpsi/"; # BlastPSI
+    $dppPrgMax=     $dppScrPub. "/max/";	     # MaxHom
+    $dppPrgBlastp=  $dppScrPub. "/blastp/";   # BlastP
+    $dppPrgBlastPsi=$dppScrPub. "/blastpsi/"; # BlastPSI
 
-    $dppPrgProsite= $dppScrPub. "prosite/";  # Prosite
-    $dppPrgProdom=  $dppScrPub. "prodom/";   # ProDom
-    $dppPrgCoils=   $dppScrPub. "ncoils/";   # Coils
-    $dppPrgMview=   $dppScrPub. "mview/";    # MView
-#    $dppPrgCyspred= $dppScrPub.	"cyspred/";  # cyspred
-    $dppPrgDisulfind= $dppScrPub.	"disulfind/";  # disulfind
-    $dppPrgNls=     $dppScrPub. "nls/";	     # NLS 
-    $dppPrgAsp=     $dppScrPub. "asp/";	     # ASP
-    $dppPrgNors=    $dppScrPub. "nors/";     # NORS
-    $dppPrgDssp=    $dppMolbio. "dssp/";     # DSSP
-    $dppPrgPfam=    $dppMolbio. "bin/"; # PFAM
+    $dppPrgProsite= $dppScrPub. "/prosite/";  # Prosite
+    $dppPrgProdom=  $dppScrPub. "/prodom/";   # ProDom
+    $dppPrgCoils=   $dppScrPub. "/ncoils/";   # Coils
+    $dppPrgMview=   $dppScrPub. "/mview/";    # MView
+#    $dppPrgCyspred= $dppScrPub.	"/cyspred/";  # cyspred
+    $dppPrgDisulfind= $dppScrPub.	"/disulfind/";  # disulfind
+    $dppPrgNls=     $dppScrPub. "/nls/";	     # NLS 
+    $dppPrgAsp=     $dppScrPub. "/asp/";	     # ASP
+    $dppPrgNors=    $dppScrPub. "/nors/";     # NORS
+    $dppPrgDssp=    $dppMolbio. "/dssp/";     # DSSP
+    $dppPrgPfam=    $dppMolbio. "/bin/"; # PFAM
 
     # GY Added 2004_01_30
-    $dppPrgProfCon    = $dppScrPub.	"profcon/";                    # profcon
-    $dppPrgPrenup     = $dppScrPub.	"prenup/";                    # prenup
-    $dppPrgMdisorder     = $dppScrPub.	"md/";                        # MD - meta disorder 
-    $dppPrgEcgo        = $dppScrPub.	"ecgo/";                    # ecgo
-    $dppPrgPcc        = $dppScrPub.	"pcc/";                        # predict cell cycle
-    $dppPrgChop       = $dppScrPub.	"chopper/";                       # CHOP
-    $dppPrgChopper    = $dppScrPub.     "chopper/";                    # CHOPPER
-    $dppPrgIsis       = $dppScrPub.	"isis/";                       # ISIS
-    $dppPrgDisis       = $dppScrPub.    "disis/";                       # DISIS                  
-    $dppPrgProfBval   = $dppScrPub.	"profbval/";                   # PROFbval
-    $dppPrgNORSnet    = $dppScrPub.	"norsnet/";                    # NORSnet
-    $dppPrgSnap   =    $dppScrPub.	"snap/";                                # snap
-    $dppPrgProfTmb    = $dppScrPub.	"proftmb/";                    # proftmb
-    $dppPrgLocTar      = $dppScrPub.	"LOCtarget_v1/";               # locTarget
-    $dppPrgAgape       = $dppScrPub.	"agape/";                      # Agape 
+    $dppPrgProfCon    = $dppScrPub.	"/profcon/";                    # profcon
+    $dppPrgPrenup     = $dppScrPub.	"/prenup/";                    # prenup
+    $dppPrgMdisorder     = $dppScrPub.	"/md/";                        # MD - meta disorder 
+    $dppPrgEcgo        = $dppScrPub.	"/ecgo/";                    # ecgo
+    $dppPrgPcc        = $dppScrPub.	"/pcc/";                        # predict cell cycle
+    $dppPrgChop       = $dppScrPub.	"/chopper/";                       # CHOP
+    $dppPrgChopper    = $dppScrPub.     "/chopper/";                    # CHOPPER
+    $dppPrgIsis       = $dppScrPub.	"/isis/";                       # ISIS
+    $dppPrgDisis       = $dppScrPub.    "/disis/";                       # DISIS                  
+    $dppPrgProfBval   = $dppScrPub.	"/profbval/";                   # PROFbval
+    $dppPrgNORSnet    = $dppScrPub.	"/norsnet/";                    # NORSnet
+    $dppPrgSnap   =    $dppScrPub.	"/snap/";                                # snap
+    $dppPrgProfTmb    = $dppScrPub.	"/proftmb/";                    # proftmb
+    $dppPrgLocTar      = $dppScrPub.	"/LOCtarget_v1/";               # locTarget
+    $dppPrgAgape       = $dppScrPub.	"/agape/";                      # Agape 
 #    $dppPrgAgape       = "/nfs/home5/dudek/server/pub/agape/";              # Agape 
-    $dppPrgNLProt       = $dppScrPub.	"nlprot/";                       # NL-Prot
-    $dppPrgConBlast     = $dppScrPub.   "conblast/";                     # conblast
-    $dppPrgR4S          = $dppScrPub.	"consurf/";                       # ConSurf
+    $dppPrgNLProt       = $dppScrPub.	"/nlprot/";                       # NL-Prot
+    $dppPrgConBlast     = $dppScrPub.   "/conblast/";                     # conblast
+    $dppPrgR4S          = $dppScrPub.	"/consurf/";                       # ConSurf
 
 
                                 # ============================================
                                 # determine current system ARCHITECTURE
                                 # ============================================
-    open (ARCHFILE, $dppScrUt."pvmgetarch.sh |") ||  # HARD_CODED
+    open (ARCHFILE, $dppScrUt."/pvmgetarch.sh |") ||  # HARD_CODED
 	# default to LINUX arch
 	do { $ARCH="LINUX";
 	     warn "*** WARN envPP: failed executing $dppScrUt.pvmgetarch.sh!!"; };
@@ -363,50 +370,50 @@ INIT:{
 	   'exe_find',          "/usr/bin/find",                     # unix (LINUX) find command
 	   'exe_du',            $Arch_exe_du{$ARCH},                 # unix du command
 
-	   'exe_mailHtml',      $dppScrUt.   "emailSendHtml.pl",     # script for attaching HTML
+	   'exe_mailHtml',      $dppScrUt.   "/emailSendHtml.pl",     # script for attaching HTML
 				                                     #    results to mail
 
 				# scripts      
 	   #changed by GY to start unique process 2003_08_25
-#	   'exe_ppScanner',     $dppScrSrv.  "scannerPP_GY.pl",         # PP scanner: endless running and 
-	   'exe_ppScanner',     $dppScrSrv.  "scannerPP.pl",         # PP scanner: endless running and 
+#	   'exe_ppScanner',     $dppScrSrv.  "/scannerPP_GY.pl",         # PP scanner: endless running and 
+	   'exe_ppScanner',     $dppScrSrv.  "/scannerPP.pl",         # PP scanner: endless running and 
 				                                     #    managing!
-	   'exe_ppScannerDB',            $dppScrSrv.  "scannerDB.pl",         # DB scanner: endless running 
-	   'exe_ppGetCachedResults',     $dppScrSrv.  "getCachedResults.pl",  # get preprocessed results using md5 id
+	   'exe_ppScannerDB',            $dppScrSrv.  "/scannerDB.pl",         # DB scanner: endless running 
+	   'exe_ppGetCachedResults',     $dppScrSrv.  "/getCachedResults.pl",  # get preprocessed results using md5 id
 	  # end changes  2003_08_25
 
 	   #ppLocal
 	   'dir_pplocal_home',  $dppPpLoc,
            #end pplocal			
 	   
-	   'exe_ppPredict',     $dppScrSrv.  "predictPP.pl",         # manager for running predictions 
+	   'exe_ppPredict',     $dppScrSrv.  "/predictPP.pl",         # manager for running predictions 
 
-	   'exe_ppEmailproc',   $dppScrSrv.  "emailProcPP.pl",       # gets mail from procmail, 
+	   'exe_ppEmailproc',   $dppScrSrv.  "/emailProcPP.pl",       # gets mail from procmail, 
 				                                     #  + generates required file,
 				                                     #  + puts it into run/prd
 				# packages
-	   'pack_predict',      $dppScrLib.  "predictPP.pm",         # runs the predictions
-	   'pack_licence',      $dppScrLib.  "licencePP.pm",         # checks for licence (called by predict)
+	   'pack_predict',      $dppScrLib.  "/predictPP.pm",         # runs the predictions
+	   'pack_licence',      $dppScrLib.  "/licencePP.pm",         # checks for licence (called by predict)
 
-	   'lib_pp',            $dppScrLib.  "lib-pp.pm",            # PP specific perl lib to link
+	   'lib_pp',            $dppScrLib.  "/lib-pp.pm",            # PP specific perl lib to link
 				# note: only for predict.pm!
-	   'lib_col',           $dppScrLib.  "lib-col.pm",           # general perl lib to link
+	   'lib_col',           $dppScrLib.  "/lib-col.pm",           # general perl lib to link
 				# note: only for predict.pm!
-	   'lib_err',           $dppScrLib.  "lib-err.pm",           # PP specific perl lib to link
-	   'lib_cgi',           $dppScrLib.  "cgi-lib.pm",           # general perl lib for HTML to link
-	   'lib_ctime',         $dppScrLib.  "ctime.pm",             # general perl lib for ctime
+	   'lib_err',           $dppScrLib.  "/lib-err.pm",           # PP specific perl lib to link
+	   'lib_cgi',           $dppScrLib.  "/cgi-lib.pm",           # general perl lib for HTML to link
+	   'lib_ctime',         $dppScrLib.  "/ctime.pm",             # general perl lib for ctime
 
 				# utilities
-	   'exe_stripstars',    $dppScrUt.   "stripstars.pl",        # get rid of too many stars in output
-	   'exe_scan_clean',    $dppScrUt.   "scanCleanUp.pl",       # clean up directories 
+	   'exe_stripstars',    $dppScrUt.   "/stripstars.pl",        # get rid of too many stars in output
+	   'exe_scan_clean',    $dppScrUt.   "/scanCleanUp.pl",       # clean up directories 
 				                                     #   - remove expired
 				                                     #   - shorten log
-	   'exe_status',        $dppScrUt.   "wwwStatusPP.pl",       # writes status file for WWW display
-#	   'exe_svcSubmitter',  $dppPpLoc.   "submit2Svcs.pl",       # script to submit to third party services
+	   'exe_status',        $dppScrUt.   "/wwwStatusPP.pl",       # writes status file for WWW display
+#	   'exe_svcSubmitter',  $dppPpLoc.   "/submit2Svcs.pl",       # script to submit to third party services
 
 
-#	   'exe_convert2xml',   $dppScrUt.   "pptoxml.sh",       # shell script to run javaclasses to convert results to XXML
-	   'exe_convert2xml',   $dppScrVPP.   "flat2xml.pl",       # shell script to run javaclasses to convert results to XXML
+#	   'exe_convert2xml',   $dppScrUt.   "/pptoxml.sh",       # shell script to run javaclasses to convert results to XXML
+	   'exe_convert2xml',   $dppScrVPP.   "/flat2xml.pl",       # shell script to convert results to XML
 
                                 # ----------------------------------------
 				# PERL SCRIPTS AND PACKAGES
@@ -444,11 +451,11 @@ INIT:{
 
 				# dir_trash will die yyDO_ONE_DAY
 	   'dir_trash',         $dppTrash,       # temporary trace
-	   'dir_bup_res',       $dppBup."res",   # temporary save of all files
-	   'dir_bup_errIn',     $dppBup."errIn", # temporary trace
-	   'dir_bup_err',       $dppBup."err",   # temporary trace
-	   'dir_bup_errMail',   $dppBup."errMail",
-	   'dir_bup_lic',       $dppBup."lic",
+	   'dir_bup_res',       $dppBup."/res",   # temporary save of all files
+	   'dir_bup_errIn',     $dppBup."/errIn", # temporary trace
+	   'dir_bup_err',       $dppBup."/err",   # temporary trace
+	   'dir_bup_errMail',   $dppBup."/errMail",
+	   'dir_bup_lic',       $dppBup."/lic",
 				# dir_err will die yyDO_ONE_DAY
 	   'dir_err',           $dppErr,          # where to put files in case of error
 	   'dir_demo',          $dppWWWdemo,      # www demo
@@ -456,69 +463,69 @@ INIT:{
 				# --------------------------------------------------
 				# PP: files
 				# --------------------------------------------------
-	   'file_scanFlag',     $dppRun.      "PPscan.flag",         # flags activity of scanner
-	   'file_scanLog',      $dppLog.      "scan.log",            # requests found by scanner
-	   'file_ppLog',        $dppLog.      "phd.log",             # all requests
-	   'file_comLog',       $dppLog.      "phd_com_pred.log",    # commercial predictions
-	   'file_errLog',       $dppLog.      "ERROR.log",           # general errors
-	   'file_predMgrLog',   $dppLog.      "out-predManager.log", # log for predManager.pl
-	   'file_sendLog',      $dppLog.      "emailSend.log",       # log of email sent
-	   'file_emailReqLog',  $dppLog.      "pred-email.log",      # log of email requests
-	   'file_emailProcLog', $dppLog.      "emailProc.log",       # log of processing email
-	   'file_procmailLog',  $dppLog.      "PROCMAIL.log",        # log of procmail
+	   'file_scanFlag',     $dppRun.      "/PPscan.flag",         # flags activity of scanner
+	   'file_scanLog',      $dppLog.      "/scan.log",            # requests found by scanner
+	   'file_ppLog',        $dppLog.      "/phd.log",             # all requests
+	   'file_comLog',       $dppLog.      "/phd_com_pred.log",    # commercial predictions
+	   'file_errLog',       $dppLog.      "/ERROR.log",           # general errors
+	   'file_predMgrLog',   $dppLog.      "/out-predManager.log", # log for predManager.pl
+	   'file_sendLog',      $dppLog.      "/emailSend.log",       # log of email sent
+	   'file_emailReqLog',  $dppLog.      "/pred-email.log",      # log of email requests
+	   'file_emailProcLog', $dppLog.      "/emailProc.log",       # log of processing email
+	   'file_procmailLog',  $dppLog.      "/PROCMAIL.log",        # log of procmail
 				# NOTE: named by .procmailrc !!!
-	   'file_procmailInLog',$dppLog.      "procmail-in.log",     # log of procmail
+	   'file_procmailInLog',$dppLog.      "/procmail-in.log",     # log of procmail
 
 				# NOTE: for WWW access MUST be writable (or change wwwPredict)
-#	   'file_htmlReqLog',   $dppLog.      "pred-html.log",       # log of HTML requests
-#	   'file_htmlReqLog',   $dppLog.      "pred-html2.log",      # log of HTML requests
-	   'file_htmlReqLog',   $dppWWWlog.   "pred-html.log",       # log of HTML requests
-	   'file_htmlCgiLog',   $dppLog.      "cgi.log",             # log of CGI activity
+#	   'file_htmlReqLog',   $dppLog.      "/pred-html.log",       # log of HTML requests
+#	   'file_htmlReqLog',   $dppLog.      "/pred-html2.log",      # log of HTML requests
+	   'file_htmlReqLog',   $dppWWWlog.   "/pred-html.log",       # log of HTML requests
+	   'file_htmlCgiLog',   $dppLog.      "/cgi.log",             # log of CGI activity
 	   # MERGED
-	   'file_cgi_user_log', $dppLog.      "cgi_user.log",        # log of CGI user
+	   'file_cgi_user_log', $dppLog.      "/cgi_user.log",        # log of CGI user
 	   # END Of Merge
 
-	   'file_licenceComLog',  $dppLog.    "licenceCom.log",      # log of licence control
+	   'file_licenceComLog',  $dppLog.    "/licenceCom.log",      # log of licence control
 				                                     # -> assumed to be com
-	   'file_licenceNotLog',  $dppLog.    "licenceNot.log",      # log of licence control
+	   'file_licenceNotLog',  $dppLog.    "/licenceNot.log",      # log of licence control
 				                                     # -> assumed NOT com
-	   'file_badGuy',       $dppLog.      "BAD_guy.rdb",          # counts unlicensed users
+	   'file_badGuy',       $dppLog.      "/BAD_guy.rdb",          # counts unlicensed users
 	   'par_num4badGuy',    "5",                                 # requests allowed for bad ones
-	   'flag_badGuy',       $dppLog.      "FLAG_writes_badGuy",  # is writing
+	   'flag_badGuy',       $dppLog.      "/FLAG_writes_badGuy",  # is writing
 	   
-	   'file_crontabLog',   $dppLog.      "crontab.log",	     # log of crontab job
-	   'file_batchLog',     $dppLog.      "bqueue.log",          # batch queue out file
+	   'file_crontabLog',   $dppLog.      "/crontab.log",	     # log of crontab job
+	   'file_batchLog',     $dppLog.      "/bqueue.log",          # batch queue out file
 
-	   'file_htmlLicOrd',   $dppWWWdoc.   "doc/license_payFax.html",  # html licence order file
-	   'file_htmlLicCond',  $dppWWWdoc.   "doc/license_cond.html",   # licence condition
+	   'file_htmlLicOrd',   $dppWWWdoc.   "/doc/license_payFax.html",  # html licence order file
+	   'file_htmlLicCond',  $dppWWWdoc.   "/doc/license_cond.html",   # licence condition
 
-#	   'file_licence',      $dppLog.      "phd_licence",         # list of commercial licences
-	   'file_licence',      $dppLog.      "licenseGiven.rdb",    # list of commercial licences
-	   'file_licenceGiven', $dppLog.      "licenseGiven.rdb",    # list of commercial licences
-	   'file_licenceCount', $dppLog.      "licenseCount.rdb",    # counts no of usage for com
-	   'flag_licenceCount', $dppLog.      "FLAG_writes_licenceCount",
+#	   'file_licence',      $dppLog.      "/phd_licence",         # list of commercial licences
+	   'file_licence',      $dppLog.      "/licenseGiven.rdb",    # list of commercial licences
+	   'file_licenceGiven', $dppLog.      "/licenseGiven.rdb",    # list of commercial licences
+	   'file_licenceCount', $dppLog.      "/licenseCount.rdb",    # counts no of usage for com
+	   'flag_licenceCount', $dppLog.      "/FLAG_writes_licenceCount",
 				                                     # flag to indicate that
 				                                     #  licensePP writes
-	   'file_licNew',       $dppLicense.  "TMP_phd_licNew",      # temporary file
-	   'file_licFlag',      $dppLicense.  "TMP_flag_writing",    # flags that is writing now!
+	   'file_licNew',       $dppLicense.  "/TMP_phd_licNew",      # temporary file
+	   'file_licFlag',      $dppLicense.  "/TMP_flag_writing",    # flags that is writing now!
 
-	   'file_key',          $dppLog.      "phd_key",             # file of user key 
-	   'file_scanOut',      $dppLog.      "scan.out",	     # redirection of scanner output
-	   'file_scanMach',     $dppLog.      "scan.machine",        # couple machine/job id
-	   'file_scanErr',      $dppLog.      "scan.err",            # redirection of scanner error
-	   'file_statusLog',    $dppWWWlog.   "PPstatus.log",        # WWW readable file with Status
-	   'file_statusHis',    $dppWWWlog.   "PPstatus.history",
-	   'file_statusAdd',    $dppWWWlog.   "PPstatus.add",
-	   'file_statusFlag',   $dppWWWlog.   "PPstatus.flag",       # flag to avoid double writing 
+	   'file_key',          $dppLog.      "/phd_key",             # file of user key 
+	   'file_scanOut',      $dppLog.      "/scan.out",	     # redirection of scanner output
+	   'file_scanMach',     $dppLog.      "/scan.machine",        # couple machine/job id
+	   'file_scanErr',      $dppLog.      "/scan.err",            # redirection of scanner error
+	   'file_statusLog',    $dppWWWlog.   "/PPstatus.log",        # WWW readable file with Status
+	   'file_statusHis',    $dppWWWlog.   "/PPstatus.history",
+	   'file_statusAdd',    $dppWWWlog.   "/PPstatus.add",
+	   'file_statusFlag',   $dppWWWlog.   "/PPstatus.flag",       # flag to avoid double writing 
 
-	   'file_htmlFmtErr',   $dppScrTxt.   "app/WrgFormatHtml",   # html format error
+	   'file_htmlFmtErr',   $dppScrTxt.   "/app/WrgFormatHtml",   # html format error
 
-	   'file_sorryTimeout', $dppScrTxt.   "app/SorryTimeout",    # to user if no result after 2 days
-	   'file_cleanUpLog',   $dppLog.      "cleanUp.log",         # dump from cleanUpPP.pl
-	   'file_releaseLockLog', $dppLog.    "releaseLock.log", # log file for removing outdated lockfiles to keep queue going
+	   'file_sorryTimeout', $dppScrTxt.   "/app/SorryTimeout",    # to user if no result after 2 days
+	   'file_cleanUpLog',   $dppLog.      "/cleanUp.log",         # dump from cleanUpPP.pl
+	   'file_releaseLockLog', $dppLog.    "/releaseLock.log", # log file for removing outdated lockfiles to keep queue going
 
-	   'file_methodwwwDoc',  $dppWWWdoc.   "doc/methodsPP.html",
-	   'file_methodTemplate',$dppScrTxt.   "wwwMethods.rdb",
+	   'file_methodwwwDoc',  $dppWWWdoc.   "/doc/methodsPP.html",
+	   'file_methodTemplate',$dppScrTxt.   "/wwwMethods.rdb",
 	   'file_methodMetaRel',               "explain_meta.html",
 
 				# --------------------------------------------------
@@ -579,31 +586,31 @@ INIT:{
 				# PHD
 				# ==================================================
 				# PHD: executables
-	   'exePhd',            $dppPrgPhd.   "phd.pl",
-	   'exePhdFor',         $dppScrBin.   "phd."               .$ARCH,
-#	   'exePhdFor',         $dppPrgPhd.   "bin/phd."           .$ARCH,
+	   'exePhd',            $dppPrgPhd.   "/phd.pl",
+	   'exePhdFor',         $dppScrBin.   "/phd."               .$ARCH,
+#	   'exePhdFor',         $dppPrgPhd.   "/bin/phd."           .$ARCH,
 
-	   'exePhdHtmfil',      $dppPrgPhd.   "scr/phd_htmfil.pl",
-	   'exePhdHtmref',      $dppPrgPhd.   "scr/phd_htmref.pl",
-	   'exePhdHtmtop',      $dppPrgPhd.   "scr/phd_htmtop.pl",
+	   'exePhdHtmfil',      $dppPrgPhd.   "/scr/phd_htmfil.pl",
+	   'exePhdHtmref',      $dppPrgPhd.   "/scr/phd_htmref.pl",
+	   'exePhdHtmtop',      $dppPrgPhd.   "/scr/phd_htmtop.pl",
 
-	   'exePhdRdb2kg',      $dppPrgPhd.   "scr/rdb_tokg.pl",
-	   'exePhd2msf',        $dppPrgPhd.   "scr/conv_phd2msf.pl",
-	   'exePhd2dssp',       $dppPrgPhd.   "scr/conv_phd2dssp.pl",
-	   'exePhd2casp2',      $dppPrgPhd.   "scr/conv_phd2casp4.pl",
-	   'exePhd2html',       $dppPrgPhd.   "scr/conv_phd2html.pl",
-#	   'exeGlobe',          $.      "globe.pl",
+	   'exePhdRdb2kg',      $dppPrgPhd.   "/scr/rdb_tokg.pl",
+	   'exePhd2msf',        $dppPrgPhd.   "/scr/conv_phd2msf.pl",
+	   'exePhd2dssp',       $dppPrgPhd.   "/scr/conv_phd2dssp.pl",
+	   'exePhd2casp2',      $dppPrgPhd.   "/scr/conv_phd2casp4.pl",
+	   'exePhd2html',       $dppPrgPhd.   "/scr/conv_phd2html.pl",
+#	   'exeGlobe',          $.      "/globe.pl",
                                 # ----------------------------------------
 				# PHD: directories
 	   'dirPhd',            $dppPrgPhd,
                                 # ----------------------------------------
 				# PHD: files
-	   'filePhdParaAcc',    $dppPrgPhd.   "para/Para-exp152x-mar94.com",
-	   'filePhdParaHtm',    $dppPrgPhd.   "para/Para-htm69-aug94.com",
-	   'filePhdParaSec',    $dppPrgPhd.   "para/Para-sec317-may94.com",
-#	   'filePhdParaAcc',    $dppPrgPhd.   "para/Para-exptest.com", # zzz
-#	   'filePhdParaHtm',    $dppPrgPhd.   "para/Para-htmtest.com", # zzz
-#	   'filePhdParaSec',    $dppPrgPhd.   "para/Para-test.com",    # zzz
+	   'filePhdParaAcc',    $dppPrgPhd.   "/para/Para-exp152x-mar94.com",
+	   'filePhdParaHtm',    $dppPrgPhd.   "/para/Para-htm69-aug94.com",
+	   'filePhdParaSec',    $dppPrgPhd.   "/para/Para-sec317-may94.com",
+#	   'filePhdParaAcc',    $dppPrgPhd.   "/para/Para-exptest.com", # zzz
+#	   'filePhdParaHtm',    $dppPrgPhd.   "/para/Para-htmtest.com", # zzz
+#	   'filePhdParaSec',    $dppPrgPhd.   "/para/Para-test.com",    # zzz
                                 # ----------------------------------------
 				# PHD: parameters
 	   'parPhdMinLen',      "17",  # minimal length of sequence
@@ -619,39 +626,39 @@ INIT:{
 				# PROF
 				# ==================================================
 				# PROF: executables
-	   'exeProf',            $dppPrgProf.   "scr/prof.pl",
-	   'exeProfFor',         $dppScrBin.    "prof."               .$ARCH,
+	   'exeProf',            $dppPrgProf.   "/scr/prof.pl",
+	   'exeProfFor',         $dppScrBin.    "/prof."               .$ARCH,
 
-	   'exeProfHtmfil',      $dppPrgProf.   "scr/tlprof_htmfil.pl",
-	   'exeProfHtmref',      $dppPrgProf.   "scr/tlprof_htmref.pl",
-	   'exeProfHtmtop',      $dppPrgProf.   "scr/tlprof_htmtop.pl",
+	   'exeProfHtmfil',      $dppPrgProf.   "/scr/tlprof_htmfil.pl",
+	   'exeProfHtmref',      $dppPrgProf.   "/scr/tlprof_htmref.pl",
+	   'exeProfHtmtop',      $dppPrgProf.   "/scr/tlprof_htmtop.pl",
 
-	   'exeProfConv',        $dppPrgProf.   "scr/conv_prof.pl",
+	   'exeProfConv',        $dppPrgProf.   "/scr/conv_prof.pl",
 
 				# yy beg: for time being
-	   'exeProfPhd1994',     $dppPrgProf.   "embl/phd.pl",
-	   'exeProfPhd1994For',  $dppScrBin.    "phd."                .$ARCH,
+	   'exeProfPhd1994',     $dppPrgProf.   "/embl/phd.pl",
+	   'exeProfPhd1994For',  $dppScrBin.    "/phd."                .$ARCH,
 				# yy end: for time being
                                 # ----------------------------------------
 				# PROF: directories
 	   'dirProf',            $dppPrgProf,
                                 # ----------------------------------------
 				# PROF: files
-#	   'fileProfPara3',      $dppPrgProf.   "net/PROFboth_2nd.par",
-#	   'fileProfParaAcc',    $dppPrgProf.   "net/PROFacc_1st.par",
-#	   'fileProfParaHtm',    $dppPrgProf.   "net/PROFsec_2nd.par",
-#	   'fileProfParaSec',    $dppPrgProf.   "net/PROFsec_2nd.par",
-	   'fileProfPara3',      $dppPrgProf.   "net/PROFboth.par",
-	   'fileProfParaBoth',   $dppPrgProf.   "net/PROFboth.par",
-	   'fileProfParaAcc',    $dppPrgProf.   "net/PROFacc.par",
-	   'fileProfParaHtm',    $dppPrgProf.   "net/PROFsec.par",
-	   'fileProfParaSec',    $dppPrgProf.   "net/PROFsec.par",
+#	   'fileProfPara3',      $dppPrgProf.   "/net/PROFboth_2nd.par",
+#	   'fileProfParaAcc',    $dppPrgProf.   "/net/PROFacc_1st.par",
+#	   'fileProfParaHtm',    $dppPrgProf.   "/net/PROFsec_2nd.par",
+#	   'fileProfParaSec',    $dppPrgProf.   "/net/PROFsec_2nd.par",
+	   'fileProfPara3',      $dppPrgProf.   "/net/PROFboth.par",
+	   'fileProfParaBoth',   $dppPrgProf.   "/net/PROFboth.par",
+	   'fileProfParaAcc',    $dppPrgProf.   "/net/PROFacc.par",
+	   'fileProfParaHtm',    $dppPrgProf.   "/net/PROFsec.par",
+	   'fileProfParaSec',    $dppPrgProf.   "/net/PROFsec.par",
 
-#	   'fileProfPara3',      $dppPrgProf.   "net/TSTboth.par",   # zz test
-#	   'fileProfParaBoth',   $dppPrgProf.   "net/TSTboth.par",   # zz test
-#	   'fileProfParaAcc',    $dppPrgProf.   "net/TSTacc.jct",    # zz test
-#	   'fileProfParaHtm',    $dppPrgProf.   "net/TSThtm.jct",    # zz test
-#	   'fileProfParaSec',    $dppPrgProf.   "net/TSTsec.jct",    # zz test
+#	   'fileProfPara3',      $dppPrgProf.   "/net/TSTboth.par",   # zz test
+#	   'fileProfParaBoth',   $dppPrgProf.   "/net/TSTboth.par",   # zz test
+#	   'fileProfParaAcc',    $dppPrgProf.   "/net/TSTacc.jct",    # zz test
+#	   'fileProfParaHtm',    $dppPrgProf.   "/net/TSThtm.jct",    # zz test
+#	   'fileProfParaSec',    $dppPrgProf.   "/net/TSTsec.jct",    # zz test
                                 # ----------------------------------------
 				# PROF: parameters
 	   'parProfOptDef',      "both", # default to run PROF
@@ -669,12 +676,12 @@ INIT:{
                                 # TOPITS
 				# ==================================================
 				# TOPITS: executables
-	   'exeTopits',         $dppPrgTopits."topits.pl",
-	   'exeTopitsMaxhom',   $dppScrBin.   "maxhom."            .$ARCH, 
-#	   'exeTopitsMaxhom',   $dppScrBin.   "maxhom-big."        .$ARCH, 
-	   'exeTopitsMaxhomCsh',$dppPrgTopits."scr/maxhom_topits.csh",
-	   'exeTopitsMakeMetr', $dppScrBin.   "metr2st_make."      .$ARCH,
-#	   'exeTopitsMakeMetr', $dppPrgTopits."bin/metr2st_make."  .$ARCH,
+	   'exeTopits',         $dppPrgTopits."/topits.pl",
+	   'exeTopitsMaxhom',   $dppScrBin.   "/maxhom."            .$ARCH, 
+#	   'exeTopitsMaxhom',   $dppScrBin.   "/maxhom-big."        .$ARCH, 
+	   'exeTopitsMaxhomCsh',$dppPrgTopits."/scr/maxhom_topits.csh",
+	   'exeTopitsMakeMetr', $dppScrBin.   "/metr2st_make."      .$ARCH,
+#	   'exeTopitsMakeMetr', $dppPrgTopits."/bin/metr2st_make."  .$ARCH,
 
 #	   'exeTopitsWrtOwn',   $dppPrgTopits."/scr/"."topitsWrtOwn.pl",
                                 # ----------------------------------------
@@ -682,26 +689,26 @@ INIT:{
 	   'dirTopits',         $dppPrgTopits,
                                 # ----------------------------------------
                                 # TOPITS: files
-	   'fileTopitsDef',     $dppPrgTopits."mat/Defaults.topits",
-	   'fileTopitsMaxhomDef', $dppPrgTopits.  "mat/Defaults.maxhom",
+	   'fileTopitsDef',     $dppPrgTopits."/mat/Defaults.topits",
+	   'fileTopitsMaxhomDef', $dppPrgTopits.  "/mat/Defaults.maxhom",
 
-#	   'fileTopitsAliList', $dppPrgTopits."mat/Topits_dssp849.list",
-#	   'fileTopitsAliList', $dppPrgTopits."mat/Topits_dssp1213.list",
-#	   'fileTopitsAliList', $dppPrgTopits."mat/Topits_dssp_98_10.list",
-#	   'fileTopitsAliList', $dppPrgTopits."mat/Topits_dssp_99_01.list",
-	   'fileTopitsAliList', $dppPrgTopits."mat/Topits_dssp_00_06.list",
-#	   'fileTopitsAliList', $dppPrgTopits."mat/tmp2.list",        # zzz 
-#	   'fileTopitsAliList', $dppPrgTopits."mat/tmp3.list",        # zzz 
+#	   'fileTopitsAliList', $dppPrgTopits."/mat/Topits_dssp849.list",
+#	   'fileTopitsAliList', $dppPrgTopits."/mat/Topits_dssp1213.list",
+#	   'fileTopitsAliList', $dppPrgTopits."/mat/Topits_dssp_98_10.list",
+#	   'fileTopitsAliList', $dppPrgTopits."/mat/Topits_dssp_99_01.list",
+	   'fileTopitsAliList', $dppPrgTopits."/mat/Topits_dssp_00_06.list",
+#	   'fileTopitsAliList', $dppPrgTopits."/mat/tmp2.list",        # zzz 
+#	   'fileTopitsAliList', $dppPrgTopits."/mat/tmp3.list",        # zzz 
 
-	   'fileTopitsMetrIn',  $dppPrgTopits."mat/Topits_m3c_in.metric",
-#	   'fileTopitsMetrIn',  $dppPrgTopits."mat/Topits_in.metric",
-	   'fileTopitsMetrSeq', $dppPrgTopits."mat/Maxhom_McLachlan.metric",
+	   'fileTopitsMetrIn',  $dppPrgTopits."/mat/Topits_m3c_in.metric",
+#	   'fileTopitsMetrIn',  $dppPrgTopits."/mat/Topits_in.metric",
+	   'fileTopitsMetrSeq', $dppPrgTopits."/mat/Maxhom_McLachlan.metric",
 				# all possible metrices
 	   'fileTopitsMetrSeqAll', 
-	                        $dppPrgTopits."mat/Maxhom_McLachlan.metric".",".
-	                        $dppPrgTopits."mat/Maxhom_Blosum.metric".",".
-	                        $dppPrgTopits."mat/Maxhom_GCG.metric".",",
-	   'fileTopitsMetrGCG', $dppPrgTopits."mat/Maxhom_GCG.metric",
+	                        $dppPrgTopits."/mat/Maxhom_McLachlan.metric".",".
+	                        $dppPrgTopits."/mat/Maxhom_Blosum.metric".",".
+	                        $dppPrgTopits."/mat/Maxhom_GCG.metric".",",
+	   'fileTopitsMetrGCG', $dppPrgTopits."/mat/Maxhom_GCG.metric",
                                 # ----------------------------------------
                                 # TOPITS: parameters
 	   'parTopitsSmax',     "2",
@@ -720,14 +727,14 @@ INIT:{
 				# Alignment Blast
 				# ==================================================
 				
-#	   'exeBlastp',         $dppScrBin.   "blastp."            .$ARCH, # XX GY 052008 blastp running through blastall now
-	   'exeBlastp',         $dppScrBin.   "blastall_latest."            .$ARCH,
-#	   'exeBlastp',         $dppPrgBlastp."bin/blastp."        .$ARCH,
-#	   'exeBlastpFilter',   $dppPrgMax.   "scr/filter_blastp.pl",
-	   'exeBlastpFilter',   $dppPrgMax.   "scr/filter_blastp_big.pl",
+#	   'exeBlastp',         $dppScrBin.   "/blastp."            .$ARCH, # XX GY 052008 blastp running through blastall now
+	   'exeBlastp',         $dppScrBin.   "/blastall_latest."            .$ARCH,
+#	   'exeBlastp',         $dppPrgBlastp."/bin/blastp."        .$ARCH,
+#	   'exeBlastpFilter',   $dppPrgMax.   "/scr/filter_blastp.pl",
+	   'exeBlastpFilter',   $dppPrgMax.   "/scr/filter_blastp_big.pl",
 
-	   'envBlastMat',       $dppPrgBlastp."blastapp/matrix/",
-	   'envBlastDb',        $dppData.     "blast/",
+	   'envBlastMat',       $dppPrgBlastp."/blastapp/matrix/",
+	   'envBlastDb',        $dppData.     "/blast/",
 	   
 	   'parBlastDb',         "swiss",     # database to run BLASTP against
 	   'parBlastDbPdb',     "pdb",
@@ -741,16 +748,16 @@ INIT:{
 				# ==================================================
 				# Alignment PSI-Blast
 				# ==================================================
-	   'exeBlastPsi',       $dppScrBin.   "blastpgp."            .$ARCH,
-#	   'exeBlastp',         $dppPrgBlastp."bin/blastp."        .$ARCH,
-#	   'exeBlastpFilter',   $dppPrgMax.   "scr/filter_blastp.pl",
-#	   'exeBlastpFilter',   $dppPrgMax.   "scr/filter_blastp_big.pl",
+	   'exeBlastPsi',       $dppScrBin.   "/blastpgp."            .$ARCH,
+#	   'exeBlastp',         $dppPrgBlastp."/bin/blastp."        .$ARCH,
+#	   'exeBlastpFilter',   $dppPrgMax.   "/scr/filter_blastp.pl",
+#	   'exeBlastpFilter',   $dppPrgMax.   "/scr/filter_blastp_big.pl",
 
-	   'exeBlast2Saf',      $dppPrgBlastPsi."blastpgp_to_saf.pl",
-#	   'exeBlast2Saf',      $dppPrgBlastPsi."blast2saf.pl",
-	   'exeBlastRdbExtr4pp',$dppPrgBlastPsi."blastPsi_rdb4pp.pl",
-	   'envBlastPsiMat',    $dppPrgBlastPsi."data",
-	   'envBlastPsiDb',     $dppData.     "blast",
+	   'exeBlast2Saf',      $dppPrgBlastPsi."/blastpgp_to_saf.pl",
+#	   'exeBlast2Saf',      $dppPrgBlastPsi."/blast2saf.pl",
+	   'exeBlastRdbExtr4pp',$dppPrgBlastPsi."/blastPsi_rdb4pp.pl",
+	   'envBlastPsiMat',    $dppPrgBlastPsi."/data",
+	   'envBlastPsiDb',     $dppData.     "/blast",
 	   
 #	   'parBlastPsiDb',        "big_98_X",     # default database to run BLASTPSI against
 	   'parBlastPsiDb',        "big_80",     # default database to run BLASTPSI against
@@ -788,32 +795,32 @@ INIT:{
 				# ==================================================
 				# Alignment MaxHom
 				# ==================================================
-	   'exeMaxhom',         $dppScrBin.   "maxhom."            .$ARCH,
+	   'exeMaxhom',         $dppScrBin.   "/maxhom."            .$ARCH,
                                 # ----------------------------------------
 				# MaxHom: directories
 #	   'dirMaxhom',         $dppPrgMax,
 	   'dirData',           $dppData,                           # dir of databases
-	   'dirSwiss',          $dppData.     "swissprot/",         # Swissprot directory
-	   'dirSwissSplit',     $dppData.     "swissprot/current/", # SWISS-PROT split
-	   'dirPdb',            $dppData.     "pdb/",               # not used ..
-	   'dirDssp',           $dppData.     "dssp/",              # DSSP for TOPITS
-	   'dirBigSwissSplit',  $dppData.     "derived/big/splitSwiss",
-	   'dirBigTremblSplit', $dppData.     "derived/big/splitTrembl",
-	   'dirBigPdbSplit',    $dppData.     "derived/big/splitPdb",
+	   'dirSwiss',          $dppData.     "/swissprot/",         # Swissprot directory
+	   'dirSwissSplit',     $dppData.     "/swissprot/current/", # SWISS-PROT split
+	   'dirPdb',            $dppData.     "/pdb/",               # not used ..
+	   'dirDssp',           $dppData.     "/dssp/",              # DSSP for TOPITS
+	   'dirBigSwissSplit',  $dppData.     "/derived/big/splitSwiss",
+	   'dirBigTremblSplit', $dppData.     "/derived/big/splitTrembl",
+	   'dirBigPdbSplit',    $dppData.     "/derived/big/splitPdb",
                                 # ----------------------------------------
 				# MaxHom: files
-	   'fileMaxhomDefaults',$dppPrgMax.   "mat/maxhom.default",
-#	   'fileMaxhomMetrSeq', $dppPrgMax.   "mat/Maxhom_McLachlan.metric",
-	   'fileMaxhomMetrSeq', $dppPrgMax.   "mat/Maxhom_Blosum.metric",
-	   'fileMaxhomMetr',    $dppPrgMax.   "mat/Maxhom_Blosum.metric",
-	   'fileMaxhomMetrLach',$dppPrgMax.   "mat/Maxhom_McLachlan.metric",
+	   'fileMaxhomDefaults',$dppPrgMax.   "/mat/maxhom.default",
+#	   'fileMaxhomMetrSeq', $dppPrgMax.   "/mat/Maxhom_McLachlan.metric",
+	   'fileMaxhomMetrSeq', $dppPrgMax.   "/mat/Maxhom_Blosum.metric",
+	   'fileMaxhomMetr',    $dppPrgMax.   "/mat/Maxhom_Blosum.metric",
+	   'fileMaxhomMetrLach',$dppPrgMax.   "/mat/Maxhom_McLachlan.metric",
 				# all possible metrices
 	   'fileMaxhomMetrSeqAll', 
-	                        $dppPrgMax.   "mat/Maxhom_McLachlan.metric".",".
-	                        $dppPrgMax.   "mat/Maxhom_Blosum.metric".",".
-	                        $dppPrgMax.   "mat/Maxhom_GCG.metric".",",
+	                        $dppPrgMax.   "/mat/Maxhom_McLachlan.metric".",".
+	                        $dppPrgMax.   "/mat/Maxhom_Blosum.metric".",".
+	                        $dppPrgMax.   "/mat/Maxhom_GCG.metric".",",
 				             # USE for copf when msf-> hssp!!
-#	   'fileMaxhomMetr',    $dppPrgMax.   "mat/Maxhom_GCG.metric",
+#	   'fileMaxhomMetr',    $dppPrgMax.   "/mat/Maxhom_GCG.metric",
 
 	   'extPdb',            ".brk",	# PDB extension
 #old	   'fileBrookhaven',    "/data/brookhaven/brookhaven",
@@ -849,18 +856,18 @@ INIT:{
 				# ==================================================
 				# Alignment utilities: Convert_seq
 				# ==================================================
-#	   'exeCopf',           $dppPrgPhd.   "scr/copf.pl",
-	   'exeCopf',           $dppPrgProf.   "scr/copf.pl",
-	   'exeConvertSeq',     $dppScrBin.   "convert_seq_big."       .$ARCH,
-#	   'exeConvertSeq',     $dppPrgMax.   "bin/convert_seq."   .$ARCH,
+#	   'exeCopf',           $dppPrgPhd.   "/scr/copf.pl",
+	   'exeCopf',           $dppPrgProf.   "/scr/copf.pl",
+	   'exeConvertSeq',     $dppScrBin.   "/convert_seq_big."       .$ARCH,
+#	   'exeConvertSeq',     $dppPrgMax.   "/bin/convert_seq."   .$ARCH,
 
 				# ==================================================
 				# Alignment utilities: Filter_hssp
 				# ==================================================
-	   'exeHsspFilter',     $dppPrgProf.   "scr/hssp_filter.pl",
-#	   'exeHsspFilter',     $dppPrgPhd.   "scr/hssp_filter.pl",
-	   'exeHsspFilterFor',  $dppScrBin.   "filter_hssp_big."       .$ARCH,
-#	   'exeHsspFilterFor',  $dppPrgMax.   "bin/filter_hssp."   .$ARCH,
+	   'exeHsspFilter',     $dppPrgProf.   "/scr/hssp_filter.pl",
+#	   'exeHsspFilter',     $dppPrgPhd.   "/scr/hssp_filter.pl",
+	   'exeHsspFilterFor',  $dppScrBin.   "/filter_hssp_big."       .$ARCH,
+#	   'exeHsspFilterFor',  $dppPrgMax.   "/bin/filter_hssp."   .$ARCH,
                                 # ----------------------------------------
 				# ali filter: parameters
 				             # options for running hssp_filter.pl:
@@ -878,36 +885,36 @@ INIT:{
 				# ==================================================
 				# Alignment utilities: extract from HSSP
 				# ==================================================
-	   'exeHsspExtrHead',   $dppPrgMax.   "scr/hssp_extr_header.pl",
-	   'exeHssp2pir',       $dppPrgMax.   "scr/hssp_extr_2pir.pl",
-	   'exeHsspExtrStrip',  $dppPrgTopits."scr/hssp_extr_strip.pl",
+	   'exeHsspExtrHead',   $dppPrgMax.   "/scr/hssp_extr_header.pl",
+	   'exeHssp2pir',       $dppPrgMax.   "/scr/hssp_extr_2pir.pl",
+	   'exeHsspExtrStrip',  $dppPrgTopits."/scr/hssp_extr_strip.pl",
 
-	   'exeHsspExtrHdr4pp', $dppScrUt.    "hssp_extr_hdr4pp.pl",
-	   'exeHsspExtrStripPP',$dppScrUt.    "pp_strip2send.pl",
+	   'exeHsspExtrHdr4pp', $dppScrUt.    "/hssp_extr_hdr4pp.pl",
+	   'exeHsspExtrStripPP',$dppScrUt.    "/pp_strip2send.pl",
 
 
                                 # ==================================================
 				# other jobs threader
 				# ==================================================
-	   'exeThreader',        $dppPrgThreader. "scr/threader.pl",
+	   'exeThreader',        $dppPrgThreader. "/scr/threader.pl",
 
 				# ==================================================
 				# other jobs Prosite
 				# ==================================================
-	   'exeProsite',        $dppPrgProsite. "prosite_scan.pl",
+	   'exeProsite',        $dppPrgProsite. "/prosite_scan.pl",
                                              # prosite database converted	   
-	   'filePrositeData',   $dppPrgProsite. "mat/prosite_convert.dat",
+	   'filePrositeData',   $dppPrgProsite. "/mat/prosite_convert.dat",
 
 				# ==================================================
 				# other jobs Prodom
 				# ==================================================
-	   'envProdomBlastDb',  $dppPrgProdom.  "mat",
+	   'envProdomBlastDb',  $dppPrgProdom.  "/mat",
 				             # database to run BLASTP against PRODOM
-#	   'parProdomBlastDb',  $dppPrgProdom.  "mat/prodom_36",
-#	   'parProdomBlastDb',  $dppPrgProdom.  "mat/prodom_99_1",
-#	   'parProdomBlastDb',  $dppPrgProdom.  "mat/prodom_99_2",
-#	   'parProdomBlastDb',  $dppPrgProdom.  "mat/prodom_00_1",
-	   'parProdomBlastDb',  $dppData.       "blast/prodom",
+#	   'parProdomBlastDb',  $dppPrgProdom.  "/mat/prodom_36",
+#	   'parProdomBlastDb',  $dppPrgProdom.  "/mat/prodom_99_1",
+#	   'parProdomBlastDb',  $dppPrgProdom.  "/mat/prodom_99_2",
+#	   'parProdomBlastDb',  $dppPrgProdom.  "/mat/prodom_00_1",
+	   'parProdomBlastDb',  $dppData.       "/blast/prodom",
 	   'parProdomBlastN',   "500",
 	   'parProdomBlastE',   "0.001",       # E=0.1 when calling BLASTP (PRODOM)
 	   'parProdomBlastP',   "0.001",       # probability cut-off for PRODOM
@@ -915,8 +922,8 @@ INIT:{
 				# ==================================================
 				# other jobs Coils
 				# ==================================================
-	   'exeCoils',          $dppPrgCoils. "coils-wrap.pl",
-#	   'exeCoils',          $dppPrgCoils. "bin/coils."         .$ARCH,
+	   'exeCoils',          $dppPrgCoils. "/coils-wrap.pl",
+#	   'exeCoils',          $dppPrgCoils. "/bin/coils."         .$ARCH,
 
 	   'parCoilsMin',       0.5,         # minimal prob for considering it a coiled-coil
 	   'parCoilsMetr',      "MTIDK",       # two metrices allowd MTK|MTIDK
@@ -927,67 +934,67 @@ INIT:{
 				# ==================================================
 				# other jobs: cyspred
 				# ==================================================
-#	   'exeCyspred',        $dppPrgCyspred. "runcyspred.run",
+#	   'exeCyspred',        $dppPrgCyspred. "/runcyspred.run",
 #	   'dirCyspred',        $dppPrgCyspred,
 
 
 				# ==================================================
 				# other jobs: disulfind
 				# ==================================================
-	   'exeDisulfind',        $dppPrgDisulfind. "predict.sh",
+	   'exeDisulfind',        $dppPrgDisulfind. "/predict.sh",
 	   'dirDisulfind',        $dppPrgDisulfind,
 
 				# ==================================================
 				# other jobs: pfam
 				# ==================================================
-	   'exePfam',           $dppPrgPfam. "hmmpfam",
+	   'exePfam',           $dppPrgPfam. "/hmmpfam",
 	   'dirPfam',           $dppPrgPfam,
 
 				# ==================================================
 				# other jobs: profcon
 				# ==================================================
-	   'exeProfCon',        $dppPrgProfCon. "run-PROFcon-2008.pl", #this is the default profcon
+	   'exeProfCon',        $dppPrgProfCon. "/run-PROFcon-2008.pl", #this is the default profcon
 	   'dirProfCon',        $dppPrgProfCon,
 
 
 				# ==================================================
 				# other jobs: ucon (aka prenup)
 				# ==================================================
-	   'exePrenup',         $dppPrgPrenup. "runPreNUP.pl", #this is the default ucon
+	   'exePrenup',         $dppPrgPrenup. "/runPreNUP.pl", #this is the default ucon
 	   'dirPrenup',        $dppPrgPrenup,
 
 				# ==================================================
 				# other jobs: Mdisorder
 				# ==================================================
-	   #'exeMdisorder',      $dppPrgMdisorder. "runMDnoCont.pl", #this is the default Mdisorder
-	   'exeMdisorder',      $dppPrgMdisorder. "runMDnoCont_temp.pl", #this is the default Mdisorder
-	   'exeMdisorder_slow',  $dppPrgMdisorder. "runMD.pl",
+	   #'exeMdisorder',      $dppPrgMdisorder. "/runMDnoCont.pl", #this is the default Mdisorder
+	   'exeMdisorder',      $dppPrgMdisorder. "/runMDnoCont_temp.pl", #this is the default Mdisorder
+	   'exeMdisorder_slow',  $dppPrgMdisorder. "/runMD.pl",
 	   'dirMdisorder',      $dppPrgMdisorder,
 
 				# ==================================================
 				# other jobs: ecgo
 				# ==================================================
-	   'exeEcgo',           $dppPrgEcgo. "ecgo.py", #this is the default ecgo
+	   'exeEcgo',           $dppPrgEcgo. "/ecgo.py", #this is the default ecgo
 	   'dirEcgo',           $dppPrgEcgo,
 
 
 				# ==================================================
 				# other jobs: Predict Cell Cycle
 				# ==================================================
-	   'exePcc',            $dppPrgPcc. "pcc_wrap.pl",
+	   'exePcc',            $dppPrgPcc. "/pcc_wrap.pl",
 	   'dirPcc',            $dppPrgPcc,
 
 
 				# ==================================================
 				# other jobs: ConSurf/ConSeq
 				# ==================================================
-	   'exeR4S',            $dppPrgR4S. "r4s.run",
+	   'exeR4S',            $dppPrgR4S. "/r4s.run",
 	   'dirR4S',            $dppPrgR4S,
 
 				# ==================================================
 				# other jobs: Predict Prot-Prot interaction  ISIS YO
 				# ==================================================
-           'exeIsis',            $dppPrgIsis. "readSeqServer.pl",
+           'exeIsis',            $dppPrgIsis. "/readSeqServer.pl",
 	   'dirIsis',            $dppPrgIsis,
 	   'parIsisChain',         " ", # defualt: chain is empty  
 	   'parSolved',            "no",# defualt: find solved is false 
@@ -996,7 +1003,7 @@ INIT:{
                                 # ==================================================             
                                 # other jobs: Predict Prot-Prot interaction DISIS YO             
                                 # ==================================================             
-           'exeDisis',            $dppPrgDisis. "readSeqDNA-SVM-server.pl",
+           'exeDisis',            $dppPrgDisis. "/readSeqDNA-SVM-server.pl",
            'dirDisis',            $dppPrgDisis,
 
 
@@ -1004,22 +1011,22 @@ INIT:{
 				# ==================================================
 				# other jobs: NL-Prot
 				# ==================================================
-           'exeNLProt',            $dppPrgNLProt. "nlprot",
+           'exeNLProt',            $dppPrgNLProt. "/nlprot",
 	   'dirNLProt',            $dppPrgNLProt,
 
 
                                 # ==================================================
                                 # other jobs: Predict Prof TMB
                                 # ==================================================
-#           'exeProfTmb',            $dppPrgProfTmb. "proftmb.pl",
+#           'exeProfTmb',            $dppPrgProfTmb. "/proftmb.pl",
            'exeProfTmb',            $dppPrgProfTmb. "/usr/bin/proftmb",
            'dirProfTmb',            $dppPrgProfTmb,
 
                                 # ==================================================
 				# other jobs: Predict PROFBval
                                 # ==================================================
-#           'exeProfTmb',            $dppPrgProfTmb. "proftmb.pl",
-           'exeProfBval',            $dppPrgProfBval. "runPROFbval.pl",
+#           'exeProfTmb',            $dppPrgProfTmb. "/proftmb.pl",
+           'exeProfBval',            $dppPrgProfBval. "/runPROFbval.pl",
            'dirProfBval',            $dppPrgProfBval,
 
 
@@ -1027,40 +1034,40 @@ INIT:{
                                # ==================================================
 				# other jobs: Predict NORSnet
                                 # ==================================================
-           'exeNORSnet',            $dppPrgNORSnet. "runNORSnet.pl",
+           'exeNORSnet',            $dppPrgNORSnet. "/runNORSnet.pl",
            'dirNORSnet',            $dppPrgNORSnet,
 
                                 # ==================================================
 				# other jobs: snap
                                 # ==================================================
-           'exeSnap',            $dppPrgSnap. "SingleSequenceRun.pl",
+           'exeSnap',            $dppPrgSnap. "/SingleSequenceRun.pl",
            'dirSnap',            $dppPrgSnap,
 
 				# ==================================================
 				# other jobs: LOC Target
 				# ==================================================
-	   'exeLocTar',         $dppPrgLocTar. "predLoci.pl",
+	   'exeLocTar',         $dppPrgLocTar. "/predLoci.pl",
 	   'dirLocTar',         $dppPrgLocTar,
 
 				# ==================================================
 				# other jobs: Agape
 				# ==================================================
-	   'exeAgape',         $dppPrgAgape. "scr/agape.pl",
-#	   'exeAgape',         $dppPrgAgape. "agape.pl",
+	   'exeAgape',         $dppPrgAgape. "/scr/agape.pl",
+#	   'exeAgape',         $dppPrgAgape. "/agape.pl",
 	   'dirAgape',         $dppPrgAgape,
 
 
 				# ==================================================
 				# other jobs: ConBlast
 				# ==================================================
-	   'exeConBlast',      $dppPrgConBlast. "conBlast_pp.pl",
+	   'exeConBlast',      $dppPrgConBlast. "/conBlast_pp.pl",
 	   'dirConBlast',      $dppPrgConBlast,
 
 
 				# ==================================================
 			        # other jobs: CHOP
 				# ==================================================
-	   'exeChop',           $dppPrgChop. "scr/chop.pl",
+	   'exeChop',           $dppPrgChop. "/scr/chop.pl",
 	   'dirChop',           $dppPrgChop,
 
 	   'parChopBlastE',         0.01, # 
@@ -1071,7 +1078,7 @@ INIT:{
 				# ==================================================
 			        # other jobs: CHOPPER
 				# ==================================================
-	   'exeChopper',           $dppPrgChopper. "scr/chopper.pl",
+	   'exeChopper',           $dppPrgChopper. "/scr/chopper.pl",
 	   'dirChopper',           $dppPrgChopper,
 				
 	   'parChopperFormatOut',         'casp',  
@@ -1080,12 +1087,12 @@ INIT:{
 				# ==================================================
 				# other jobs: nls
 				# ==================================================
-	   'exeNls',            $dppPrgNls. "pp_resonline.pl",
+	   'exeNls',            $dppPrgNls. "/pp_resonline.pl",
 
                                 # ==================================================
 				# other jobs: asp
 				# ==================================================
-	   'exeAsp',            $dppPrgAsp. "asp_cubic.pl",
+	   'exeAsp',            $dppPrgAsp. "/asp_cubic.pl",
 	   'parAspWs',           5, # window size
 	   'parAspZ',            -1.75,	# z score cutoff
 	   'parAspMin',           9, # minimum mu dPr score
@@ -1094,7 +1101,7 @@ INIT:{
                                 # ==================================================
 				# other jobs: Nors
 				# ==================================================
-	   'exeNorsp',            $dppPrgNors. "nors.pl",
+	   'exeNorsp',            $dppPrgNors. "/nors.pl",
 	   'parNorsWs',          70, # window size
 	   'parNorsSecCut',      12, # structural content cutoff
 	   'parNorsAccLen',      10, # minimum consecutive exposed residues
@@ -1109,7 +1116,7 @@ INIT:{
 				# ==================================================
 				# other jobs SEG
 				# ==================================================
-	   'exeSeg',            $dppScrBin.   "seg."               .$ARCH,
+	   'exeSeg',            $dppScrBin.   "/seg."               .$ARCH,
 	   'parSegNorm',        "-x",        # simply replace low-complexity region
 				             #    by letter 'x'
 	   'parSegGlob',        "30 3.5 3.75",
@@ -1121,24 +1128,24 @@ INIT:{
 				# other jobs DSSP
 				# ==================================================
 				# executables
-	   'exeDssp',           $dppPrgDssp.     "dssp",           
-	   'exeDssp2Seq',       $dppScrUt.       "dsspExtrSeqSecAcc.pl",
+	   'exeDssp',           $dppPrgDssp.     "/dssp",           
+	   'exeDssp2Seq',       $dppScrUt.       "/dsspExtrSeqSecAcc.pl",
 				# ==================================================
 				# other jobs MView
 				# ==================================================
-	   'exeMview',          $dppPrgMview. "mview.pl",
+	   'exeMview',          $dppPrgMview. "/mview.pl",
 	   'parMview',          "-css on -srs on".
 	                        " -html head -ruler on".
 	                        " -coloring consensus -threshold 70 -consensus on -con_coloring any",	
-#	   'fileMviewStyles',   $dppPrgMview. "mview_pp.css",
+#	   'fileMviewStyles',   $dppPrgMview. "/mview_pp.css",
 
 				# ==================================================
 				# EVALSEC
 				# ==================================================
 				# EVALSEC: executables
-	   'exeEvalsec',        $dppPrgEvalsec."evalsec.pl",
-	   'exeEvalsecFor',     $dppScrBin.    "evalsec."          .$ARCH,
-#	   'exeEvalsecFor',     $dppPrgEvalsec."bin/evalsec."      .$ARCH,
+	   'exeEvalsec',        $dppPrgEvalsec."/evalsec.pl",
+	   'exeEvalsecFor',     $dppScrBin.    "/evalsec."          .$ARCH,
+#	   'exeEvalsecFor',     $dppPrgEvalsec."/bin/evalsec."      .$ARCH,
 
 				# ==================================================
 
@@ -1176,40 +1183,40 @@ INIT:{
                                 # ----------------------------------------
 				# message files to be appended
 				# PP: stuff
-	   'fileHelpText',      $dppScrTxt.        "Help.txt",
-	   'fileHelpConcise',   $dppScrTxt.        "Help.concise",
-	   'fileNewsText',      $dppScrTxt.        "News.txt",
-	   'fileLicText',       $dppScrTxt.        "Licence.txt",
-	   'fileAppErrCrypt',   $dppScrTxt."app/". "IntErr",
+	   'fileHelpText',      $dppScrTxt.        "/Help.txt",
+	   'fileHelpConcise',   $dppScrTxt.        "/Help.concise",
+	   'fileNewsText',      $dppScrTxt.        "/News.txt",
+	   'fileLicText',       $dppScrTxt.        "/Licence.txt",
+	   'fileAppErrCrypt',   $dppScrTxt."/app/". "IntErr",
 
-	   'fileAppEmpty',      $dppScrTxt."app/". "EmptyFile",
-	   'fileAppHtmlHead',          $dppScrTxt."app/". "HtmlHead.html",
-	   'fileAppHtmlHeadChop',      $dppScrTxt."app/". "HtmlHead_chop.html",
-	   'fileAppHtmlHeadProfCon',   $dppScrTxt."app/". "HtmlHead_profcon.html",
-	   'fileAppHtmlHeadPrenup',    $dppScrTxt."app/". "HtmlHead_prenup.html",
-	   'fileAppHtmlHeadMdisorder',    $dppScrTxt."app/". "HtmlHead_Mdisorder.html",
-	   'fileAppHtmlHeadEcgo',    $dppScrTxt."app/". "HtmlHead_ecgo.html",
-	   'fileAppHtmlHeadProfBval',   $dppScrTxt."app/". "HtmlHead_profbval.html",
-	   'fileAppHtmlHeadNORSnet',   $dppScrTxt."app/". "HtmlHead_norsnet.html",
-	   'fileAppHtmlHeadSnap',   $dppScrTxt."app/". "HtmlHead_snap.html",
-	   'fileAppHtmlHeadIsis',      $dppScrTxt."app/". "HtmlHead_isis.html",
-           'fileAppHtmlHeadDisis',      $dppScrTxt."app/". "HtmlHead_disis.html",
-#	   'fileAppHtmlHeadProfBval',      $dppScrTxt."app/". "HtmlHead_ptofbval.html",
-	   'fileAppHtmlHeadNLProt',   $dppScrTxt."app/". "HtmlHead_nlprot.html",
-	   'fileAppHtmlHeadAgape',      $dppScrTxt."app/"."HtmlHead_agape.html",
-           'fileAppHtmlHeadConBlast',      $dppScrTxt."app/"."HtmlHead_conblast.html",
-#	   'fileAppHtmlHeadProfBval',  $dppScrTxt."app/"."HtmlHead_profbval.html",
-	   'fileAppHtmlHeadSnap'    ,  $dppScrTxt."app/"."HtmlHead_snap.html",
-	   'fileAppHtmlFoot',          $dppScrTxt."app/". "HtmlFoot.html",
-	   'fileAppHtmlMviewStyles',   $dppScrTxt."app/". "HtmlMviewStyles.html",
-	   'fileAppHtmlPhdStyles',     $dppScrTxt."app/". "HtmlPhdStyles.html",
-	   'fileAppHtmlStyles',        $dppScrTxt."app/". "HtmlStyles.html",
-	   'fileAppHtmlQuote',         $dppScrTxt."app/". "HtmlQuote.html",
+	   'fileAppEmpty',      $dppScrTxt."/app/". "EmptyFile",
+	   'fileAppHtmlHead',          $dppScrTxt."/app/". "HtmlHead.html",
+	   'fileAppHtmlHeadChop',      $dppScrTxt."/app/". "HtmlHead_chop.html",
+	   'fileAppHtmlHeadProfCon',   $dppScrTxt."/app/". "HtmlHead_profcon.html",
+	   'fileAppHtmlHeadPrenup',    $dppScrTxt."/app/". "HtmlHead_prenup.html",
+	   'fileAppHtmlHeadMdisorder',    $dppScrTxt."/app/". "HtmlHead_Mdisorder.html",
+	   'fileAppHtmlHeadEcgo',    $dppScrTxt."/app/". "HtmlHead_ecgo.html",
+	   'fileAppHtmlHeadProfBval',   $dppScrTxt."/app/". "HtmlHead_profbval.html",
+	   'fileAppHtmlHeadNORSnet',   $dppScrTxt."/app/". "HtmlHead_norsnet.html",
+	   'fileAppHtmlHeadSnap',   $dppScrTxt."/app/". "HtmlHead_snap.html",
+	   'fileAppHtmlHeadIsis',      $dppScrTxt."/app/". "HtmlHead_isis.html",
+           'fileAppHtmlHeadDisis',      $dppScrTxt."/app/". "HtmlHead_disis.html",
+#	   'fileAppHtmlHeadProfBval',      $dppScrTxt."/app/". "HtmlHead_ptofbval.html",
+	   'fileAppHtmlHeadNLProt',   $dppScrTxt."/app/". "HtmlHead_nlprot.html",
+	   'fileAppHtmlHeadAgape',      $dppScrTxt."/app/"."HtmlHead_agape.html",
+           'fileAppHtmlHeadConBlast',      $dppScrTxt."/app/"."HtmlHead_conblast.html",
+#	   'fileAppHtmlHeadProfBval',  $dppScrTxt."/app/"."HtmlHead_profbval.html",
+	   'fileAppHtmlHeadSnap'    ,  $dppScrTxt."/app/"."HtmlHead_snap.html",
+	   'fileAppHtmlFoot',          $dppScrTxt."/app/". "HtmlFoot.html",
+	   'fileAppHtmlMviewStyles',   $dppScrTxt."/app/". "HtmlMviewStyles.html",
+	   'fileAppHtmlPhdStyles',     $dppScrTxt."/app/". "HtmlPhdStyles.html",
+	   'fileAppHtmlStyles',        $dppScrTxt."/app/". "HtmlStyles.html",
+	   'fileAppHtmlQuote',         $dppScrTxt."/app/". "HtmlQuote.html",
 
 				# HTML submission form for META
-	   'fileHtmlMetaSubmit',$dppWWWdoc."submit_meta.html",
-#	   'fileHtmlMetaSubmit',$dppWWWdoc."submit_meta2.html",
-           'fileHtmlMetaSubmitPP',$dppWWWdoc."submit_meta_phm.html", #MERGED
+	   'fileHtmlMetaSubmit',$dppWWWdoc."/submit_meta.html",
+#	   'fileHtmlMetaSubmit',$dppWWWdoc."/submit_meta2.html",
+           'fileHtmlMetaSubmitPP',$dppWWWdoc."/submit_meta_phm.html", #MERGED
 				# HTML submission to ESPript
 	  # 'fileHtmlEspript',   "http://cubic.bioc.columbia.edu/cgi/pp/ESPript",
 				# URL for SRS server
@@ -1227,17 +1234,17 @@ INIT:{
 		  "fileHeadEvalsec"){
 	if ($kwd =~ /^fileHeadPhd/){
 	    $file=$kwd;$file=~s/^fileH/h/g;
-	    $envL{$kwd}=      $dppPrgPhd."mat/".$file.".txt"; }
+	    $envL{$kwd}=      $dppPrgPhd."/mat/".$file.".txt"; }
 	else {
 	    $file=$kwd;$file=~s/^fileHead//g;
-	    $envL{$kwd}=      $dppScrTxt."head/".$file.".txt";} }
+	    $envL{$kwd}=      $dppScrTxt."/head/".$file.".txt";} }
 
 				# abbreviations
     foreach $kwd ("fileAbbrPhd3",  "fileAbbrRdb3",  "fileAbbrPhdBoth",
 		  "fileAbbrPhdSec","fileAbbrPhdAcc","fileAbbrPhdHtm",
 		  ){
 	$file=$kwd;$file=~s/^fileAbbr//g;
-	$envL{$kwd}=          $dppScrTxt."head/".$file.".txt";}
+	$envL{$kwd}=          $dppScrTxt."/head/".$file.".txt";}
     foreach $kwd ("fileAppLicPwd",       "fileAppLicExhaust",   "fileAppLicExpired",
 		  "fileAppLicNew",       "fileAppLine",
 		  "fileAppInSeqConv",    "fileAppInSeqSent",
@@ -1268,7 +1275,7 @@ INIT:{
 #	$tmp=substr($file,1,1);$tmp=~tr/[A-Z]/[a-z]/ if ($file=~/head|app/i);
 #	$file=$tmp.substr($file,2);
 	$file=$kwd;$file=~s/^fileApp//g;
-	$envL{$kwd}=            $dppScrTxt."app/".$file ;}
+	$envL{$kwd}=            $dppScrTxt."/app/".$file ;}
 
 				# ------------------------------
 				# hack (change br 1999-01):
@@ -1787,3 +1794,4 @@ sub getLocal{
 
 1;
 
+# vim:ts=8:
