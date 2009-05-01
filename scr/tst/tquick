@@ -1,0 +1,9 @@
+PPhdr from: gy47@columbia.edu
+PPhdr resp: MAIL
+PPhdr orig: HTML
+PPhdr want: HTML
+PPhdr password(###)
+ret html
+ret store
+# default: single protein sequence
+MSAQISDSIEEKRGFFTRWFMSTNHKDIGVLYLF
