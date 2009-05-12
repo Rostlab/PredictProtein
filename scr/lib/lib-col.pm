@@ -7047,8 +7047,6 @@ sub cachedBlastCall {
         $cache_dir = "$ENV{PP_ROOT}/blastcache";
         if( -d $cache_dir )
         {
-            remove_old_files({ root => $cache_dir, mmin => '+2880' }); # 48 hours - keeps results of very slow blasts overnight
-
             $cmd_cache_dir = $cache_dir.'/'.$blastcmdmd5->hexdigest();
             if( -d $cmd_cache_dir )
             {
@@ -7098,6 +7096,10 @@ sub cachedBlastCall {
             { my @cmd = ( '/bin/gunzip', '--force', $path.'.gz' ); system( @cmd ) == 0 or confess( join(' ', @cmd),": $!" ); }
         }
         $Lsystem = 0;
+    }
+
+    if( -d $cache_dir ) {
+        remove_old_files({ root => $cache_dir, mmin => '+2880' }); # 48 hours
     }
 
     if( $fhLoc ){ print $fhLoc "\n"; }
