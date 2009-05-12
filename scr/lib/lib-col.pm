@@ -7099,6 +7099,7 @@ sub cachedBlastCall {
     }
 
     if( -d $cache_dir ) {
+        # this should take place after utime (touch)
         remove_old_files({ root => $cache_dir, mmin => '+2880' }); # 48 hours
     }
 
