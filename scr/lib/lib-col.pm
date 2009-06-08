@@ -5934,7 +5934,7 @@ sub prodomWrt {
 	"--- \n",
 	"--- The general WWW page is on:\n",
 	"----      ---------------------------------------\n",
-	"---       http://www.toulouse.inra.fr/prodom.html\n",
+	"---       http://prodom.prabi.fr                 \n",
 	"----      ---------------------------------------\n",
 	"--- \n",
 	"--- For WWW graphic interfaces to PRODOM, in particular for your\n",
@@ -5943,9 +5943,11 @@ sub prodomWrt {
 	"--- \n";
 				# ------------------------------
 				# define keywords
-    $txt1a="http://www.toulouse.inra.fr/prodom/cgi-bin/ReqProdomII.pl?id_dom1=";
+#    $txt1a="http://www.toulouse.inra.fr/prodom/cgi-bin/ReqProdomII.pl?id_dom1=";
+    $txt1a="http://prodom.prabi.fr/prodom/current/cgi-bin/request.pl?question=DBEN&query=";
     $txt1b=" ==> multiple alignment, consensus, PDB and PROSITE links of domain ";
-    $txt2a="http://www.toulouse.inra.fr/prodom/cgi-bin/ReqProdomII.pl?id_dom2=";
+    $txt2a="http://prodom.prabi.fr/prodom/current/cgi-bin/request.pl?question=DBEN&query=";
+#    $txt2a="http://www.toulouse.inra.fr/prodom/cgi-bin/ReqProdomII.pl?id_dom2=";
     $txt2b=" ==> graphical output of all proteins having domain ";
 				# ------------------------------
 				# establish links
