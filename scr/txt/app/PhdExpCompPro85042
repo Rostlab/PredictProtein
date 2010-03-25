@@ -1,7 +1,0 @@
-#Out gen by scr: /nfs/data5/users/ppuser/server/pub/LOCtarget_v1/makeComp.pl(xx's inserted for compatability)
-#File contains "secondary structure" composition of each residue type
-#All exposed and intermediate predicted residues assigned to exposed state
-#HsspFile =/nfs/data5/users/ppuser/server/work/85042.hsspMax4phd
-#ProfFile =/nfs/data5/users/ppuser/server/work/85042.profRdb
-#pdb_id	xx	xx	len	V	L	I	M	F	W	Y	G	A	P	S	T	C	H	R	K	Q	E	N	D
-prot	xx	xx	114	5.263	4.971	3.509	3.363	3.216	1.316	2.339	3.07	4.971	3.947	10.38	7.895	1.754	1.462	11.111	8.918	6.579	3.801	5.994	6.14
