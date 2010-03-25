@@ -1,1 +1,0 @@
- perl -ane 'next if($_!~/^>/); ($id)=/^>(\S+)/; print $id."\n" if(/designed/i);' /data/derived/pdb/pdb_seqres.txt

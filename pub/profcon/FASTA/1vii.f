@@ -1,2 +1,0 @@
->1vii   mol:protein length:36     Villin
-MLSDEDFKAVFGMTRSAFANLPLWKQQNLKKEKGLF

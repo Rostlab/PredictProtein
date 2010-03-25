@@ -1,1 +1,0 @@
-../scr/filter_blastp_big.pl

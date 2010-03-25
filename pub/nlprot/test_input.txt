@@ -1,1 +1,0 @@
-1>ZYG-12 is a member of the Hook family of cytoskeletal linker proteins and localizes to both the nuclear envelope (via SUN-1) and centrosomes. ZYG-12 is able to bind the dynein subunit DLI-1 in a two-hybrid assay and is required for dynein localization to the nuclear envelope.

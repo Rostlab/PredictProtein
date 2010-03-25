@@ -1,1 +1,0 @@
-/razor/2/home/rost/perl/rs-cgi.pl

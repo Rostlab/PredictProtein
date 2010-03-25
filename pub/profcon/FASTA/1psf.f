@@ -1,2 +1,0 @@
->1psf   mol:protein length:69     Photosystem I Accessory Protein E (Psae) (Sub
-AIERGSKVKILRKESYWYGDVGTVASIDKSGIIYPVIVRFNKVNYNGFSGSAGGLNTNNFAEHELEVVG
