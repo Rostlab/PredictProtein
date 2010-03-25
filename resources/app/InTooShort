@@ -1,0 +1,37 @@
+***                                                                          ***
+***                                                                          ***
+********************************************************************************
+***                                                                          ***
+***                                                                          ***
+***   Dear Colleague,                                                        ***
+***   									     ***
+***   Unfortunately we have to apologise for not sending you a prediction    ***
+***   for the peptide you sent.  The neural network was trained on peptides  ***
+***   of length > 17 residues.  We strongly doubt that there is any sense    ***
+***   in making predictions for much shorter stretches. 		     ***
+***   									     ***
+***   Should you be able to append some residues before or after the sequence***
+***   you sent this time, please try again with the longer stretch.          ***
+***   									     ***
+***   Note: this message could also have been produced by a format violation!***
+***   If your sequence contained more than 17 residues, than the most likely ***
+***   cause for the error message is that you used a non-amino acid charac-  ***
+***   ter in the first or second line after the line with the hash (#).  The ***
+***   automatic format extraction procedure interprets everything after that ***
+***   hash as amino acid sequence, and ignores everything from the first line***
+***   containing a non-amino acid character (e.g. any of the following:      ***
+***   .-_bjozx0123456789!,                                                   ***
+***   asf. ...                                                               ***
+***   									     ***
+***   We wish you better luck in the future!				     ***
+***   With my best regards						     ***
+***   									     ***
+***   		Burkhard Rost						     ***
+***                                                                          ***
+***   For personal messages or questions to the PHD authors,                 ***
+***   send email to Predict-Help@columbia.edu                                ***
+***                                                                          ***
+***                                                                          ***
+********************************************************************************
+***                                                                          ***
+***                                                                          ***

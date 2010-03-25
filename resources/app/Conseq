@@ -1,0 +1,29 @@
+***                                                                          ***
+********************************************************************************
+***                                                                          ***
+***   Result of Rate4Site       		                             ***
+***   ~~~~~~~~~~~~~~~~~~~                        		             ***
+***                                                                          ***
+***  Glaser, F., Pupko, T., Paz, I., Bell, R.E., Bechor-Shental, D., 	     ***
+***  Martz, E. and Ben-Tal, N.	                                             ***
+***                                                                          ***
+***  Rate4Site: an algorithmic tool for the identification of functional     ***
+***  regions in proteins by surface mapping of evolutionary determinants     ***
+***  within their homologues. (Bioinformatics. 2002;18 Suppl 1:S71-7.)       ***
+***                                                                          ***
+***                                                                          ***
+________________________________________________________________________________
+
+***                                                                          ***
+- POS: The position of the AA in the SEQRES derived sequence.
+- SEQ: The SEQRES derived sequence in one letter code.
+- SCORE: The normalized conservation score.
+- COLOR: The color scale representing the conservation score (9 - conserved, 1 - variable).
+- B/E: Burried (b) or Exposed (e) residue.
+- FUNCTION: functional (f) or structural (s) residue (f - highly conserved and exposed, s - highly conserved and burried).
+- MSA DATA: The number of aligned sequences having an amino acid (non-gapped) from the overall number of sequences at each position.
+- RESIDUE VARIETY: The amino acids variety in the multiple sequence alignment at each position.
+
+
+
+

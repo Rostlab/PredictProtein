@@ -1,0 +1,9 @@
+return no alignment
+run profsec
+run mdisorder_fast
+run profacc
+run isis
+run disis
+ret html
+# default: single protein sequence resfilename=d7827c495a4ee0bf5f465a0cf775591c0ac8c24c
+MSAQISDSIEEKRGFFTRWFMSTNHKDIGVLYLF

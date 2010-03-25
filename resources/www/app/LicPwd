@@ -1,0 +1,23 @@
+***                                                                          ***
+********************************************************************************
+***                                                                          ***
+***   Dear User,	                                                     ***
+***   									     ***
+***   Please check the usage of your password.                               ***
+***   									     ***
+***   Only commercial user should use a password.                            *** 
+***   									     ***
+***   If, you use the e-mail server, the correct password must be given      ***
+***   in any line before the one starting with a hash ('#'):                 ***
+***   									     ***
+***   		password(my_password)					     ***
+***   									     ***
+***   If you have used the correct format,  the password was probably mis-   ***
+***   typed.								     ***
+***   									     ***
+***   With my best regards						     ***
+***   									     ***
+***   		Burkhard Rost						     ***
+***                                                                          ***
+********************************************************************************
+***                                                                          ***

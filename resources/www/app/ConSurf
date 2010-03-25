@@ -1,0 +1,27 @@
+***                                                                          ***
+********************************************************************************
+***                                                                          ***
+***   Result of Rate4Site       		                             ***
+***   ~~~~~~~~~~~~~~~~~~~                        		             ***
+***                                                                          ***
+***  Glaser, F., Pupko, T., Paz, I., Bell, R.E., Bechor-Shental, D., 	     ***
+***  Martz, E. and Ben-Tal, N.	                                             ***
+***                                                                          ***
+***  Rate4Site: an algorithmic tool for the identification of functional     ***
+***  regions in proteins by surface mapping of evolutionary determinants     ***
+***  within their homologues. (Bioinformatics. 2002;18 Suppl 1:S71-7.)       ***
+***                                                                          ***
+***                                                                          ***
+________________________________________________________________________________
+***                                                                          ***
+***  Legend:                                                                 ***
+***  POS: The position of the AA in the SEQRES derived sequence.             ***
+***  SEQ: The SEQRES derived sequence in one letter code.                    ***
+***  SCORE: The normalized conservation score (negative=conserve).           ***
+***  B/E: Burried (b) or Exposed (e) residue.                                ***
+________________________________________________________________________________
+
+***                                                                          ***
+
+
+

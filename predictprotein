@@ -1,0 +1,45 @@
+#!/usr/bin/perl -w
+use strict;
+use Data::Dumper;
+
+use lib './RG'; 
+use RG::PP;  
+
+my ($fastaHeader, $optSeq)=0;
+my $flag=0;
+my @seq = ();
+
+while(<STDIN>){
+    if ($_=~ /^\s*\#/ ){ # ignore header
+	$flag=1;
+	next;
+    }
+    if ( /^\s*\>/ ) {# ignore fasta header
+	$fastaHeader = $_;
+	$fastaHeader =~ s/\s*\>\s*//g;
+	$fastaHeader =~ s/\s+$//g;
+	if ( $fastaHeader ) {
+	    $optSeq =~ s/,.*$/,$fastaHeader/;
+	    next;
+	}
+    }
+
+    $_=~s/\n//g;
+    $_=~s/^\s*|\s*$//g;
+    next if (length($_)<1);
+    push(@seq,$_) if ($flag==1);
+}
+print Dumper(@seq);
+
+
+
+# this comments captures abn example of the way pp calls interpretsq "Called interpretSeqPP($ARGV[0],\"default: single protein sequence resfilename=d7827c495a4ee0bf5f465a0cf775591c0ac8c24c tquick\",60,17,5000,80 @seq)");
+warn ("Called interpretSeqPP($ARGV[0],\"\",60,17,5000,80 @seq)");
+my ($LokWrt,$msg,$lenTmp)=
+    RG::PP::interpretSeqPP($ARGV[0],"",60,17,5000,80,@seq);
+
+if    (! $LokWrt) {warn ("err=207 $$msg");}
+elsif ($LokWrt==2){warn ("err=208 $msg");}
+elsif ($LokWrt==3){warn ("err=209 $msg");}
+elsif ($LokWrt==4){warn ("err=210 $msg");}
+else              {warn ("normal PP format");}

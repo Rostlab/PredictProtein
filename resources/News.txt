@@ -1,0 +1,38 @@
+-----------------------------------------------------------------------------
+- PredictProtein (PP): News 2002                                            -
+-----------------------------------------------------------------------------
+-                                                                           -
+- PP home:                                                                  -
+  New York            http://cubic.bioc.columbia.edu/predictprotein/
+-                                                                           -
+- PP mirrors:                                                               -
+
+  Australia Sydney        http://molmod.angis.org.au/predictprotein/
+  Germany EMBL            http://www.embl-heidelberg.de/predictprotein/
+  China CBI,Peking        http://www.cbi.pku.edu.cn/predictprotein/
+  China Inst. Microbiol.  http://micronet.im.ac.cn/predictprotein/
+  England EBI             http://www.ebi.ac.uk/~rost/predictprotein/
+  India CDFD		  http://www.cdfd.org.in/~www/pp/predictprotein/
+  India Pune              http://202.41.70.33/predictprotein/
+  Iran Tehran             http://www.ibc.ut.ac.ir/predictprotein/
+  Israel Beer-Sheva       http://www.cs.bgu.ac.il/~dfischer/predictprotein/
+  Italy Rome              http://obelix.bio.uniroma2.it/www/predictprotein/
+  Mexico Cuernavaca UNAM  http://www.ibt.unam.mx/paginas/lorenzo/predictprotein/
+  Netherlands CMBI        http://www.cmbi.kun.nl/bioinf/predictprotein/
+  Russia Puschino         http://mirror.protres.ru/predictprotein/
+  Singapore               http://embl.bic.nus.edu.sg/predictprotein/
+  Spain CNB               http://www.es.embnet.org/Services/MolBio/PredictProtein/
+  Switzerland Glaxo       http://www.gwer.ch/tools/predictprotein/
+  USA San Diego SDSC      http://www.sdsc.edu/predictprotein/
+
+-                                                                           -
+- Tools to post-process PP results:                                         -
+-                                                                           -
+- Generate a PostScript (or GIF, or TIFF):                                  -
+  ESPript (New York)  http://cubic.bioc.columbia.edu/cgi/pp/nph-ESPript_exe.cgi 
+  ESPript (Toulouse)  http://genopole.toulouse.inra.fr/ESPript
+-                                                                           -
+-----------------------------------------------------------------------------
+
+
+
