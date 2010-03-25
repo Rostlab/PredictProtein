@@ -1,9 +1,64 @@
 #!/usr/bin/perl -w
+
 use strict;
 use Data::Dumper;
+use Carp qw(cluck croak);
+use Getopt::Long;
+use File::Copy;
+use File::Temp;
+
+use RG::Utils::Hssp_filter;
+use RG::Utils::Copf;
+use RG::Utils::Conv_hssp2saf;
+use RG::Dudek::Blastpgp;
 
 use lib './RG'; 
 use RG::PP;  
+
+# USER ENTERED OPTIONS
+my ($help, $man, $dbg, $temp_dir,$proc_name,$input_file);
+
+
+if (@ARGV<2){ die "Usage: $0 --input_file=<file>  +[OPTIONS] [process_id]\n";}
+my $result = GetOptions (   "input_file=s" => \$input_file,
+			    "proc_name=s" =>\$proc_name,
+			    "temp_dir=s" => \$temp_dir,
+			    "d|debug" => \$dbg,
+			    "m|man" => \$man,
+			    "help|?" => \$help) or pod2usage(2);
+
+pod2usage(1) if (!$input_file);
+pod2usage(1) if $help;
+pod2usage(-verbose => 2) if $man;
+
+
+$proc_name= $$ if (!$proc_name);   # this is a process ID 
+
+$temp_dir = File::Temp::tempdir( CLEANUP => 1 ) if (!$temp_dir);
+
+# CONFIGURATION RETRIEVAL
+our $config;
+my ($pp_rootdir,$librg_utils_perl, $librg_dudek_perl);
+BEGIN {
+    use Config::IniFiles;
+    my ( $defaultconfig, $etcconfig );
+    if( -e "/usr/share/predictprotein/predictprotein.default" ) { $defaultconfig = Config::IniFiles->new( -file => "/usr/share/predictprotein/predictprotein.default" ); }
+    if( -e "/etc/predictproteinrc" ) { $etcconfig = Config::IniFiles->new( -file => "/etc/predictproteinrc", -import => $defaultconfig ); } else { $etcconfig = $defaultconfig; }
+    if( ( $ENV{PREDICTPROTEINCONF} && -e "$ENV{PREDICTPROTEINCONF}" ) || -e "$ENV{HOME}/.predictproteinrc" ) { $config = Config::IniFiles->new( -file => $ENV{PREDICTPROTEINCONF} || "$ENV{HOME}/.predictproteinrc", -import => $etcconfig ); } else { $config = $etcconfig; }
+    
+}
+
+
+$pp_rootdir  = glob($config->val('predictprotein', 'predictprotein_utildir'));
+$librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')) || '/usr/share/librg-utils-perl';
+$librg_dudek_perl = glob($config->val('predictprotein', 'librg_dudek_perl')) || '/usr/share/librg_dudek_perl';
+my $db_blast_train = glob($config->val('blast', 'uniref'));
+my $db_blast_final = glob($config->val('blast', 'uniref90'));
+
+my $root_dir = $pp_rootdir || "__PREFIX__/usr/share/predictprotein/";
+
+
+# COLLECT USER INPUT
 
 my ($fastaHeader, $optSeq)=0;
 my $flag=0;
@@ -33,7 +88,6 @@ print Dumper(@seq);
 
 
 
-# this comments captures abn example of the way pp calls interpretsq "Called interpretSeqPP($ARGV[0],\"default: single protein sequence resfilename=d7827c495a4ee0bf5f465a0cf775591c0ac8c24c tquick\",60,17,5000,80 @seq)");
 warn ("Called interpretSeqPP($ARGV[0],\"\",60,17,5000,80 @seq)");
 my ($LokWrt,$msg,$lenTmp)=
     RG::PP::interpretSeqPP($ARGV[0],"",60,17,5000,80,@seq);
@@ -43,3 +97,58 @@ elsif ($LokWrt==2){warn ("err=208 $msg");}
 elsif ($LokWrt==3){warn ("err=209 $msg");}
 elsif ($LokWrt==4){warn ("err=210 $msg");}
 else              {warn ("normal PP format");}
+
+
+# RUN MAKEFILE
+
+
+# RUN GLOBE
+
+
+# FORMAT RESULTS
+# CONVERT TO XML
+# CLEAN UP PROCESS
+
+
+__END__
+
+=head1 profcon
+predictprotein - 
+=head1 SYNOPSIS
+predictprotein [options] [file ...]
+=head1 DESCRIPTION 
+Protein sequence analysis suite
+-output format
+=head1 INPUT
+-input_file: parameter and input sequence
+
+=head1 OPTIONS
+=over 8
+=item B<-help>
+Print a brief help message and exits. 
+=item B<-man>
+This documentation page
+=item B<-verbose>
+Prints all debug information.
+=back
+=head1 DESCRIPTION
+B<This program> runs a set of protein sequnce analysis methods
+=head1 EXAMPLE
+C<predictprotein -i /usr/share/predictprotein/example/MT4_HUMAN.in>
+
+=head2 EXAMPLE INPUT FILE
+return no alignment
+run profsec
+run mdisorder_fast
+run profacc
+run isis
+run disis
+ret html
+# default: single protein sequence resfilename=d7827c495a4ee0bf5f465a0cf775591c0ac8c24c
+MSAQISDSIEEKRGFFTRWFMSTNHKDIGVLYLF
+
+=head1 ENVIRONMENT
+=over
+=item PREDICTPROTEINCONF
+Location of snapfunrc configuration file to use, overriding other configuration files                               
+=out
