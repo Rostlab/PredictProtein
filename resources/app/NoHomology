@@ -1,0 +1,33 @@
+***--------------------------------------------------------------------------***
+********************************************************************************
+***                                                                          ***
+***                                                                          ***
+***   Secondary Structure Prediction by a Layered Network                    ***
+***   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                    ***
+***                                                                          ***
+***                                                                          ***
+***   Burkhard Rost                                                          ***
+***   CUBIC Columbia University, New York                                    ***
+***   (Internet: Predict-Help@columbia.edu)                                  ***
+***                                                                          ***
+***                                                                          ***
+***   Dear Colleague,                                                        ***
+***                                                                          ***
+***   the PHD prediction performs best for multiple                          ***
+***   sequence alignments.  For the protein sequence you sent, there is no   *** 
+***   homologue in the SWISSPROT databank with more than 30% identical       ***
+***   residues (higher cutoff for shorter sequences).  Therefore, we do not  ***
+***   send a prediction.                                                     ***
+***                                                                          ***
+***   For more details about the method:                                     ***
+***                                                                          ***
+***   Multiple sequence alignment (MaxHom, HSSP):                            ***
+***   C.Sander and R.Schneider, PROTEINS 9,56-68 (1991).                     ***
+***                                                                          ***
+***   Profile network prediction (PHD):                                      ***
+***   Rost, B. & Sander, C. J. of Neural Systems   3, in press.              ***
+***   B.Rost and C.Sander, PNAS,  submitted.                                 ***
+***   									     ***
+***   		Burkhard Rost						     ***
+***                                                                          ***
+********************************************************************************

@@ -1,0 +1,30 @@
+***                                                                          ***
+********************************************************************************
+***                                                                          ***
+***   Result of ProfBval         		                             ***
+***   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~               		             ***
+***                                                                          ***
+***  Schlessinger A, Rost B (2005) Protein flexibility and rigidity          ***
+***  predicted from sequence. Proteins, 2005, in press                       ***
+***                                                                          ***
+________________________________________________________________________________
+
+***                                                                          ***
+
+Non-strict mode (NS) - most of the residues are
+flexible; hence, a residue on the surface that is predicted to be rigid
+is likely to have a functional role. 
+Strict mode (S) - about a third of the residues are
+flexible, therefore, a stretch of residues that is predicted to be
+flexible might be important for the protein function.
+
+Reliability index - the output of the network was converted
+to reliability index reflecting the strength of the prediction (values
+0-9). High value indicates strong prediction. RI_s marks the
+reliability index of the strict mode and RI_ns marks the reliability
+index of the non-strict.
+
+Accessibility - solvent accessibility prediction by PROFacc
+- 'e' marks exposed and 'b' marks buried. A residue that is predicted
+to be &ge;16% exposed to the surface is defined to be exposed.
+

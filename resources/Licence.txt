@@ -1,0 +1,357 @@
+
+          =================================================
+          Licence for the use of the PredictProtein Service 
+          =================================================
+
+------------------------------------------------------------------------
+(0)    TOC of document
+------------------------------------------------------------------------
+
+(i)    Addresses
+(ii)   What is PredictProtein
+(iii)  Order of License for the use of the PredictProtein Service
+(iv)   Conditions of License for the use of the PredictProtein Service
+
+NOTE:  academical users do NOT have to apply for a license!
+
+
+========================================================================
+(i)    Addresses
+========================================================================
+
+fax:   PredictProtein +1 (212) 305 - 7932
+voice: Burkhard Rost  +1 (212) 305 - 3773
+email: pp_admin@columbia.edu
+www:   http://cubic.bioc.columbia.edu/predictprotein
+
+automatic submission of license order:
+       http://cubic.bioc.columbia.edu/predictprotein/send_license.html
+
+
+========================================================================
+(ii)   What is PredictProtein
+========================================================================
+
+PredictProtein is an automatic service for protein database searches and
+the prediction of aspects of protein structure.   You send an amino acid
+sequence and PredictProtein returns:
+
+  1. a multiple sequence alignment (i.e. database search),
+  2. ProSite sequence motifs (more info),
+  3. ProDom domain assignments (more info),
+  4. and predictions of
+       1. secondary structure (more info),
+       2. solvent accessibility (more info),
+       3. globular regions ( more info),
+       4. transmembrane helices (more info),
+       5. coiled-coil regions ( more info).
+
+The following features are available upon request:
+
+  1. fold recognition by prediction-based threading:
+     PDB is searched for possible remote homologues  (sequence identity
+     0-25%) to your sequence,
+  2. evaluation of prediction accuracy (more info):
+     for a given predicted and observed secondary structure  (for one or
+     several proteins), per-residue and per-segment scores are compiled.
+
+For all services, you can submit your sequence (or prediction) either by
+electronic mail, or interactively from World Wide Web.
+
+
+========================================================================
+(iii)  Order of License for the use of the PredictProtein Service
+========================================================================
+
+------------------------------
+Procedure:
+------------------------------
+
+Please sign the following order form and send:
+
+order   by fax to Burkhard Rost +1 (212) 305-7932
+or      by email to pp_admin@columbia.edu
+
+As soon as we receive the order,  we shall return a password for the im-
+mediate usage of the  prediction service  (note: filling in the WWW form
+http://cubic.bioc.columbia.edu/predictprotein/send_license.html 
+guarantees access without any delay!).       
+The invoice will be  send  in parallel to the address given in the order
+form.
+
+________________________________________________________________________
+
+
+          Name:
+E-Mail address:
+       Company:
+       Address:
+         Phone:
+           Fax:
+
+I agree  to the terms and conditions found in the license agreement (be-
+low). Please issue me the password for using PredictProtein.
+
+Form of Invoice (check one):
+
++--+
+|  |  I do not need an invoice for payment.
++--+
+|  |  I should like to receive dated invoice by e-mail.
++--+
+|  |  I should like the invoice faxed to me.
++--+
+|  |  I should like the invoice mailed to the above address.
++--+
+
+
+Number of maximal requests (check one):
+
++--+
+|  |  up to  50 predictions during one year = US$ 2000
++--+
+|  |  up to 250 predictions during one year = US$ 4000
++--+
+
+Payment method (check one):
+
++--+
+|  | I shall send you a check for the respective amount.
++--+
+|  | I shall fax/mail you a Purchase Order for the amount.
++--+
+
+
+
+________________________                  ______________________________
+     place, date                                    signature    
+
+
+
+________________________________________________________________________
+
+
+again send order:
+by fax 		to Burkhard Rost +1-212-305-7932
+or by email 	to pp_admin@columbia.edu
+
+
+------------------------------
+Important Information:
+------------------------------
+
+   * Please note that the check has to be made out in US dollars and not
+     in any foreign currency.  All  checks and  purchase orders need the
+     the routing numbers located in the upper right corner.  We can acc-
+     ept money orders if they have this number.  We CANNOT accept postal
+     money orders.
+   * Bank:
+     First Union National Bank
+     Address:            P.O. Box 7618, PA4822
+                         Philadelphia, PA 19101-7618
+     ABA Routing:        ACH#: 031000503 (Clearing House)
+     Account (checking): 0129558
+     Account title:      The Trustees of COLUMBIA UNIVERSITY
+     Please provide the following information:
+                         Burkhard Rost, PredictProtein, account 0-19719
+   * Please contact ppadmin@columbia.edu for further information on bank
+     wire transfers.
+
+
+________________________________________________________________________
+
+
+
+========================================================================
+(iv)  Conditions of License for the use of the PredictProtein Service 
+========================================================================
+
+
+AGREEMENT effective for 12 months after first usage, between THE DEPART-
+MENT OF  BIOCHEMISTRY AND MOLECULAR BIOPHYSICS  OF  COLUMBIA  UNIVERSITY 
+("Licensor") and the undersigning party ("Licensee").
+
+WHEREAS,  Licensor  is the  provider  of the results of certain computer
+software and Licensee desires to obtain those results.
+
+NOW, THEREFORE, the parties agree as follows.
+
+------------------------------------------------------------------------
+1. License and Title.
+------------------------------------------------------------------------
+
+  a. Subject to the terms and conditions hereinafter set forth, Licensor
+     hereby  grants a  non-exclusive  and non-transferable  license (the
+     "License") to Licensee to use the protein sequence analysis service
+     known as   PredictProtein ,  hereto (the "Service") for a specified
+     number of requests issued within the  twelve months of the validity
+     of this agreement.
+  b. The license expires after twelve months, or after the agreed number
+     of predictions has been returned to Licensee.
+
+
+
+------------------------------------------------------------------------
+2. Delivery of the Service.
+------------------------------------------------------------------------
+
+  a. Licensor shall deliver to Licensee,  upon request, the results from
+     PredictProtein by email.
+  b. At any given time within the twelve  months this Agreement is valid
+     Licensee will have access to the latest version of the Service.
+  c. The license is valid for all users from one company, if the company
+     is located in one place, and for one location of a company,  if the
+     company spreads over many locations.
+  d. It is understood that Licensor will provide no guarantee for the
+     availability of the Service at all times. Licensor may, in its  sole
+     discretion, use reasonable efforts to resolve any potential problems
+     Licensee may experience with the use of the Service.   Licensor will
+     attempt  correcting   errors  brought  to  Licensor's  attention  by
+     Licensee.
+
+
+
+------------------------------------------------------------------------
+3. Service Description.
+------------------------------------------------------------------------
+
+  a. PredictProtein  is an  automatic  prediction service to which users
+     send  amino acid sequences  and  which  returns  multiple  sequence
+     alignments,  predictions of  secondary  structure,  residue solvent
+     accessibility, locations of transmembrane helices,  topology of he-
+     lical  transmembrane  proteins,  and results from  prediction-based
+     threading for the detection of remote homologues.
+  b. Two modes for use of the server are available:
+       i. access by electronic mail (via Internet)
+      ii. access through the World Wide Web.
+  c. Alignment  and  predictions by PredictProtein are processed as des-
+     cribed in:
+       1. B Rost: Methods in  Enzymology 266, 525-539, 1996.
+       2. B Rost, C Casadio, P Fariselli: Protein Sci 5,1704-1718,1996.
+       3. B Rost, R Schneider, C Sander: J of Molecular Biol 270, 471-
+          480, 1997.
+       4. B Rost, C Sander, R Schneider: CABIOS 10, 53-60, 1994.
+       5. B Rost, C Sander: J of Molecular Biol. 232, 584-599, 1993.
+       6. B Rost, C Sander: Proteins 19, 55-72, 1994.
+       7. B Rost, C Sander: Proteins 20, 216-226, 1994.
+  d. Additional predictions and analyses may be provided to the Licensee
+     free of charge, provided those results are part of the current ver-
+     sion of the Service.
+
+
+
+------------------------------------------------------------------------
+4. Service Charges.
+------------------------------------------------------------------------
+
+  a. Licensee shall pay to Licensor a fee of
+     $ 2000 for up to 50 predictions, or
+     $ 4000 for up to 250 predictions.
+  b. The fee is paid within 30 days of the date of this Agreement.
+
+
+
+------------------------------------------------------------------------
+5. Confidentiality; Protection of Service and Licensor Information.
+------------------------------------------------------------------------
+
+  a. Licensor will not reveal any information about  the protein sequen-
+     ces submitted by Licensee to any third party.
+  b. Licensor will also not reveal  any information about this agreement
+     to any third party.
+  c. Any termination of this Agreement and the  License  hereunder shall
+     not terminate Licensor's  obligations of confidentiality under this
+     Section 5.
+  d. Licensee  agrees that the results of the  Service  shall be held in
+     confidence and are being provided by Licensor for the exclusive use
+     of Licensee.
+  e. Licensee
+       i. will  protect  the results of the  Service  in the same manner
+          that it protects its own confidential information;
+      ii. will permit access to the Software only to its authorised em-
+          loyees designated by Licensee to use the Service;
+     iii. (iii) will not remove or destroy any proprietary notice on the
+          results of the Service.
+  f. Any  termination of this  Agreement and the License hereunder shall 
+     not terminate Licensee's obligations of  confidentiality under this
+     Section 5.
+
+
+
+------------------------------------------------------------------------
+6. Disclaimer of Warranties.
+------------------------------------------------------------------------
+
+  a. While  the software  producing the  results of the Service has been
+     tested for accuracy and proper functioning,  Licensor disclaims any
+     responsibility  for the  accuracy  or correctness of the results or
+     for its use or application by Licensee.
+  b. LICENSOR  MAKES  NO  REPRESENTATION OR WARRANTY EITHER EXPRESSED OR
+     IMPLIED OF ANY KIND, INCLUDING AS TO THE ADEQUACY OR SUITABILITY OF
+     THE SERVICE FOR ANY PARTICULAR PURPOSE OR TO PRODUCE ANY PARTICULAR
+     RESULT AND NEITHER LICENSOR, NOR ANY EMPLOYEE OR AGENT OF LICENSOR,
+     SHALL HAVE ANY  LIABILITY TO  LICENSEE  OR ANY OTHER PERSON ARISING
+     OUT OF THE USE OF THE SERVICE BY LICENSEE FOR ANY REASON, INCLUDING
+     BUT NOT LIMITED TO THE  INADEQUACY OR UNSUITABILITY  OF THE SERVICE
+     FOR ANY PARTICULAR PURPOSE OR TO PRODUCE ANY PARTICULAR RESULT, FOR
+     ANY LATENT DEFECTS THEREIN OR THE  FAILURE OF  LICENSOR  TO PROVIDE 
+     LICENSEE WITH ANY MODIFICATIONS OR CHANGES IN THE SERVICE.
+  c. In no event will Licensor or its  trustees, officers, agents or em-
+     ployees be liable to  Licensee or to any other party,  for any loss
+     or damages, consequential or otherwise, including, but not  limited
+     to time, money, or good will, arising from the use of  operation of
+     the Service by Licensee.
+
+
+
+------------------------------------------------------------------------
+7. Indemnity.
+------------------------------------------------------------------------
+
+  a. Columbia does not indemnify the user of the  Service.  The Licensee
+     shall be liable for claims, damages or suits arising from the acts,
+     omissions or negligence of its officers agents and employees.
+
+
+
+------------------------------------------------------------------------
+8. Termination.
+------------------------------------------------------------------------
+
+  a. Licensor may terminate this Agreement and the License granted here-
+     under upon 30 days written notice of Licensee's  material breach of
+     the Agreement and Licensee's  failure to cure the  breach within 30
+     days of receipt of said notice.
+
+
+
+------------------------------------------------------------------------
+9. General Provision.
+------------------------------------------------------------------------
+
+  a. Assignment.    This  Agreement  may not be assigned, sublicensed or
+     transferred by Licensee without the prior written consent of Licen-
+     sor.
+  b. Governing Law. This  Agreement shall be  governed by  United States
+     Federal  law  applicable to  agreements made and to be performed in
+     New York.
+  c. Amendment.  This Agreement may not be changed or terminated orally.
+
+
+
+IN WITNESS WHEREOF, the parties hereto have duly executed this Agreement
+as of the day and year first above written.
+
+ LICENSOR                                       LICENSEE
+ Prof. Dr. Burkhard Rost                        FILL_IN_LICENSEE_NAME
+ Department of Biochemistry and Molecular       FILL_IN_LICENSEE_COMPANY
+ Biophysics                                     FILL_IN_LICENSEE_ADDRESS
+ Columbia University                            FILL_IN_LICENSEE_EMAIL
+ 630 West 168th Street
+ New York, NY 10032
+
+ PLACE: New York City, USA
+ DATE:  FILL_IN_DATE
+
+________________________________________________________________________
+

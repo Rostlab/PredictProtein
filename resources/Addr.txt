@@ -1,0 +1,20 @@
+Dear users of PredictProtein,
+
+sorry, but your request have been delivered to a wrong address.
+
+If you are using email (internet), please:
+
+Submit requests to:  PredictProtein@columbia.edu
+Send questions to:   Predict_Help@columbia.edu
+Send problems to:    pp_admin@columbia.edu
+
+On World Wide Web, the following URL are available:
+
+Home page:           http://cubic.bioc.columbia.edu/predictprotein/predictprotein.html
+Interactive request: http://cubic.bioc.columbia.edu/predictprotein/submit_def.html
+Customise questions: http://cubic.bioc.columbia.edu/predictprotein/send_feedback.html
+
+
+With best regards,
+
+the  PredictProtein people

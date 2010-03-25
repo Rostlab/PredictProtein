@@ -1,0 +1,2101 @@
+----------------------------------------------------------------------------
+
+                             PredictProtein Help
+
+       PHDsec, PHDacc, PHDhtm, PHDtopology,  TOPITS, MaxHom, EvalSec
+                               
+                                Burkhard Rost
+
+----------------------------------------------------------------------------
+
+NOTE: this document is NOT updated on a daily base.   For the latest options
+please contact the WWW site for help pages:
+	http://cubic.bioc.columbia.edu/predictprotein/doc/help_entry.html
+
+ftp site to download local copy of all PP Web pages:
+	ftp cubic.bioc.columbia.edu
+	login as anonymous
+	get pages 
+		pub/phd/wwwPP.tar.gz
+	description of what to do:
+		pub/phd/ReadMe
+
+
+----------------------------------------------------------------------------
+
+Table of Contents for PP help
+
+  1. Introduction
+       1. What is it?
+       2. How does it work?
+       3. How to use it?
+            i. email
+           ii. www
+       4. What can we do for you?
+       5. Responsible administrator
+       6. If You Do NOT Receive a reply
+  2. Quote and copyright
+       1. Who are we?
+       2. Please cite
+       3. Copyright
+       4. Protection of data
+       5. Feedback
+  3. Default input and output
+       1. Input (WWW)
+       2. Input (email)
+       3. Default output
+       4. Example for input and output
+  4. Advanced input options
+       1. SWISSPROT identifier
+       2. FASTA list
+       3. PIR list
+       4. SAF formatted alignment
+       5. MSF formatted alignment
+       6. Column formatted prediction
+  5. Advanced prediction options
+       1. PHDsec only
+       2. PHDacc only
+       3. PHDhtm only
+       4. toggle Coils prediction
+       5. toggle ProSite reports
+       6. toggle ProDom assignment
+       7. TOPITS threading
+       8. Evaluate prediction accuracy (for developers)
+  6. Advanced output options
+       1. General output
+            i. results in HTML
+           ii. concise output
+       2. Customising alignment
+            i. also BLASTP
+           ii. no alignment
+          iii. HSSP format
+           iv. HSSP profiles
+       3. Customising PHD
+            i. COLUMN format
+           ii. PHD in MSF
+          iii. PHD in RDB
+           iv. PHD in CASP2
+            v. format for graph
+       4. Customising TOPITS
+            i. TOPITS in HSSP
+           ii. TOPITS in STRIP
+          iii. TOPITS in special
+       5. Toggle defaults
+            i. No COILS
+           ii. No ProSite
+          iii. No ProDom
+  7. Examples for input formats (required for email submissions)
+       1. Single sequence in
+       2. FASTA list
+       3. PIR list
+       4. SAF alignment
+       5. MSF alignment
+       6. COLUMN (for TOPITS)
+       7. COLUMN (for EvalSec)
+  8. Methods
+       1. MaxHom : multiple alignment
+       2. ProSite : functional motifs
+       3. ProDom : domain assignment
+       4. PHDsec : secondary structure
+       5. PHDacc : solvent accessibility
+       6. Globe : globularity of proteins
+       7. PHDhtm : transmembrane helices
+       8. Coils : coiled-coil regions
+       9. Topits : fold recognition by threading
+  9. Hints
+       1. Automatic parsing of PredictProtein output
+       2. Note
+       3. What to expect from predictions?
+       4. In a nutshell: how to avoid pitfalls?
+       5. Nuts and bolts: what to keep in mind?
+            1. Information content in sequence alignment
+            2. Cut-off for including homologues in alignment
+            3. Quality of multiple sequence alignment
+            4. Minimal length of sequences
+            5. Insertions in multiple sequence alignment ( avoid this! )
+            6. Untypical' proteins
+            7. Prediction of transmembrane helices and topology
+            8. Reliability indices for PHD predictions
+            9. Combining results with that of other methods
+           10. Homologue of known structure
+           11. Prediction-based threading
+       6. Paper describing pitfalls in sequence analysis:
+ 10. News
+       1. PP is migrating...
+       2. Currently known problems
+       3. PP mirrors
+       4. PP news 1999
+       5. PP news 1998
+       6. PP news 1997
+       7. PP news 1996
+     Note: PP is the first WWW service for structure prediction. It is
+     online since 1992. However, news between 1992 and 1995 have not been
+     logged.
+ 11. Additional information
+       1. Interested in the PP software?
+       2. Links to selected WWW services
+       3. Restrictions (watch it!)
+       4. Further PP related publications
+            i. Structure and structure prediction, in general
+           ii. WWW services for biologists
+          iii. Predictions of 1D structure
+           iv. Prediction-based threading
+            v. Alignment
+           vi. Evaluation and testing
+ 12. If you do NOT receive a reply
+
+
+  ------------------------------------------------------------------------
+  WHAT IS IT? HOW TO USE?
+  ------------------------------------------------------------------------
+
+What is PredictProtein (PP)?
+
+PP is an automatic service for protein database searches and the prediction
+of aspects of protein structure. You send an amino acid sequence and PP
+returns:
+
+  1. a multiple sequence alignment (i.e. database search),
+  2. ProSite sequence motifs (more info),
+  3. ProDom domain assignments (more info),
+  4. and predictions of
+       1. secondary structure (more info),
+       2. solvent accessibility (more info),
+       3. globular regions ( more info),
+       4. transmembrane helices (more info),
+       5. coiled-coil regions ( more info).
+
+The following features are available upon request:
+
+  1. fold recognition by prediction-based threading (more info):
+     PDB is searched for possible remote homologues (sequence identity
+     0-25%) to your sequence,
+  2. evaluation of prediction accuracy (more info):
+     for a given predicted and observed secondary structure (for one or
+     several proteins), per-residue and per-segment scores are compiled.
+
+For all services, you can submit your sequence (or prediction) either by
+electronic mail, or interactively from World Wide Web.
+
+How does PredictProtein work?
+
+Generating an alignment. The following steps are performed.
+
+  1. the sequence database (currently only SWISSPROT) is scanned for similar
+     sequences (by BLASTP).
+  2. a multiple sequence alignment is generated by a weighted dynamic
+     programming method (by MaxHom).
+  3. ProSite motifs are retrieved from the ProSite database,
+  4. and your protein is compared to a domain database (ProDom).
+
+Prediction of protein structure in 1D. The multiple alignment is used as
+input for profile-based neural network predictions (PHD methods). The
+following levels of prediction accuracy have been evaluated in
+cross-validation experiments:
+
+  1. Secondary structure prediction (PHDsec):
+     expected three-state (helix, strand, rest) overall accuracy >72% for
+     water-soluble globular proteins.
+     You may find details about accuracy in graphs, on tables, and in the
+     literature: Rost 1997 (paper) and 1996 (paper); Rost & Sander 1993
+     (abstract) and 1994 (abstract).
+  2. Solvent accessibility prediction (PHDacc):
+     expected correlation between observed and predicted relative
+     accessibility > 0.5.
+     You may find details about accuracy in graphs, on tables, and in the
+     literature: Rost 1997 (paper) and 1996 (paper), Rost & Sander 1994
+     (abstract).
+  3. Transmembrane helix prediction (PHDhtm):
+     expected overall two-state accuracy (transmembrane, non-transmembrane)
+     > 95%; refined prediction of transmembrane helices and topology &
+     expected likelihood of predicting all helices correctly about 89%,
+     expected accuracy of topology prediction > 86%
+     You may find details about accuracy on tables, and in the literature:
+     Rost, Casadio & Fariselli 1996 (abstract), and Rost, Casadio, Fariselli
+     & Sander 1995 abstract).
+
+Fold recognition by prediction-based threading. Predictions of secondary
+structure and accessibility are aligned against PDB to detect remote
+homologues (prediction-based threading). As for other threading methods,
+results should be taken with caution.
+
+   * The first hit of the prediction-based threading is on average in 30% of
+     the cases correct.
+   * Hits with z-scores above 3.0 are more reliable (accuracy > 60%).
+   * For exceptional cases the resulting alignments suffice for building
+     correct homology-based models.
+
+You may find details about accuracy in the literature: Rost, Schneider &
+Sander, 1996 (paper), Rost 1995 (abstract) and 1994 (abstract).
+
+Evaluation of prediction accuracy. If you opt for 'evaluate prediction
+accuracy', we evaluate the accuracy of the secondary structure prediction
+provided by you. The following per-residue and per-segment scores are
+returned: overall three-state accuracy, single state accuracy, correlation
+coefficients, information entropy, fractional segment overlap, and finally
+the accuracy of predicting secondary structure content and structural class
+(Rost et al., JMB, 1994, 235, 13-26, example for output).
+
+How to use PP?
+
+Use of the PredictProtein server is free for academics. Commercial users may
+want to apply for a licence.
+
+  1. Using email (internet):
+       I. Prepare a file with your sequence(s) according to the required
+          format (see below), and:
+          Send sequence(s) to:     PredictProtein@columbia.edu
+      II. Send questions to:       predict_help@columbia.edu
+     III. Send problem reports to: pp_admin@columbia.edu
+  2. Using World Wide Web (WWW):
+       I. Home page:
+          http://cubic.bioc.columbia.edu/predictprotein/predictprotein.html
+      II. Help page (this):
+          http://cubic.bioc.columbia.edu/predictprotein/doc/help_entry.html
+     III. Submit request:
+          default:
+          http://cubic.bioc.columbia.edu/predictprotein/submit_def.html
+          advanced:
+          http://cubic.bioc.columbia.edu/predictprotein/submit_adv.html
+          expert:
+          http://cubic.bioc.columbia.edu/predictprotein/submit_exp.html
+      IV. Questions, feedback:
+          http://cubic.bioc.columbia.edu/predictprotein/send_feedback.html
+
+What can we do for you?
+
+   * You have a protein sequence and want to find out anything we can say
+     about structure?
+     In general, we can provide multiple sequence alignments and predictions
+     of secondary structure, residue solvent accessibility and the location
+     of transmembrane helices (examples for: request; and output).
+   * You have a helical transmembrane protein sequence and want a refined
+     prediction of the helix locations and topology?
+     We provide multiple sequence alignments and refined predictions for the
+     location of transmembrane helices and for the topology, i.e. the
+     orientation of the N-term with respect to the membrane (examples for:
+     request; and output).
+   * You have a protein sequence and search for remote homologues (i.e.,
+     homologues with <25% sequence identity)?
+     We find secondary structure and accessibility motifs similar between a
+     known structure and your protein by prediction-based threading
+     (examples for: request; and output).
+   * You have a multiple sequence alignment and want to obtain a prediction
+     of 1D structure based on that alignment?
+     We use your alignment as input to the methods predicting secondary
+     structure, solvent accessibility and transmembrane helices (examples
+     for: request; and output).
+   * You have a list of sequences not in current data bases and want it to
+     be used for 1D predictions?
+     We align your sequences and use the resulting alignment as input to
+     predictions of secondary structure, accessibility and transmembrane
+     helices (examples for: request; and output).
+   * You have a prediction of secondary structure and accessibility and
+     search similar motifs in known structures?
+     We base the threading procedure on your prediction (examples for:
+     request; and output).
+   * You have a prediction and an observation of secondary structure and you
+     want to compile the prediction accuracy?
+     We compile per-residue and per-segment based score for the evaluation
+     of prediction accuracy (examples for: request; and output).
+
+Responsible for PP
+
+                        Burkhard Rost, CUBIC, Columbia University, New York
+
+  ------------------------------------------------------------------------
+  QUOTE and COPYRIGHT
+  ------------------------------------------------------------------------
+
+
+Who are we?
+
+   * Current 'team':
+        o Burkhard Rost (New York, LION, EMBL) pioneered the PredictProtein
+          service; wrote the PHD prediction programs: PHDsec, PHDacc,
+          PHDhtm, and PHDtopology; developed the prediction-based threading
+          method PHDthreader/TOPITS; programmed, and proposed the scores
+          compiled by EvalSec; hacked some of the PredictProtein scripts; is
+          trying to keep the service up and running, and is responsible for
+          the documentation.
+        o Volker Eyrich (Chemistry Dept, Columbia Univ, New York) wrote the 
+	  scripts for the META server which allows you to access a large 
+	  variety of selected servers world-wide from a single-page 
+	  interface. 
+        o Jinfeng Liu (CUBIC, Columbia Univ, New York) is currently 
+	  maintaining the PredictProtein server. 
+   * Others who contributed (in the past):
+        o Reinhard Schneider (now LION, Heidelberg) wrote the program MaxHom
+          for multiple sequence, and 1D structure alignments, and helped the
+          service take off.
+        o Antoine de Daruvar (now Univ. Bordeaux and LION, Heidelberg)
+          rewrote the scripts managing requests, and maintained the service
+          running for twelve months.
+        o Chris Sander (now Millennium, Boston) organised resources,
+          contributed ideas, and simulated the grand guru.
+   * Authors of programs used:
+        o Reinhard Schneider (now LION, Heidelberg)(s. a.) wrote the program
+          MaxHom (multiple sequence alignment).
+        o Andrei Lupas (SmithKline Beecham, Collegeville) wrote the program
+          COILS (detection of coiled-coil regions).
+        o Amos Bairoch (Geneva) maintains SWISS-PROT, initialised ProSite
+          (as well, as numerous other services), and wrote the scripts
+          returning the ProSite output.
+        o Florence Corpet, Jerome Gouzy & Daniel Kahn (Toulouse) maintain
+          the ProDom data-base of domain assignments to all proteins in
+          SWISS-PROT.
+        o Nigel Brown (London) has developed the program MView which is a
+          rather powerful tool for automatically displaying alignments.
+
+Pleease cite (!!)
+
+Comment: if you find the following list too long, please note that
+PredictProtein combines a large number of independent tools. Where other
+servers adopt the philosophy 'one mail/WWW interface per tool' (for a few
+examples), PP attempts to provide one single interface to many tools. Many
+of the tools are at the forefront of bio-informatics (academics may 'pay'
+these services by quoting).
+
+   * For general reference to the PredictProtein server:
+       1. B Rost: PHD: predicting one-dimensional protein structure by
+          profile based neural networks. Meth. in Enzym., 1996, 266,
+          525-539.(Full paper)
+   * Profile network prediction of secondary structure (PHDsec):
+       1. B Rost & C Sander: Prediction of protein secondary structure at
+          better than 70% accuracy. J. Mol. Biol., 1993, 232, 584-599.
+       2. B Rost & C Sander: Combining evolutionary information and neural
+          networks to predict protein secondary structure. Proteins, 1994,
+          19, 55-77.
+   * Profile network prediction of solvent accessibility (PHDacc):
+       1. B Rost & C Sander: Conservation and prediction of solvent
+          accessibility in protein families. Proteins, 1994, 20, 216-226.
+   * Profile network prediction of transmembrane helices (PHDhtm):
+       1. B Rost, R Casadio, P Fariselli & C Sander: Prediction of helical
+          transmembrane segments at 95% accuracy. Protein Science, 1995, 4,
+          521-533.
+       2. B Rost, P Fariselli & R Casadio: Topology prediction for helical
+          transmembrane proteins at 86% accuracy. Prot. Science, 1996, 7,
+          1704-1718. (Abstract)
+   * Coiled-coil prediction (COILS):
+       1. A Lupas; M Van Dyke & J Stock: Predicting coiled coils from
+          protein sequences. Science, 1991, 252, 1162-1164.
+   * Prediction-based threading (TOPITS):
+       1. B Rost: TOPITS: Threading One-dimensional Predictions Into
+          Three-dimensional Structures. In: C Rawlings, D Clark, R Altman, L
+          Hunter, T Lengauer & S Wodak (eds.) "The third international
+          conference on Intelligent Systems for Molecular Biology (ISMB)",
+          Cambridge, U.K., Jul 16-19, 1995, Menlo Park, CA: AAAI Press,
+          1995, 314-321.
+   * Multiple sequence alignment (MaxHom, HSSP):
+       1. C Sander; R Schneider: Database of Homology-Derived Structures and
+          the Structural Meaning of Sequence Alignment. Proteins, 1991, 9,
+          56-68.
+   * Html display of alignments (MView):
+       1. N P Brown, C Leroy, C Sander: MView: A Web compatible database
+          search or multiple alignment viewer. Bioinformatics, 1998, 14,
+          380-381.
+   * Functional sequence motifs (ProSite):
+       1. A Bairoch, P Bucher & K Hofmann: The ProSite database, its status
+          in 1997. Nucl. Acids Res., 1997, 25, 217-221.
+   * Domain assignment (ProDom):
+       1. F Corpet, J Gouzy, D Kahn: The ProDom database of protein domain
+          families. Nucl. Acids Res, 1998, 26, 323-326.
+   * Evaluation of secondary structure prediction accuracy (EVALSEC):
+       1. B Rost; C Sander & R Schneider: Redefining the goals of protein
+          secondary structure prediction. J. Mol. Biol., 1994, 235, 13-26.
+
+Copyright
+
+All rights reserved, including copyrights. Commercial users should apply for
+a licence.
+
+Contact
+by fax via:     Predict Protein  at +1-212-305 7932
+by email via:   predict_help@columbia.edu
+or via WWW:     http://cubic.bioc.columbia.edu/predictprotein/send_licence.html
+
+Feedback
+
+Address questions, suggestions, bug reports, or comments
+
+by fax via:     Predict Protein  at +1-212-305 7932
+by email via:   predict_help@columbia.edu
+or via WWW:     http://cubic.bioc.columbia.edu/predictprotein/send_feedback.html
+
+Protection of sequence data
+
+Your sequence data is deposited in files to which only the PP administrator
+(BR) has read access. No one else inside or outside of CUBIC (Columbia
+University BioInformatics Centre) can read your data, except our system
+administrators who are held to the highest standards of confidentiality.
+Occasionally, the PP administrator may look at the data in order to assess
+the performance of the server.
+
+  ------------------------------------------------------------------------
+  DEFAULT INPUT AND OUTPUT
+  ------------------------------------------------------------------------
+
+Default input format (www)
+
+For WWW submissions, simply fill in the appropriate form and let us know if
+you'd anticipate problems in understanding what the form wants you to do!
+
+Please:
+
+   * make sure that you fill in your correct email address,
+   * paste only protein sequence into the respective box.
+
+                                                                    thanks!
+
+Default input format (email)
+
+For email submission create a file with the following content (example):
+
+   * Your email address (one line)
+   * Commercial users: "password(my_password)"
+   * A one-line description of the protein sequence submitted that must
+     start with the symbol "#".
+   * The amino acid sequence in one-letter-code (one or more lines of any
+     length, letters or blanks only, no special symbols or numbers, NOTHING
+     may follow your sequence).
+
+PredictProtein insists that you adhere to this format. Your input file will
+in general only be read by a computer program. Any additional messages to be
+read by one of us in person should be sent
+
+by fax via:     Predict Protein at +1-212-305 7932
+by email via:   predict_help@columbia.edu
+or via WWW:     http://cubic.bioc.columbia.edu/predictprotein/send_feedback.html
+
+Default output
+
+The output format is self-documenting (examples given for the major prion
+protein precursor prio_human (all,phd only) and the known 3D structure of
+HIV protease 1hhp). The output contains:
+
+  1. A list of likely homologues found in the protein database (SWISSPROT),
+     and the multiple sequence alignment of these sequence (by default in
+     'MSF' format)
+  2. If found: a list of the putative ProSite motifs.
+  3. If found: a list of ProDom domain assignments.
+  4. If found: a prediction of coiled-coil regions.
+  5. Information about the expected levels of accuracy of structure
+     predictions. (We suggest that newcomers read this carefully.)
+  6. Prediction of aspects of protein structure. These are grouped in the
+     following way:
+       1. Prediction of secondary structure for all residues, with an
+          expected average three-state accuracy of > 72%;
+       2. Prediction of secondary structure for reliably scored residues
+          only, with an expected three-state accuracy for these residues of
+          > 82%;
+       3. Prediction of solvent accessibility for all residues, with an
+          expected average correlation to the experimentally observed values
+          of 0.54;
+       4. Prediction of solvent accessibility for reliably scored residues
+          only, with an expected correlation between experimental
+          observation and prediction of 0.69;
+       5. Prediction of transmembrane helices and their topology (if any
+          detected), with an expected prediction accuracy of about 95% in
+          two states.
+
+Note: for the prediction of transmembrane helices a conservative threshold
+is chosen. Thus, your protein may not be reported to contain a HTM although
+it may have one. If you opt explicitly for the refined prediction of
+transmembrane helices and topology ("predict htm"), four predictions are
+given (example for output)):
+
+  1. neural network prediction (expected accuracy for HTM's about 78%);
+  2. result of empirical filter (expected accuracy for HTM's about 97%);
+  3. refined prediction (expected accuracy for HTM's about 99%);
+  4. prediction of topology (expected accuracy about 86%).
+
+Example for input and output (important for email submission)
+
+Submitting a single sequence
+
+   * INPUT is: your protein sequence,
+   * OUTPUT is: alignment + prediction
+
+INPUT
+You send the following file:
+joe@amino.churn.edu
+# incredulase from paracoccus dementiae, translated from cDNA
+KELVLALYDYQEKSPREVTMKKGDILTLLNSTNKD
+WWKVEVNDRQGFVPAAYVKKLD
+
+Notes:
+
+   * The '#' is a control for PredictProtein.
+   * The hash (#) is crucial, as the parser interprets anything after this
+     line as a protein sequence. Following the hash, put a one-line
+     description of the protein.
+
+OUTPUT (detailed example)
+If your sequence has at least one non-trivial homologue in the database of
+protein sequences, you receive a multiple sequence alignment and the
+annotated prediction in the following form:
+Block with multiple sequence alignment.
+Block with explanations about the prediction method.
+Block with prediction (example for secondary structure prediction follows).
+
+    .........1.........2.........3.........4.........5.........6
+AA  KELVLALYDYQEKSPREVTMKKGDILTLLNSTNKDWWKVEVNDRQGFVPAAYVKKLD
+PHD   EEEEEE                EEEEEE     EEEEEE    EEEE  EEE
+Rel 854777641334566643102441577762566642443213663122112234155
+
+
+  ------------------------------------------------------------------------
+  ADVANCED INPUT OPTIONS (FORMATS)
+  ------------------------------------------------------------------------
+
+
+The following input options have been implemented:
+
+  1. Use a SWISSPROT identifier ('# SWISSPROT identifier')
+     If you provide a valid SWISSPROT identifier (e.g. paho_chick), PP will
+     use the respective sequence for prediction.
+     Example for email submission format.
+  2. Use your unaligned set of sequences ('# FASTA list')
+     You can provide sequences that are not yet in the Swissprot database.
+     The sequences will be aligned automatically by the program MaxHom; the
+     prediction will be based on this alignment. You use the header as
+     described before, with "# FASTA list" instead of "# sequence name".
+     Then you append all your sequences successively in the PIR format after
+     this line.
+     Example for email submission format.
+  3. Use your unaligned set of sequences ('# PIR list')
+     You can provide sequences that are not yet in the Swissprot database.
+     The sequences will be aligned automatically by the program MaxHom; the
+     prediction will be based on this alignment. You use the header as
+     described before, with "# PIR list" instead of "# sequence name". Then
+     you append all your sequences successively in the PIR format after this
+     line.
+     Example for email submission format.
+  4. Use your SAF alignment ('# SAF')
+     You can provide your alignment input to the PHD predictions. To do so,
+     you have to generate a file in SAF (simple alignment format). Then you
+     append this file to the same header as described before, with "# SAF"
+     instead of "# sequence name".
+     Example for email submission format.
+  5. Use your MSF alignment ('# MSF')
+     You can provide your alignment input to the PHD predictions. To do so,
+     you have to generate a file in MSF (multiple sequence format), e.g.,
+     generated by the program PILEUP (GCG). Then you append this file to the
+     same header as described before, with "# MSF" instead of "# sequence
+     name".
+     Example for email submission format.
+  6. Use your FASTA alignment ('# FASTA list')
+     You can submit your alignment in FASTA format. This requires two
+     keywords: (1) the string "# FASTA list" prompts the system to interpret
+     your alignment as one in the FASTA format (specification and example
+     for FASTA list format), and (2) the keyword "do NOT align" in a line
+     before the one starting with a hash ('#'), assures that your alignment
+     will not be re-aligned (as for the options of submitting your sequences
+     via FASTA format).
+     Example for email submission format.
+  7. Use your PIR alignment ('# PIR list')
+     You can submit your alignment in PIR format. This requires two
+     keywords: (1) the string "# PIR list" prompts the system to interpret
+     your alignment as one in the PIR format (specification and example for
+     PIR list format), and (2) the keyword "do NOT align" in a line before
+     the one starting with a hash ('#'), assures that your alignment will
+     not be re-aligned (as for the options of submitting your sequences via
+     PIR format).
+     Example for email submission format.
+  8. Use your prediction of 1D structure for threading ('# COLUMN format')
+     You can provide your prediction of secondary structure and relative
+     accessibility. (Both predictions are required. If you don't have, e.g.,
+     a prediction of accessibility, use PHDacc to generate it.) Your
+     prediction will be used for threading. You use the header as described
+     before, with "# COLUMN format" instead of "# sequence name". Then you
+     append your prediction in the "COLUMN format" after this line.
+     Example for email submission format.
+
+  ------------------------------------------------------------------------
+  ADVANCED PREDICTION OPTIONS
+  ------------------------------------------------------------------------
+
+  
+The following prediction options have been implemented:
+
+  1. Predict only secondary structure ('predict secondary structure')
+     The string "predict secondary structure" (or short: "PHDsec") in any
+     line before the one beginning with a hash (#) results in a prediction
+     of secondary structure, only.
+  2. Predict only solvent accessibility ('predict accessibility')
+     The string "predict accessibility" (or short: "PHDacc") in any line
+     before the one beginning with a hash (#) results in a prediction of
+     solvent accessibility, only.
+  3. Predict only transmembrane helices ('predict transmembrane')
+     The string "predict transmembrane" (or short: "PHDhtm") in any line
+     before the one beginning with a hash (#) results in a refined
+     prediction of transmembrane helices and topology.
+
+  4. Filtering PHD input alignment (Default)
+     If the divergence found in your family is not 'well' spread, prediction
+     accuracy may drop. In particular, too many highly similar sequences may
+     be problematic in absence of further diverged family members. This
+     problem came up only in the post-genome era, i.e. since the number of
+     sequences is exploding. To correct for this problem we run a crude
+     filter on the alignment, by default. To switch this filter off, please
+     use the keyword 'no filter' in any line before the one commencing with
+     a hash ('#').
+
+  5. Prediction of coiled coils (Default, example)
+     Coiled-coil regions are reported by default, when found. To surpress
+     this default, use the string "no coils" in any line before the one
+     beginning with a hash (#).
+  6. ProSite sequence motifs (Default, example)
+     ProSite sequence motifs are reported by default, when found. To
+     surppress this default, use the string "no prosite" in any line before
+     the one beginning with a hash (#).
+  7. ProDom domains (Default, example)
+     ProDom domains are reported by default, when found. To surppress this
+     default, use the string "no prodom" in any line before the one
+     beginning with a hash (#).
+
+  8. Prediction-based threading ('prediction-based threading')
+     The string "prediction-based threading" (or short: TOPITS) in any line
+     before the one beginning with a hash (#) requests the prediction-based
+     threading (TOPITS). If you do not provide 'your prediction' for the
+     fold recognition, we return a multiple sequence alignment, a prediction
+     of secondary structure and accessibility, and the threading alignment
+     of your sequence and possible remote homologues of known structure.
+     The results of the search for remote homologues are given in three
+     blocks. (1) An MSF formatted (default) alignment between your sequence
+     and possible remote homologues. (2) A summary of some statistics such
+     as alignment scores for a cross-validation experiment and for your
+     request. (3) An alignment presenting the entire motifs of 1D structure
+     for the alignment.
+
+  9. Evaluation of secondary structure prediction accuracy (for program
+     developers, only!)
+     The output consists of two parts: (1) per-residue and per-segment
+     scores for each protein in your input file, and (2) per-residue and
+     per-segment scores for all proteins in your input file (the latter
+     includes scores for the accuracy in predicting secondary structure
+     content and secondary structural class; example for output).
+
+  ------------------------------------------------------------------------
+  ADVANCED OUTPUT OPTIONS
+  ------------------------------------------------------------------------
+
+The following output options have been implemented (most of the options are
+mutually not exclusive, i.e. you can add most of these additional keywords
+at the same time).
+
+General output options
+
+  1. Return results in html ('return html')
+     The string "return html" in any line before the one starting with a
+     hash (#) results in that the email you get will have the entire results
+     attached in one HTML formatted file (which you can load into any WWW
+     browser).
+        o Alignments and ProDom results are displayed using the program
+          MView developed by (A
+          HREF="http://mathbio.nimr.mrc.ac.uk/~nbrown/">Nigel Brown (MRC,
+          Mill Hill, London).
+        o All other results is still simply converted to a format resembling
+          the old output. (I hope that this is going to change soon.)
+
+  2. Return concise output ("return concise")
+     The string "return concise result" in any line before the one starting
+     with a hash (#) returns a concise summary of results (e.g., no tables
+     for prediction accuracy).
+
+Customising alignment
+
+  1. Return also BLASTP output ('return blast')
+     The string "return blast" in any line before the one starting with a
+     hash (#) returns additionally the unfiltered BLASTP output.
+  2. Return no alignment ('return no alignment')
+     The string "return no alignment" in any line before the one starting
+     with a hash (#) returns no alignment.
+  3. Return alignment in MSF format ('return msf' = default return format)
+     The string "return msf" in any line before the one starting with a hash
+     (#) returns the HSSP/MaxHom alignment in MSF format. (Note: this format
+     can be used as input for a request of homology modelling.)
+  4. Return alignment in HSSP format without profiles ('return hssp format')
+
+     The string "return hssp format" in any line before the one starting
+     with a hash (#) return the HSSP/MaxHom alignment without profiles of
+     residue substitution frequencies (default MSF format without profiles).
+  5. Return alignment in HSSP format + profiles ('return hssp profiles')
+     The string "return hssp profiles" in any line before the one starting
+     with a hash (#) return the HSSP/MaxHom alignment including profiles of
+     residue substitution frequencies (default MSF format without profiles).
+
+Customising PHD
+
+  1. Return COLUMN format ("return column format")
+     The string "return column format" in any line before the one starting
+     with a hash (#) returns the secondary structure and accessibility
+     prediction in a column format. (Note: this format can be used as input
+     for a request of prediction-based threading.)
+  2. Return prediction additionally in MSF format ("return phd msf")
+     The string "return phd msf" in any line before the one starting with a
+     hash (#) returns the PHD predictions additionally in an MSF format
+     (appended to the alignment).
+  3. Return prediction additionally in RDB format ("return phd rdb")
+     The string "return phd rdb" in any line before the one starting with a
+     hash (#) returns the PHD predictions additionally in RDB format (as
+     read and written by local versions of the programs PHD and TOPITS).
+  4. Return prediction additionally in CASP2 format ("return phd casp2")
+     The string "return phd casp2" in any line before the one starting with
+     a hash (#) returns the PHD predictions additionally in the format used
+     for the second protein structure prediction contest in Asilomar, 1996
+     (CASP2).
+  5. Return prediction probability for graphical display ("return graph")
+     The string "return graph" in any line before the one starting with a
+     hash (#) append a file containing the 1D structure prediction in such a
+     format that the relative propensities for the prediction of each of the
+     output states (e.g. three secondary structure types: helix, strand,
+     rest) can be used as input for usual graphics software (if
+     appropriately extracted), such as KaleidaGraph, Excel, Mathematica,
+     Sigma-Plot, Harvard-Graphics. Example:
+
+     ridiculase (17 residues)
+       No,AA,PSEC,RI_S,OtH,OtE,OtL,PACC,PREL,RI_A,Pbie,Ot0,Ot1,..,Ot9
+        1, E,   L,   9,  0,  1, 97, 157,  81,   6,   e,  0,  1,.., 21
+        2, F,   L,   9,  0,  1, 97,   0,   0,   0,   b,  8,  8,..,  5
+        :, :,   :,   :,  :,  :,  :,   :,   :,   :,   :,  :,  :,..,  :
+        8, V,   H,   3, 51, 30, 14,   0,   0,   9,   b, 39, 29,..,  1
+        9, L,   H,   4, 53, 20, 21,   0,   0,   7,   b, 36, 28,..,  1
+       10, R,   H,   1, 36, 32, 24,  62,  25,   1,   i,  8,  8,..,  4
+        :, :,   :,   :,  :,  :,  :,   :,   :,   :,   :,  :,  :,..,  :
+       16, P,   L,   9,  4,  2, 91,  66,  49,   4,   e,  4,  4,.., 11
+       17, A,   L,   9,  2,  1, 95,  51,  49,   2,   e,  7,  7,..,  8
+
+Customising TOPITS
+
+  1. Return topits hssp ("return topits hssp")
+     The string "return topits hssp" in any line before the one starting
+     with a hash (#) returns the threading output additionally in HSSP
+     format.
+  2. Return topits strip ("return topits strip")
+     The string "return topits strip" in any line before the one starting
+     with a hash (#) returns the threading output additionally in HSSP
+     format.
+  3. Return topits own ("return topits own")
+     The string "return topits own" in any line before the one starting with
+     a hash (#) returns the threading output additionally in the format used
+     by TOPITS.
+
+Note: the 'return topits' options will hopefully make more sense in the near
+future when Sito Pazos (CNB, Madrid) will have finished his interactive
+work-bench for viewing the TOPITS output.
+
+Toggle defaults
+
+The following options allow you to toggle (switch) the defaults for ProSite,
+ProDom, and Coils.
+
+  1. Return no coils ("return no coils")
+     The string "return no coils" in any line before the one starting with a
+     hash (#) results in that COILS results are not returned.
+     Note: to explicitly REQUEST Coils predictions use the string "do
+     coils".
+  2. Return no ProSite ("return no ProSite")
+     The string "return no ProSite" in any line before the one starting with
+     a hash (#) results in that ProSite results are not returned.
+     Note: to explicitly REQUEST detection of ProSite motifs use the string
+     "do prosite".
+  3. Return no prodom ("return no prodom")
+     The string "return no prodom" in any line before the one starting with
+     a hash (#) results in that ProDom results are not returned.
+     Note: to explicitly REQUEST ProDom domain assignments use the string
+     "do prodom".
+
+  ------------------------------------------------------------------------
+  EXAMPLES for input formats (required for email submissions)
+  ------------------------------------------------------------------------
+
+Note: the examples for the allowed PP input formats are primarily important
+when you submit the request by email.
+
+Example for input and output (important for email submission)
+
+Submitting a single sequence
+
+   * INPUT is: your protein sequence,
+   * OUTPUT is: alignment + prediction
+
+INPUT
+You send the following file:
+joe@amino.churn.edu
+# incredulase from paracoccus dementiae, translated from cDNA
+KELVLALYDYQEKSPREVTMKKGDILTLLNSTNKD
+WWKVEVNDRQGFVPAAYVKKLD
+
+Notes:
+
+   * The '#' is a control for PredictProtein.
+   * The hash (#) is crucial, as the parser interprets anything after this
+     line as a protein sequence. Following the hash, put a one-line
+     description of the protein.
+
+OUTPUT (detailed example)
+If your sequence has at least one non-trivial homologue in the database of
+protein sequences, you receive a multiple sequence alignment and the
+annotated prediction in the following form:
+Block with multiple sequence alignment.
+Block with explanations about the prediction method.
+Block with prediction (example for secondary structure prediction follows).
+
+    .........1.........2.........3.........4.........5.........6
+AA  KELVLALYDYQEKSPREVTMKKGDILTLLNSTNKDWWKVEVNDRQGFVPAAYVKKLD
+PHD   EEEEEE                EEEEEE     EEEEEE    EEEE  EEE
+Rel 854777641334566643102441577762566642443213663122112234155
+
+Submitting a set of unaligned sequences (in FASTA format)
+
+   * INPUT is: a list with your sequences,
+   * OUTPUT is: alignment + prediction
+
+INPUT
+You send the following file:
+joe@amino.churn.edu
+# FASTA list incredulase from paracoccus dementiae, translated from cDNA
+> Andr_Mouse
+RQLVHVVKWAKALPGFRNLHVDDQMAVIQYSWMGLMVFAMGWRSFT
+> Prgr_Rabit
+QLLSVVKWSKSLPGFRNLHIDDQITLIQYSWMSLMVFGLRSYK
+:
+
+Notes:
+
+   * The string "# FASTA list" is crucial, as the parser interprets anything
+     after this line as a list of sequences in FASTA format (i.e. the actual
+     FASTA format starts in the line after the '#').
+
+OUTPUT (example)
+Block with ProDom domain assignment (if found).
+Block with ProSite motif (if found).
+Block with predictions of coiled-coil regions (if found).
+Block with explanations about the prediction method.
+Block with prediction.
+
+Submitting a set of unaligned sequences (in PIR format)
+
+   * INPUT is: a list with your sequences,
+   * OUTPUT is: alignment + prediction
+
+INPUT
+You send the following file:
+joe@amino.churn.edu
+# PIR list incredulase from paracoccus dementiae, translated from cDNA
+>P1;
+Andr_Mouse
+RQLVHVVKWAKALPGFRNLHVDDQMAVIQYSWMGLMVFAMGWRSFT
+>P1;
+Prgr_Rabit
+QLLSVVKWSKSLPGFRNLHIDDQITLIQYSWMSLMVFGLRSYK
+:
+
+Notes:
+
+   * The string "# PIR list" is crucial, as the parser interprets anything
+     after this line as a list of sequences in PIR format (i.e. the actual
+     PIR format starts in the line after the '#').
+
+OUTPUT (example)
+Block with ProDom domain assignment (if found).
+Block with ProSite motif (if found).
+Block with predictions of coiled-coil regions (if found).
+Block with explanations about the prediction method.
+Block with prediction.
+
+Submitting your alignment (in SAF format)
+
+Note: I do strongly recommend this as THE option of choice for non-experts
+(rather than the MSF format).
+
+   * INPUT is: your alignment (in the simple alignment format SAF),
+   * OUTPUT is: prediction
+
+INPUT You send the following file:
+joe@amino.churn.edu
+# SAF incredulase from paracoccus dementiae, translated from cDNA
+Andr_Human RQLVHVVKWA KALPGFRNLH VDDQMAVIQY SWMGLMVFAM GWRSFT
+Prgr_Rabit .QLLSVVKWS KSLPGFRNLH IDDQITLIQY SWMSLMVFGL GWRSYK
+
+Notes:
+
+   * Your name and email address are required. The string "# SAF" is
+     crucial, as the parser interprets anything after this line as an
+     alignment in SAF format.)
+   * The '#' is a control for PredictProtein. The actual SAF-format begins
+     after that line!
+   * Names should contain up to 14 characters and no blanks.
+   * Please use the same names for the same protein in all rows.
+   * To mark insertions, please use a point '.'.
+
+OUTPUT (example)
+Block with ProDom domain assignment (if found).
+Block with ProSite motif (if found).
+Block with predictions of coiled-coil regions (if found).
+Block with explanations about the prediction method.
+Block with prediction.
+
+Submitting your alignment (in MSF format)
+
+Note: To non-experts I strongly recommend to use the SAF format, instead
+(see above).
+
+   * INPUT is: your alignment (in the multiple sequence format MSF),
+   * OUTPUT is: prediction
+
+INPUT You send the following file:
+joe@amino.churn.edu
+# MSF incredulase from paracoccus dementiae, translated from cDNA
+MSF of: x.hssp from: 1 to: 176
+x.msf MSF: 176 Type: P 11-Oct-93 21:17:4 Check: 5859 ..
+Name: Andr_Human Len: 176 Check: 750 Weight: 1.00
+Name: Prgr_Rabit Len: 176 Check: 3980 Weight: 1.00
+//
+Andr_Human RQLVHVVKWA KALPGFRNLH VDDQMAVIQY SWMGLMVFAM GWRSFT
+Prgr_Rabit .QLLSVVKWS KSLPGFRNLH IDDQITLIQY SWMSLMVFGL GWRSYK
+
+Notes:
+
+   * Your name and email address are required. The string "# MSF" is
+     crucial, as the parser interprets anything after this line as an
+     alignment in MSF format.)
+   * The '#' is a control for PredictProtein. The actual MSF-format begins
+     after that line!
+   * Names should contain up to 14 characters and no blanks.
+   * Please use the same names for the same protein in all rows.
+   * All sequences must have the same length.
+   * To mark insertions, please use a point '.'.
+
+OUTPUT (example)
+Block with ProDom domain assignment (if found).
+Block with ProSite motif (if found).
+Block with predictions of coiled-coil regions (if found).
+Block with explanations about the prediction method.
+Block with prediction.
+
+Submitting a set of aligned sequences (in FASTA format)
+
+   * INPUT is: a list with your aligned sequences,
+   * OUTPUT is: prediction
+
+INPUT
+You send the following file:
+joe@amino.churn.edu
+do NOT align
+# FASTA list incredulase from paracoccus dementiae, translated from cDNA
+> Andr_Mouse
+RQLVHVVKWAKALPGFRNLHVDDQMAVIQYSWMGLMVFAMGWRSFT
+> Prgr_Rabit
+QLLSVVKWSKSLPGFRNLHIDDQITLIQYSWMSLMVFGLRSYK
+:
+
+Notes:
+
+   * The strings '# FASTA list',and 'do NOT align' are crucial: the first as
+     the parser interprets anything after the line with the hash ('#') as a
+     list of sequences in FASTA format (i.e. the actual FASTA format starts
+     in the line after the '#'), the second ('do not align'), as otherwise
+     your sequences will be re-aligned.
+
+Block with ProDom domain assignment (if found).
+Block with ProDom domain assignment (if found).
+Block with ProSite motif (if found).
+Block with predictions of coiled-coil regions (if found).
+Block with explanations about the prediction method.
+Block with prediction.
+
+Submitting a set of aligned sequences (in PIR format)
+
+   * INPUT is: a list with your aligned sequences,
+   * OUTPUT is: prediction
+
+INPUT
+You send the following file:
+joe@amino.churn.edu
+do NOT align
+# PIR list incredulase from paracoccus dementiae, translated from cDNA
+>P1;
+Andr_Mouse
+RQLVHVVKWAKALPGFRNLHVDDQMAVIQYSWMGLMVFAMGWRSFT
+>P1;
+Prgr_Rabit
+QLLSVVKWSKSLPGFRNLHIDDQITLIQYSWMSLMVFGLRSYK
+:
+
+Notes:
+
+   * The strings '# PIR list',and 'do NOT align' are crucial: the first as
+     the parser interprets anything after the line with the hash ('#') as a
+     list of sequences in PIR format (i.e. the actual PIR format starts in
+     the line after the '#'), the second ('do not align'), as otherwise your
+     sequences will be re-aligned.
+
+Block with ProDom domain assignment (if found).
+Block with ProDom domain assignment (if found).
+Block with ProSite motif (if found).
+Block with predictions of coiled-coil regions (if found).
+Block with explanations about the prediction method.
+Block with prediction.
+
+Submitting 1D structure prediction for fold recognition (in COLUMN format)
+
+   * INPUT is: a prediction of secondary structure and accessibility,
+   * OUTPUT is: an alignment of remote homologues
+
+INPUT You send the following file:
+joe@amino.churn.edu
+prediction-based threading
+# COLUMN format
+AA PSEC PACC RI_SEC RI_ACC
+E L 11 9 6
+F E 7 9 0
+: : : : :
+V H 61 3 0
+L H 113 3 0
+R H 39 1 1
+: : : : :
+P L 17 9 4
+A L 89 9 2
+: : : : :
+
+  1. Delimiters of columns: allowed are spaces, commas, and tabs.
+  2. Compulsory information: (1) sequence (AA) in one-letter code; (2)
+     secondary structure (PSEC) in either of the states H=helix, E=strand,
+     or L=rest; (3) solvent accessibility (PACC) in square Angstrom (note:
+     for prediction-based threading accessibility will be converted to
+     relative accessibility in two states: buried (<15%) or exposed
+     (&ge;15%)).
+  3. Optional: (1) reliability, or strength for secondary structure (RI_SEC)
+     scaled from 0 (low) to 9 (high); (2) reliability, or strength for
+     relative accessibility (RI_ACC) scaled from 0 (low) to 9 (high).
+  4. Notes:
+        o The string '# COLUMN format' is crucial, as the parser interprets
+          anything after this line as a prediction.
+        o To receive PHD prediction in this format use the output option
+          'return COLUMN format'.
+
+OUTPUT (example)
+Block with ProDom domain assignment (if found).
+Block with ProSite motif (if found).
+Block with predictions of coiled-coil regions (if found).
+Block with explanations about the prediction method.
+Block with prediction.
+
+Submitting secondary structure for evaluation of prediction accuracy (in
+COLUMN format)
+
+   * INPUT is: a prediction and observation of secondary structure,
+   * OUTPUT is: an evaluation of prediction accuracy
+
+INPUT You send the following file:
+joe@amino.churn.edu
+evaluate prediction accuracy
+# COLUMN format
+NAME AA PSEC OSEC
+first M L L
+first Q L L
+first T L H
+first S H H
+first S H H
+first I H H
+: : : :
+second G L L
+second V L L
+second K E L
+second S L H
+second I L H
+: : : :
+
+  1. Delimiters of columns: allowed are spaces, commas, and tabs.
+  2. Compulsory information: (1) sequence (AA) in one-letter code; (2)
+     secondary structure (PSEC) in either of the states H=helix, E=strand,
+     or L=rest; (3) observed (OSEC) secondary structure in either of the
+     states H=helix, E=strand, or L=rest (e.g. from DSSP assignment); (4) if
+     more than one protein is used, simply append all requested proteins (in
+     that case make sure that the first column (NAME) lists a unique protein
+     name).
+  3. Optional: (1) name of protein (compulsory for more than one protein).
+  4. (Note: Your email address is required. The string "# COLUMN format" is
+     crucial, as the parser interprets anything after this line as a
+     prediction.)
+
+OUTPUT (example)
+Block with definition of scores for prediction accuracy.
+Tables with per-residue and per-segment prediction accuracy.
+
+Submitting a single sequence through its SWISSPROT identifier
+
+   * INPUT is: your protein sequence given as a valid SWISSPROT identifer,
+   * OUTPUT is: alignment + prediction
+
+INPUT
+You send the following file:
+joe@amino.churn.edu
+# SWISSid paho_chick
+
+Notes:
+
+   * The string "# SWISSid" is crucial, as the parser interprets anything
+     after this line as a SWISSPROT identifier.
+   * Valid identifiers have the form 'name_species', for the example above:
+        o name=paho
+        o species=chick
+   * Only identifiers of the latest SWISSPROT release are accepted.
+
+  ------------------------------------------------------------------------
+  PREDICTION METHODS
+  ------------------------------------------------------------------------
+
+
+Multiple sequence alignment (MaxHom)
+
+The multiple sequence alignments is built up in essentially three steps
+(MaxHom, Sander & Schneider, Proteins, 1991, 9, 56-68).
+
+  1. The protein database (currently SWISS-PROT) is searched by a fast
+     alignment program (currently BLASTP).
+  2. In sweep 1, sequences are aligned consecutively to the search sequence
+     by a standard dynamic programming method. After each sequence has been
+     added a profile is compiled, and used to align the next sequence.
+  3. In sweep 2, after all sequences with significant homology have been
+     picked from the BLASTP output, the profile is recompiled, and the
+     dynamic programming algorithm starts once again to align consecutively
+     the sequences, this time using the conservation profile as derived
+     after completion of sweep 1.
+
+Functional sequence motifs (ProSite; example for output)
+
+The following description is from the original ProSite site:
+ProSite is a method of determining what is the function of uncharacterized
+proteins translated from genomic or cDNA sequences. It consists of a
+database of biologically significant sites, patterns and profiles that help
+to reliably identify to which known family of protein (if any) a new
+sequence belongs.
+
+Domain assignment (ProDom; example for output)
+
+The following description is from the original ProDom site (which supplies a
+rather useful graphical interface to the ProDom database):
+The ProDom protein domain database consists of an automatic compilation of
+homologous domains detected in the SWISS-PROT database by the DOMAINER
+algorithm (ELL Sonnhammer & D Kahn, Prot. Sci., 1994, 3, 482-492). It has
+been devised to assist with the analysis of the domain arrangement of
+proteins.
+ProDom `domains' are inferred on the basis of conserved subsequences as
+found in various proteins. Such a conservation corresponds frequently,
+though not always, to genuine structural domains: therefore domain
+boundaries should be treated with caution. For some domain families experts
+have been asked to correct domain boundaries on the basis of both sequence
+and structural information. This expertise will complement the automated
+process and improve the quality of ProDom domain families.
+
+Secondary structure (PHDsec)
+
+Secondary structure is predicted by a system of neural networks rating at an
+expected average accuracy > 72% for the three states helix, strand and loop
+(Rost & Sander, PNAS, 1993 , 90, 7558-7562; Rost & Sander, JMB, 1993 , 232,
+584-599; and Rost & Sander, Proteins, 1994 , 19, 55-72; evaluation of
+accuracy). Evaluated on the same data set, PHDsec is rated at ten percentage
+points higher three-state accuracy than methods using only single sequence
+information, and at more than six percentage points higher than, e.g., a
+method using alignment information based on statistics (Levin, Pascarella,
+Argos & Garnier, Prot. Engng., 6, 849-54, 1993).
+PHDsec predictions have three main features:
+
+  1. improved accuracy through evolutionary information from multiple
+     sequence alignments
+  2. improved beta-strand prediction through a balanced training procedure
+  3. more accurate prediction of secondary structure segments by using a
+     multi-level system
+
+Solvent accessibility (PHDacc)
+
+Solvent accessibility is predicted by a neural network method rating at a
+correlation coefficient (correlation between experimentally observed and
+predicted relative solvent accessibility) of 0.54 cross-validated on a set
+of 238 globular proteins (Rost & Sander, Proteins, 1994, 20, 216-226;
+evaluation of accuracy). The output of the neural network codes for 10
+states of relative accessibility. Expressed in units of the difference
+between prediction by homology modelling (best method) and prediction at
+random (worst method), PHDacc is some 26 percentage points superior to a
+comparable neural network using three output states (buried, intermediate,
+exposed) and using no information from multiple alignments.
+
+Globularity of proteins (GLOBE)
+
+An additional result from the prediction of solvent accessibility is that of
+protein globularity. That method is not published, yet. For more
+information, you may have a look at the preliminary preprint.
+
+Transmembrane helices (PHDhtm; example for output)
+
+Transmembrane helices in integral membrane proteins are predicted by a
+system of neural networks. The shortcoming of the network system is that
+often too long helices are predicted. These are cut by an empirical filter.
+The final prediction (Rost et al., Protein Science, 1995, 4, 521-533;
+evaluation of accuracy) has an expected per-residue accuracy of about 95%.
+The number of false positives, i.e., transmembrane helices predicted in
+globular proteins, is about 2% (Rost et al. 1996).
+The neural network prediction of transmembrane helices (PHDhtm) is refined
+by a dynamic programming-like algorithm. This method resulted in correct
+predictions of all transmembrane helices for 89% of the 131 proteins used in
+a cross-validation test; more than 98% of the transmembrane helices were
+correctly predicted. The output of this method is used to predict topology,
+i.e., the orientation of the N-term with respect to the membrane. The
+expected accuracy of the topology prediction is > 86%. Prediction accuracy
+is higher than average for eukaryotic proteins and lower than average for
+prokaryotes. PHDtopology is more accurate than all other methods tested on
+identical data sets (Rost, Casadio & Fariselli, 1996a and 1996b; evaluation
+of accuracy).
+
+Coiled-coil regions (COILS; example for output)
+
+The following description is from the original COILS site:
+COILS is a program that compares a sequence to a database of known parallel
+two-stranded coiled-coils and derives a similarity score. By comparing this
+score to the distribution of scores in globular and coiled-coil proteins,
+the program then calculates the probability that the sequence will adopt a
+coiled-coil conformation.
+
+Fold recognition by prediction-based threading (TOPITS; examples for:
+request and output)
+
+Remote homologues (0-25% sequence identity) are detected by a novel
+prediction-based threading method (Rost 1995a and 1995b). The principle idea
+is to detect similar motifs of secondary structure and accessibility between
+a sequence of unknown structure and a known fold . For the recognition of
+similarities between entire folds, the expected accuracy (first hit of
+alignment list correct) is about 60% (Rost, ISMB95 Proceedings, 1995, AAAI
+Press, 314-321). If the goal is to correctly detect even short homologous
+fragments, still about 30% of the first hits are correct (compared to an
+accuracy of 14% for simple sequence alignments: full paper). Hits with
+z-scores above 3.0 are more reliable (accuracy > 60%). (Note: a threading
+service based on similar principles is provided by Daniel Fischer
+(http://www.mbi.ucla.edu/people/frsvr/frsvr.html).
+
+  ------------------------------------------------------------------------
+  HINTS FOR USERS
+  ------------------------------------------------------------------------
+
+Note
+
+The following notes result from the experiences I have gathered by offering,
+and running the PredictProtein service and during various structure
+prediction workshops. The comments are tailored in particular to the PHD
+methods; however, most comments hold also for using other secondary
+structure prediction methods.
+
+What can you expect from secondary structure prediction?
+
+How accurate are the predictions ? The expected levels of accuracy (PHDsec =
+72±11% (three state per-residue accuracy); PHDacc = 75±7% (two-state
+per-residue accuracy); PHDhtm = 94±6% (two-state per-residue accuracy)) are
+valid for typical globular, water-soluble (PHDsec, PHDacc), or helical
+transmembrane proteins (PHDhtm) when the multiple alignment contains many
+and diverse sequences. High values for the reliability indices indicate more
+accurate predictions. (Note: for alignments with little variation in the
+sequences, the reliability indices adopt misleadingly high values.) PHDsec
+predictions tend to be relatively accurate for porins; however, for helical
+membrane proteins other programs ought to be used.
+
+Confusion between strand and helix? PHD (as well as other methods) focuses
+on predicting hydrogen bonds. Consequently, occasionally strongly predicted
+(high reliability index) helices are observed as strands and vice versa
+(expected accuracy of PHDsec).
+
+Strong signal from secondary structure caps? The ends of helices and strands
+contain a strong signal. However, on average PHD predicts the core of
+helices and strands more accurately than the caps (B. Rost and C. Sander, 1D
+secondary structure prediction through evolutionary profiles, in: H. Bohr
+and S. Brunak (eds.), Protein Structure by Distance Analysis, Amsterdam: IOS
+Press, 257-276 (1994)). This seems to also hold for other methods (Garnier,
+priv. comm.).
+
+Are internal helices predicted poorly? Steven Benner has indicated that
+internal buried helices are particularly difficult to predict. On average,
+this is not the case for PHD predictions (expected accuracy of PHDsec for
+buried helices).
+
+Accessibility useful to provide upper limits for contacts? The predicted
+solvent accessibility (PHDacc) can be translated into a prediction of the
+number of water atoms around a given residue. Consequently, PHDacc can be
+used to derive upper and lower limits for the number of inter-residue
+contacts of a certain residue (such an estimate could improve predictions of
+inter-residue contacts).
+
+How to predict porins? PHDhtm predicts only transmembrane helices, and
+PHDsec has been trained on globular, water-soluble proteins. How to predict
+1D structure for porins then? As porins are partly accessible to solvent,
+prediction accuracy of PHDsec was relatively high (70%) for the known
+structures. Thus, PHDsec appears to be applicable.
+
+How to use the prediction of transmembrane helices? One possible application
+of PHDhtm is to scan, e.g., entire chromosomes for possible transmembrane
+proteins. The classification as transmembrane protein is not sufficient to
+have knowledge about function, but may shed some light into the puzzle of
+genome analyses. When using PHDhtm for this purpose, the user should keep in
+mind that on average about 5% of the globular proteins are falsely predicted
+to have transmembrane helices.
+
+What about protein design and synthesised peptides? The PHD networks are
+trained on naturally evolved proteins. However, the predictions have proven
+to be useful in some cases to investigate the influence of single mutations
+(e.g. for Chameleon ), or for Janus, Rost, unpublished). For short
+poly-peptides, the following should be taken into account: the network input
+consists of 17 adjacent residues, thus, shorter sequences may be dominated
+by the ends (which are treated as solvent).
+
+In a nutshell: how to avoid pitfalls?
+
+70% correct implies 30% incorrect. The most accurate methods for predicting
+secondary structure reach sustained levels of about 70% accuracy. When
+interpreting predictions for a particular protein it is often instructive to
+mark the 30% of the residues you suspect to be falsely predicted.
+
+Spread of prediction accuracy. An expected accuracy of 70% does NOT imply
+that for your protein U 70% of all residues are correctly predicted.
+Instead, values published for prediction accuracy are averaged over hundreds
+of unique proteins. An expected accuracy of 70±10% (one standard deviation)
+implies that, on average, for two thirds of all proteins between 60 and 80%
+of the residues will be predicted correctly (expected accuracy of PHDsec).
+Thus, prediction accuracy can be higher than 80% or lower than 60% for your
+protein. Few methods supply well tested indices for the reliability of
+predictions. Such indices can help to reduce or increase your trust in a
+particular prediction.
+
+Special classes of proteins. Prediction methods are usually derived from
+knowledge contained in subsets of proteins from databases. Consequently,
+they should not be applied to classes of proteins which have not been
+included in the subsets. For example, methods for predicting helices in
+globular proteins are likely to fail when applied to predict transmembrane
+helices. In general, results should be taken with caution for proteins with
+unusual features, such as proline-rich regions, unusually many cysteine
+bonds, or for domain interfaces.
+
+Better alignments yield better predictions. Multiple alignment-based
+predictions are substantially more accurate than single sequence-based
+predictions. How many sequences do you need in your alignment to expect an
+improvement; and how sensitive are prediction methods with respect to errors
+in the alignment? The more divergent sequences contained in the alignment,
+the better (two distantly related sequences often improve secondary
+structure predictions by several percentage points). Regions with few
+aligned sequences yield less reliable predictions. The sensitivity to
+alignment errors depends on the methods, e.g., secondary structure
+prediction is less sensitive to alignment errors than accessibility
+prediction.
+
+Better + worse = even better? Today, several automatic services accomplish
+secondary structure predictions. Some users fall into the
+what-is-common-is-correct trap, i.e., they average over all prediction
+methods and consider identical regions as more reliable. Exceptionally, such
+a majority vote may be beneficial. However frequently, the result will be
+the worst-of-all prediction. Often, it is preferable to use reliability
+indices provided by some methods. Such indices answer the question: how
+reliably is the tryptophan at position 307 predicted in a surface loop?
+(Note: the correlation between such indices and prediction accuracy is
+sufficiently tested for a few methods, only.)
+
+1D structure may or may not be sufficient to infer 3D structure. Say you
+obtain as prediction for regular secondary structure:
+helix-strand-strand-helix-strand-strand (H-E-E-H-E-E). Assume, you find a
+protein of known structure with the same motif (H-E-E-H-E-E). Can you
+conclude that the two proteins have the same fold? Yes and no, your guess
+may be correct, but there are various ways to realise the given motif by
+completely different structures. For example, the secondary structure motif
+'H-E-E-H-E-E' is contained in, at least, 16 structurally unrelated proteins.
+
+Nuts and bolts: what to keep in mind?
+
+Information content in multiple sequence alignment
+
+If the multiple sequence alignment contains only a few proteins very similar
+to the one you sent (pairwise sequence identity > 90%), the expected
+accuracy for 1D structure predictions (secondary structure, accessibility,
+transmembrane helices) drops significantly. Note: this implies a reduction
+of the expected accuracy for threading. The scores for expected accuracy
+(PHDsec, PHDacc., PHDhtm) are valid for typical alignments as to be found in
+the HSSP database. The information content of the alignment is difficult to
+measure. Two important parameters are:
+
+   * (1) Number of aligned sequences: the more sequences in the alignment,
+     the better. The exact number of sequences needed for a 'good
+     prediction' cannot be given, as it depends on the variation and on
+     characteristics of the particular protein family. As a rule of thumb:
+     one is clearly NOT sufficient, more than five sequences can be enough.
+   * (2) Variation of aligned sequences: the aligned sequences should have a
+     considerable variation with respect to the guide sequence (your
+     protein). Ideally, the alignment should contain sequences at levels of
+     80%, 60%, 50%, 40%, and about 30% pairwise sequence identity (with
+     respect to the predicted protein). In general, more diverged sequences
+     (30-40%) contribute more to the information content than do very
+     similar ones (> 80%). Note: the levels of sequence identity are
+     summarised in the alignment header of the output returned (example).
+
+NOTE HOWEVER:
+
+   * (A) Alignment errors for distant homologues: More distantly related
+     sequences contribute more to the alignment diversity which is the base
+     for an improved prediction accuracy. However, the more distant relative
+     are difficult to align (actually below levels of some 40% sequence
+     identity some alignment errors are guaranteed). Furthermore, even the
+     correct detection of more distant relatives is getting highly
+     complicated below levels of about 35% sequence identity.
+   * (B) Bias by identical sequences: Growing data bases result in an
+     explosion of highly redundant information. This has recently (1996-7)
+     led to the situation where the previous rule 'the more sequences, the
+     better' is not applicable anymore. Instead, you should leave out some
+     (or all) family members in the high homology (>70%) region, in
+     particular, when there are not many rather diverged sequences present.
+     Furthermore, the current version of PHD does not handle redundant
+     information, i.e., when you have two proteins A and B of say 40%
+     sequence identity to your query, and when A and B are highly similar
+     (>90% sequence identity to one another), you should leave out one of
+     the two from the alignment you use for the prediction!
+
+Cut-off for including homologues in alignment
+
+In the multiple sequence alignment returned to you, only homologues down to
+levels of 30% pairwise sequence identity over 80 or more residues are
+included. This cut-off is five percentage points above the threshold for
+structural homology (Sander & Schneider, 1990), in an attempt to stay
+clearly off the twilight zone of sequence similarity, and provide
+high-quality multiple alignments in an automated fashion.
+
+Quality of multiple sequence alignment
+
+On average, more residues are falsely aligned for lower levels of pairwise
+sequence identity. Down to levels of about 30%, the automatic MaxHom
+alignments are usually quite accurate. However, for many families there are
+regions for which the 'correct' alignment is, in principle, not well
+defined. One way to spot such regions is the stability of the alignment with
+respect to including or excluding some of the aligned sequences. By
+providing different lists of sequences ("input option 'PIR list'") you can
+monitor the stability of the alignment. Often such regions may form surface
+loops. Predictions may be less accurate in such regions.
+
+Minimal length of sequences
+
+The PHD programs treat N- and C-terminal ends of proteins as solvent
+molecules. The size of the input window for predicting 1D structure is up to
+17 residues. Thus, the first and the last 17 residues of your sequence will
+'see solvent'. Especially for short fragments you did cut out from large
+proteins, this may result in false predictions.
+
+Insertions in multiple sequence alignment
+
+   * Insertions in guide sequence: Do NOT use insertions for the guide
+     sequence when you supply your alignment to be used as input for the
+     predictions ("input option 'MSF format'"). In the current
+     implementation, PHD will treat such insertions as if the corresponding
+     positions were occupied by solvent. This may lead to particular
+     prediction errors ( example )!
+   * Split alignment into domains: If your alignment (of say 20 sequences)
+     contains long (> 10 residues) regions for which only very few sequences
+     do not have insertions (in positions R1-R2), split the alignment into
+     fragments that are not full of insertions for all sequences. For the
+     problematic region (R1-R2) it may be better to include only those
+     sequences without insertions. The existence of such regions may
+     indicate that the protein contains various domains (one for residues <
+     R1, another for residues > R2). When you submit your alignment in
+     fragments, mind the minimal length of sequences (see above).
+
+'Untypical' proteins
+
+   * Globular, water-soluble proteins. The PHD neural networks have been
+     trained on proteins with typical features as contained in the database
+     of known protein structures (PDB). Thus, accuracy may be lower if the
+     methods are applied to other proteins. For instance, PHDsec (secondary
+     structure) correctly predicts only about 50% of the residues in
+     transmembrane helices of integral membrane proteins. However, the
+     network system trained on transmembrane proteins (PHDhtm) predicts
+     residues in transmembrane helices on average at a level of well above
+     90% accuracy. In general, the PHD methods learn to extract
+     characteristics features of currently known protein structures.
+     Problematic cases are proteins with many cysteine bridges that
+     stabilise the particular protein structure, or proteins for which the
+     structure is stabilised by functional constraints (co-factors).
+   * Transmembrane proteins. PHDhtm for globular proteins. The rate of false
+     positives, i.e., of globular, water-soluble proteins for which PHDhtm
+     predicts transmembrane helices, is in the order of 5%. Such false
+     positive predictions occur more often for structures with very
+     hydrophobic beta-strands. Consequently, a prediction of transmembrane
+     helices for a globular protein may indicate the existence of very
+     hydrophobic beta-strands. PHD for porin-like beta structures. For the
+     beta-strand transmembrane protein, porin, the accuracy of PHDsec was
+     below the expected average (60%), but it was higher than the average
+     for helical transmembrane proteins (50%). The explanation may be that
+     the barrels formed by porins share features of globular, water-soluble
+     proteins and thus can be predicted relatively well. MaxHom alignments
+     for transmembrane proteins. The alignment procedure MaxHom is optimised
+     on globular water-soluble proteins. For transmembrane proteins, the
+     alignments of the more hydrophobic transmembrane segments may require
+     changes in the alignment details. Furthermore, in particular in
+     transmembrane regions, often more distantly related sequences could be
+     aligned by hand based on, e.g., hydrophobicity analyses. Unfortunately,
+     we do not yet provide such refinements of the alignment automatically.
+   * Multi-domain proteins. The accuracy for predicting solvent
+     accessibility (PHDacc) for single-domain proteins is higher than for
+     multi-domain proteins. Predictions are more likely to be wrong at
+     interfaces between domains. This shortcoming may be used to predict
+     inter-domain interfaces in regions where PHDacc predicts buried
+     residues that would otherwise not be compatible with your guess about
+     the fold of the protein.
+   * Novel folds are NOT 'untypical proteins'. The expected prediction
+     accuracy for the PHD programs has been re-evaluated several times over
+     the last years. So far, the results have always confirmed our estimates
+     (Rost & Sander, 1995, Proteins, 1995, 23, 295-300).
+
+Prediction of transmembrane helices (HTM's) and topology
+
+   * False positives: globular proteins predicted with HTM's. By default we
+     search for possible transmembrane helices in your sequence. The rate of
+     false positive detection (i.e. proteins falsely predicted to contain
+     transmembrane helices) is about 1.6%. Thus, a reported transmembrane
+     segment may just indicate a rather hydrophobic patch in a globular
+     protein. If you explicitly request a prediction of transmembrane
+     helices (HTM's), we assume that you know the protein to contain HTM's
+     and consequently apply a lower threshold to eliminate false positives.
+   * Refined prediction of transmembrane helices and topology. By default we
+     use the neural network system PHDhtm and an empirical filter to predict
+     the locations of transmembrane helices. A refined (more accurate)
+     version of that program, as well as, the prediction of transmembrane
+     topology (orientation of N-terminal non-transmembrane region with
+     respect to cell) is available upon request ("predict htm topology").
+     All predicted HTM's are sorted according to the reliability of the
+     prediction. This may help experts to spot HTM's predicted falsely based
+     on a reliability index provided. Note: try NOT to provide sequences
+     that start or end with HTM regions as this may result in wrong topology
+     predictions!
+
+Reliability indices for PHD predictions
+
+The reliability indices of the PHD methods correlate well with prediction
+accuracy. In other words, residues predicted with high reliability (0 = low,
+9 = high) are more likely to be predicted correctly. However, when basing
+the prediction on single sequences (rather than multiple alignments) the
+scale has to be shifted. For instance, values of RI > 4 usually imply an
+expected accuracy of > 80% for PHDsec. When using a single sequence as input
+the same level of accuracy is reached only for residues predicted at RI > 7.
+
+Combination of results with that of other methods
+
+A combination of two prediction methods is likely to improve the accuracy
+only if the following points are met:
+
+   * (1) the predictions are based on methods using independent information,
+     e.g., prediction-based threading and potential-based threading,
+   * (2) the accuracy of the two methods is comparable, e.g., NOT for
+     combining Chou-Fasman (about 50% accuracy) and PHDsec (> 72% accuracy),
+
+Say you want to focus on the most likely secondary structure segments. You
+may hope that the best predicted segments are those for which methods X and
+PHDsec agree. This may or may not be correct. However, it may be more
+reasonable to identify such regions based on the reliability index provided
+by PHD. The PHD methods have been tailored to provide a reasonable estimate
+for the reliability of the prediction, whereas a combination of two
+arbitrary prediction methods, at best, yields improvements, at random.
+
+Homologue of known structure
+
+Ab-initio prediction (by e.g. PHD) is, in general, less accurate than is
+homology modelling. Thus, if we find a protein of known structure that has >
+25% pairwise sequence identity to your sequence, you ought to make use of
+the known structure by homology modelling.
+
+Prediction-based threading
+
+   * Most alignments returned are wrong! We decided to return quite a number
+     of alignment hits from the threading search. Most of those will be
+     wrong. On the one hand, this is caused by a rather low accuracy of
+     threading methods. On the other hand, successful threading requires
+     experience in analysing protein sequences on the side of the user.
+     Although most hits reported by the threading program (TOPITS alias
+     TOPITS) will be wrong, you may arrive at some correct conclusions from
+     the alignments. Just bear in mind: threading is likely to be more often
+     wrong than correct.
+   * Combining prediction-based and potential-based threading. The first
+     problem of all threading programs is a high proportion of false
+     positives, i.e., proteins falsely predicted to have a fold similar to
+     the search sequence. One successful strategy to reduce the number of
+     false positives is a combination of the results from prediction-based
+     threading (such as TOPITS) with those from potential-based threading.
+
+  ------------------------------------------------------------------------
+  NEWS
+  ------------------------------------------------------------------------
+
+PP is migrating again
+
+Dear user,
+
+the main site of PredictProtein has to move to a different URL address:
+        http://cubic.bioc.columbia.edu/predictprotein
+
+sorry for inconveniences ...
+                                                           Burkhard Rost
+                                     Columbia Univ, New York, Feb 2000
+
+
+
+
+Currently known problems
+
+The following problems are known, and we are trying to fix them... 
+
+   1.none 
+
+
+
+
+
+PP WWW pages are mirrored to ease access times
+
+   1.09.98
+     Australia 
+     Site: ANGIS centre, Sydney University 
+     Contact: Shoba Ranganathan (shoba@angis.org.au) 
+   2.BIC, Singapore 
+     Site: BioInformatics Centre, National Univ. of Singapore
+     Contact: Betty Chenk (betty@bic.nus.edu.sg) 
+   3.03.99
+     CUBIC New York 
+     Site: Columbia University BioInformatics Centre
+     Contact: Burkhard Rost (rost@columbia.edu) 
+   4.04.99
+     CNB Madrid (Spain) 
+     Site: National Centre of Biotechnology 
+     Contact: Jose Valverde (jrvalverde@cnb.uam.es) 
+   5.05.99
+     CDFD Hyderabad (India) 
+     Site: Centre for DNA Fingerprinting and Diagnostics (CDFD) 
+     Contact: Kunchur Gururprasad (guru@www.cdfd.org.in ) 
+   6.07.99
+     Univ Rome
+     Site: University 'Tor Vergata' 
+     Contact: Manuela Helmer-Citterich (citterich@uniroma2.it 
+   7.07.99
+     Univ of Pune (India) 
+     Site: Bioinformatics Centre, University of Pune
+     Contact: Sunita Jagtap (sunita@bioinfo.ernet.in) 
+   8.08.99
+     Univ Ben Gurion (Israel)
+     Site: Ben Gurion University
+     Contact: Daniel Fischer (dfischer@cs.bgu.ac.il) 
+   9.09.99
+     Geneva (Switzerland) 
+     Site: GlaxoWellcome / ExPasy Geneva
+     Contact: Torsten Schwede (ts80960@GlaxoWellcome.co.uk ) 
+  10.09.99
+     Nijmegen (The Netherlands) 
+     Site: CMBI Center
+     Contact: Jack Leunissen (jackl@cmbi.kun.nl) 
+  11.09.99
+     Pushchino (Russia) 
+     Site: Inst for protein research (RAS) 
+     Contact: Dmitry Rykunov (rykunov@antares.protres.ru) 
+  12.09.99
+     San Diego (USA) 
+     Site: San Diego Supercomputer Center
+     Contact: Phil Bourne (bourne@sdsc.edu) 
+  13.11.99
+     Cuernavaca (Mexico) 
+     Site: Instituto de BiotecnologÌa (UNAM)
+     Contact: Lorenzo Segovia (lorenzo@ibt.unam.mx) 
+  14.02.00
+     Tehran (Iran) 
+     Site: Institute for Biochemistry
+     Contact: Bahram Goliaei (goliaei@ibc.ut.ac.ir) 
+  15.04.00
+     Peking Univ (China) 
+     Site: Centre of Bioinformatics
+     Contact: Gang Fang (fangg@lsc.pku.edu.cn) 
+  16.09.00
+     Institute of Microbiology (China)
+     Site: Institute of Microbiology, Chinese Academy of Sciences
+     Contact: Juncai MA (ma@sun.im.ac.cn) 
+  17.Who wants to be next? 
+
+
+
+
+
+PP news 2000
+
+New prediction options
+
+   1.02.00
+     cysteine bonding partners by CYSPRED : The program CYSPRED (P Fariselli, P Riccobelli & R Casadio) is run by default. CYSPRED
+     predicts cysteins that are likely to be partners in cysteine bridges. The output is reported only if at least one cystein is predicted to bind. 
+
+
+
+
+
+PP news 1999
+
+META PredictProtein
+
+Volker Eyrich (Columbia Univ., Chemistry Dept.) has written a general interface that enables users to simultaneously submit a sequence to a wide
+variety of prediction services (submission page). The following services are available at the moment: 
+
+     Miscellaneous services 
+       1.SignalP prediction of presence and location of signal peptide cleavage sites in amino acid sequences from different organisms 
+       2.NetOglyc prediction of mucin type GalNAc O-glycosylation sites in mammalian proteins. 
+       3.NetPicoRNA predictions of cleavage sites of picornaviral proteases. 
+       4.ChloroP predictions of whether or not a protein contains an N-terminal chloroplast transit peptide, cTP, and of probable sites for
+         cleavage of the transit peptide. 
+     Secondary structure prediction 
+       1.JPRED consensus method for protein secondary structure prediction. 
+     Transmembrane helices 
+       1.TMHMM prediction the location of transmembrane helices and their topology. 
+       2.TOPPRED prediction of location and orientation of transmembrane helices. 
+       3.DAS prediction of location of transmembrane helices. 
+     Threading (remote homology search) 
+       1.FRSVR prediction-based threading, also incorporating purely sequence-based database searches. 
+       2.SAMT98 hidden Markov model method (SAM-T98) for finding remote homologs of protein sequences. 
+     Homology modelling 
+       1.SWISS-MODEL prediction of 3D structure by homology modelling (automated server). 
+       2.CPHmodels prediction of 3D structure by homology modelling through a collection of methods and databases developed to predict
+         protein structures. 
+
+
+New prediction defaults
+
+   1.04.99
+     Low-complexity regions by SEG (default, example): The program SEG (J C Wootton & S Federhen) is executed, by default. SEG scans
+     your sequence for regions of low-complexity ('simple sequences' or 'composition-biased regions'). You may turn this default off by using the
+     keyword 'no seg in any line before the one beginning with a hash ('#'). 
+   2.03.99
+     Filtering your alignment (default): Your alignment will be filtered before running PHD, in order to reduce possible redundancy. You may
+     turn this default off by using the keyword 'no filter. 
+
+New output option
+
+   1.04.98
+     Return no seg ('return no seg') 
+     The string "return no seg" in any line before the one starting with a hash (#) results in that SEG results are not returned. 
+   2.04.99
+     Store results here, return no mail output ('return no mail') 
+     The string "return no mail" in any line before the one starting with a hash (#) results in that we shall not returned the results by mail. Instead,
+     the results for your requests will be stored on our machines for 3 days, and you will receive a mail that simply tells you how you can ftp the
+     result from here. The reason for including this option is that some requests may result in very large output files, and those may be difficult to
+     handle for your local mailing device (in particular when you request HTML formatted output). 
+   3.04.99
+     Return output in HTML format ('return html') 
+     The string "return html" in any line before the one starting with a hash (#) results in that the email you get will have the entire results attached
+     in one HTML formatted file (which you can load into any WWW browser). 
+     The conversion of the old format to the new one is still rather rudimentary. However, thanks to the program MView (Nigel Brown, MRC, Mill
+     Hill, London) part of the output is already much easier to digest in this new format! 
+   4.04.99
+     Return output in HTML format for printouts ('perline=60') 
+     The strings "return html60" OR "perline=N" (with N=1..number of residues of your protein) in any line before the one starting with a hash (#)
+     result in that the email you get will have the all output attached in one HTML formatted file (to display with any WWW browser) that has fewer
+     characters per line than the normal HTML output (see "return HTML"), so that you can print the output. (For further information see the
+     option "return html".) 
+   5.04.99
+     Return output in HTML format (with PHD graphics) ('return html detail') 
+     The string "return html detail" in any line before the one starting with a hash (#) results in that the email you get will have the entire results
+     attached in one HTML formatted file (which you can load into any WWW browser), furthermore, the PHD predictions will also be displayed
+     graphically. 
+     Note: the HTML files resulting from the PHD predictions may be large. To avoid that your mail will be too big, you may therefore use the
+     option of leaving the result on our machines, and simply ftp it to your local machine (see option "return no mail"). 
+   6.04.99
+     Return output (with PHD graphics) in HTML format for printouts ('perline=60') 
+     The strings "return html detail 60" OR "perline=N" (with N=1..number of residues of your protein) in any line before the one starting with a
+     hash (#) result in that the email you get will have the all output attached in one HTML formatted file (to display with any WWW browser) that
+     has fewer characters per line than the normal HTML output (see "return HTML detail"), so that you can print the output. (For further
+     information see the option "return html".) 
+     Note: the HTML files resulting from the PHD predictions may be large. To avoid that your mail will be too big, you may therefore use the
+     option of leaving the result on our machines, and simply ftp it to your local machine (see option "return no mail"). 
+
+New input option
+
+   1.03.99
+     Your input sequence by its SWISSPROT identifier ('# swissid') 
+     You can submit your sequence through its SWISS-PROT identifier. The string "# SWISSID" prompts the system to interpret the following
+     line to be an identifier of the form 'name_species' (example for input). 
+     NOTE: only identifiers in our current SWISS-PROT release are valid. 
+   2.03.99
+     Your input sequence(s) by FASTA alignment ('do not align') 
+     You can submit your alignment in FASTA format. This requires two keywords: (1) the string "# FASTA list" prompts the system to interpret
+     your alignment as one in the FASTA format (specification and example for FASTA list format), and (2) the keyword "do NOT align" in a line
+     before the one starting with a hash ('#'), assures that your alignment will not be re-aligned (as for the options of submitting your sequences via
+     FASTA format). 
+   3.03.99
+     Your input sequence(s) by PIR alignment ('do not align') 
+     You can submit your alignment in PIR format. This requires two keywords: (1) the string "# PIR list" prompts the system to interpret your
+     alignment as one in the PIR format (specification and example for PIR list format), and (2) the keyword "do NOT align" in a line before the
+     one starting with a hash ('#'), assures that your alignment will not be re-aligned (as for the options of submitting your sequences via PIR
+     format). 
+
+
+
+
+
+
+PP news 1998
+
+New input option 
+
+   1.02.98
+     Your input sequence(s) in FASTA-list format ('# FASTA list ') 
+     You can submit your alignment in a format which is hopefully easier for you to write than the MSF format. The string "# FASTA list" prompts
+     the system to interpret your alignment as one in the SAF format (specification and example for FASTA list format). 
+
+New prediction defaults 
+
+   1.04.98
+     Coiled-coil regions: now by default the program COILS written by Andrei Lupas is run on your sequence. An output is returned if a
+     coiled-coil region has been detected. 
+   2.04.98
+     Functional sequence motifs: now by default the PROSITE database written by Amos Bairoch, Philip Bucher and Kay Hofmann is scanned
+     for sequence motifs. An output is returned if any motif has been detected. 
+
+New output options 
+
+   1.04.98
+     Return also BLASTP output ('return blast') 
+     The string "return blast" in any line before the one starting with a hash (#) returns additionally the unfiltered BLASTP output. 
+   2.04.98
+     Return prediction additionally in RDB format ('return phd rdb') 
+     The string "return phd rdb" in any line before the one starting with a hash (#) returns the PHD predictions additionally in RDB format (as read
+     and written by local versions of the programs PHD and TOPITS). 
+   3.04.98
+     Return topits hssp ('return topits hssp') 
+     The string "return topits hssp" in any line before the one starting with a hash (#) returns the threading output additionally in HSSP format. 
+   4.04.98
+     Return no coils ('return no coils') 
+     The string "return no coils" in any line before the one starting with a hash (#) results in that COILS results are not returned. 
+   5.04.98
+     Return no prosite ('return no prosite') 
+     The string "return no prosite" in any line before the one starting with a hash (#) results in that PROSITE results are not returned. 
+
+
+
+
+
+PP news 1997
+
+New input option 
+
+   1.06.97
+     Your input alignment in SAF format ('# SAF format ') 
+     You can submit your alignment in a format which is hopefully easier for you to write than the MSF format. The string "# SAF" prompts the
+     system to interpret your alignment as one in the SAF format (specification and example for SAF format). 
+
+New output options 
+
+   1.03.97
+     Return prediction additionally in MSF format ('return phd msf') 
+     The string "return phd msf" in any line before the one starting with a hash (#) returns the PHD predictions additionally in an MSF format
+     (appended to the alignment). 
+   2.03.97
+     Return prediction additionally in CASP2 format ('return phd casp2') 
+     The string "return phd casp2" in any line before the one starting with a hash (#) returns the PHD predictions additionally in the format used for
+     the second protein structure prediction contest in Asilomar, 1996 (CASP2). 
+
+
+
+
+
+PP news 1996
+
+Notes 
+
+   1.The error rate in falsely predicting transmembrane helices for globular proteins has been reduced by a new program to below 2%. 
+
+New services 
+
+   1.11.96: Estimate for approximate response time of PredictProtein 
+   2.03.96: Refined prediction of transmembrane helices and topology (PhdTopology) 
+
+Short description of new service 
+
+     Refined prediction of transmembrane helices and topology (help on topology prediction; examples for: request; and output) 
+     The neural network prediction of transmembrane helices (PHDhtm) is refined by a dynamic programming-like algorithm. This method
+     resulted in correct predictions of all transmembrane helices for 89% of the 131 proteins used in a cross-validation test; more than 98% of the
+     transmembrane helices were correctly predicted. The output of this method is used to predict topology, i.e., the orientation of the N-term with
+     respect to the membrane. The expected accuracy of the topology prediction is > 86%. Prediction accuracy is higher than average for
+     eukaryotic proteins and lower than average for prokaryotes. PhdTopology is more accurate than all other methods tested on identical data sets
+     (Rost, Casadio & Fariselli, Protein Science, 1996). 
+
+New defaults 
+
+   1.03.96: For predicting the locations of transmembrane helices, PHDhtm is used. The more accurate refined version along with the prediction of
+     topology (PHDtopology) is available upon request ('predict htm topology'). 
+
+
+
+
+  ------------------------------------------------------------------------
+  ADDITIONAL INFORMATION
+  ------------------------------------------------------------------------
+
+Interested in the PP software?
+
+   * PredictProtein is not easily portable, yet. To make it become a program
+     that can easily by ported to any location (running UNIX or LINUX
+     platforms) is on my list of things-to-do.
+   * PHD codes are available, respectively will be in the near future.
+   * All WWW pages are public. That is: no restrictions to downloading them
+     (provided you keep the reference!).
+
+Links to selected WWW services
+
+To dig out 'putatively relevant sites' on the web is not a problem anymore.
+The crucial part of searching on the web becomes to filter the pearls. We
+(RS and BR) selected a list of WWW sites useful for molecular biology when
+compiling a guide to sequence analysis (paper). We would be grateful if you
+notice dead links to us!
+
+  1. General sites
+     search engines, literature, pathways, genomes
+  2. Databases
+     general, miscellaneous, DNA/RNA, protein sequences, protein structures
+  3. Services
+     hotlists, general, data base searches, analysing DNA/RNA, protein
+     structure prediction
+  4. Software
+     general, documentation, alignments, homology modelling, threading
+
+Restrictions (watch it!)
+
+   * If there are only a few homologous protein sequences in the database
+     that are not too similar to the one you sent (pairwise sequence
+     identity > 90%), prediction accuracy drops for structure predictions
+     (secondary structure, accessibility, transmembrane helices).
+   * In the multiple sequence alignment returned to you, only homologues
+     down to 30% identity over 80 or more residues are included. This cutoff
+     is five percentage points above the threshold for structural homology
+     (Sander & Schneider, 1991), in an attempt to stay clearly off the
+     twilight zone of sequence similarity, and provide high-quality multiple
+     alignments in an automated fashion.
+   * The alignment procedure MaxHom is optimised on globular water-soluble
+     proteins. For transmembrane proteins, the alignments of the more
+     hydrophobic transmembrane segments may require changes in the
+     alignments. Furthermore, in particular for transmembrane regions, often
+     more distantly related sequences could be aligned by hand based on
+     hydrophobicity analyses. Unfortunately, we cannot provide such
+     refinements of the alignment automatically.
+   * If you don't (explicitly request a prediction of transmembrane helices,
+     possible HTM's may not be detected as a particular threshold is applied
+     to avoid over-prediction.
+   * Functional sequence motifs from ProSite are reported only if found.
+   * Coiled-coil regions are predicted only if the signal for these detected
+     by the COILS program exceeds a minimal threshold (of 0.5).
+
+Further PP related publications
+
+   * Structure and structure prediction, in general
+       1. B Rost: Marrying structure and genomics, Structure, 1998, 6,
+          259-263. (full paper on WWW)
+       2. M Andrade, SI O'Donoghue & B Rost: Adaptation of protein surfaces
+          to subcellular location, J. Mol. Biol., 1998, 276, 517-525. (full
+          paper on WWW)
+       3. B Rost: Protein structure prediction in 1D, 2D, and 3D, in: P von
+          Ragué Schleyer, NL Allinger, T Clark, J Gasteiger, PA Kollman and
+          HFI Schaefer (eds.), Encyclopedia of computational chemistry,
+          Sussex: John Wiley & Sons, 1998, in press (1997).. (full paper on
+          WWW)
+       4. B Rost and C Sander: 3rd Generation Prediction Of Secondary, in:
+          D. W. Webster (ed.) Predicting protein structure'. Humana Press,
+          1998, in press. (full paper on WWW)
+       5. B Rost: Protein structures sustain evolutionary drift, Folding &
+          Design, 1997, 2, 519-524 (1997).. (full paper on WWW)
+       6. B Rost & SI O'Donoghue: Sisyphus and prediction of protein
+          structure, CABIOS, 1997, 13, 345-356. (full paper on WWW)
+       7. B Rost and C. Sander, Bridging the protein sequence-structure gap
+          by predictions?, Ann. Rev. Biophys. Biomol. Struc., 1996, 25,
+          113-136.
+       8. B Rost & C Sander, Structure prediction of proteins - where are we
+          now?, Cur. Opin. Biotech., 1994, 5, 372-380.
+       9. B Rost & C Sander: Protein Structure Prediction by Neural
+          Networks, in: M Arbib (ed.), The Handbook of Brain Theory and
+          Neural Networks, Cambridge, MA: Bradford Books/The MIT Press,
+          1995, 772-775.
+   * WWW services for biologists
+       1. B Rost & A Valencia: Pitfalls of protein sequence analysis. Curr.
+          Op. Biotechn., 7, 1996, 457-461. ( full paper on WWW )
+       2. B Rost: Learning From Evolution To Predict Protein Structure. In:
+          B. Olsson, D. Lundh, A Narayanam (eds.) 'Bio-Computing and
+          Emergent Computation', Skövde, Sweden, Sep 1-2, 1997. World
+          Scientific, 87 - 101. ( full paper on WWW )
+       3. B Rost, C Sander & R Schneider: PHD - a mail server for protein
+          secondary structure prediction. CABIOS, 1994, 10, 53-60.
+       4. B Rost & R Schneider: Pedestrian guide to analysing sequence
+          databases. In: K Ashman (ed.) "Core techniques in biochemistry",
+          Heidelberg: Springer, 1998, in press. ( full paper on WWW )
+       5. Commented list of WWW services for biologists
+   * Predictions of 1D structure
+       1. B Rost: Better 1D predictions by experts with machines, Proteins,
+          1998, Suppl. 1, 192-197. (full paper on WWW)
+       2. B Rost, R Casadio & P Fariselli: Refining neural network
+          predictions for helical transmembrane proteins by dynamic
+          programming. In: D States et al. (eds.) "The fourth international
+          conference on Intelligent Systems for Molecular Biology (ISMB)",
+          St. Louis, U.S.A., Jun, 1996, Menlo Park, CA: AAAI Press, 1996,
+          192-200.
+       3. B Rost, & C Sander: Progress of 1D protein structure prediction at
+          last. Proteins, 1995, 23, 295-300.
+       4. B Rost & C Sander: 1D secondary structure prediction through
+          evolutionary profiles. In: H Bohr & S Brunak (eds.) "Protein
+          Structure by Distance Analysis", Amsterdam: IOS Press, 1994,
+          257-276.
+       5. B Rost & C Sander: Secondary structure prediction of all-helical
+          proteins in two states. Protein Engng, 1993, 6, 831-836.
+       6. B Rost & C Sander: Improved prediction of protein secondary
+          structure by use of sequence profiles and neural networks. PNAS,
+          1993, 90, 7558-7562.
+       7. B Rost & C Sander: Jury returns on structure prediction. Nature,
+          1992, 360,540.
+   * Prediction-based threading
+       1. B Rost, R Schneider & C Sander: Fold recognition by
+          prediction-based threading. JMB, 270, 1997, 1-10. (full paper on
+          WWW)
+       2. B Rost: Fold recognition by merging 1D structure prediction and
+          sequence alignments. Preprint, EMBL, Germany, PDG-6/95, 1996. (
+          full paper on WWW )
+       3. B Rost: Fitting 1D predictions into 3D structures. In: H Bohr & S
+          Brunak, (eds.) "Protein folds. A distance based approach", Boca
+          Raton, Florida: CRC Press, 1995, 132-151.
+   * Alignment/HSSP:
+       1. C Sander & R Schneider: The HSSP data base of protein
+          structure-sequence alignments. Nucl. Acids Res., 1994, 22,
+          3597-3599.
+   * Evaluation and testing of 1D predictions:
+       1. B Rost, & C Sander: Bridging the protein sequence-structure gap by
+          structure predictions. Ann. Rev. of Biophys. and Biomol.
+          Structure, 25, 1996, 113-136.
+       2. B Rost, & C Sander: Progress of 1D protein structure prediction at
+          last. Proteins, 1995, 23, 295-300.
+       3. B Rost, C Sander & R Schneider: Progress in protein structure
+          prediction? TIBS, 1993, 18, 120-123.
+
+  ------------------------------------------------------------------------
+  If you do NOT receive a reply
+  ------------------------------------------------------------------------
+
+If you have not received ANY reply to your request within 24 hours, this
+indicates a problem with your mailing device. In this case, please contact
+us
+
+by email via:   predict_help@columbia.edu
+or:             pp_admin@columbia.edu
+
+If you have still NOT received the prediction after 60 hours (or a message
+of the type 'wrong_format') this indicates that something went wrong on our
+side. Unfortunately, due to a shortage of both human and computer resources,
+we cannot resubmit jobs that go wrong. If this is the case, please resubmit
+your sequence. The bug or feature may have been fixed in the meantime.
+Should you again wait for a prediction, please contact us
+
+fax via:   Predict Protein at +1-212-305-7932
+email via: predict_help@columbia.edu
+WWW:       http://cubic.bioc.columbia.edu/predictprotein/send_feedback.html
+
+                                                              Burkhard Rost
+                                                       New York, April 1999.
+
+----------------------------------------------------------------------------

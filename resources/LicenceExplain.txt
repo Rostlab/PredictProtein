@@ -1,0 +1,23 @@
+Dear 
+
+thank you very much for the interest in using the
+PredictProtein service.  
+
+Your licence will be valid from to .
+Your keyword is xxx.
+
+When using the service via WWW simply use those 5
+characters in the respective box.
+
+When using the service via email, add the follow-
+ing line in any line before the one with a hash:
+
+password(xxx)
+
+
+good success with using PredictProtein!
+
+regards,
+
+Burkhard Rost
+
