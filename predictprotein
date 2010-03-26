@@ -6,6 +6,7 @@ use Carp qw(cluck croak);
 use Getopt::Long;
 use File::Copy;
 use File::Temp;
+use Pod::Usage;
 
 use RG::Utils::Hssp_filter;
 use RG::Utils::Copf;
@@ -19,7 +20,7 @@ use RG::PP;
 my ($help, $man, $dbg, $temp_dir,$proc_name,$input_file);
 
 
-if (@ARGV<2){ die "Usage: $0 --input_file=<file>  +[OPTIONS] [process_id]\n";}
+if (@ARGV<1){ die "Usage: $0 --input_file=<file>  +[OPTIONS] [process_id]\n";}
 my $result = GetOptions (   "input_file=s" => \$input_file,
 			    "proc_name=s" =>\$proc_name,
 			    "temp_dir=s" => \$temp_dir,
@@ -27,7 +28,7 @@ my $result = GetOptions (   "input_file=s" => \$input_file,
 			    "m|man" => \$man,
 			    "help|?" => \$help) or pod2usage(2);
 
-pod2usage(1) if (!$input_file);
+#pod2usage(1) if (!$input_file);
 pod2usage(1) if $help;
 pod2usage(-verbose => 2) if $man;
 
@@ -111,44 +112,70 @@ else              {warn ("normal PP format");}
 
 
 __END__
+=head1 predictprotein -
 
-=head1 profcon
-predictprotein - 
-=head1 SYNOPSIS
-predictprotein [options] [file ...]
-=head1 DESCRIPTION 
 Protein sequence analysis suite
--output format
+
+=head1 SYNOPSIS
+
+predictprotein [options] [file ...]
+
 =head1 INPUT
+
 -input_file: parameter and input sequence
 
 =head1 OPTIONS
+
 =over 8
+
 =item B<-help>
+
 Print a brief help message and exits. 
+
 =item B<-man>
+
 This documentation page
+
 =item B<-verbose>
+
 Prints all debug information.
+
 =back
+
 =head1 DESCRIPTION
+
 B<This program> runs a set of protein sequnce analysis methods
+
 =head1 EXAMPLE
+
 C<predictprotein -i /usr/share/predictprotein/example/MT4_HUMAN.in>
 
-=head2 EXAMPLE INPUT FILE
+=head2 INPUT FILE
+
 return no alignment
+
 run profsec
+
 run mdisorder_fast
+
 run profacc
+
 run isis
+
 run disis
+
 ret html
+
 # default: single protein sequence resfilename=d7827c495a4ee0bf5f465a0cf775591c0ac8c24c
+
 MSAQISDSIEEKRGFFTRWFMSTNHKDIGVLYLF
 
 =head1 ENVIRONMENT
+
 =over
+
 =item PREDICTPROTEINCONF
+
 Location of snapfunrc configuration file to use, overriding other configuration files                               
-=out
+
+
