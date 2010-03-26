@@ -106,7 +106,7 @@ $(COILSFILE) $(COILSRAWFILE): $(FASTAFILE)
 
 
 $(DISULFINDFILE): $(BLASTMATFILE) | $(TEMPDIR) 
-	disulfinder -a 1 -p $< $(JOBID) -o $(TEMPDIR) 
+	disulfinder -a 1 -p $< $(JOBID) -o $(TEMPDIR) -r $(TEMPDIR) 
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Disulfind >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /tmp/gyachdav/pp_work/tquick.disulfind >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Line >> /tmp/gyachdav/pp_work/tquick.pred_temp
