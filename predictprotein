@@ -33,17 +33,20 @@ BEGIN {
     
 }
 
-# NOTE: all configuration can be overridden by command line options
+# NOTE: all configuration can be overridde by command line options
 $pp_rootdir  = glob($config->val('predictprotein', 'predictprotein_utildir'));
 $librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')) || '/usr/share/librg-utils-perl';
 $librg_dudek_perl = glob($config->val('predictprotein', 'librg_dudek_perl')) || '/usr/share/librg_dudek_perl';
 my $db_blast_train = glob($config->val('blast', 'uniref'));
 my $db_blast_final = glob($config->val('blast', 'uniref90'));
 my $root_dir = $pp_rootdir || "__PREFIX__/usr/share/predictprotein/";
+my $make_file = $root_dir."Makefile";
 my $temp_dir = File::Temp::tempdir( CLEANUP => 0 );
 
+
+
 # COMMAND LINE OPTIONS
-my ($help, $man, $dbg, $proc_name, $input_file, $make_file);
+my ($help, $man, $dbg, $proc_name, $input_file);
 
 if (@ARGV < 1){ die "Usage: $0 --input_file=<file>  +[OPTIONS] [process_id]\n";}
 
@@ -76,18 +79,12 @@ cluck ("$warn Called interpretSeqPP($sequence_file,\"\",60,17,5000,80 @sequence)
 my ($LokWrt,$msg,$lenTmp)=
     RG::PP::interpretSeqPP($sequence_file,"",60,17,5000,80,@sequence);
 
-if    (! $LokWrt) {warn ("err=207 $$msg");}
-elsif ($LokWrt==2){warn ("err=208 $msg");}
-elsif ($LokWrt==3){warn ("err=209 $msg");}
-elsif ($LokWrt==4){warn ("err=210 $msg");}
-else              {warn ("normal PP format");}
+croak ($msg) if ($LokWrt!=1); # NOTE: interepretSeqPP returns 1 on normal completion
 
 # PRINT OUT JOB ENV
 if ($dbg){
     cluck "temp_dir=$temp_dir";
 }
-
-
 
 # RUN MAKEFILE
 cluck ("make -f $make_file INFILE=$sequence_file TEMPDIR=$temp_dir ");
@@ -96,6 +93,7 @@ system ("make -f $make_file INFILE=$sequence_file TEMPDIR=$temp_dir ");
 
 
 # FORMAT RESULTS
+
 # CONVERT TO XML
 # CLEAN UP PROCESS
 
