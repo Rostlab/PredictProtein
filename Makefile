@@ -7,9 +7,11 @@
 JOBID:=$(basename $(notdir $(INFILE)))
 
 TEMPDIR:=/tmp/pp/
+OUTPUTDIR:=/mnt/home/gyachdav/public_html/
+OUTPUTFILE:=$(OUTPUTDIR)$(JOBID).html
 
 # FOLDER LOCATION (CONFIGURABLE)
-PPROOT:=/mnt/project/predictprotein/Development/
+PPROOT:=/mnt/home/gyachdav/Development/predictprotein/
 HELPERAPPSDIR:=$(PPROOT)helper_apps/
 
 LIBRGUTILS:=/usr/share/librg-utils-perl/
@@ -18,8 +20,13 @@ PROFROOT:=/usr/share/profphd/prof/
 # DATA (CONFIGURABLE)
 BLASTDATADIR:=/mnt/project/rost_db/data/blast/
 PRODOMDIR:=/mnt/project/rost_db/data/prodom/
-PROSITEDIR:=$(HELPER_APPS)prosite/
+PROSITEDIR:=$(HELPERAPPSDIR)prosite/
 PROSITEMATDIR:=$(PROSITEDIR)mat/
+
+# STATIC FILES
+HTMLHEAD=$(PPROOT)/resources/HtmlHead.html
+HTMLQUOTE=$(PPROOT)/resources/HtmlQuote.html
+HRFILE=$(PPROOT)/resources/HtmlHr.html
 
 # RESULTS FILES
 HSSPFILE:=$(INFILE:%.in=%.hssp)
@@ -59,6 +66,7 @@ PROFBVALFILE:=$(INFILE:%.in=%.profbval)
 NORSNETFILE:=$(INFILE:%.in=%.norsnet)
 METADISORDERFILE:=$(INFILE:%.in=%.metadisorder)
 PROFFILE:=$(INFILE:%.in=%.profRdb)
+PROFTEXTFILE:=$(INFILE:%.in=%.profAscii)
 PROFCONFILE:=$(INFILE:%.in=%.profcon)
 PCCFILE:=$(INFILE:%.in=%.pcc)
 SNAPFILE:=$(INFILE:%.in=%.snap)
@@ -66,9 +74,14 @@ ISISFILE:=$(INFILE:%.in=%.isis)
 DISISFILE:=$(INFILE:%.in=%.disis)
 PPFILE:=$(INFILE:%.in=%.predictprotein)
 
+
 .PHONY: all
-all: $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGFILE) $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(COILSFILE) $(DISULFINDFILE) $(NLSFILE) $(PHDHTMLFILE) $(PROFTEXTFILE) $(PROFHTMLFILE) $(ASPFILE) $(NORSFILE) $(METADISORDERFILE)
-	cat $(FASTAFILE) $(SEGFILE) $(COILSFILE) $(DISULFINDFILE) $(NLSFILE) $(PROFTEXTFILE) $(PROFHTMLFILE) $(ASPFILE) $(METADISORDERFILE) >> $(PPFILE) 
+all: $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGFILE) $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(COILSFILE) $(NLSFILE) $(PHDHTMLFILE)  $(PROFTEXTFILE) $(PROFHTMLFILE)  $(ASPFILE) $(NORSFILE) $(METADISORDERFILE)
+
+$(OUTPUTFILE): $(FASTAFILE).html $(GCGFILE) $(PROSITEFILE).html $(SEGFILE).html $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(COILSFILE).html $(NLSFILE) $(PHDHTMLFILE)  $(PROFTEXTFILE) $(PROFHTMLFILE)  $(ASPFILE).html $(NORSFILE).html $(METADISORDERFILE).html
+	cat $(HTMLHEAD) $(FASTAFILE).html $(HRFILE) $(PROSITEFILE).html $(HRFILE)  $(SEGFILE).html $(HRFILE)  $(COILSFILE).html $(HRFILE)  $(NLSFILE) $(HRFILE)  $(PHDHTMLFILE) $(HRFILE) $(PROFHTMLFILE) $(HRFILE) $(ASPFILE).html $(HRFILE) $(NORSFILE).html $(HRFILE) $(METADISORDERFILE).html $(HRFILE)  $(HTMLQUOTE)> $@
+
+
 $(PROFBVALFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
 	profbval $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $@ 1 5 $(JOBID)
 
@@ -77,6 +90,11 @@ $(NORSNETFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $(PROFBVALFILE)
 
 $(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $(PROFBVALFILE) $(NORSNETFILE) $(BLASTCHECKFILE)
 	metadisorder fasta=$(FASTAFILE) hssp=$(HSSPBLASTFILTERFILE) prof=$(PROFFILE) profbval_raw=$(PROFBVALFILE) norsnet=$(NORSNETFILE) chk=$(BLASTCHECKFILE) out=$@ out_mode=1
+
+$(METADISORDERFILE).html: $(METADISORDERFILE)
+	echo '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@
 
 $(HSSPFILE): $(SAFFILE)
 	 $(LIBRGUTILS)copf.pl $<  formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq
@@ -100,6 +118,11 @@ $(HSSPFILTERFORPHDFILE): $(HSSPBLASTFILTERFILE) |$(TEMPDIR)
 
 $(COILSFILE) $(COILSRAWFILE): $(FASTAFILE) 
 	coils-wrap.pl -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE)
+
+$(COILSFILE).html: $(COILSFILE)
+	echo '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Coils >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /tmp/gyachdav/pp_work/tquick.coils >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Line >> /tmp/gyachdav/pp_work/tquick.pred_temp
@@ -107,19 +130,28 @@ $(COILSFILE) $(COILSRAWFILE): $(FASTAFILE)
 
 $(DISULFINDFILE): $(BLASTMATFILE) | $(TEMPDIR) 
 	disulfinder -a 1 -p $< $(JOBID) -o $(TEMPDIR) -r $(TEMPDIR) 
+
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Disulfind >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /tmp/gyachdav/pp_work/tquick.disulfind >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Line >> /tmp/gyachdav/pp_work/tquick.pred_temp
 
+$(DISULFINDFILE).html: $(DISULFINDFILE)
+	echo '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@
 $(NLSFILE) $(NLSSUMFILE): $(FASTAFILE) |$(TEMPDIR)
 	predictnls dirOut=$(TEMPDIR) fileIn=$< fileOut=$(NLSFILE) fileSummary=$(NLSSUMFILE) fileTrace=$(NLSFILE).nlsTrace html=1
 # /mnt/project/predictprotein/no_arch/pub//nls//pp_resonline.pl  dirOut=/tmp/gyachdav/pp_work/ fileIn=/tmp/gyachdav/pp_work/tquick.fasta fileOut=/tmp/gyachdav/pp_work/tquick.nls fileSummary=/tmp/gyachdav/pp_work/tquick.nlsSum fileTrace=/tmp/gyachdav/pp_work/tquick.nlsTrace html=1  
+$(NLSFILE).html: $(NLSFILE)
+	echo '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@
 
 $(PHDFILE) $(PHDRDBFILE) $(PHDNOTHTMFILE): $(HSSPBLASTFILTERFILE)
 	$(PROFROOT)embl/phd.pl $(HSSPBLASTFILTERFILE) htm exePhd=phd1994 filterHsspMetric=$(PPROOT)Maxhom_Blosum.metric exeHtmfil=$(PROFROOT)embl/scr/phd_htmfil.pl \
 	 exeHtmtop=$(PROFROOT)embl/scr/phd_htmtop.pl paraSec=$(PROFROOT)embl/para/Para-sec317-may94.com paraAcc=$(PROFROOT)embl/para/Para-exp152x-mar94.com \
 	paraHtm=$(PROFROOT)embl/para/Para-htm69-aug94.com user=phd noPhdHeader dirOut=$(TEMPDIR) dirWork=$(TEMPDIR) jobid=$(JOBID) fileOutPhd=$(PHDFILE) \
-	fileOutRdb=$(PHDFILE)  fileOutRdbHtm=$(PHDFILE) fileNotHtm=$(PHDNOTHTMFILE)  optDoHtmref=1  optDoHtmtop=1 optHtmisitMin=0.2 exeCopf=$(LIBRGUTILS)copf.pl \
+	fileOutRdb=$(PHDRDBFILE)  fileOutRdbHtm=$(PHDRDBHTMFILE) fileNotHtm=$(PHDNOTHTMFILE)  optDoHtmref=1  optDoHtmtop=1 optHtmisitMin=0.2 exeCopf=$(LIBRGUTILS)copf.pl \
 	nresPerLineAli=60 exePhd2msf=$(PROFROOT)embl/scr/conv_phd2msf.pl exePhd2dssp=$(PROFROOT)/embl/scr/conv_phd2dssp.pl  exeConvertSeq=convert_seq \
 	exeHsspFilter=filter_hssp doCleanTrace=1 > $(PHDFILE).screenPhd
 #cat < /usr/share/profphd/prof/embl//mat/headPhdConcise.txt >> /tmp/gyachdav/pp_work/tquick.pred_temp
@@ -136,13 +168,15 @@ $(PROFFILE): $(HSSPBLASTFILTERFILE)
 	dirOut=$(TEMPDIR) dirWork=$(TEMPDIR) jobid=$(JOBID) fileRdb=$@ dbg verbose > $@.screenProf
 
 $(PROFTEXTFILE): $(PROFFILE)
-	$(PROFROOT)embl/scr/conv_phd2html.pl $< fileOut=$@ ascii nohtml nodet nograph
+	$(PROFROOT)scr/conv_prof.pl $< fileOut=$@ ascii nohtml nodet nograph
+#/usr/share/profphd/prof/scr/conv_prof.pl /tmp/gyachdav/pp_work/tquick.profRdb ascii nohtml fileOut=/tmp/gyachdav/pp_work/tquick.profAscii nodet nograph
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/PredProf >> /tmp/gyachdav/pp_work/tquick.pred_temp'
 #cat < /tmp/gyachdav/pp_work/tquick.profAscii >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Line >> /tmp/gyachdav/pp_work/tquick.pred_temp
 
 $(PROFHTMLFILE): $(PROFFILE)
-		$(PROFROOT)embl/scr/conv_phd2html.pl $< fileOut=$@ parHtml=html:body,data:brief,data:normal
+	$(PROFROOT)/scr/conv_prof.pl $< fileOut=$@ html noascii parHtml=html:body,data:brief,data:normal
+# /usr/share/profphd/prof/scr/conv_prof.pl /tmp/gyachdav/pp_work/tquick.profRdb html noascii fileOut=/tmp/gyachdav/pp_work/tquick.html_prof parHtml=html:body,data:brief,data:normal
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Globe >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /tmp/gyachdav/pp_work/tquick.globeProf >> /tmp/gyachdav/pp_work/tquick.pred_temp
 
@@ -156,6 +190,11 @@ $(ASPFILE): $(PROFFILE)
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Asp >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /tmp/gyachdav/pp_work/tquick.asp >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Line >> /tmp/gyachdav/pp_work/tquick.pred_temp
+$(ASPFILE).html: $(ASPFILE)
+	echo '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@
+
 
 # NORS
 NORSDIR:= $(HELPERAPPSDIR)nors/
@@ -164,6 +203,10 @@ $(NORSFILE) $(NORSSUMFILE): $(FASTAFILE) $(HSSPBLASTFILTERFILE) $(PROFFILE) $(PH
 	$(EXE_NORS)  -win 70 -secCut 12 -accLen 10 -fileSeq $(FASTAFILE) -fileHssp $(HSSPBLASTFILTERFILE) \
 	-filePhd $(PROFFILE) -filePhdHtm $(PHDRDBFILE) -fileCoils $(COILSFILE) -o $(NORSFILE) -fileSum $(NORSSUMFILE)
 
+$(NORSFILE).html: $(NORSFILE)
+	echo '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@
 #PRODOM
 $(PRODOMFILE):  $(FASTAFILE)
 	blastall -p blastp -d $(PRODOMDIR)prodom -B 500 -i $< -o $@ 
@@ -173,8 +216,19 @@ EXE_PROSITE:=$(PROSITEDIR)prosite_scan.pl
 $(PROSITEFILE): $(GCGFILE)
 	$(EXE_PROSITE) -h $(PROSITEMATDIR)prosite_convert.dat $< >> $@
 
+$(PROSITEFILE).html: $(PROSITEFILE)
+	echo '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@
+
 $(SEGFILE): $(FASTAFILE)
 	lowcompseg $< -x > $@
+
+$(SEGFILE).html: $(SEGFILE)
+	echo '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@
+
 
 $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE): $(FASTAFILE)
 	blastpgp  -j 3 -b 3000 -e 1 -F T -h 1e-3 -d $(BLASTDATADIR)big_80 -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE)
@@ -185,21 +239,26 @@ $(BLASTALIFILE)  $(BLASTMATFILE): $(BLASTCHECKFILE) $(FASTAFILE)
 $(SAFFILE): $(BLASTALIFILE)  $(FASTAFILE)
 	$(LIBRGUTILS)blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$@ red=100 maxAli=3000 tile=0 fileOutErr=$@.blast2safErr
 
-$(FASTAFILE): $(FASTAFILE).tmp
+$(FASTAFILE): $(INFILE)
 	$(LIBRGUTILS)copf.pl $< formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq
 
-$(GCGFILE): $(FASTAFILE).tmp
+$(FASTAFILE).html: $(FASTAFILE)
+	echo '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@
+
+$(GCGFILE): $(INFILE)
 	$(LIBRGUTILS)copf.pl $< formatOut=gcg fileOut=$@ exeConvertSeq=convert_seq
 
-$(FASTAFILE).tmp:  $(TEMPDIR)$(INFILE)
-	./interpretSeq.pl $@ < $<  
+#$(FASTAFILE).tmp:  $(TEMPDIR)$(INFILE)
+#	./interpretSeq.pl $@ < $<  
 
 .PRECIOUS: $(TEMPDIR)%.in
 $(TEMPDIR)%.in: |$(TEMPDIR)
-	cp -aL $*.in $@ && \
-	tr -d '\000' < $(TEMPDIR)$*.in > $(TEMPDIR)$*.in2  && \
-	mv  $(TEMPDIR)$*.in2  $(TEMPDIR)$*.in &&\
-	sed --in-place -e '/^\$$/d' $(TEMPDIR)$*.in 
+#	cp -aL $*.in $@ && 
+	tr -d '\000' < $*.in > $*.in2  && \
+	mv  $*.in2  $*.in &&\
+	sed --in-place -e '/^\$$/d' $*.in 
 
 $(TEMPDIR):
 	mkdir -p $(TEMPDIR)
@@ -209,7 +268,7 @@ clean:
 
 .PHONY: ECHO
 ECHO:
-	echo $(JOBID)
+	echo $(PPFILE)
 
 .PHONY: help
 help:
