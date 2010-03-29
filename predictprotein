@@ -43,8 +43,6 @@ my $root_dir = $pp_rootdir || "__PREFIX__/usr/share/predictprotein/";
 my $make_file = $root_dir."Makefile";
 my $temp_dir = File::Temp::tempdir( CLEANUP => 0 );
 
-
-
 # COMMAND LINE OPTIONS
 my ($help, $man, $dbg, $proc_name, $input_file);
 
@@ -87,14 +85,11 @@ if ($dbg){
 }
 
 # RUN MAKEFILE
+# FORMAT RESULTS
+# CONVERT TO XML
 cluck ("make -f $make_file INFILE=$sequence_file TEMPDIR=$temp_dir ");
 system ("make -f $make_file INFILE=$sequence_file TEMPDIR=$temp_dir ");
-# RUN GLOBE
 
-
-# FORMAT RESULTS
-
-# CONVERT TO XML
 # CLEAN UP PROCESS
 
 
