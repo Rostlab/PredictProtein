@@ -44,14 +44,16 @@ my $make_file = $root_dir."Makefile";
 my $temp_dir = File::Temp::tempdir( CLEANUP => 0 );
 
 # COMMAND LINE OPTIONS
-my ($help, $man, $dbg, $proc_name, $input_file);
+my ($help, $man, $dbg, $dry_run,$proc_name, $input_file,$output_file);
 
 if (@ARGV < 1){ die "Usage: $0 --input_file=<file>  +[OPTIONS] [process_id]\n";}
 
 my $result = GetOptions (   "i|input_file=s" => \$input_file,
+			    "o|output_file=s" => \$output_file,
 			    "m|make_file=s" =>\$make_file,
 			    "p|proc_name=s" =>\$proc_name,
 			    "t|temp_dir=s" => \$temp_dir,
+			    "n|dryrun" => \$dry_run,
 			    "d|debug" => \$dbg,
 			    "man" => \$man,
 			    "help|?" => \$help) or pod2usage(2);
@@ -87,8 +89,16 @@ if ($dbg){
 # RUN MAKEFILE
 # FORMAT RESULTS
 # CONVERT TO XML
-cluck ("make -f $make_file INFILE=$sequence_file TEMPDIR=$temp_dir ");
-system ("make -f $make_file INFILE=$sequence_file TEMPDIR=$temp_dir ");
+my $command = "make ";
+$command .= glob($output_file)." ";
+$command .= "INFILE=".glob($sequence_file)." ";
+$command .= "-f ".glob($make_file)." " if ($make_file);
+$command .= "TEMPDIR=$temp_dir " if ($temp_dir);
+$command .= "JOBID=$proc_name " if ($proc_name);
+$command .= "-n " if ($dry_run);
+cluck ($command) if ($dbg);
+system ($command);
+
 
 # CLEAN UP PROCESS
 

@@ -75,13 +75,24 @@ ISISFILE:=$(INFILE:%.in=%.isis)
 DISISFILE:=$(INFILE:%.in=%.disis)
 PPFILE:=$(INFILE:%.in=%.predictprotein)
 
+.PHONY: sec-struct
+sec-struct:  $(COILSFILE) $(PHDHTMLFILE) $(PROFTEXTFILE) $(PROFHTMLFILE) $(PROFTMBFILE).html 
+
+.PHONY: disorder
+disorder: $(ASPFILE) $(NORSFILE) $(METADISORDERFILE)
+
+.PHONEY: function
+function: $(NLSFILE) $(DISULFINDFILE).html
+
+.PHONEY: interaction
+function: $(DISISFILE).html $(DISISFILE).html
 
 .PHONY: all
 all: $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGFILE) $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(COILSFILE) $(NLSFILE) $(PHDHTMLFILE)  $(PROFTEXTFILE) $(PROFHTMLFILE)  $(ASPFILE) $(NORSFILE) $(METADISORDERFILE)
 
 $(OUTPUTFILE): $(FASTAFILE).html $(GCGFILE) $(PROSITEFILE).html $(SEGFILE).html $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(COILSFILE).html $(NLSFILE) $(PHDHTMLFILE)  $(PROFTEXTFILE) $(PROFHTMLFILE)  $(ASPFILE).html $(PROFTMBFILE).html $(NORSFILE).html $(METADISORDERFILE).html
 	cat $(HTMLHEAD) $(FASTAFILE).html $(HRFILE) $(PROSITEFILE).html $(HRFILE)  $(SEGFILE).html $(HRFILE)  $(COILSFILE).html $(HRFILE)  $(NLSFILE) $(HRFILE)  $(PHDHTMLFILE) $(HRFILE) $(PROFHTMLFILE) $(HRFILE) $(ASPFILE).html $(HRFILE) $(PROFTMBFILE).html $(HRFILE) $(NORSFILE).html $(HRFILE) $(METADISORDERFILE).html $(HRFILE)  $(HTMLQUOTE)> $@
-
+	sed -i 's/VAR_jobid/$(JOBID)/' $@ 
 
 $(PROFTMBFILE):  $(BLASTMATFILE)
 	proftmb @/usr/share/proftmb/options -q $< -o $@
@@ -89,7 +100,6 @@ $(PROFTMBFILE).html: $(PROFTMBFILE)
 	echo '<pre>' > $@ && \
 	cat $< >> $@ && \
 	echo '</pre>' >> $@
-
 
 $(PROFBVALFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
 	profbval $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $@ 1 5 $(JOBID)
@@ -124,7 +134,6 @@ $(HSSPFILTERFORPHDFILE): $(HSSPBLASTFILTERFILE) |$(TEMPDIR)
 	 $(LIBRGUTILS)/hssp_filter.pl $(HSSPBLASTFILTERFILE) fileOut=$@  thresh=8 threshSgi=-10 mode=ide red=90 exeFilterHssp=filter_hssp dirWork=$(TEMPDIR) jobid=$(JOBID)  fileOutScreen=$@.filterScreen fileOutTrace=$@.filterTrace
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/RetNoali >> /tmp/gyachdav/pp_work/tquick.pred_temp
 
-
 $(COILSFILE) $(COILSRAWFILE): $(FASTAFILE) 
 	coils-wrap.pl -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE)
 
@@ -140,6 +149,10 @@ $(COILSFILE).html: $(COILSFILE)
 $(DISULFINDFILE): $(BLASTMATFILE) | $(TEMPDIR) 
 	disulfinder -a 1 -p $< $(JOBID) -o $(TEMPDIR) -r $(TEMPDIR) 
 
+$(DISULFINDFILE).html: $(DISULFINDFILE)
+	echo '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Disulfind >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /tmp/gyachdav/pp_work/tquick.disulfind >> /tmp/gyachdav/pp_work/tquick.pred_temp
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/Line >> /tmp/gyachdav/pp_work/tquick.pred_temp
@@ -259,12 +272,8 @@ $(FASTAFILE).html: $(FASTAFILE)
 $(GCGFILE): $(INFILE)
 	$(LIBRGUTILS)copf.pl $< formatOut=gcg fileOut=$@ exeConvertSeq=convert_seq
 
-#$(FASTAFILE).tmp:  $(TEMPDIR)$(INFILE)
-#	./interpretSeq.pl $@ < $<  
-
 .PRECIOUS: $(TEMPDIR)%.in
 $(TEMPDIR)%.in: |$(TEMPDIR)
-#	cp -aL $*.in $@ && 
 	tr -d '\000' < $*.in > $*.in2  && \
 	mv  $*.in2  $*.in &&\
 	sed --in-place -e '/^\$$/d' $*.in 
@@ -277,12 +286,15 @@ clean:
 
 .PHONY: ECHO
 ECHO:
-	echo $(PPFILE)
+	echo $(JOBID)
 
 .PHONY: help
 help:
 	@echo "Rules:"
-	@echo "all* - run pipeline"
+	@echo "all - run pipeline"
+	@echo "sec-struct - run secondary structure predictors"
+	@echo "disorder - run disorder predictors"
+	@echo "interaction - run bindingg site predictors"
 	@echo "clean - purge the intermediary files foder."
 	@echo "help - this message"
 	@echo
