@@ -10,6 +10,7 @@ PROSITEQUOTE=PROSITE motif search (A Bairoch; P Bucher and K Hofmann)
 SEGQUOTE=SEG low-complexity regions (J C Wootton &amp; S Federhen)
 FASTAQUOTE=The following information has been received by the server
 PHDQUOTE=PHD predictions
+GLOBEQUOTE=GLOBE prediction of globularity
 # html headers for results
 PROFHEAD='1i\<h2><a name="prof_body">$(PROFQUOTE)</a></h2>' # this is a special case where sed is used to append this header to top of results file
 PROFTMBHEAD='<h2><a name ='proftmb'>$(PROFTMBQUOTE)</a></h2>'
@@ -21,6 +22,7 @@ NORSHEAD='<h2><a name="nors">$(NORSQUOTE)</a></h2>'
 PROSITEHEAD='<h2><a name="prosite">$(PROSITEQUOTE)</a></h2>'
 SEGHEAD='<h2><a name="seg_norm">$(SEGQUOTE)</a></h2>'
 FASTAHEAD='<h2><a name="in_given">$(FASTAQUOTE)</a></h2>'
+GLOBEHEAD='<h2><a name="profglobe">$(GLOBEQUOTE)</a></h2>'
 
 
 # table of contents items
@@ -35,3 +37,4 @@ NORSTOC='<li><a href="\#nors">$(NORSQUOTE)</a></li>'
 PROSITETOC='<li><a href="\#prosite">$(PROSITEQUOTE)</a></li>'
 SEGTOC='<li><a href="\#seg_norm">$(SEGQUOTE)</a></li>'
 FASTATOC='<li><a href="\#in_given">$(FASTAQUOTE)</a></li>'
+GLOBETOC='<li><a href="\#profglobe">$(GLOBEQUOTE)</a></li>'
