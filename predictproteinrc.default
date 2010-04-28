@@ -1,0 +1,23 @@
+[predictprotein]
+
+# predictprotein_utildir=path - path to package utilities, default: /usr/share/predictprotein
+predictprotein_utildir=~/Development/predictprotein
+
+# librg_utils_perl=path - path to librg-utils-perl utilities, default: /usr/share/librg-utils-perl
+librg_utils_perl=/usr/share/librg-utils-perl
+
+# librg_dudek_perl=path - path to librg-dudek-perl utilities, default: /usr/share/librg-dudek-bundle-perl
+librg_dudek_perl=/usr/share/librg-dudek-bundle-perl
+
+
+[blast]
+
+# uniref=path to UniRef database
+uniref=/mnt/project/rost_db/data/blast/big
+
+# uniref90=path - path to UniRef filtered for 98% redundancy
+uniref90=/mnt/project/rost_db/data/blast/big_98
+
+# swiss=path - path to SwissProt database
+swiss=/mnt/project/rost_db/data/blast/swiss
+
