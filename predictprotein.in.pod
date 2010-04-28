@@ -1,0 +1,67 @@
+=head1 predictprotein -
+
+Protein sequence analysis suite
+
+=head1 SYNOPSIS
+
+predictprotein [options] [file ...]
+
+=head1 INPUT
+
+-input_file: parameter and input sequence
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-help>
+
+Print a brief help message and exits. 
+
+=item B<-man>
+
+This documentation page
+
+=item B<-verbose>
+
+Prints all debug information.
+
+=back
+
+=head1 DESCRIPTION
+
+B<This program> runs a set of protein sequnce analysis methods
+
+=head1 EXAMPLE
+
+C<predictprotein -i /usr/share/predictprotein/example/MT4_HUMAN.in>
+
+=head2 INPUT FILE
+
+return no alignment
+
+run profsec
+
+run mdisorder_fast
+
+run profacc
+
+run isis
+
+run disis
+
+ret html
+
+# default: single protein sequence resfilename=d7827c495a4ee0bf5f465a0cf775591c0ac8c24c
+
+MSAQISDSIEEKRGFFTRWFMSTNHKDIGVLYLF
+
+=head1 ENVIRONMENT
+
+=over
+
+=item PREDICTPROTEINCONF
+
+Location of snapfunrc configuration file to use, overriding other configuration files                               
+
+
