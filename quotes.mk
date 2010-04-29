@@ -16,22 +16,28 @@ BLASTQUOTE=PSI-BLAST alignment header
 # html headers for results
 
 # tese are special cases where sed is used to append this header to top of results file
-PROFHEAD='1i\<a name="prof_body"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" "><strong>$(PROFQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-PHDHEAD='1i\<b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" "></div><div style="display: block;" id="ext" class="advanced">'
-BLASTHEAD='1i\<a name="ali_psiBlast_head"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" "><strong>$(BLASTQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+PHDHEAD="1i\<a name=\"prof_body\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('profhead')\"><strong>$(PROFQUOTE)</strong></div><div style=\"display: block;\" id=\"profhead\" class=\"advanced\">"
+PHDHEAD="1i\<b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('phdhead')\"></div><div style=\"display: block;\" id=\"phdhead\" class=\"advanced\">"
+BLASTHEAD="1i\<a name=\"ali_psiBlast_head\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('ali_psiBlasthead')\"><strong>$(BLASTQUOTE)</strong></div><div style=\"display: block;\" id=\"ali_psiBlasthead\" class=\"advanced\">"
 
 #these are "noraml" cases
-PROFTMBHEAD='<a name="proftmb"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(PROFTMBQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-MDHEAD='<a name="mdisorder"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(MDQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-COILSHEAD='<a name="coils"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(COILSQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-DISULFINDHEAD='<a name="disulfind"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(DISULFINDQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-ASPHEAD='<a name="asp"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(ASPQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-NORSHEAD='<a name="nors"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(NORSQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-PROSITEHEAD='<a name="prosite"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(PROSITEQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-SEGHEAD='<a name="seg_norm"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(SEGQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+PROFTMBHEAD="<a name=\"proftmb\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('proftmbhead')\"><strong>$(PROFTMBQUOTE)</strong></div><div style=\"display: block;\" id=\"proftmbhead\" class=\"advanced\">"
+MDHEAD="<a name=\"mdisorder\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('mdisorderhead')\"><strong>$(MDQUOTE)</strong></div><div style=\"display: block;\" id=\"mdisorderhead\" class=\"advanced\">"
+COILSHEAD="<a name=\"coils\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('coilshead')\"><strong>$(COILSQUOTE)</strong></div><div style=\"display: block;\" id=\"coilshead\" class=\"advanced\">"
+
+
+DISULFINDHEAD="<a name=\"disulfind\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('disulfindhead')\"><strong>$(DISULFINDHEAD)</strong></div><div style=\"display: block;\" id=\"disulfindhead\" class=\"advanced\">"
+
+ASPHEAD="<a name=\"asp\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('asphead')\"><strong>$(ASPHEAD)</strong></div><div style=\"display: block;\" id=\"asphead\" class=\"advanced\">"
+NORSHEAD="<a name=\"nors\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('norshead')\"><strong>$(NORSQUOTE)</strong></div><div style=\"display: block;\" id=\"norshead\" class=\"advanced\">"
+
+
+PROSITEHEAD="<a name=\"prosite\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('prositehead')\"><strong>$(PROSITEQUOTE)</strong></div><div style=\"display: block;\" id=\"prositehead\" class=\"advanced\">"
+
+SEGHEAD="<a name=\"seg_norm\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('seghead')\"><strong>$(SEGQUOTE)</strong></div><div style=\"display: block;\" id=\"seghead\" class=\"advanced\">"
 FASTAHEAD="<a name=\"in_given\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('fastahead')\"><strong>$(FASTAQUOTE)</strong></div><div style=\"display: block;\" id=\"fastahead\" class=\"advanced\">"
-GLOBEHEAD='<a name="isis"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(GLOBEQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-ISISHEAD='<a name="isis"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(ISISQUOTE)</strong>></div><div style="display: block;" id="ext" class="advanced">'
+GLOBEHEAD="<a name=\"profglobe\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('globehead')\"><strong>$(GLOBEQUOTE)</strong></div><div style=\"display: block;\" id=\"globehead\" class=\"advanced\">"
+ISISHEAD="<a name=\"profglobe\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('isishead')\"><strong>$(ISISQUOTE)</strong></div><div style=\"display: block;\" id=\"isishead\" class=\"advanced\">"
 TOCHEAD=<div id="container"><b class="b1fc"></b><b class="b2fc"></b><b class="b3fc"></b><b class="b4fc"></b><div id="maintop"></div><div id="main"><div style="padding: 10px">
 
 # table of contents items
