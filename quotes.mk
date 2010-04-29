@@ -15,35 +15,24 @@ GLOBEQUOTE=GLOBE prediction of globularity
 BLASTQUOTE=PSI-BLAST alignment header
 # html headers for results
 
-# this is a special case where sed is used to append this header to top of results file
-PROFHEAD='1i\<a name="ali_psiBlast_head"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(PROFQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+# tese are special cases where sed is used to append this header to top of results file
+PROFHEAD='1i\<a name="prof_body"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" "><strong>$(PROFQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+PHDHEAD='1i\<b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" "></div><div style="display: block;" id="ext" class="advanced">'
+BLASTHEAD='1i\<a name="ali_psiBlast_head"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" "><strong>$(BLASTQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
 
-# this is a special case where sed is used to append this header to top of results file
-BLASTHEAD='1i\<a name="ali_psiBlast_head"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(BLASTQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-PROFTMBHEAD='<a name="proftmb"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(PROFTMBQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-MDHEAD='<a name="mdisorder"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(MDQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-COILSHEAD='<a name="coils"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(COILSQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-DISULFINDHEAD='<a name="disulfind"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(DISULFINDQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-ASPHEAD='<a name="asp"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(ASPQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-NORSHEAD='<a name="nors"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(NORSQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-PROSITEHEAD='<a name="prosite"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(PROSITEQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-SEGHEAD='<a name="seg_norm"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(SEGQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-FASTAHEAD='<a name="in_given"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(FASTAQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-GLOBEHEAD='<a name="isis"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(GLOBEQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-ISISHEAD='<a name="isis"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar" onclick="showHide(\'ext\')"><strong$(ISISQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
-
-TOCHEAD='<div id="container"><b class="b1fc"></b><b class="b2fc"></b><b class="b3fc"></b><b class="b4fc"></b><div id="maintop"></div><div id="main"><div style="padding: 10px">'
+#these are "noraml" cases
+PROFTMBHEAD='<a name="proftmb"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(PROFTMBQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+MDHEAD='<a name="mdisorder"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(MDQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+COILSHEAD='<a name="coils"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(COILSQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+DISULFINDHEAD='<a name="disulfind"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(DISULFINDQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+ASPHEAD='<a name="asp"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(ASPQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+NORSHEAD='<a name="nors"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(NORSQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+PROSITEHEAD='<a name="prosite"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(PROSITEQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+SEGHEAD='<a name="seg_norm"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(SEGQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+FASTAHEAD="<a name=\"in_given\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('fastahead')\"><strong>$(FASTAQUOTE)</strong></div><div style=\"display: block;\" id=\"fastahead\" class=\"advanced\">"
+GLOBEHEAD='<a name="isis"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(GLOBEQUOTE)</strong></div><div style="display: block;" id="ext" class="advanced">'
+ISISHEAD='<a name="isis"></a><b class="b1f"></b><b class="b2f"></b><b class="b3f"></b><b class="b4f"></b><div class="titlebar"><strong>$(ISISQUOTE)</strong>></div><div style="display: block;" id="ext" class="advanced">'
+TOCHEAD=<div id="container"><b class="b1fc"></b><b class="b2fc"></b><b class="b3fc"></b><b class="b4fc"></b><div id="maintop"></div><div id="main"><div style="padding: 10px">
 
 # table of contents items
 PROFTOC='<li><a href="\#prof_body">$(PROFQUOTE)</a></li>'

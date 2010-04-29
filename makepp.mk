@@ -99,9 +99,9 @@ function: $(DISISFILE).html $(DISISFILE).html
 all: $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(DISULFINDFILE) $(SEGGCGFILE) $(GLOBEFILE) $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(COILSFILE) $(NLSFILE) $(PHDHTMLFILE)  $(PROFTEXTFILE) $(PROFHTMLFILE)  $(ASPFILE) $(NORSFILE) $(METADISORDERFILE)
 
 $(OUTPUTFILE): $(FASTAFILE).html $(GCGFILE) $(PROSITEFILE).html $(SEGGCGFILE).html $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(BLASTFILERDB).html $(COILSFILE).html $(DISULFINDFILE).html $(PHDHTMLFILE)  $(PROFTEXTFILE) $(PROFHTMLFILE) $(GLOBEFILE).html  $(ASPFILE).html $(PROFTMBFILE).html $(NORSFILE).html $(METADISORDERFILE).html $(ISISFILE).html
-	sed -i '1i\<h2>Table Of Contents</h2>'  $(TOCFILE) 
 	sed -i '1i\<ol>'  $(TOCFILE) 
 	sed -i  '$$a\</ol>' $(TOCFILE)
+	sed -i '1i\$(TOCHEAD)'  $(TOCFILE) 
 	cat $(HTMLHEAD) $(TOCFILE) $(FASTAFILE).html $(HRFILE) $(PROSITEFILE).html $(HRFILE) $(BLASTFILERDB).html $(HRFILE) $(DISULFINDFILE).html $(HRFILE) $(SEGGCGFILE).html $(HRFILE)  $(COILSFILE).html $(HRFILE)  $(PHDHTMLFILE) $(HRFILE) $(PROFHTMLFILE) $(HRFILE) $(GLOBEFILE).html $(HRFILE) $(ASPFILE).html $(HRFILE) $(PROFTMBFILE).html $(HRFILE) $(NORSFILE).html $(HRFILE) $(METADISORDERFILE).html $(HRFILE) $(ISISFILE).html $(HRFILE)  $(HTMLQUOTE) $(HTMLFOOTER) > $@
 	sed -i 's/VAR_jobid/$(JOBID)/' $@ 
 
@@ -109,17 +109,19 @@ $(OUTPUTFILE): $(FASTAFILE).html $(GCGFILE) $(PROSITEFILE).html $(SEGGCGFILE).ht
 $(PROFTMBFILE):  $(BLASTMATFILE)
 	proftmb @/usr/share/proftmb/options -q $< -o $@
 $(PROFTMBFILE).html: $(PROFTMBFILE)
-	echo '<pre>' $(PROFTMBHEAD) > $@ && \
+	echo $(PROFTMBHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(PROFTMBTOC) >> $(TOCFILE)
 
 $(ISISFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
 	profisis  --fastafile $(FASTAFILE)  --profrdbfile $(PROFFILE) --hsspfile $(HSSPBLASTFILTERFILE)  --outfile $@
 $(ISISFILE).html: $(ISISFILE)
-	echo '<pre>' $(ISISHEAD) > $@ && \
+	echo $(ISISHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(ISISTOC) >> $(TOCFILE)
 
 $(PROFBVALFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
@@ -132,9 +134,10 @@ $(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $(PROFBVALF
 	metadisorder fasta=$(FASTAFILE) hssp=$(HSSPBLASTFILTERFILE) prof=$(PROFFILE) profbval_raw=$(PROFBVALFILE) norsnet=$(NORSNETFILE) chk=$(BLASTCHECKFILE) out=$@ out_mode=1
 
 $(METADISORDERFILE).html: $(METADISORDERFILE)
-	echo '<pre>' $(MDHEAD)> $@ && \
+	echo $(MDHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(MDTOC) >> $(TOCFILE)
 
 $(HSSPFILE): $(SAFFILE)
@@ -148,7 +151,8 @@ $(BLASTPFILE):  $(FASTAFILE)
 
 $(BLASTFILERDB).html: $(BLASTFILERDB)
 	$(HELPERAPPSDIR)blast2html.pl $< $@ html $(DBSWISS)
-	sed -i $(BLASTHEAD) $@
+	sed -i $(BLASTHEAD) $@  && \
+	echo '</div>' >> $@ 
 	echo $(BLASTTOC) >> $(TOCFILE)
 
 
@@ -165,27 +169,30 @@ $(HSSPFILTERFORPHDFILE): $(HSSPBLASTFILTERFILE) |$(TEMPDIR)
 $(GLOBEFILE) : $(PROFFILE) 
 	profglobe --prof_file $<  --output_file $@
 $(GLOBEFILE).html: $(GLOBEFILE)
-	echo '<pre>' $(GLOBEHEAD) > $@ && \
+	echo $(GLOBEHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(GLOBETOC) >> $(TOCFILE)
 
 $(COILSFILE) $(COILSRAWFILE): $(FASTAFILE) 
 	coils-wrap.pl -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE)
 
 $(COILSFILE).html: $(COILSFILE)
-	echo '<pre>' $(COILSHEAD) > $@ && \
+	echo $(COILSHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(COILSTOC) >> $(TOCFILE)
 
 $(DISULFINDFILE): $(BLASTMATFILE) $(DISULFINDDIR)  | $(TEMPDIR) 
 	disulfinder -a 1 -p $<  -o $(DISULFINDDIR) -r $(DISULFINDDIR) -F html
 
 $(DISULFINDFILE).html: $(DISULFINDFILE)
-	echo '<pre>' $(DISULFINDHEAD)> $@ && \
+	echo $(DISULFINDHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(DISULFINDTOC) >> $(TOCFILE)
 
 
@@ -195,7 +202,8 @@ $(NLSFILE) $(NLSSUMFILE): $(FASTAFILE) |$(TEMPDIR)
 $(NLSFILE).html: $(NLSFILE)
 	echo '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(NLSTOC) >> $(TOCFILE)
 
 
@@ -209,6 +217,8 @@ $(PHDFILE) $(PHDRDBFILE) $(PHDNOTHTMFILE): $(HSSPBLASTFILTERFILE)
 
 $(PHDHTMLFILE): $(PHDRDBFILE)
 	$(PROFROOT)embl/scr/conv_phd2html.pl $< fileOut=$@ parHtml=html:body,data:brief,data:normal
+	sed -i $(PHDHEAD) $@ && \
+	echo '</div>' >> $@ 
 	echo $(PHDTOC) >> $(TOCFILE)	
 
 $(PROFFILE): $(HSSPBLASTFILTERFILE)
@@ -221,16 +231,18 @@ $(PROFTEXTFILE): $(PROFFILE)
 
 $(PROFHTMLFILE): $(PROFFILE)
 	$(PROFROOT)/scr/conv_prof.pl $< fileOut=$@ html noascii parHtml=html:body,data:brief,data:normal
-	sed -i $(PROFHEAD) $@
+	sed -i $(PROFHEAD) $@ && \
+	echo '</div>' >> $@ 
 	echo $(PROFTOC) >> $(TOCFILE)
 
 $(ASPFILE): $(PROFFILE)
 	profasp  -ws 5 -z -1.75 -min 9 -in $< -out $@ -err $@.errASP
 
 $(ASPFILE).html: $(ASPFILE)
-	echo '<pre>' $(ASPHEAD)> $@ && \
+	echo $(ASPHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(ASPTOC) >> $(TOCFILE)
 
 # NORS
@@ -241,9 +253,10 @@ $(NORSFILE) $(NORSSUMFILE): $(FASTAFILE) $(HSSPBLASTFILTERFILE) $(PROFFILE) $(PH
 	-filePhd $(PROFFILE) -filePhdHtm $(PHDRDBFILE) -fileCoils $(COILSFILE) -o $(NORSFILE) -fileSum $(NORSSUMFILE)
 
 $(NORSFILE).html: $(NORSFILE)
-	echo '<pre>' $(NORSHEAD)> $@ && \
+	echo  $(NORSHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(NORSTOC) >> $(TOCFILE)
 
 #PRODOM
@@ -255,9 +268,10 @@ $(PROSITEFILE): $(GCGFILE)
 	$(HELPERAPPSDIR)prosite_scan.pl -h $(PROSITEDIR)prosite_convert.dat $< >> $@
 
 $(PROSITEFILE).html: $(PROSITEFILE)
-	echo '<pre>' $(PROSITEHEAD)> $@ && \
+	echo $(PROSITEHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(PROSITETOC) >> $(TOCFILE)
 
 $(SEGFILE): $(FASTAFILE)
@@ -267,9 +281,10 @@ $(SEGGCGFILE): $(SEGFILE)
 
 $(SEGGCGFILE).html: $(SEGGCGFILE)
 	sed -i 's/\(x\s\?\)\+/<font style=\"color:red\">&<\/font>/g' $< 	# highlight all X's in red
-	echo '<pre>' $(SEGHEAD)> $@ && \
+	echo $(SEGHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(SEGTOC) >> $(TOCFILE)
 
 
@@ -286,9 +301,10 @@ $(FASTAFILE): $(INFILE)
 	$(LIBRGUTILS)copf.pl $< formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq
 
 $(FASTAFILE).html: $(FASTAFILE)
-	echo '<pre>' $(FASTAHEAD)>  $@ && \
+	echo  $(FASTAHEAD) '<pre>' >  $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
 	echo $(FASTATOC) >> $(TOCFILE)
 
 
@@ -311,7 +327,7 @@ clean:
 	rm -rf $(TEMPDIR)
 
 clean-html:
-	rm -rf $(TEMPDIR)/*.html $(OUTPUTFILE)
+	rm -rf $(TEMPDIR)/*.html $(OUTPUTFILE) $(DISULFINDFILE).html
 
 .PHONY: ECHO
 ECHO:
