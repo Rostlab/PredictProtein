@@ -23,8 +23,8 @@ PROFROOT:=/usr/share/profphd/prof/
 BLASTDATADIR:=/mnt/project/rost_db/data/blast/
 PRODOMDIR:=/mnt/project/rost_db/data/prodom/
 DBSWISS:=/mnt/project/rost_db/data/swissprot/current/
-PROSITEDIR:=$(HELPERAPPSDIR)prosite/
-PROSITEMATDIR:=$(PROSITEDIR)mat/
+PROSITEDIR:=mnt/project/rost_db/data/prosite/
+
 
 # STATIC FILES
 HTMLHEAD=$(PPROOT)/resources/HtmlHead.html
@@ -251,9 +251,8 @@ $(PRODOMFILE):  $(FASTAFILE)
 	blastall -p blastp -d $(PRODOMDIR)prodom -B 500 -i $< -o $@ 
 
 # PROSITE
-EXE_PROSITE:=$(PROSITEDIR)prosite_scan.pl
 $(PROSITEFILE): $(GCGFILE)
-	$(EXE_PROSITE) -h $(PROSITEMATDIR)prosite_convert.dat $< >> $@
+	$(HELPERAPPSDIR)prosite_scan.pl -h $(PROSITEDIR)prosite_convert.dat $< >> $@
 
 $(PROSITEFILE).html: $(PROSITEFILE)
 	echo '<pre>' $(PROSITEHEAD)> $@ && \
