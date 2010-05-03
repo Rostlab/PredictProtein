@@ -1,3 +1,11 @@
+#####################################
+#	PREDICTPROTEIN PIPELINE
+#
+#	(c) 2010 Guy Yachdav rostlab
+#####################################
+
+include makepp.mk
+
 # quotes of methods
 PROFQUOTE=PROF predictions
 PROFTMBQUOTE=Prediction of transmembrane beta-barrelsfor entire proteomes (Bigelow, H., Petrey, D., Liu, J.,Przybylski, D. & Rost, B.)
@@ -58,4 +66,117 @@ ISISTOC='<li><a href="\#isis">$(ISISQUOTE)</a></li>'
 
 
 
+$(OUTPUTFILE): $(FASTAFILE).html $(GCGFILE) $(PROSITEFILE).html $(SEGGCGFILE).html $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(BLASTFILERDB).html $(COILSFILE).html $(DISULFINDFILE).html $(PHDHTMLFILE)  $(PROFTEXTFILE) $(PROFHTMLFILE) $(GLOBEFILE).html  $(ASPFILE).html $(PROFTMBFILE).html $(NORSFILE).html $(METADISORDERFILE).html $(ISISFILE).html
+	sed -i '1i\<ol>'  $(TOCFILE) 
+	sed -i  '$$a\</ol>' $(TOCFILE)
+	sed -i '1i\$(TOCHEAD)'  $(TOCFILE) 
+	cat $(HTMLHEAD) $(TOCFILE) $(FASTAFILE).html $(HRFILE) $(PROSITEFILE).html $(HRFILE) $(BLASTFILERDB).html $(HRFILE) $(DISULFINDFILE).html $(HRFILE) $(SEGGCGFILE).html $(HRFILE)  $(COILSFILE).html $(HRFILE)  $(PHDHTMLFILE) $(HRFILE) $(PROFHTMLFILE) $(HRFILE) $(GLOBEFILE).html $(HRFILE) $(ASPFILE).html $(HRFILE) $(PROFTMBFILE).html $(HRFILE) $(NORSFILE).html $(HRFILE) $(METADISORDERFILE).html $(HRFILE) $(ISISFILE).html $(HRFILE)  $(HTMLQUOTE) $(HTMLFOOTER) > $@
+	sed -i 's/VAR_jobid/$(JOBID)/' $@ 
 
+$(PROFTMBFILE).html: $(PROFTMBFILE)
+	echo $(PROFTMBHEAD) '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(PROFTMBTOC) >> $(TOCFILE)
+
+
+$(ISISFILE).html: $(ISISFILE)
+	echo $(ISISHEAD) '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(ISISTOC) >> $(TOCFILE)
+
+$(METADISORDERFILE).html: $(METADISORDERFILE)
+	echo $(MDHEAD) '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(MDTOC) >> $(TOCFILE)
+
+$(BLASTFILERDB).html: $(BLASTFILERDB)
+	$(HELPERAPPSDIR)blast2html.pl $< $@ html $(DBSWISS)
+	sed -i $(BLASTHEAD) $@  && \
+	echo '</div>' >> $@ 
+	echo $(BLASTTOC) >> $(TOCFILE)
+
+$(GLOBEFILE).html: $(GLOBEFILE)
+	echo $(GLOBEHEAD) '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(GLOBETOC) >> $(TOCFILE)
+
+$(COILSFILE).html: $(COILSFILE)
+	echo $(COILSHEAD) '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(COILSTOC) >> $(TOCFILE)
+
+$(DISULFINDFILE).html: $(DISULFINDFILE)
+	echo $(DISULFINDHEAD) '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(DISULFINDTOC) >> $(TOCFILE)
+
+$(NLSFILE).html: $(NLSFILE)
+	echo '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(NLSTOC) >> $(TOCFILE)
+
+$(PHDHTMLFILE): $(PHDRDBFILE)
+	$(PROFROOT)embl/scr/conv_phd2html.pl $< fileOut=$@ parHtml=html:body,data:brief,data:normal
+	sed -i $(PHDHEAD) $@ && \
+	echo '</div>' >> $@ 
+	echo $(PHDTOC) >> $(TOCFILE)	
+
+$(PROFHTMLFILE): $(PROFFILE)
+	$(PROFROOT)/scr/conv_prof.pl $< fileOut=$@ html noascii parHtml=html:body,data:brief,data:normal
+	sed -i $(PROFHEAD) $@ && \
+	echo '</div>' >> $@ 
+	echo $(PROFTOC) >> $(TOCFILE)
+
+
+$(NORSFILE).html: $(NORSFILE)
+	echo  $(NORSHEAD) '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(NORSTOC) >> $(TOCFILE)
+
+$(PROSITEFILE).html: $(PROSITEFILE)
+	echo $(PROSITEHEAD) '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(PROSITETOC) >> $(TOCFILE)
+
+$(SEGGCGFILE).html: $(SEGGCGFILE)
+	sed -i 's/\(x\s\?\)\+/<font style=\"color:red\">&<\/font>/g' $< 	# highlight all X's in red
+	echo $(SEGHEAD) '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(SEGTOC) >> $(TOCFILE)
+
+$(FASTAFILE).html: $(FASTAFILE)
+	echo  $(FASTAHEAD) '<pre>' >  $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(FASTATOC) >> $(TOCFILE)
+
+$(ASPFILE).html: $(ASPFILE)
+	echo $(ASPHEAD) '<pre>' > $@ && \
+	cat $< >> $@ && \
+	echo '</pre>' >> $@ && \
+	echo '</div>' >> $@ 
+	echo $(ASPTOC) >> $(TOCFILE)
+
+clean-html:
+	rm -rf $(TEMPDIR)/*.html $(OUTPUTFILE) $(DISULFINDFILE).html

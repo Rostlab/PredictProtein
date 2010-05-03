@@ -4,7 +4,6 @@
 #	(c) 2010 Guy Yachdav rostlab
 #####################################
 
-include quotes.mk
 
 JOBID:=$(basename $(notdir $(INFILE)))
 
@@ -12,10 +11,10 @@ TEMPDIR:=/tmp/pp/
 OUTPUTDIR:=/mnt/home/gyachdav/public_html/
 OUTPUTFILE:=$(OUTPUTDIR)$(JOBID).html
 DISULFINDDIR:=$(TEMPDIR)/disulfinder/
+
 # FOLDER LOCATION (CONFIGURABLE)
 PPROOT:=/mnt/home/gyachdav/Development/predictprotein/
 HELPERAPPSDIR:=$(PPROOT)helper_apps/
-
 LIBRGUTILS:=/usr/share/librg-utils-perl/
 PROFROOT:=/usr/share/profphd/prof/
 
@@ -24,7 +23,6 @@ BLASTDATADIR:=/mnt/project/rost_db/data/blast/
 PRODOMDIR:=/mnt/project/rost_db/data/prodom/
 DBSWISS:=/mnt/project/rost_db/data/swissprot/current/
 PROSITEDIR:=mnt/project/rost_db/data/prosite/
-
 
 # STATIC FILES
 HTMLHEAD=$(PPROOT)/resources/HtmlHead.html
@@ -63,7 +61,6 @@ BLASTPFILE:=$(INFILE:%.in=%.aliBlastp)
 BLASTPFILTERFILE:=$(INFILE:%.in=%.aliFil_list)
 BLASTMATFILE:=$(INFILE:%.in=%.blastPsiMat)
 BLASTALIFILE:=$(INFILE:%.in=%.blastPsiAli)
-#DISULFINDFILE:=$(INFILE:%.in=%.disulfind)
 DISULFINDFILE:=$(DISULFINDDIR)$(notdir $(BLASTMATFILE))
 SAFFILE:=$(INFILE:%.in=%.safBlastPsi)
 FASTAFILE:=$(INFILE:%.in=%.fasta)
@@ -84,45 +81,25 @@ TOCFILE:=$(INFILE:%.in=%.toc.html)
 
 
 .PHONY: sec-struct
-sec-struct:  $(COILSFILE) $(PHDHTMLFILE) $(PROFTEXTFILE) $(PROFHTMLFILE) $(PROFTMBFILE).html 
+sec-struct:  $(COILSFILE) $(PHDHTMLFILE) $(PROFTEXTFILE) $(PROFHTMLFILE) $(PROFTMBFILE)
 
 .PHONY: disorder
 disorder: $(ASPFILE) $(NORSFILE) $(METADISORDERFILE)
 
 .PHONEY: function
-function: $(NLSFILE) $(DISULFINDFILE).html
+function: $(NLSFILE) $(DISULFINDFILE)
 
 .PHONEY: interaction
-function: $(DISISFILE).html $(DISISFILE).html
+function: $(DISISFILE) $(DISISFILE)
 
 .PHONY: all
 all: $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(DISULFINDFILE) $(SEGGCGFILE) $(GLOBEFILE) $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(COILSFILE) $(NLSFILE) $(PHDHTMLFILE)  $(PROFTEXTFILE) $(PROFHTMLFILE)  $(ASPFILE) $(NORSFILE) $(METADISORDERFILE)
 
-$(OUTPUTFILE): $(FASTAFILE).html $(GCGFILE) $(PROSITEFILE).html $(SEGGCGFILE).html $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(BLASTFILERDB).html $(COILSFILE).html $(DISULFINDFILE).html $(PHDHTMLFILE)  $(PROFTEXTFILE) $(PROFHTMLFILE) $(GLOBEFILE).html  $(ASPFILE).html $(PROFTMBFILE).html $(NORSFILE).html $(METADISORDERFILE).html $(ISISFILE).html
-	sed -i '1i\<ol>'  $(TOCFILE) 
-	sed -i  '$$a\</ol>' $(TOCFILE)
-	sed -i '1i\$(TOCHEAD)'  $(TOCFILE) 
-	cat $(HTMLHEAD) $(TOCFILE) $(FASTAFILE).html $(HRFILE) $(PROSITEFILE).html $(HRFILE) $(BLASTFILERDB).html $(HRFILE) $(DISULFINDFILE).html $(HRFILE) $(SEGGCGFILE).html $(HRFILE)  $(COILSFILE).html $(HRFILE)  $(PHDHTMLFILE) $(HRFILE) $(PROFHTMLFILE) $(HRFILE) $(GLOBEFILE).html $(HRFILE) $(ASPFILE).html $(HRFILE) $(PROFTMBFILE).html $(HRFILE) $(NORSFILE).html $(HRFILE) $(METADISORDERFILE).html $(HRFILE) $(ISISFILE).html $(HRFILE)  $(HTMLQUOTE) $(HTMLFOOTER) > $@
-	sed -i 's/VAR_jobid/$(JOBID)/' $@ 
-
-
 $(PROFTMBFILE):  $(BLASTMATFILE)
 	proftmb @/usr/share/proftmb/options -q $< -o $@
-$(PROFTMBFILE).html: $(PROFTMBFILE)
-	echo $(PROFTMBHEAD) '<pre>' > $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(PROFTMBTOC) >> $(TOCFILE)
 
 $(ISISFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
 	profisis  --fastafile $(FASTAFILE)  --profrdbfile $(PROFFILE) --hsspfile $(HSSPBLASTFILTERFILE)  --outfile $@
-$(ISISFILE).html: $(ISISFILE)
-	echo $(ISISHEAD) '<pre>' > $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(ISISTOC) >> $(TOCFILE)
 
 $(PROFBVALFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
 	profbval $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $@ 1 5 $(JOBID)
@@ -133,13 +110,6 @@ $(NORSNETFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $(PROFBVALFILE)
 $(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $(PROFBVALFILE) $(NORSNETFILE) $(BLASTCHECKFILE)
 	metadisorder fasta=$(FASTAFILE) hssp=$(HSSPBLASTFILTERFILE) prof=$(PROFFILE) profbval_raw=$(PROFBVALFILE) norsnet=$(NORSNETFILE) chk=$(BLASTCHECKFILE) out=$@ out_mode=1
 
-$(METADISORDERFILE).html: $(METADISORDERFILE)
-	echo $(MDHEAD) '<pre>' > $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(MDTOC) >> $(TOCFILE)
-
 $(HSSPFILE): $(SAFFILE)
 	 $(LIBRGUTILS)copf.pl $<  formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq
 
@@ -148,13 +118,6 @@ $(HSSPBLASTFILTERFILE): $(HSSPFILE)
 
 $(BLASTPFILE):  $(FASTAFILE)
 	blastall -p blastp -d $(BLASTDATADIR)swiss -b 4000 -i $< -o $@ 
-
-$(BLASTFILERDB).html: $(BLASTFILERDB)
-	$(HELPERAPPSDIR)blast2html.pl $< $@ html $(DBSWISS)
-	sed -i $(BLASTHEAD) $@  && \
-	echo '</div>' >> $@ 
-	echo $(BLASTTOC) >> $(TOCFILE)
-
 
 $(BLASTPFILTERFILE): $(BLASTPFILE)
 	$(PPROOT)filter_blastp_big.pl $< db=swiss dir=$(DBSWISS) > $@
@@ -168,44 +131,15 @@ $(HSSPFILTERFORPHDFILE): $(HSSPBLASTFILTERFILE) |$(TEMPDIR)
 
 $(GLOBEFILE) : $(PROFFILE) 
 	profglobe --prof_file $<  --output_file $@
-$(GLOBEFILE).html: $(GLOBEFILE)
-	echo $(GLOBEHEAD) '<pre>' > $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(GLOBETOC) >> $(TOCFILE)
 
 $(COILSFILE) $(COILSRAWFILE): $(FASTAFILE) 
 	coils-wrap.pl -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE)
 
-$(COILSFILE).html: $(COILSFILE)
-	echo $(COILSHEAD) '<pre>' > $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(COILSTOC) >> $(TOCFILE)
-
 $(DISULFINDFILE): $(BLASTMATFILE) $(DISULFINDDIR)  | $(TEMPDIR) 
 	disulfinder -a 1 -p $<  -o $(DISULFINDDIR) -r $(DISULFINDDIR) -F html
 
-$(DISULFINDFILE).html: $(DISULFINDFILE)
-	echo $(DISULFINDHEAD) '<pre>' > $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(DISULFINDTOC) >> $(TOCFILE)
-
-
 $(NLSFILE) $(NLSSUMFILE): $(FASTAFILE) |$(TEMPDIR)
 	predictnls dirOut=$(TEMPDIR) fileIn=$< fileOut=$(NLSFILE) fileSummary=$(NLSSUMFILE) fileTrace=$(NLSFILE).nlsTrace html=1
-# /mnt/project/predictprotein/no_arch/pub//nls//pp_resonline.pl  dirOut=/tmp/gyachdav/pp_work/ fileIn=/tmp/gyachdav/pp_work/tquick.fasta fileOut=/tmp/gyachdav/pp_work/tquick.nls fileSummary=/tmp/gyachdav/pp_work/tquick.nlsSum fileTrace=/tmp/gyachdav/pp_work/tquick.nlsTrace html=1  
-$(NLSFILE).html: $(NLSFILE)
-	echo '<pre>' > $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(NLSTOC) >> $(TOCFILE)
-
 
 $(PHDFILE) $(PHDRDBFILE) $(PHDNOTHTMFILE): $(HSSPBLASTFILTERFILE)
 	$(PROFROOT)embl/phd.pl $(HSSPBLASTFILTERFILE) htm exePhd=phd1994 filterHsspMetric=$(PPROOT)Maxhom_Blosum.metric exeHtmfil=$(PROFROOT)embl/scr/phd_htmfil.pl \
@@ -215,12 +149,6 @@ $(PHDFILE) $(PHDRDBFILE) $(PHDNOTHTMFILE): $(HSSPBLASTFILTERFILE)
 	nresPerLineAli=60 exePhd2msf=$(PROFROOT)embl/scr/conv_phd2msf.pl exePhd2dssp=$(PROFROOT)/embl/scr/conv_phd2dssp.pl  exeConvertSeq=convert_seq \
 	exeHsspFilter=filter_hssp doCleanTrace=1 > $(PHDFILE).screenPhd
 
-$(PHDHTMLFILE): $(PHDRDBFILE)
-	$(PROFROOT)embl/scr/conv_phd2html.pl $< fileOut=$@ parHtml=html:body,data:brief,data:normal
-	sed -i $(PHDHEAD) $@ && \
-	echo '</div>' >> $@ 
-	echo $(PHDTOC) >> $(TOCFILE)	
-
 $(PROFFILE): $(HSSPBLASTFILTERFILE)
 	prof $< both  exeProfFor=profnet_prof  exePhd1994=$(PROFROOT)embl/phd.pl exePhd1994For=phd1994 para3=$(PROFROOT)net/PROFboth.par paraBoth=$(PROFROOT)net/PROFboth.par \
 	paraSec=$(PROFROOT)net/PROFsec.par paraAcc=$(PROFROOT)net/PROFacc.par numresMin=17 nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=. \
@@ -228,12 +156,6 @@ $(PROFFILE): $(HSSPBLASTFILTERFILE)
 
 $(PROFTEXTFILE): $(PROFFILE)
 	$(PROFROOT)scr/conv_prof.pl $< fileOut=$@ ascii nohtml nodet nograph
-
-$(PROFHTMLFILE): $(PROFFILE)
-	$(PROFROOT)/scr/conv_prof.pl $< fileOut=$@ html noascii parHtml=html:body,data:brief,data:normal
-	sed -i $(PROFHEAD) $@ && \
-	echo '</div>' >> $@ 
-	echo $(PROFTOC) >> $(TOCFILE)
 
 $(ASPFILE): $(PROFFILE)
 	profasp  -ws 5 -z -1.75 -min 9 -in $< -out $@ -err $@.errASP
@@ -252,41 +174,18 @@ $(NORSFILE) $(NORSSUMFILE): $(FASTAFILE) $(HSSPBLASTFILTERFILE) $(PROFFILE) $(PH
 	$(EXE_NORS)  -win 70 -secCut 12 -accLen 10 -fileSeq $(FASTAFILE) -fileHssp $(HSSPBLASTFILTERFILE) \
 	-filePhd $(PROFFILE) -filePhdHtm $(PHDRDBFILE) -fileCoils $(COILSFILE) -o $(NORSFILE) -fileSum $(NORSSUMFILE)
 
-$(NORSFILE).html: $(NORSFILE)
-	echo  $(NORSHEAD) '<pre>' > $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(NORSTOC) >> $(TOCFILE)
 
 #PRODOM
 $(PRODOMFILE):  $(FASTAFILE)
 	blastall -p blastp -d $(PRODOMDIR)prodom -B 500 -i $< -o $@ 
 
-# PROSITE
 $(PROSITEFILE): $(GCGFILE)
 	$(HELPERAPPSDIR)prosite_scan.pl -h $(PROSITEDIR)prosite_convert.dat $< >> $@
-
-$(PROSITEFILE).html: $(PROSITEFILE)
-	echo $(PROSITEHEAD) '<pre>' > $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(PROSITETOC) >> $(TOCFILE)
 
 $(SEGFILE): $(FASTAFILE)
 	lowcompseg $< -x > $@
 $(SEGGCGFILE): $(SEGFILE)
 	/usr/share/librg-utils-perl/copf.pl $< formatOut=gcg fileOut=$@
-
-$(SEGGCGFILE).html: $(SEGGCGFILE)
-	sed -i 's/\(x\s\?\)\+/<font style=\"color:red\">&<\/font>/g' $< 	# highlight all X's in red
-	echo $(SEGHEAD) '<pre>' > $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(SEGTOC) >> $(TOCFILE)
-
 
 $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE): $(FASTAFILE)
 	blastpgp  -j 3 -b 3000 -e 1 -F F -h 1e-3 -d $(BLASTDATADIR)big_80 -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE)
@@ -299,14 +198,6 @@ $(SAFFILE): $(BLASTALIFILE)  $(FASTAFILE)
 
 $(FASTAFILE): $(INFILE)
 	$(LIBRGUTILS)copf.pl $< formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq
-
-$(FASTAFILE).html: $(FASTAFILE)
-	echo  $(FASTAHEAD) '<pre>' >  $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(FASTATOC) >> $(TOCFILE)
-
 
 $(GCGFILE): $(INFILE)
 	$(LIBRGUTILS)copf.pl $< formatOut=gcg fileOut=$@ exeConvertSeq=convert_seq
