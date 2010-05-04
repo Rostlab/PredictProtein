@@ -40,7 +40,8 @@ $librg_dudek_perl = glob($config->val('predictprotein', 'librg_dudek_perl')) || 
 my $db_blast_train = glob($config->val('blast', 'uniref'));
 my $db_blast_final = glob($config->val('blast', 'uniref90'));
 my $root_dir = $pp_rootdir || "__PREFIX__/usr/share/predictprotein/";
-my $make_file = $root_dir."makepp.mk";
+my $make_file = $root_dir."/makepp.mk";
+my $output_format = "text";
 my $temp_dir = File::Temp::tempdir( CLEANUP => 0 );
 
 # COMMAND LINE OPTIONS
@@ -54,6 +55,7 @@ my $result = GetOptions (   "i|input_file=s" => \$input_file,
 			    "p|proc_name=s" =>\$proc_name,
 			    "t|temp_dir=s" => \$temp_dir,
 			    "n|dryrun" => \$dry_run,
+			    "f|output_format=s" => \$output_format,
 			    "d|debug" => \$dbg,
 			    "man" => \$man,
 			    "help|?" => \$help) or pod2usage(2);
@@ -62,6 +64,7 @@ pod2usage(1) if $help;
 pod2usage(-verbose => 2) if $man;
 
 system ("mkdir -p $temp_dir") if ($temp_dir);
+
 # COLLECT USER INPUT
 
 my $user_params;
@@ -90,13 +93,15 @@ if ($dbg){
 # FORMAT RESULTS
 # CONVERT TO XML
 my $command = "make ";
-$command .= glob($output_file)." ";
+$command .= glob($output_file);
+if ($output_format =~ /html/){ $command.=".html "; }else { $command .=" "; }
 $command .= "INFILE=".glob($sequence_file)." ";
 $command .= "-f ".glob($make_file)." " if ($make_file);
 $command .= "TEMPDIR=$temp_dir " if ($temp_dir);
 $command .= "JOBID=$proc_name " if ($proc_name);
 $command .= "-n " if ($dry_run);
 cluck ($command) if ($dbg);
+
 system ($command);
 
 

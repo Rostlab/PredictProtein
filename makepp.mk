@@ -22,7 +22,7 @@ PROFROOT:=/usr/share/profphd/prof/
 BLASTDATADIR:=/mnt/project/rost_db/data/blast/
 PRODOMDIR:=/mnt/project/rost_db/data/prodom/
 DBSWISS:=/mnt/project/rost_db/data/swissprot/current/
-PROSITEDIR:=mnt/project/rost_db/data/prosite/
+PROSITEDIR:=/mnt/project/rost_db/data/prosite/
 
 # STATIC FILES
 HTMLHEAD=$(PPROOT)/resources/HtmlHead.html
@@ -168,12 +168,11 @@ $(ASPFILE).html: $(ASPFILE)
 	echo $(ASPTOC) >> $(TOCFILE)
 
 # NORS
-NORSDIR:= $(HELPERAPPSDIR)nors/
+NORSDIR:= $(HELPERAPPSDIR)
 EXE_NORS:= $(NORSDIR)nors.pl
 $(NORSFILE) $(NORSSUMFILE): $(FASTAFILE) $(HSSPBLASTFILTERFILE) $(PROFFILE) $(PHDRDBFILE) $(COILSFILE)
 	$(EXE_NORS)  -win 70 -secCut 12 -accLen 10 -fileSeq $(FASTAFILE) -fileHssp $(HSSPBLASTFILTERFILE) \
-	-filePhd $(PROFFILE) -filePhdHtm $(PHDRDBFILE) -fileCoils $(COILSFILE) -o $(NORSFILE) -fileSum $(NORSSUMFILE)
-
+	-filePhd $(PROFFILE) -filePhdHtm $(PHDRDBFILE) -fileCoils $(COILSFILE) -o $(NORSFILE) -fileSum $(NORSSUMFILE) -html
 
 #PRODOM
 $(PRODOMFILE):  $(FASTAFILE)
