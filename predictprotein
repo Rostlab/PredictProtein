@@ -6,6 +6,7 @@ use Carp qw(cluck croak confess longmess);
 use Getopt::Long;
 use File::Copy;
 use File::Temp;
+use File::Basename;
 use Pod::Usage;
 use Config::IniFiles;
 
@@ -74,10 +75,12 @@ confess  ("$err Cannot read user parameter file. Exiting.")     if (!defined ($u
 
 # Get sequence
 my $sequence = glob($user_params->val('main', 'input')) || confess ("No input specified. Exiting");
+
 my @sequence; push (@sequence, $sequence);
 
 # sequence_file holds sequence information and resides in intermediate work directory
-my $sequence_file=$temp_dir."/".$input_file; 
+my $sequence_file=$temp_dir."/".fileparse($input_file); 
+
 cluck ("$warn Called interpretSeqPP($sequence_file,\"\",60,17,5000,80 @sequence)");
 my ($LokWrt,$msg,$lenTmp)=
     RG::PP::interpretSeqPP($sequence_file,"",60,17,5000,80,@sequence);
