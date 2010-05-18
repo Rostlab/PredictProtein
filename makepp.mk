@@ -4,13 +4,12 @@
 #	(c) 2010 Guy Yachdav rostlab
 #####################################
 
-
 JOBID:=$(basename $(notdir $(INFILE)))
 
 TEMPDIR:=/tmp/pp/
-OUTPUTDIR:=/mnt/home/gyachdav/public_html/
-OUTPUTFILE:=$(OUTPUTDIR)$(JOBID).html
 DISULFINDDIR:=$(TEMPDIR)/disulfinder/
+
+BLASTCORES := 1
 
 # FOLDER LOCATION (CONFIGURABLE)
 PPROOT:=/mnt/home/gyachdav/Development/predictprotein/
@@ -79,7 +78,6 @@ DISISFILE:=$(INFILE:%.in=%.disis)
 PPFILE:=$(INFILE:%.in=%.predictprotein)
 TOCFILE:=$(INFILE:%.in=%.toc.html)
 
-
 .PHONY: sec-struct
 sec-struct:  $(COILSFILE) $(PHDHTMLFILE) $(PROFTEXTFILE) $(PROFHTMLFILE) $(PROFTMBFILE)
 
@@ -111,10 +109,10 @@ $(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $(PROFBVALF
 	metadisorder fasta=$(FASTAFILE) hssp=$(HSSPBLASTFILTERFILE) prof=$(PROFFILE) profbval_raw=$(PROFBVALFILE) norsnet=$(NORSNETFILE) chk=$(BLASTCHECKFILE) out=$@ out_mode=1
 
 $(HSSPFILE): $(SAFFILE)
-	 $(LIBRGUTILS)copf.pl $<  formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq
+	 $(LIBRGUTILS)copf.pl $<  formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq dirWork=$(TEMPDIR)
 
 $(HSSPBLASTFILTERFILE): $(HSSPFILE)
-	 $(LIBRGUTILS)/hssp_filter.pl  red=80 $< fileOut=$@
+	 $(LIBRGUTILS)/hssp_filter.pl  red=80 $< fileOut=$@ dirWork=$(TEMPDIR)
 
 $(BLASTPFILE):  $(FASTAFILE)
 	blastall -p blastp -d $(BLASTDATADIR)swiss -b 4000 -i $< -o $@ 
@@ -123,17 +121,17 @@ $(BLASTPFILTERFILE): $(BLASTPFILE)
 	$(PPROOT)filter_blastp_big.pl $< db=swiss dir=$(DBSWISS) > $@
 
 $(HSSPFILTERFILE): $(HSSPBLASTFILTERFILE) |$(TEMPDIR)
-	 $(LIBRGUTILS)/hssp_filter.pl $(HSSPBLASTFILTERFILE) fileOut=$@  thresh=8 threshSgi=-10 mode=ide exeFilterHssp=filter_hssp dirWork=$(TEMPDIR) jobid=$(JOBID)  fileOutScreen=$@.filterScreen fileOutTrace=$@.filterTrace
+	 $(LIBRGUTILS)/hssp_filter.pl $(HSSPBLASTFILTERFILE) fileOut=$@  thresh=8 threshSgi=-10 mode=ide exeFilterHssp=filter_hssp dirWork=$(TEMPDIR) jobid=$(JOBID)  fileOutScreen=$@.filterScreen dirWork=$(TEMPDIR)
 
 $(HSSPFILTERFORPHDFILE): $(HSSPBLASTFILTERFILE) |$(TEMPDIR)
-	 $(LIBRGUTILS)/hssp_filter.pl $(HSSPBLASTFILTERFILE) fileOut=$@  thresh=8 threshSgi=-10 mode=ide red=90 exeFilterHssp=filter_hssp dirWork=$(TEMPDIR) jobid=$(JOBID)  fileOutScreen=$@.filterScreen fileOutTrace=$@.filterTrace
+	 $(LIBRGUTILS)/hssp_filter.pl $(HSSPBLASTFILTERFILE) fileOut=$@  thresh=8 threshSgi=-10 mode=ide red=90 exeFilterHssp=filter_hssp dirWork=$(TEMPDIR) jobid=$(JOBID)  fileOutScreen=$@.filterScreen dirWork=$(TEMPDIR)
 #cat < /mnt/project/predictprotein/no_arch/scr///txt//app/RetNoali >> /tmp/gyachdav/pp_work/tquick.pred_temp
 
 $(GLOBEFILE) : $(PROFFILE) 
 	profglobe --prof_file $<  --output_file $@
 
-$(COILSFILE) $(COILSRAWFILE): $(FASTAFILE) 
-	coils-wrap.pl -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE)
+$(COILSFILE) $(COILSRAWFILE): $(FASTAFILE)
+	COILSTMP=$$(mktemp -d) && trap "rm -rf '$$COILSTMP'" EXIT; cd $$COILSTMP && coils-wrap.pl -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE);
 
 $(DISULFINDFILE): $(BLASTMATFILE) $(DISULFINDDIR)  | $(TEMPDIR) 
 	disulfinder -a 1 -p $<  -o $(DISULFINDDIR) -r $(DISULFINDDIR) -F html
@@ -160,13 +158,6 @@ $(PROFTEXTFILE): $(PROFFILE)
 $(ASPFILE): $(PROFFILE)
 	profasp  -ws 5 -z -1.75 -min 9 -in $< -out $@ -err $@.errASP
 
-$(ASPFILE).html: $(ASPFILE)
-	echo $(ASPHEAD) '<pre>' > $@ && \
-	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(ASPTOC) >> $(TOCFILE)
-
 # NORS
 NORSDIR:= $(HELPERAPPSDIR)
 EXE_NORS:= $(NORSDIR)nors.pl
@@ -184,28 +175,28 @@ $(PROSITEFILE): $(GCGFILE)
 $(SEGFILE): $(FASTAFILE)
 	lowcompseg $< -x > $@
 $(SEGGCGFILE): $(SEGFILE)
-	/usr/share/librg-utils-perl/copf.pl $< formatOut=gcg fileOut=$@
+	/usr/share/librg-utils-perl/copf.pl $< formatOut=gcg fileOut=$@ dirWork=$(TEMPDIR)
 
 $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE): $(FASTAFILE)
-	blastpgp  -j 3 -b 3000 -e 1 -F F -h 1e-3 -d $(BLASTDATADIR)big_80 -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE)
+	blastpgp -a $(BLASTCORES) -j 3 -b 3000 -e 1 -F F -h 1e-3 -d $(BLASTDATADIR)big_80 -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE)
 
-$(BLASTALIFILE)  $(BLASTMATFILE): $(BLASTCHECKFILE) $(FASTAFILE)
-	blastpgp  -b 1000 -e 1 -F F -d $(BLASTDATADIR)big -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) -Q  $(BLASTMATFILE)
+$(BLASTALIFILE): $(BLASTCHECKFILE) $(FASTAFILE)
+	blastpgp -a $(BLASTCORES) -b 1000 -e 1 -F F -d $(BLASTDATADIR)big -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE)
 
-$(SAFFILE): $(BLASTALIFILE)  $(FASTAFILE)
+$(SAFFILE) $(BLASTFILERDB): $(BLASTALIFILE)  $(FASTAFILE)
 	$(LIBRGUTILS)blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$@ red=100 maxAli=3000 tile=0 fileOutErr=$@.blast2safErr
 
 $(FASTAFILE): $(INFILE)
-	$(LIBRGUTILS)copf.pl $< formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq
+	$(LIBRGUTILS)copf.pl $< formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq dirWork=$(TEMPDIR)
 
 $(GCGFILE): $(INFILE)
-	$(LIBRGUTILS)copf.pl $< formatOut=gcg fileOut=$@ exeConvertSeq=convert_seq
+	$(LIBRGUTILS)copf.pl $< formatOut=gcg fileOut=$@ exeConvertSeq=convert_seq dirWork=$(TEMPDIR)
 
 .PRECIOUS: $(TEMPDIR)%.in
 $(TEMPDIR)%.in: |$(TEMPDIR)
-	tr -d '\000' < $*.in > $*.in2  && \
-	mv  $*.in2  $*.in &&\
-	sed --in-place -e '/^\$$/d' $*.in 
+	tr -d '\000' < $@ > $(TEMPDIR)$*.in2  && \
+	mv $(TEMPDIR)$*.in2 $@ &&\
+	sed --in-place -e '/^\$$/d' $@ 
 
 $(TEMPDIR):
 	mkdir -p $(TEMPDIR)
@@ -226,7 +217,6 @@ ECHO:
 .PHONY: help
 help:
 	@echo "Rules:"
-	@echo "all - run pipeline"
 	@echo "sec-struct - run secondary structure predictors"
 	@echo "disorder - run disorder predictors"
 	@echo "interaction - run bindingg site predictors"
@@ -234,4 +224,7 @@ help:
 	@echo "help - this message"
 	@echo
 	@echo "Variables:"
-	@echo ""
+	@echo "BLASTCORES - default: 1"
+	@echo "TEMPDIR - default: /tmp/pp/, mind the trailing /"
+
+# vim:ai:

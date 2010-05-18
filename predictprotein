@@ -97,7 +97,7 @@ if ($dbg){
 # FORMAT RESULTS
 # CONVERT TO XML
 my $command = "make ";
-$command .= glob($output_file);
+$command .= "OUTPUTFILE=".glob($output_file);
 if ($output_format =~ /html/){ $command.=".html "; }else { $command .=" "; }
 $command .= "INFILE=".glob($sequence_file)." ";
 $command .= "-f ".glob($make_file)." " if ($make_file);
@@ -112,6 +112,7 @@ system ($command);
 
 # CLEAN UP PROCESS
 
+exit(0);
 
 __END__
 =head1 predictprotein -
