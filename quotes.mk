@@ -4,7 +4,8 @@
 #	(c) 2010 Guy Yachdav rostlab
 #####################################
 
-include makepp.mk
+include $(MAIN_PIPELINE)
+
 
 # quotes of methods
 PROFQUOTE=PROF predictions

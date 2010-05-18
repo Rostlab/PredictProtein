@@ -99,7 +99,7 @@ $(PROFTMBFILE):  $(BLASTMATFILE)
 	proftmb @/usr/share/proftmb/options -q $< -o $@
 
 $(ISISFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
-	profisis  --fastafile $(FASTAFILE)  --profrdbfile $(PROFFILE) --hsspfile $(HSSPBLASTFILTERFILE)  --outfile $@
+	profisis  --fastafile $(FASTAFILE)  --rdbproffile $(PROFFILE) --hsspfile $(HSSPBLASTFILTERFILE)  --outfile $@
 
 $(PROFBVALFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
 	profbval $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $@ 1 5 $(JOBID)

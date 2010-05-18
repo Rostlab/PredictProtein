@@ -42,6 +42,7 @@ my $db_blast_train = glob($config->val('blast', 'uniref'));
 my $db_blast_final = glob($config->val('blast', 'uniref90'));
 my $root_dir = $pp_rootdir || "__PREFIX__/usr/share/predictprotein/";
 my $make_file = $root_dir."/makepp.mk";
+my $main_make_file = $root_dir."/makepp.mk";  # TODO NEED TO REORGNAIZE makefiles in a way that they can call each other
 my $output_format = "text";
 my $temp_dir = File::Temp::tempdir( CLEANUP => 0 );
 
@@ -100,6 +101,7 @@ $command .= glob($output_file);
 if ($output_format =~ /html/){ $command.=".html "; }else { $command .=" "; }
 $command .= "INFILE=".glob($sequence_file)." ";
 $command .= "-f ".glob($make_file)." " if ($make_file);
+$command .= "MAIN_PIPELINE=$main_make_file "; 
 $command .= "TEMPDIR=$temp_dir " if ($temp_dir);
 $command .= "JOBID=$proc_name " if ($proc_name);
 $command .= "-n " if ($dry_run);
