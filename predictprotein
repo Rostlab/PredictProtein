@@ -98,7 +98,12 @@ if ($dbg){
 # CONVERT TO XML
 my $command = "make ";
 $command .= "OUTPUTFILE=".glob($output_file);
-if ($output_format =~ /html/){ $command.=".html "; }else { $command .=" "; }
+if ($output_format =~ /html/){  
+    $command.=".html ";# if ($output_file !~ /\.html$/); 
+    $make_file=$root_dir."/makepphtml.mk"; 
+}else { 
+    $command .=" "; 
+}
 $command .= "INFILE=".glob($sequence_file)." ";
 $command .= "-f ".glob($make_file)." " if ($make_file);
 $command .= "MAIN_PIPELINE=$main_make_file "; 
