@@ -15,7 +15,6 @@ use RG::Utils::Copf;
 use RG::Utils::Conv_hssp2saf;
 use RG::Dudek::Blastpgp;
 
-use lib './RG'; 
 use RG::PP;  
 
 $Carp::Verbose = 1; 
@@ -65,7 +64,7 @@ my $result = GetOptions (   "i|input_file=s" => \$input_file,
 pod2usage(1) if $help;
 pod2usage(-verbose => 2) if $man;
 
-system ("mkdir -p $temp_dir") if ($temp_dir);
+system ("mkdir -p $temp_dir")|| if ($temp_dir);
 
 # COLLECT USER INPUT
 
@@ -96,23 +95,34 @@ if ($dbg){
 # RUN MAKEFILE
 # FORMAT RESULTS
 # CONVERT TO XML
-my $command = "make ";
-$command .= "OUTPUTFILE=".glob($output_file);
-if ($output_format =~ /html/){  
-    $command.=".html ";# if ($output_file !~ /\.html$/); 
-    $make_file=$root_dir."/makepphtml.mk"; 
-}else { 
-    $command .=" "; 
-}
-$command .= "INFILE=".glob($sequence_file)." ";
-$command .= "-f ".glob($make_file)." " if ($make_file);
-$command .= "MAIN_PIPELINE=$main_make_file "; 
-$command .= "TEMPDIR=$temp_dir " if ($temp_dir);
-$command .= "JOBID=$proc_name " if ($proc_name);
-$command .= "-n " if ($dry_run);
-cluck ($command) if ($dbg);
 
-system ($command);
+my @command = ();
+push (@command,"make");
+push (@command, "OUTPUTFILE");
+if ($output_format =~ /html/){  
+    $output_file .=".html";# if ($output_file !~ /\.html$/); 
+    $make_file=$root_dir."/makepphtml.mk"; 
+}
+
+push (@command,glob($output_file));
+push (@command,"INFILE=".glob($sequence_file));
+if ($make_file);{
+    push (@command,"-f");
+    push (@command,glob($make_file));
+}
+push (@command,"MAIN_PIPELINE");
+push (@command,$main_make_file); 
+push (@command,"TEMPDIR");
+push (@command,$temp_dir) if ($temp_dir);
+if ($proc_name){
+    push (@command,"JOBID");
+    push (@command,$proc_name);
+}
+push (@command, "-n") if ($dry_run);
+
+cluck (@command) if ($dbg);
+system (@command) && die( "$command failed: ".$? >> 8 )
+
 
 
 # CLEAN UP PROCESS
