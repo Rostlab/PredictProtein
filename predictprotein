@@ -121,7 +121,7 @@ if ($proc_name){
 push (@command, "-n") if ($dry_run);
 
 cluck (@command) if ($dbg);
-system (@command) && die( "$command failed: ".$? >> 8 )
+system (@command) && die( "@command failed: ".$? >> 8 )
 
 
 
