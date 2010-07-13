@@ -34,7 +34,7 @@ B<This program> runs a set of protein sequnce analysis methods
 
 =head1 EXAMPLE
 
-C<predictprotein -i /usr/share/predictprotein/example/MT4_HUMAN.in>
+C<predictprotein -i /usr/share/predictprotein/example/tquick.in>
 
 =head2 INPUT FILE
 
