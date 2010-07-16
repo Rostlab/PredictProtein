@@ -9,13 +9,9 @@ use File::Temp;
 use File::Basename;
 use Pod::Usage;
 use Config::IniFiles;
+use Bio::Seq;
+use Bio::SeqIO;
 
-use RG::Utils::Hssp_filter;
-use RG::Utils::Copf;
-use RG::Utils::Conv_hssp2saf;
-use RG::Dudek::Blastpgp;
-
-use RG::PP;  
 
 $Carp::Verbose = 1; 
 
@@ -40,18 +36,18 @@ $librg_dudek_perl = glob($config->val('predictprotein', 'librg_dudek_perl')) || 
 my $db_blast_train = glob($config->val('blast', 'uniref'));
 my $db_blast_final = glob($config->val('blast', 'uniref90'));
 my $root_dir = $pp_rootdir || "__PREFIX__/usr/share/predictprotein/";
-my $make_file = $root_dir."/makepp.mk";
-my $main_make_file = $root_dir."/makepp.mk";  # TODO NEED TO REORGNAIZE makefiles in a way that they can call each other
+my $make_file = $root_dir."/Makefile";
+#my $main_make_file = $root_dir."/makepp.mk";  # TODO NEED TO REORGNAIZE makefiles in a way that they can call each other
 my $output_format = "text";
 my $temp_dir = File::Temp::tempdir( CLEANUP => 0 );
 
 # COMMAND LINE OPTIONS
-my ($help, $man, $dbg, $dry_run,$proc_name, $input_file,$output_file);
+my ($help, $man, $dbg, $dry_run,$proc_name, $input_file,$output_dir);
 
 if (@ARGV < 1){ die "Usage: $0 --input_file=<file>  +[OPTIONS] [process_id]\n";}
 
 my $result = GetOptions (   "i|input_file=s" => \$input_file,
-			    "o|output_file=s" => \$output_file,
+			    "o|output_dir=s" => \$output_dir,
 			    "m|make_file=s" =>\$make_file,
 			    "p|proc_name=s" =>\$proc_name,
 			    "t|temp_dir=s" => \$temp_dir,
@@ -64,28 +60,26 @@ my $result = GetOptions (   "i|input_file=s" => \$input_file,
 pod2usage(1) if $help;
 pod2usage(-verbose => 2) if $man;
 
-system ("mkdir -p $temp_dir")|| if ($temp_dir);
+$proc_name="no_prot_name" if (! $proc_name);
+
+system ("mkdir -p $temp_dir") if ($temp_dir);
 
 # COLLECT USER INPUT
-
 my $user_params;
 
 if( -e $input_file ) { $user_params = Config::IniFiles->new( -file =>  glob($input_file) ); } else { confess ("$err Cannot open input file $input_file $!")} 
 confess  ("$err Cannot read user parameter file. Exiting.")     if (!defined ($user_params));
 
 # Get sequence
-my $sequence = glob($user_params->val('main', 'input')) || confess ("No input specified. Exiting");
-
-my @sequence; push (@sequence, $sequence);
+my $sequence_as_string = glob($user_params->val('main', 'input')) || confess ("No input specified. Exiting");
 
 # sequence_file holds sequence information and resides in intermediate work directory
 my $sequence_file=$temp_dir."/".fileparse($input_file); 
+my $seqout= Bio::SeqIO->new( -format => 'Fasta', -file => ">$sequence_file");
+my $seqobj = Bio::Seq->new( -display_id => $proc_name,
+			 -seq => $sequence_as_string);
 
-cluck ("$warn Called interpretSeqPP($sequence_file,\"\",60,17,5000,80 @sequence)");
-my ($LokWrt,$msg,$lenTmp)=
-    RG::PP::interpretSeqPP($sequence_file,"",60,17,5000,80,@sequence);
-
-croak ($msg) if ($LokWrt!=1); # NOTE: interepretSeqPP returns 1 on normal completion
+$seqout->write_seq($seqobj);
 
 # PRINT OUT JOB ENV
 if ($dbg){
@@ -93,37 +87,20 @@ if ($dbg){
 }
 
 # RUN MAKEFILE
-# FORMAT RESULTS
-# CONVERT TO XML
-
 my @command = ();
 push (@command,"make");
-push (@command, "OUTPUTFILE");
-if ($output_format =~ /html/){  
-    $output_file .=".html";# if ($output_file !~ /\.html$/); 
-    $make_file=$root_dir."/makepphtml.mk"; 
-}
-
-push (@command,glob($output_file));
+push (@command, "DESTDIR=".glob($output_dir));
 push (@command,"INFILE=".glob($sequence_file));
-if ($make_file);{
+push (@command,"TEMPDIR=".glob($temp_dir)) if ($temp_dir);
+push (@command,"JOBID=".$proc_name);
+push (@command, "-n") if ($dry_run);
+if ($make_file){
     push (@command,"-f");
     push (@command,glob($make_file));
 }
-push (@command,"MAIN_PIPELINE");
-push (@command,$main_make_file); 
-push (@command,"TEMPDIR");
-push (@command,$temp_dir) if ($temp_dir);
-if ($proc_name){
-    push (@command,"JOBID");
-    push (@command,$proc_name);
-}
-push (@command, "-n") if ($dry_run);
 
-cluck (@command) if ($dbg);
-system (@command) && die( "@command failed: ".$? >> 8 )
-
-
+print Dumper (@command) if ($dbg);
+system (@command) && die( "@command failed: ".($? >> 8 ) );
 
 # CLEAN UP PROCESS
 
@@ -146,6 +123,22 @@ predictprotein [options] [file ...]
 
 =over 8
 
+=item B<-i|input>
+
+path to input file
+
+=item B<-o|output_dir>
+
+Final location of outputfiles
+
+=item B<-d|debug>
+
+A lot of verbiage
+
+=item B<-n|dryrun>
+
+Do not exectute, just shows what is about to be run. 
+
 =item B<-help>
 
 Print a brief help message and exits. 
@@ -166,27 +159,7 @@ B<This program> runs a set of protein sequnce analysis methods
 
 =head1 EXAMPLE
 
-C<predictprotein -i /usr/share/predictprotein/example/MT4_HUMAN.in>
-
-=head2 INPUT FILE
-
-return no alignment
-
-run profsec
-
-run mdisorder_fast
-
-run profacc
-
-run isis
-
-run disis
-
-ret html
-
-# default: single protein sequence resfilename=d7827c495a4ee0bf5f465a0cf775591c0ac8c24c
-
-MSAQISDSIEEKRGFFTRWFMSTNHKDIGVLYLF
+C<~gyachdav/Development/predictprotein/predictprotein -i ~gyachdav/Development/predictprotein/examples/tquick.in -d -o /tmp/pp/tquick.out/>
 
 =head1 ENVIRONMENT
 
@@ -194,6 +167,6 @@ MSAQISDSIEEKRGFFTRWFMSTNHKDIGVLYLF
 
 =item PREDICTPROTEINCONF
 
-Location of snapfunrc configuration file to use, overriding other configuration files                               
+Location of predictproteinrc configuration file to use, overriding other configuration files                               
 
 
