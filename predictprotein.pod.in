@@ -14,6 +14,22 @@ predictprotein [options] [file ...]
 
 =over 8
 
+=item B<-i|input>
+
+path to input file
+
+=item B<-o|output_dir>
+
+Final location of outputfiles
+
+=item B<-d|debug>
+
+A lot of verbiage
+
+=item B<-n|dryrun>
+
+Do not exectute, just shows what is about to be run. 
+
 =item B<-help>
 
 Print a brief help message and exits. 
@@ -34,9 +50,7 @@ B<This program> runs a set of protein sequnce analysis methods
 
 =head1 EXAMPLE
 
-C<predictprotein -i /usr/share/predictprotein/example/tquick.in>
-
-=head2 INPUT FILE
+C<predictprotein -i __pkgdatadir__/examples/tquick.in -d -o /tmp/pp/tquick.out/>
 
 =head1 ENVIRONMENT
 
@@ -44,6 +58,30 @@ C<predictprotein -i /usr/share/predictprotein/example/tquick.in>
 
 =item PREDICTPROTEINCONF
 
-Location of snapfunrc configuration file to use, overriding other configuration files                               
+Location of predictproteinrc configuration file to use, overriding other configuration files                               
 
+=back
 
+=head1 FILES
+
+=over
+
+=item F<__pkgdatadir__/predictproteinrc.default>
+
+Default configuration file. See this file for a description of the parameters.
+
+=item F<__sysconfdir__/predictproteinrc>
+
+System configuration file overriding values in F<__pkgdatadir__/predictproteinrc.default>
+
+=back
+
+=head1 AUTHOR
+
+Burkhard Rost, Antoine de Daruvar, Jinfeng Liu, Guy Yachdav, Laszlo Kajan, Markus Schmidberger
+
+=head1 SEE ALSO
+
+ppqsub(1),  ppc_store(1),  ppc_fetch(1)
+
+=cut

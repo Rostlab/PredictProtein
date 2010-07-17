@@ -1,4 +1,4 @@
-SUBDIRS = example helper_apps resources RG
+SUBDIRS = example helper_apps resources
 
 man_MANS = predictprotein.1
 dist_noinst_DATA = predictprotein.pod.in
