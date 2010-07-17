@@ -35,14 +35,14 @@ $librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')) || 
 $librg_dudek_perl = glob($config->val('predictprotein', 'librg_dudek_perl')) || '/usr/share/librg_dudek_perl';
 my $db_blast_train = glob($config->val('blast', 'uniref'));
 my $db_blast_final = glob($config->val('blast', 'uniref90'));
-my $root_dir = $pp_rootdir || "__PREFIX__/usr/share/predictprotein/";
+my $root_dir = $pp_rootdir || "/usr/share/predictprotein/";
 my $make_file = $root_dir."/MakefilePP";
 #my $main_make_file = $root_dir."/makepp.mk";  # TODO NEED TO REORGNAIZE makefiles in a way that they can call each other
 my $output_format = "text";
 my $temp_dir = File::Temp::tempdir( CLEANUP => 0 );
 
 # COMMAND LINE OPTIONS
-my ($help, $man, $dbg, $dry_run,$proc_name, $input_file,$output_dir);
+my ($help, $man, $dbg, $dry_run,$proc_name, $input_file,$output_dir, $sequence_in,$version);
 
 if (@ARGV < 1){ die "Usage: $0 --input_file=<file>  +[OPTIONS] [process_id]\n";}
 
@@ -50,15 +50,21 @@ my $result = GetOptions (   "i|input_file=s" => \$input_file,
 			    "o|output_dir=s" => \$output_dir,
 			    "m|make_file=s" =>\$make_file,
 			    "p|proc_name=s" =>\$proc_name,
+			    "s|sequence=s" =>\$sequence_in,
 			    "t|temp_dir=s" => \$temp_dir,
 			    "n|dryrun" => \$dry_run,
 			    "f|output_format=s" => \$output_format,
 			    "d|debug" => \$dbg,
+			    "v|version" => \$version,
 			    "man" => \$man,
 			    "help|?" => \$help) or pod2usage(2);
 
 pod2usage(1) if $help;
 pod2usage(-verbose => 2) if $man;
+if ($version){
+    print STDERR ("PredictProtein version __pkgver__\n");
+    exit (0);
+}
 
 $proc_name="no_prot_name" if (! $proc_name);
 
@@ -71,7 +77,7 @@ if( -e $input_file ) { $user_params = Config::IniFiles->new( -file =>  glob($inp
 confess  ("$err Cannot read user parameter file. Exiting.")     if (!defined ($user_params));
 
 # Get sequence
-my $sequence_as_string = glob($user_params->val('main', 'input')) || confess ("No input specified. Exiting");
+my $sequence_as_string = $sequence_in || glob($user_params->val('main', 'input')) || confess ("No input specified. Exiting");
 
 # sequence_file holds sequence information and resides in intermediate work directory
 my $sequence_file=$temp_dir."/".fileparse($input_file); 

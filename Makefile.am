@@ -3,7 +3,7 @@ SUBDIRS = example helper_apps resources
 man_MANS = predictprotein.1
 dist_noinst_DATA = predictprotein.pod.in
 
-dist_pkgdata_DATA = predictproteinrc.default
+dist_pkgdata_DATA = predictproteinrc.default MakefilePP.mk
 
 dist_bin_SCRIPTS = predictprotein
 
@@ -25,5 +25,5 @@ install-data-hook:
 	sed -i -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;s|__bindir__|$(bindir)|g;' "$(DESTDIR)$(pkgdatadir)/predictproteinrc.default"
 
 install-exec-hook:
-	sed -i -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;' "$(DESTDIR)$(bindir)/predictprotein"
+	sed -i -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g; s|__pkgver__|$(PACKAGE_VERSION)|g;' "$(DESTDIR)$(bindir)/predictprotein"
 
