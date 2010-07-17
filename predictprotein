@@ -36,7 +36,7 @@ $librg_dudek_perl = glob($config->val('predictprotein', 'librg_dudek_perl')) || 
 my $db_blast_train = glob($config->val('blast', 'uniref'));
 my $db_blast_final = glob($config->val('blast', 'uniref90'));
 my $root_dir = $pp_rootdir || "/usr/share/predictprotein/";
-my $make_file = $root_dir."/MakefilePP";
+my $make_file = $root_dir."/MakefilePP.mk";
 #my $main_make_file = $root_dir."/makepp.mk";  # TODO NEED TO REORGNAIZE makefiles in a way that they can call each other
 my $output_format = "text";
 my $temp_dir = File::Temp::tempdir( CLEANUP => 0 );
