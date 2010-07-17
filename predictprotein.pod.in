@@ -18,6 +18,10 @@ predictprotein [options] [file ...]
 
 path to input file
 
+=item B<-s|sequence>
+
+one letter amino acid sequence input
+
 =item B<-o|output_dir>
 
 Final location of outputfiles
@@ -25,6 +29,10 @@ Final location of outputfiles
 =item B<-d|debug>
 
 A lot of verbiage
+
+=item B<-v|version>
+
+Print package version
 
 =item B<-n|dryrun>
 

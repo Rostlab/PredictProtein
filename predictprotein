@@ -37,14 +37,14 @@ my $db_blast_train = glob($config->val('blast', 'uniref'));
 my $db_blast_final = glob($config->val('blast', 'uniref90'));
 my $root_dir = $pp_rootdir || "/usr/share/predictprotein/";
 my $make_file = $root_dir."/MakefilePP.mk";
-#my $main_make_file = $root_dir."/makepp.mk";  # TODO NEED TO REORGNAIZE makefiles in a way that they can call each other
+
 my $output_format = "text";
 my $temp_dir = File::Temp::tempdir( CLEANUP => 0 );
 
 # COMMAND LINE OPTIONS
 my ($help, $man, $dbg, $dry_run,$proc_name, $input_file,$output_dir, $sequence_in,$version);
 
-if (@ARGV < 1){ die "Usage: $0 --input_file=<file>  +[OPTIONS] [process_id]\n";}
+if (@ARGV < 1){ die "Usage: $0 +[OPTIONS]\n";}
 
 my $result = GetOptions (   "i|input_file=s" => \$input_file,
 			    "o|output_dir=s" => \$output_dir,
@@ -63,6 +63,7 @@ pod2usage(1) if $help;
 pod2usage(-verbose => 2) if $man;
 if ($version){
     print STDERR ("PredictProtein version __pkgver__\n");
+    print STDERR ("(c) 2010 ROSTLAB\n");
     exit (0);
 }
 
