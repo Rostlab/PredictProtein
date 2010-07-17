@@ -23,8 +23,8 @@ our $config;
 my ($pp_rootdir,$librg_utils_perl, $librg_dudek_perl);
 BEGIN {
     my ( $defaultconfig, $etcconfig );
-    if( -e "/usr/share/predictprotein/predictprotein.default" ) { $defaultconfig = Config::IniFiles->new( -file => "/usr/share/predictprotein/predictprotein.default" ); }
-    if( -e "/etc/predictproteinrc" ) { $etcconfig = Config::IniFiles->new( -file => "/etc/predictproteinrc", -import => $defaultconfig ); } else { $etcconfig = $defaultconfig; }
+    if( -e "__pkgdatadir__/predictproteinrc.default" ) { $defaultconfig = Config::IniFiles->new( -file => "__pkgdatadir__/predictproteinrc.default" ); }
+    if( -e "__sysconfdir__/predictproteinrc" ) { $etcconfig = Config::IniFiles->new( -file => "__sysconfdir__/predictproteinrc", -import => $defaultconfig ); } else { $etcconfig = $defaultconfig; }
     if( ( $ENV{PREDICTPROTEINCONF} && -e "$ENV{PREDICTPROTEINCONF}" ) || -e "$ENV{HOME}/.predictproteinrc" ) { $config = Config::IniFiles->new( -file => $ENV{PREDICTPROTEINCONF} || "$ENV{HOME}/.predictproteinrc", -import => $etcconfig ); } else { $config = $etcconfig; }
     
 }

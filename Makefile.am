@@ -22,7 +22,7 @@ dist-hook:
 	rm -rf `find $(distdir) -name .svn`
 
 install-data-hook:
-	find '$(DESTDIR)$(pkgdatadir)/predictproteinrc.default' -type f -exec sed -i -e 's|__datadir__|$(datadir)|g;s|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;' '{}' \;
+	sed -i -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;s|__bindir__|$(bindir)|g;' "$(DESTDIR)$(pkgdatadir)/predictproteinrc.default"
 
 install-exec-hook:
 	sed -i -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;' "$(DESTDIR)$(bindir)/predictprotein"

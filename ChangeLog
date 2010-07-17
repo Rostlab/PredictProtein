@@ -1,6 +1,15 @@
+predictprotein (1.0.1)
+
+  * Bug Fixes
+  * No longer relies on RG:PP
+  * Runs profdisis
+  * Creates files into output folder and not one concatenated file
+
+ -- Guy Yachdav <gyachdav@rostlab.org>  Sat, 17 Jul 2010 14:37:05 +0200
+	
 predictprotein (1.0.0)
 
   * Initial packaged version
 
- -- Guy Yachdav <lkajan@rostlab.org>  Wed, 28 Apr 2010 15:33:11 +0200
+ -- Guy Yachdav <gyachdav@rostlab.org>  Wed, 28 Apr 2010 15:33:11 +0200
 
