@@ -1,3 +1,11 @@
+predictprotein (1.0.6)
+
+  * Paths for prof, proftmb are now resolved through the config file
+  * Added more version information about the package
+  * Man page had an incorrect example
+
+ -- Guy Yachdav <gyachdav@rostlab.org>  Sun, 18 Jul 2010 12:56:19 +0200
+	
 predictprotein (1.0.1)
 
   * Bug Fixes
