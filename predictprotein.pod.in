@@ -26,6 +26,10 @@ one letter amino acid sequence input
 
 Final location of outputfiles
 
+=item B<-c|num_cpus>
+
+Number of threads to use (default is one)
+
 =item B<-d|debug>
 
 A lot of verbiage
@@ -58,7 +62,7 @@ B<This program> runs a set of protein sequnce analysis methods
 
 =head1 EXAMPLE
 
-C<predictprotein -i __pkgdatadir__/examples/tquick.in -d -o /tmp/pp/tquick.out/>
+C<predictprotein -i __pkgdatadir__/example/tquick.in -d -o /tmp/pp/tquick.out/>
 
 =head1 ENVIRONMENT
 

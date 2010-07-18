@@ -12,10 +12,11 @@ DISULFINDDIR:=$(TEMPDIR)/disulfinder/
 BLASTCORES := 1
 
 # FOLDER LOCATION (CONFIGURABLE)
-PPROOT:=/mnt/home/gyachdav/Development/predictprotein/
+PPROOT:=/usr/share/predictprotein/
 HELPERAPPSDIR:=$(PPROOT)helper_apps/
 LIBRGUTILS:=/usr/share/librg-utils-perl/
 PROFROOT:=/usr/share/profphd/prof/
+PROFTMBROOT:=/usr/share/proftmb/
 
 # DATA (CONFIGURABLE)
 BLASTDATADIR:=/mnt/project/rost_db/data/blast/
@@ -98,7 +99,7 @@ function: $(NLSFILE) $(DISULFINDFILE)
 interaction: $(ISISFILE) $(DISISFILE)
 
 $(PROFTMBFILE):  $(BLASTMATFILE)
-	proftmb @/usr/share/proftmb/options -q $< -o $@
+	proftmb @$(PROFTMBROOT)/options -q $< -o $@
 
 $(ISISFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
 	profisis  --fastafile $(FASTAFILE)  --rdbproffile $(PROFFILE) --hsspfile $(HSSPBLASTFILTERFILE)  --outfile $@
@@ -123,7 +124,7 @@ $(HSSPBLASTFILTERFILE): $(HSSPFILE)
 	 $(LIBRGUTILS)/hssp_filter.pl  red=80 $< fileOut=$@ dirWork=$(TEMPDIR)
 
 $(BLASTPFILE):  $(FASTAFILE)
-	blastall -p blastp -d $(BLASTDATADIR)swiss -b 4000 -i $< -o $@ 
+	blastall -a $(BLASTCORES) -p blastp -d $(BLASTDATADIR)swiss -b 4000 -i $< -o $@ 
 
 $(BLASTPFILTERFILE): $(BLASTPFILE)
 	$(PPROOT)filter_blastp_big.pl $< db=swiss dir=$(DBSWISS) > $@
@@ -175,7 +176,7 @@ $(NORSFILE) $(NORSSUMFILE): $(FASTAFILE) $(HSSPBLASTFILTERFILE) $(PROFFILE) $(PH
 
 #PRODOM
 $(PRODOMFILE):  $(FASTAFILE)
-	blastall -p blastp -d $(PRODOMDIR)prodom -B 500 -i $< -o $@ 
+	blastall -a $(BLASTCORES)  -p blastp -d $(PRODOMDIR)prodom -B 500 -i $< -o $@ 
 
 $(PROSITEFILE): $(GCGFILE)
 	$(HELPERAPPSDIR)prosite_scan.pl -h $(PROSITEDIR)prosite_convert.dat $< >> $@
@@ -183,7 +184,7 @@ $(PROSITEFILE): $(GCGFILE)
 $(SEGFILE): $(FASTAFILE)
 	lowcompseg $< -x > $@
 $(SEGGCGFILE): $(SEGFILE)
-	/usr/share/librg-utils-perl/copf.pl $< formatOut=gcg fileOut=$@ dirWork=$(TEMPDIR)
+	$(LIBRGUTILS)copf.pl $< formatOut=gcg fileOut=$@ dirWork=$(TEMPDIR)
 
 $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE): $(FASTAFILE)
 	blastpgp -a $(BLASTCORES) -j 3 -b 3000 -e 1 -F F -h 1e-3 -d $(BLASTDATADIR)big_80 -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE)

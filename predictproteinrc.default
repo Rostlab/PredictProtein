@@ -4,10 +4,10 @@
 predictprotein_utildir= __pkgdatadir__
 
 # librg_utils_perl=path - path to librg-utils-perl utilities, default: /usr/share/librg-utils-perl
-librg_utils_perl=/usr/share/librg-utils-perl
+librg_utils_perl=/usr/share/librg-utils-perl/
 
 # librg_dudek_perl=path - path to librg-dudek-perl utilities, default: /usr/share/librg-dudek-bundle-perl
-librg_dudek_perl=/usr/share/librg-dudek-bundle-perl
+librg_dudek_perl=/usr/share/librg-dudek-bundle-perl/
 
 
 [blast]
@@ -21,3 +21,10 @@ uniref90=/mnt/project/rost_db/data/blast/big_98
 # swiss=path - path to SwissProt database
 swiss=/mnt/project/rost_db/data/blast/swiss
 
+[support_apps]
+
+# path to proftmb 
+proftmb=/usr/share/proftmb/
+
+# path to proftmb 
+prof=/usr/share/profphd/prof/
