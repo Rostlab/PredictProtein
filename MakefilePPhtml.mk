@@ -4,13 +4,12 @@
 #	(c) 2010 Guy Yachdav rostlab
 #####################################
 
-# This sets JOBID:
-include $(MAIN_PIPELINE)
+MAKE_PP:=__pkgdatadir__/MakefilePP.mk
+include $(MAKE_PP)
 
 #OUTPUTDIR:=/mnt/home/gyachdav/public_html/
 OUTPUTDIR:=./
 OUTPUTFILE:=$(OUTPUTDIR)$(JOBID).html
-.DEFAULT_GOAL := $(OUTPUTFILE)
 
 # quotes of methods
 PROFQUOTE:=PROF predictions
@@ -74,9 +73,10 @@ $(OUTPUTFILE): $(FASTAFILE).html $(GCGFILE) $(PROSITEFILE).html $(SEGGCGFILE).ht
 	cat $(HTMLHEAD) $(TOCFILE) $(FASTAFILE).html $(HRFILE) $(PROSITEFILE).html $(HRFILE) $(BLASTFILERDB).html $(HRFILE) $(DISULFINDFILE).html $(HRFILE) $(SEGGCGFILE).html $(HRFILE)  $(COILSFILE).html $(HRFILE)  $(PHDHTMLFILE) $(HRFILE) $(PROFHTMLFILE) $(HRFILE) $(GLOBEFILE).html $(HRFILE) $(ASPFILE).html $(HRFILE) $(PROFTMBFILE).html $(HRFILE) $(NORSFILE).html $(HRFILE) $(METADISORDERFILE).html $(HRFILE) $(ISISFILE).html $(HRFILE)  $(HTMLQUOTE) $(HTMLFOOTER) > $@
 	sed -i 's/VAR_jobid/$(JOBID)/' $@ 
 
-$(PROFTMBFILE).html: $(PROFTMBFILE)
+tquick.proftmb.html: $(SRCFOLDER)$(PROFTMBFILE)
+	echo $(PROFTMBFILE)
 	echo $(PROFTMBHEAD) '<pre>' > $@ && \
-	cat $< >> $@ && \
+	cat $(SRCFOLDER)$(PROFTMBFILE) >> $@ && \
 	echo '</pre>' >> $@ && \
 	echo '</div>' >> $@ 
 	echo $(PROFTMBTOC) >> $(TOCFILE)
