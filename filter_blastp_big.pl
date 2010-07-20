@@ -10,16 +10,10 @@ $[ =1 ;				# start counting at one
 $p_value_out=       10;
 $dbDef=             "swiss"; 
 $dbDef=             "big";   
-#$dir_db_swiss=      $ENV{PP_DATA}."/swissprot/current/";
-#$dir_db_big=         $ENV{PP_DATA}."/derived/big/";
-$dir_db_big_pdb=    $dir_db_big."splitPdb/";
-$dir_db_big_swiss=  $dir_db_big."splitSwiss/";
-$dir_db_big_trembl= $dir_db_big."splitTrembl/";
-
-$dir_dbDef=$dir_db_swiss;
-$dir_dbDef=$dir_db_big             if ($dbDef eq "big");
 $dirOut=0;
 $extOut=".blast_list";		# note: for Maxhom must end with list ..
+
+#my $ppData;
 
 				# ------------------------------
 				# help
@@ -27,8 +21,9 @@ if ($#ARGV < 1 || $ARGV[1]=~/^(help|\-h|\-m)$/){
     print "goal: $scrGoal\n";
     print "use:  $scrName file <options>\n";
     print "opt:  p=Pvalue_cutoff  (def=$p_value_out)\n";
-    print "      db=<swiss|big>   (def=$db)\n";
-    print "      dir=directory    directory with db split into many FASTA|SWISS-PROT (def=$dir_db)\n";
+    print "      db=<swiss|big>   (def=$dbDef)\n";
+#    print "      ppData=/path\n";
+    print "      dir=directory    directory with db split into many FASTA|SWISS-PROT\n";
     print "      fileOut=name_of_output_file (def=$fileIn - extension + .blastLis\n";
     print "      dirOut           directory for output file\n";
     print "      extOut           extension for output file  (def=$extOut)\n";
@@ -41,7 +36,7 @@ if ($#ARGV < 1 || $ARGV[1]=~/^(help|\-h|\-m)$/){
     exit;}
     
 
-$dir_db=$db=$fileOut=$Ldebug=$Lverb=0;
+$dir_db=$dbWant=$fileOut=$Ldebug=$Lverb=0;
 				# ------------------------------
 				# read command line
 $fileIn=$ARGV[1];
@@ -52,33 +47,46 @@ foreach $arg (@ARGV){
 					    $dirOut.="/"     if ($dirOut !~/\/$/);}
     elsif ($arg=~/^de?bu?g$/)             { $Ldebug=         1;}
     elsif ($arg=~/^verb(ose)?$|^\-v$/)    { $Lverb=          1;}
+#    elsif ($arg=~/^ppData=(.*)$/o)        { $ppData =        $1;}
     elsif ($arg=~/^silent$|^\-s$/)        { $Lverb=          0;}
     elsif ($arg=~/^p=(.*)$/)              { $p_value_out=    $1;}
-    elsif ($arg=~/^db=(.*)$/)             { $db=             $1;
-					    $db=~tr/[A-Z]/[a-z]/;}
+    elsif ($arg=~/^db=(.*)$/)             { $dbWant=             $1; $dbWant = lc( $dbWant ); }
     elsif ($arg=~/^dir=(.*)$/)            { $dir_db=         $1;}
 #    elsif ($arg=~/^=(.*)$/){ $=$1;}
-    else {
-	print "*** $0: wrong command line arg=$arg!\n";
-	exit;}}
+	else
+	{
+		print "*** $0: wrong command line arg=$arg!\n";
+		exit(1);
+	}
+}
 
-if    (! $db && ! $dir_db) {	# both NOT passed
+#if( !$ppData ){ die("no ppData"); }
+#$dir_db_swiss=      "$ppData/swissprot/current/";
+#$dir_db_big=        "$ppData/derived/big/";
+#$dir_db_big_pdb=    $dir_db_big."splitPdb/";
+#$dir_db_big_swiss=  $dir_db_big."splitSwiss/";
+#$dir_db_big_trembl= $dir_db_big."splitTrembl/";
+
+$dir_dbDef=$dir_db_swiss;
+$dir_dbDef=$dir_db_big             if ($dbDef eq "big");
+
+
+if    (! $dbWant && ! $dir_db) {	# both NOT passed
     $dir_db=$dir_dbDef;
-    $dir_db=$dir_db_big         if ($db eq "big");
-    $dir_db=$dir_db_big         if ($db eq "pdb");
-    $dir_db=$dir_db_big         if ($db eq "trembl");
-    $db=    $dbDef;
+    $dir_db=$dir_db_big         if ($dbWant eq "big");
+    $dir_db=$dir_db_big         if ($dbWant eq "pdb");
+    $dir_db=$dir_db_big         if ($dbWant eq "trembl");
+    $dbWant=    $dbDef;
     $dbWant=$dbDef;}
-elsif (! $db) {			# db NOT passed
+elsif (! $dbWant) {			# db NOT passed
     $dbWant=$dbDef;
-    $db=    $dbDef;}
-elsif (! $dir_db) {		# dir NOT passed, but db
-    $dbWant=$db;
+} elsif (! $dir_db) {		# dir NOT passed, but db
+die( $dbWant);
     $dir_db=$dir_db_swiss;
-    $dir_db=$dir_db_big         if ($db eq "big"); 
-    $dir_db=$dir_db_big         if ($db eq "pdb");
-    $dir_db=$dir_db_big         if ($db eq "trembl");}
-
+    $dir_db=$dir_db_big         if ($dbWant eq "big"); 
+    $dir_db=$dir_db_big         if ($dbWant eq "pdb");
+    $dir_db=$dir_db_big         if ($dbWant eq "trembl");
+}
 
 $dir_db.="/"                    if ($dir_db !~/\/$/); # add slash
 
@@ -87,7 +95,7 @@ $fileOut=$dirOut.$fileOut       if ($dirOut && $fileOut);
 
 				# ------------------------------
 				# check input
-die "*** unrecognised db=$db (must be <big|swiss>)\n" if ($db !~/^(big|swiss|pdb|trembl)/);
+die "*** unrecognised db=$dbWant (must be <big|swiss>)\n" if ($dbWant !~/^(big|swiss|pdb|trembl)/);
 die "*** non-existing dir=$dir_db!\n"                 if (! -d $dir_db);
 die "*** missing input file:$fileIn!\n"               if (! -e $fileIn);
 
@@ -122,7 +130,6 @@ while (<FHIN>){
     if ($line =~ /\*+\s+NONE\s+\*+/) {
 	print "none\n";
 	close($fhout)           if ($fhout ne "STDOUT");
-	close($fhin);
 #	exit(0,"none"); 
 	exit(0);
     }
@@ -142,6 +149,7 @@ while (<FHIN>){
 	      $line=~/^Sequences /) );
 
 
+# swiss|Q0H8Y4|COX1_USTMA Cytochrome c oxidase subunit 1 OS=Ustila...    29   9.2
 # pdb|1crn PLANTSEEDPROTEIN CRAMBIN source=ABYSSINIAN CABB...   262  1.8e-32   1
 # 1ppt.pdb PANCREATICHORMONE AVIAN PANCREATIC POLYPEPTI               82  4e-16
     
@@ -150,24 +158,26 @@ while (<FHIN>){
 				# finish reading if Pvalue too high
 	last if ($4 > $p_value_out);
 
-	$db_info=$1;
+	#$db_info=$1;
 				# (1) big redundant db 
 	if    ($line=~/pdb\|/) {
 	    $dbHere="pdb";
-	    $dir_dbSplit=$dir_db_big_pdb; }
+	    #$dir_dbSplit=$dir_db_big_pdb;
+	}
 	elsif ($line=~/trembl\|/) {
 	    $dbHere="trembl";
-	    $dir_dbSplit=$dir_db_big_trembl; }
+	    #$dir_dbSplit=$dir_db_big_trembl;
+        }
 	else {
 	    $dbHere="swiss";
-	    $dir_dbSplit=$dir_db_big_swiss; }
+	    #$dir_dbSplit=$dir_db_big_swiss;
+	}
 				# skip wrong db for BIG
 
-	next if ($dbWant ne "big" &&
-		 $dbHere ne $dbWant);
+	if( !defined($dbWant) || ( $dbWant ne "big" && $dbWant ne $dbHere ) ){ next; }
 
 				# (2) ordinary swiss-prot
-	if ($db eq "swiss") {
+	if ($dbWant eq "swiss") {
 	    $tmp=$line;  
 	    $tmp=~s/^(.*\|)[^\|]+.*$/$1/g;
 #	    print STDERR "tmp=$tmp\n";	    
@@ -224,10 +234,14 @@ close(FHIN);
 
 				# ------------------------------
 				# open output handle
-$fhout="STDOUT";		# default
-$fhout="FHOUT"                  if ($fileOut);
+my $fhout;			# default
 if ($fileOut) {
-    open($fhout,">".$fileOut) || die "*** $0: failed opening out=$fileOut\n";}
+    open($fhout,">".$fileOut) || die "*** $0: failed opening out=$fileOut\n";
+}
+else
+{
+	$fhout = \*STDOUT;
+}
 
 foreach $found (@found){
     print $fhout $found,"\n";
@@ -240,8 +254,9 @@ if (! $ctFound) {
     exit(0);
 }
 
-close($fhout)                   if ($fileOut);
 print "$0 output in $fileOut\n"       if ($fileOut && -e $fileOut);
 print "ERROR $0 no output=$fileOut\n" if ($fileOut && ! -e $fileOut);
 
 exit;
+
+# vim:ai:et:

@@ -4,11 +4,7 @@
 predictprotein_utildir= __pkgdatadir__
 
 # librg_utils_perl=path - path to librg-utils-perl utilities, default: /usr/share/librg-utils-perl
-librg_utils_perl=/usr/share/librg-utils-perl/
-
-# librg_dudek_perl=path - path to librg-dudek-perl utilities, default: /usr/share/librg-dudek-bundle-perl
-librg_dudek_perl=/usr/share/librg-dudek-bundle-perl/
-
+librg_utils_perl=/usr/share/librg-utils-perl
 
 [blast]
 

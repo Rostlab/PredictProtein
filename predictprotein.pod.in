@@ -1,18 +1,16 @@
-=head1 predictprotein -
+=head1 NAME
 
-Protein sequence analysis suite
+predictprotein - Protein sequence analysis suite
 
 =head1 SYNOPSIS
 
-predictprotein [options] [file ...]
+predictprotein [OPTIONS] [FILE]+
 
-=head1 INPUT
-
--input_file: parameter and input sequence
+=head1 DESCRIPTION
 
 =head1 OPTIONS
 
-=over 8
+=over
 
 =item B<-i|input>
 
@@ -22,11 +20,11 @@ path to input file
 
 one letter amino acid sequence input
 
-=item B<-o|output_dir>
+=item B<-o|output-dir>
 
 Final location of outputfiles
 
-=item B<-c|num_cpus>
+=item B<-c|num-cpus>
 
 Number of threads to use (default is one)
 
@@ -44,15 +42,19 @@ Do not exectute, just shows what is about to be run.
 
 =item B<-help>
 
-Print a brief help message and exits. 
+Parameter and input sequence
 
-=item B<-man>
+=item B<--help>
+
+Print a brief help message and exits
+
+=item B<--man>
 
 This documentation page
 
-=item B<-verbose>
+=item B<--debug>
 
-Prints all debug information.
+Prints all debug information
 
 =back
 
@@ -70,7 +72,7 @@ C<predictprotein -i __pkgdatadir__/example/tquick.in -d -o /tmp/pp/tquick.out/>
 
 =item PREDICTPROTEINCONF
 
-Location of predictproteinrc configuration file to use, overriding other configuration files                               
+Location of configuration file to use, overriding other configuration files                               
 
 =back
 
