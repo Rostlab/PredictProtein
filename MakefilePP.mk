@@ -157,7 +157,7 @@ $(BLASTPSWISS):  $(FASTAFILE)
 	blastall -a $(BLASTCORES) -p blastp -d $(BLASTDATADIR)swiss -b 4000 -i $< -o $@ 
 
 $(BLASTPFILTERFILE): $(BLASTPSWISS)
-	$(PPROOT)/filter_blastp_big.pl $< db=swiss dir=$(DBSWISS) > $@
+	$(HELPERAPPSDIR)filter_blastp_big.pl $< db=swiss dir=$(DBSWISS) > $@
 
 $(HSSPFILTERFILE): $(HSSPBLASTFILTERFILE) |$(WORKDIR)
 	 $(LIBRGUTILS)/hssp_filter.pl $(HSSPBLASTFILTERFILE) fileOut=$@  thresh=8 threshSgi=-10 mode=ide exeFilterHssp=filter_hssp dirWork=$(WORKDIR) jobid=$(JOBID)  fileOutScreen=$@.filterScreen dirWork=$(WORKDIR)

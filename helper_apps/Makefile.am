@@ -1,5 +1,9 @@
 helperappsdir = $(pkgdatadir)/helper_apps
-dist_helperapps_SCRIPTS = $(srcdir)/nors.pl $(srcdir)/blast2html.pl $(srcdir)/prosite_scan.pl
+dist_helperapps_SCRIPTS = \
+	$(srcdir)/blast2html.pl \
+	$(srcdir)/filter_blastp_big.pl \
+	$(srcdir)/nors.pl \
+	$(srcdir)/prosite_scan.pl
 
 dist-hook:
 	rm -rf `find $(distdir) -name .svn`
