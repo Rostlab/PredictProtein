@@ -1,3 +1,9 @@
+predictprotein (1.0.9)
+
+  * predictnls params now correctly given (were paths for fileSummary and fileTrace, boolean is expected)
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 21 Jul 2010 21:53:30 +0200
+
 predictprotein (1.0.8)
 
   * Man pages

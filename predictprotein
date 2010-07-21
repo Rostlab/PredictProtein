@@ -82,7 +82,7 @@ Copyright 1992-2010, Rostlab
 Please see COPYING file for license information
 
 Complete documentation for PredictProtein,  should be found on
-this system using "man predprot" or at http://www.predictprotein.org/.
+this system using "man predictprotein" or at http://www.predictprotein.org/.
 
 |;
     exit (0);
@@ -232,11 +232,11 @@ __END__
 
 =head1 NAME
 
-predprot - Protein sequence analysis suite
+predictprotein - Protein sequence analysis suite
 
 =head1 SYNOPSIS
 
-predprot [options] [file ...]
+predictprotein [options] [file ...]
 
 =head1 OPTIONS
 
@@ -318,7 +318,7 @@ B<This program> runs a set of protein sequnce analysis methods
 
 =head1 EXAMPLE
 
- predprot --output-dir /tmp/$USER/predprot --seqfile __pkgdatadir__/example/tquick.fasta
+ predictprotein --output-dir /tmp/$USER/pp --seqfile __pkgdatadir__/example/tquick.fasta
 
 =head1 ENVIRONMENT
 

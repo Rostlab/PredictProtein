@@ -181,7 +181,7 @@ $(DISULFINDERFILE): $(BLASTMATFILE) | $(DISULFINDDIR)
 disulfinder: $(DISULFINDERFILE)
 
 $(NLSFILE) $(NLSSUMFILE): $(FASTAFILE) |$(WORKDIR)
-	predictnls $(PREDICTNLSCTRL) dirOut=$(WORKDIR) fileIn=$< fileOut=$(NLSFILE) fileSummary=$(NLSSUMFILE) fileTrace=$(NLSFILE).nlsTrace html=1
+	predictnls $(PREDICTNLSCTRL) dirOut=$(WORKDIR) fileIn=$< fileOut=$(NLSFILE) fileSummary=1 fileTrace=1 html=1
 
 .PHONY: predictnls
 predictnls: $(NLSFILE) $(NLSSUMFILE)
