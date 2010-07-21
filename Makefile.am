@@ -1,7 +1,7 @@
 SUBDIRS = example helper_apps resources
 
 man_MANS = predictprotein.1
-dist_noinst_DATA = predictprotein.pod.in
+dist_noinst_DATA =
 
 dist_pkgdata_DATA = predictproteinrc.default MakefilePP.mk
 
@@ -9,8 +9,8 @@ dist_bin_SCRIPTS = predictprotein
 
 CLEANFILES = $(dist_man_MANS)
 
-predictprotein.pod:	predictprotein.pod.in
-	sed -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;s|__bindir__|$(bindir)|g;' "$<" > "$@"
+predictprotein.pod:	predictprotein
+	sed -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;s|__bindir__|$(bindir)|g;s|__pkgver__|$(PACKAGE_VERSION)|g;' "$<" > "$@"
 
 predictprotein.1:	predictprotein.pod
 	pod2man -c 'User Commands' -r "$(VERSION)" $< $@

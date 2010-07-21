@@ -39,11 +39,12 @@ my $proftmb_app_root = glob($config->val('support_apps', 'proftmb'));
 my $root_dir = $pp_rootdir || "__pkgdatadir__";
 my $make_file = $root_dir."/MakefilePP.mk";
 
-my $output_format = "text";
+#my $output_format = "text";
 my $work_dir;
 
 # COMMAND LINE OPTIONS
-my($help, $man, $dbg, $dry_run, $prot_name, $input_file, @method, $output_dir, $seqfile, $sequence_in, @target, $version);
+my($help, $man, $dbg, $dry_run, $prot_name, @method, $output_dir, $seqfile, $sequence_in, @target, $version);
+#my $input_file;
 
 my $num_cpus = 1;
 my $blast_processors = 1;
@@ -52,20 +53,20 @@ if (@ARGV < 1){ die "Usage: $0 [OPTIONS]\n";}
 
 my $result = GetOptions (
 			    "blast-processors=i" => \$blast_processors,
-          "i|input-file=s" => \$input_file,
-			    "o|output-dir=s" => \$output_dir,
+			    "c|num-cpus=i" =>\$num_cpus,
+			    "d|debug!" => \$dbg,
+#			    "f|output-format=s" => \$output_format,
+			    "help|?" => \$help,
+#          "i|input-file=s" => \$input_file,
 			    "m|make-file=s" =>\$make_file,
+			    "man" => \$man,
+			    "n|dryrun" => \$dry_run,
+			    "o|output-dir=s" => \$output_dir,
 			    "p|prot-name=s" =>\$prot_name,
 			    "s|seq|sequence=s" =>\$sequence_in,
           'seqfile=s' => \$seqfile,
-			    "c|num-cpus=i" =>\$num_cpus,
-			    "w|work-dir=s" => \$work_dir,
-			    "n|dryrun" => \$dry_run,
-			    "f|output-format=s" => \$output_format,
-			    "d|debug!" => \$dbg,
 			    "v|version" => \$version,
-			    "man" => \$man,
-			    "help|?" => \$help,
+			    "w|work-dir=s" => \$work_dir,
           #
           'method=s@' => \@method,
           'target=s@' => \@target
@@ -103,18 +104,18 @@ else { $work_dir = glob($work_dir); system ( "mkdir", '-p', $work_dir ) && die( 
 
 if( $seqfile )
 {
-  my $in = Bio::SeqIO->new( ( $seqfile eq '-' ? ( -fh => \*STDIN ) : ( -file => $seqfile ) ), -format => 'Fasta' );
+  my $in = Bio::SeqIO->new( ( $seqfile eq '-' ? ( -fh => \*STDIN ) : ( -file => scalar( glob( $seqfile ) ) ) ), -format => 'Fasta' );
   my $seq = $in->next_seq();
   $sequence_in = $seq->seq();
 }
 
 
 # COLLECT USER INPUT
-if( $input_file )
-{
-  my $user_params = Config::IniFiles->new( -file =>  glob($input_file) );
-  if( !defined ($user_params) ){ confess("$err Cannot read user parameter file. Exiting."); }
-}
+#if( $input_file )
+#{
+#  my $user_params = Config::IniFiles->new( -file =>  glob($input_file) );
+#  if( !defined ($user_params) ){ confess("$err Cannot read user parameter file. Exiting."); }
+#}
 
 # Get sequence
 my $sequence_as_string = $sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
@@ -150,19 +151,17 @@ push (@cmd,"INFILE=$work_seq_file");
 if( $work_dir ){ push (@cmd,"WORKDIR=$work_dir/"); }
 push (@cmd,"JOBID=".$prot_name);
 push (@cmd, "-n") if ($dry_run);
-push (@cmd, "-j");
-push (@cmd, $num_cpus);
+push (@cmd, "-j", $num_cpus);
 push (@cmd, "BLASTCORES=".$blast_processors);
 push (@cmd, "LIBRGUTILS=".$librg_utils_perl);
 push (@cmd, "PPROOT=".$pp_rootdir);
 push (@cmd, "PROFROOT=".$prof_app_root);
 push (@cmd, "PROFTMBROOT=".$proftmb_app_root);
 push (@cmd, @$makemethod );
-if( $dbg ){ push (@cmd, "DEBUG=".$dbg); }
+if( !$dbg ){ push @cmd, '--quiet'; } else { push (@cmd, "DEBUG=".$dbg); }
 
 if ($make_file){
-    push (@cmd,"-f");
-    push (@cmd,glob($make_file));
+    push( @cmd, "-f", scalar( glob($make_file) ) );
 }
 
 # target
@@ -239,61 +238,77 @@ predprot - Protein sequence analysis suite
 
 predprot [options] [file ...]
 
-=head1 INPUT
-
---input-file: parameter and input sequence - NOT IMPLEMENTED
-
 =head1 OPTIONS
 
-=over 8
+=over
 
 =item B<--blast-processors>
 
 Number of processors to use, default = 1
 
-=item B<-i|input>
+=item B<-c>, B<--num-cpus>
 
-path to input file
+Make jobs, default = 1
 
-=item B<-s|sequence>
-
-one letter amino acid sequence input
-
-=item B<-o|output-dir>
-
-Final location of outputfiles
-
-=item B<-c|num-cpus>
-
-Number of threads to use (default is one)
-
-=item B<-d|debug>
+=item B<-d>, B<--debug>
 
 A lot of verbiage
-
-=item B<-v|version>
-
-Print package version
-
-=item B<-n|dryrun>
-
-Do not exectute, just shows what is about to be run.
 
 =item B<-help>
 
 Print a brief help message and exits.
 
-=item B<-man>
+=item B<-m>, B<--make-file>
+
+make file to use, default = __pkgdatadir__/MakefilePP.mk
+
+=item B<--man>
 
 This documentation page
 
-=item B<--debug>
+=item B<--method>
 
-Prints all debug information.
+Describes method control parameters and requests methods to run when B<--target> is not I<all>. Format example:
+ 
+ --method=profasp,ws=3
+ 
+* begin with the method name, e.g. `profasp'
 
-=item B<-w|--work-dir>
+* list method control parameters, e.g. ws=3
 
-Working directory. Optional.
+Not all methods support passing control parameters in this way due to their primitive command line interfaces.
+
+=item B<-n>, B<--dryrun>
+
+Do not exectute, just shows what is about to be run
+
+=item B<-o>, B<--output-dir>
+
+Final location of outputfiles, required
+
+=item B<-p>, B<--prot-name>
+
+Query name, default = `query'
+
+=item B<-s>, B<--seq>, B<--sequence>
+
+one letter amino acid sequence input
+
+=item B<--seqfile>
+
+FASTA amino acid sequence file; if `-', standard input is read
+
+=item B<--target>
+
+Method groups to run. Default: `all'.  Look at the Makefile for a list of targets (``Use the source Luke'').
+
+=item B<-v>, B<--version>
+
+Print package version
+
+=item B<-w>, B<--work-dir>
+
+Working directory, optional
 
 =back
 
@@ -303,7 +318,7 @@ B<This program> runs a set of protein sequnce analysis methods
 
 =head1 EXAMPLE
 
-C<predprot -i __pkgdatadir__/example/tquick.in -d -o /tmp/pp/tquick.out/>
+ predprot --output-dir /tmp/$USER/predprot --seqfile __pkgdatadir__/example/tquick.fasta
 
 =head1 ENVIRONMENT
 
