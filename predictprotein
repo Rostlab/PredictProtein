@@ -120,7 +120,7 @@ if( $seqfile )
 # Get sequence
 my $sequence_as_string = $sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
 
-# work_seq_file holds sequence information and resides in intermediate work directory - this is written by RG::PP::interpretSeqPP
+# work_seq_file holds sequence information and resides in intermediate work directory
 my $work_seq_file = "$work_dir/$prot_name.in";
 
 if( ! -e $work_seq_file )
