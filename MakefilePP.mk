@@ -259,13 +259,6 @@ $(FASTAFILE): $(INFILE)
 $(GCGFILE): $(INFILE)
 	$(LIBRGUTILS)/copf.pl $< formatOut=gcg fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
 
-# lkajan: what's this supposed to do?
-#.PRECIOUS: $(WORKDIR)%.in
-#$(WORKDIR)%.in: |$(WORKDIR)
-#	tr -d '\000' < $@ > $(WORKDIR)$*.in2  && \
-#	mv $(WORKDIR)$*.in2 $@ &&\
-#	sed --in-place -e '/^\$$/d' $@ 
-
 $(WORKDIR) $(DISULFINDDIR):
 	mkdir -p $@
 
