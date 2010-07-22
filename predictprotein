@@ -238,6 +238,10 @@ predictprotein - Protein sequence analysis suite
 
 predictprotein [options] [file ...]
 
+=head1 DESCRIPTION
+
+predictprotein runs a set of protein sequnce analysis methods.  Method outputs are deposited into B<--output-dir>.
+
 =head1 OPTIONS
 
 =over
@@ -312,11 +316,7 @@ Working directory, optional
 
 =back
 
-=head1 DESCRIPTION
-
-B<This program> runs a set of protein sequnce analysis methods
-
-=head1 EXAMPLE
+=head1 EXAMPLES
 
  predictprotein --output-dir /tmp/$USER/pp --seqfile __pkgdatadir__/example/tquick.fasta
 
