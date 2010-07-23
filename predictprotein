@@ -69,10 +69,10 @@ my $result = GetOptions (
 			    "p|prot-name=s" =>\$prot_name,
 			    "s|seq|sequence=s" =>\$sequence_in,
           'seqfile=s' => \$seqfile,
-          'target=s@' => \@target
+          'target=s@' => \@target,
           'use-cache!' => \$use_cache,
 			    "v|version" => \$version,
-			    "w|work-dir=s" => \$work_dir,
+			    "w|work-dir=s" => \$work_dir
 ) or pod2usage(2);
 
 pod2usage(1) if $help;
@@ -370,7 +370,8 @@ predictprotein runs a set of protein sequnce analysis methods.  Method outputs a
 
 =item B<--acl>, B<--setacl>
 
-Set access control lists.  All previous ACLs are lost - no merging.  The read bit controls browsability of results. Other bits are not used. E.g.
+Set access control lists.  Access control lists are set I<only> in case results are stored in the cache.  This option is ineffective otherwise.
+All previous ACLs are lost - no merging.  The read bit controls browsability of results. Other bits are not used. E.g.
 
  u:lkajan:4,u:gyachdav:4,g:lkajan:4,o::0
 
@@ -458,6 +459,8 @@ Working directory, optional
 
  predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --method=profasp,ws=3 --output-dir /tmp/$USER/pp 
 
+=over
+
 =item Store results in cache, do not care about storing files in B<--output-dir>:
 
  predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --method=profasp,ws=3 --use-cache --setacl g:rostlab:7
@@ -465,6 +468,8 @@ Working directory, optional
 =item If not in cache store, otherwise fetch results from cache into B<--output-dir>:
 
  predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --method=profasp,ws=3 --use-cache --setacl g:rostlab:7 --output-dir /tmp/$USER/pp
+
+=back
 
 =head1 ENVIRONMENT
 
