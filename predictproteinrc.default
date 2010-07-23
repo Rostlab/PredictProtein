@@ -1,10 +1,13 @@
 [predictprotein]
 
 # predictprotein_utildir=path - path to package utilities, default: /usr/share/predictprotein
-predictprotein_utildir= __pkgdatadir__
+predictprotein_utildir=__pkgdatadir__
 
 # librg_utils_perl=path - path to librg-utils-perl utilities, default: /usr/share/librg-utils-perl
 librg_utils_perl=/usr/share/librg-utils-perl
+
+# use/do not use result cache
+use_cache=0
 
 [blast]
 

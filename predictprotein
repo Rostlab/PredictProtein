@@ -2,7 +2,7 @@
 use warnings;
 use strict;
 use Data::Dumper;
-use Carp qw(cluck croak confess longmess);
+use Carp qw(cluck :DEFAULT);
 use Getopt::Long;
 use File::Copy;
 use File::Temp;
@@ -11,6 +11,7 @@ use Pod::Usage;
 use Config::IniFiles;
 use Bio::Seq;
 use Bio::SeqIO;
+use RG::PP::CacheMgr;
 
 $Carp::Verbose = 1; 
 
@@ -38,12 +39,13 @@ my $prof_app_root = glob($config->val('support_apps', 'prof'));
 my $proftmb_app_root = glob($config->val('support_apps', 'proftmb'));
 my $root_dir = $pp_rootdir || "__pkgdatadir__";
 my $make_file = $root_dir."/MakefilePP.mk";
+my $use_cache = $config->val('predictprotein', 'use_cache');
 
 #my $output_format = "text";
 my $work_dir;
 
 # COMMAND LINE OPTIONS
-my($help, $man, $dbg, $dry_run, $prot_name, @method, $output_dir, $seqfile, $sequence_in, @target, $version);
+my($help, $man, $dbg, $dry_run, $prot_name, @method, $output_dir, $seqfile, $sequence_in, $setacl, @target, $version);
 #my $input_file;
 
 my $num_cpus = 1;
@@ -52,6 +54,7 @@ my $blast_processors = 1;
 if (@ARGV < 1){ die "Usage: $0 [OPTIONS]\n";}
 
 my $result = GetOptions (
+          'acl|setacl=s' => \$setacl,
 			    "blast-processors=i" => \$blast_processors,
 			    "c|num-cpus=i" =>\$num_cpus,
 			    "d|debug!" => \$dbg,
@@ -60,16 +63,16 @@ my $result = GetOptions (
 #          "i|input-file=s" => \$input_file,
 			    "m|make-file=s" =>\$make_file,
 			    "man" => \$man,
+          'method=s@' => \@method,
 			    "n|dryrun" => \$dry_run,
 			    "o|output-dir=s" => \$output_dir,
 			    "p|prot-name=s" =>\$prot_name,
 			    "s|seq|sequence=s" =>\$sequence_in,
           'seqfile=s' => \$seqfile,
+          'target=s@' => \@target
+          'use-cache!' => \$use_cache,
 			    "v|version" => \$version,
 			    "w|work-dir=s" => \$work_dir,
-          #
-          'method=s@' => \@method,
-          'target=s@' => \@target
 ) or pod2usage(2);
 
 pod2usage(1) if $help;
@@ -88,16 +91,23 @@ this system using "man predictprotein" or at http://www.predictprotein.org/.
     exit (0);
 }
 
-my( $makemethod, $maketarget ) = _get_makemethod( \@method );
+my( $makemethod, $maketarget, $hash_meth ) = _get_makemethod( \@method );
 
-if( !$output_dir ){ die("Error: no output directory given, use --output-dir option".( $dbg ? '' : "\n" ) ); }
-$output_dir = glob($output_dir);
-system( 'mkdir', '-p', $output_dir ) && die( "could not mkdir '$output_dir': ".($? >> 8 ));
+if( !$output_dir && !$use_cache ){ die("Error: no output directory given and no cache is to be used. Results would be lost unless you use --output-dir or --use-cache.".( $dbg ? '' : "\n" ) ); }
+if( $output_dir )
+{
+  $output_dir = glob($output_dir);
+  system( 'mkdir', '-p', $output_dir ) && die( "could not mkdir '$output_dir': ".($? >> 8 ));
+}
 
 if(! $prot_name){ $prot_name="query"; }
-if( $prot_name =~ /[^[:alnum:] -._]/o ){ die("Error: invalid protein name, please use only [[:alnum:] -._]".( $dbg ? '' : "\n" )); }
+if( $prot_name =~ /[^[:alnum:]._-]/o ){ die("Error: invalid protein name, please use only [[:alnum:] -._]".( $dbg ? '' : "\n" )); }
+
+# check acl syntax if given
+if( $setacl ) { RG::PP::CacheMgr::acl2hash( $setacl ); }
 
 if( !@target ){ @target = ( 'all' ); }
+if( $target[0] ne 'all' ){ push @target, @$maketarget; } # all is `all', no need to specify them individually
 
 if( ! $work_dir ){ $work_dir = File::Temp::tempdir( CLEANUP => !$dbg ); }
 else { $work_dir = glob($work_dir); system ( "mkdir", '-p', $work_dir ) && die( "could not mkdir '$work_dir': ".($? >> 8) ); }
@@ -118,14 +128,14 @@ if( $seqfile )
 #}
 
 # Get sequence
-my $sequence_as_string = $sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
+$sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
 
 # work_seq_file holds sequence information and resides in intermediate work directory
 my $work_seq_file = "$work_dir/$prot_name.in";
 
 if( ! -e $work_seq_file )
 {
-  my $seqobj = Bio::Seq->new( -display_id => $prot_name, -seq => $sequence_as_string);
+  my $seqobj = Bio::Seq->new( -display_id => $prot_name, -seq => $sequence_in);
   my $seqout= Bio::SeqIO->new( -format => 'Fasta', -file => ">$work_seq_file" );
   $seqout->write_seq($seqobj);
 }
@@ -140,6 +150,54 @@ if( ! -e $work_seq_file )
 # PRINT OUT JOB ENV
 if ($dbg){ cluck "work_dir=$work_dir"; }
 
+# cache fetch?
+if( $use_cache )
+{
+  # Do we have it in the cache?
+  my @ppf_cmd = ('ppc_fetch', '--seq', $sequence_in );
+
+  #   method
+  push @ppf_cmd, map {
+    my $method = $_;
+    my $ctrl = join(',', map {
+      my $ctrl = $_; "$ctrl=$hash_meth->{$method}->{ctrl}->{$ctrl}";
+    } keys(%{$hash_meth->{$method}->{ctrl}}) );
+    ( '--method', $method.( $ctrl ? ",$ctrl" : '' ) );
+  } keys(%$hash_meth);
+
+  if( $dbg ){ cluck( "@ppf_cmd" ); }
+
+  my( $closeret, @cachefiles );
+  {
+    my $pid = open( my $pipe, '-|' ); if( !defined( $pid ) ){ die("failed to execute '|@ppf_cmd': ".( $? >> 8 )); }
+    if( !$pid ){ exec( @ppf_cmd ); }
+    @cachefiles = <$pipe>;
+    $closeret = close( $pipe );
+  }
+  #
+  if( $closeret )
+  {
+    # in cache, so we do not run but copy files to $output_dir if that's given
+    if( $output_dir )
+    {
+      foreach my $cfile (@cachefiles)
+      {
+        chomp( $cfile );
+
+        # set filename to $prot_name
+        my( $filename, $directories, $suffix ) = fileparse( $cfile, qr/\.[^.]*$/o );
+
+        my $dfile = "$output_dir/$prot_name$suffix";
+
+        my @cp_cmd = ( 'cp', '--preserve=timestamps', $cfile, $dfile );
+        system( @cp_cmd ) && confess( "failed to execute '@cp_cmd': ".( $? >> 8 ) );
+      }
+
+      if( $dbg ){ warn( "prediction fetched from cache, results are in $output_dir" ); }
+    }
+    exit(0);
+  }
+}
 
 
 
@@ -166,17 +224,66 @@ if ($make_file){
 
 # target
 my @cmd_all = ( @cmd, @target );
-if( !@target || $target[0] ne 'all' ){ push @cmd_all, @$maketarget; } # all is `all', no need to specify them individually
 
 if ($dbg) { cluck("@cmd_all"); }
 system (@cmd_all) && die( "@cmd_all failed: ".($? >> 8 ) );
 
-my @cmd_install = ( @cmd, "DESTDIR=$output_dir", 'install' );
+# cache store?
+if( $use_cache )
+{
+  # We have to combine method ctrl params (%$hash_meth) with result files here and that is not trivial. We are going to have logic here to establish which result file belongs to which method.
+  # Associate extensions with method names: %RG::PP::CacheMgr::meth_ext_hash
+  my $precache_dir = File::Temp::tempdir( CLEANUP => !$dbg );
+  if( $dbg ){ warn("precache dir = $precache_dir"); }
+   
+  my @cmd_install = ( @cmd, "DESTDIR=$precache_dir", 'install' );
+  if ($dbg) { cluck("@cmd_install"); }
+  system( @cmd_install ) && die( "@cmd_install DESTDIR=$precache_dir install failed: ".( $? >> 8 ) );
 
-if ($dbg) { cluck("@cmd_install"); }
-system( @cmd_install ) && die( "@cmd_install DESTDIR=$output_dir install failed: ".( $? >> 8 ) );
+  my $result_files = _ls_dir( $precache_dir );
+  foreach my $res_file (@$result_files)
+  {
+    if( substr( $res_file, 0, 1 ) eq '.' ){ next; }
 
-if( $dbg ){ warn( "prediction complete, results are in $output_dir" ); }
+    # query.aliBlastpSwiss => $method->{blastpswiss}->{res}->{aliBlastpSwiss} = "$precache_dir/$res_file";
+    my( $filename, $directories, $suffix ) = fileparse( $res_file, qr/\.[^.]*$/o );
+    my $extkey = substr( $suffix, 1 );
+
+    my $method = $RG::PP::CacheMgr::meth_ext_hash{$extkey};
+    if( !$method ){ warn("Warning: extension '$extkey' does not have associated method in RG::PP::CacheMgr::meth_ext_hash"); $method = $extkey; }
+
+    $hash_meth->{$method}->{res}->{$extkey} = "$precache_dir/$res_file";
+  }
+  #if( $dbg ){ cluck( Dumper( $hash_meth ) ); }
+
+  # Now call ppc_store
+  my @method_args = map {
+    my $method = $_;
+    my $ctrl = join(',', map { my $cp = $_; "$cp=$hash_meth->{$method}->{ctrl}->{$cp}"; } keys(%{$hash_meth->{$method}->{ctrl}}) );
+    my $res = join(',', map { my $res = $_; "res_$res=$hash_meth->{$method}->{res}->{$res}"; } keys(%{$hash_meth->{$method}->{res}}) );
+    "--method=$method".( $ctrl ? ",$ctrl" : '' ).($res ? ",$res" : '' );
+  } keys(%$hash_meth);
+
+  my @cmd = (
+    'ppc_store',
+    ( $setacl ? ( '--setacl', $setacl ) : () ),
+    @method_args,
+    '--seq', $sequence_in
+  );
+
+  if( $dbg ){ cluck( "@cmd" ); }
+  system( @cmd ) && die( "@cmd failed: ".( $? >> 8 ) );
+}
+
+if( $output_dir )
+{
+  my @cmd_install = ( @cmd, "DESTDIR=$output_dir", 'install' );
+
+  if ($dbg) { cluck("@cmd_install"); }
+  system( @cmd_install ) && die( "@cmd_install DESTDIR=$output_dir install failed: ".( $? >> 8 ) );
+
+  if( $dbg ){ warn( "prediction complete, results are in $output_dir" ); }
+}
 
 exit(0);
 
@@ -190,6 +297,7 @@ sub               _get_makemethod
   my( $__method ) = @_;
   my $makemethod = [];
   my $maketarget = [];
+  my $hash_meth = {};
 
   foreach my $method_cm ( @$__method )
   {
@@ -218,15 +326,29 @@ sub               _get_makemethod
       ){ die("Error: this interface does not support passing control parameters to $meth1 because of ${meth1}'s primitive command line interface.".( $dbg ? '' : "\n" )); }
     }
   
-    #store the results from each crt and res elemnt as one hash
+    #store the results from each crt and res element as one hash
     push @$makemethod, uc( $meth1 ).'CTRL="'.join(' ', map {
       my $ctrlpair = $_;
       if( $ctrlpair =~ /^-/o ){ confess( "Error: control parameter with leading `-': '$ctrlpair'" ); } "--$_";
     } @tmp_crl ).'"';
+    
+    my $ctrl = { map{ split(/=/o, $_, 2 ); }@tmp_crl };
+    $hash_meth->{$meth1}{'ctrl'} = $ctrl;
   }
 
-  return( $makemethod, $maketarget );
+  return( $makemethod, $maketarget, $hash_meth );
 }
+
+
+sub               _ls_dir
+{
+  my( $__dir ) = @_;
+  opendir( my $dh, $__dir ) || confess( "failed to open $__dir: $!" );
+  my $files = [ readdir( $dh ) ];
+  closedir( $dh );
+  return $files;
+}
+
 
 __END__
 
@@ -240,11 +362,17 @@ predictprotein [options] [file ...]
 
 =head1 DESCRIPTION
 
-predictprotein runs a set of protein sequnce analysis methods.  Method outputs are deposited into B<--output-dir>.
+predictprotein runs a set of protein sequnce analysis methods.  Method outputs are deposited into B<--output-dir>.  If no B<--output-dir> is given but B<--use-cache> is in effect it will store and fetch results from the cache.
 
 =head1 OPTIONS
 
 =over
+
+=item B<--acl>, B<--setacl>
+
+Set access control lists.  All previous ACLs are lost - no merging.  The read bit controls browsability of results. Other bits are not used. E.g.
+
+ u:lkajan:4,u:gyachdav:4,g:lkajan:4,o::0
 
 =item B<--blast-processors>
 
@@ -258,7 +386,7 @@ Make jobs, default = 1
 
 A lot of verbiage
 
-=item B<-help>
+=item B<--help>
 
 Print a brief help message and exits.
 
@@ -284,11 +412,11 @@ Not all methods support passing control parameters in this way due to their prim
 
 =item B<-n>, B<--dryrun>
 
-Do not exectute, just shows what is about to be run
+Do not execute, just shows what is about to be run
 
 =item B<-o>, B<--output-dir>
 
-Final location of outputfiles, required
+Final location of outputfiles, required unless caching is used.
 
 =item B<-p>, B<--prot-name>
 
@@ -306,6 +434,14 @@ FASTA amino acid sequence file; if `-', standard input is read
 
 Method groups to run. Default: `all'.  Look at the Makefile for a list of targets (``Use the source Luke'').
 
+=item B<--use-cache>
+
+=item B<--nouse-cache>
+
+Use/do not use cache for predictprotein results. If enabled retrieve and store results automatically. Default: B<--nouse-cache>.
+
+Option `use_cache' may be given in configuration files to override default.
+
 =item B<-v>, B<--version>
 
 Print package version
@@ -318,7 +454,17 @@ Working directory, optional
 
 =head1 EXAMPLES
 
- predictprotein --output-dir /tmp/$USER/pp --seqfile __pkgdatadir__/example/tquick.fasta
+ predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --output-dir /tmp/$USER/pp 
+
+ predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --method=profasp,ws=3 --output-dir /tmp/$USER/pp 
+
+=item Store results in cache, do not care about storing files in B<--output-dir>:
+
+ predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --method=profasp,ws=3 --use-cache --setacl g:rostlab:7
+
+=item If not in cache store, otherwise fetch results from cache into B<--output-dir>:
+
+ predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --method=profasp,ws=3 --use-cache --setacl g:rostlab:7 --output-dir /tmp/$USER/pp
 
 =head1 ENVIRONMENT
 

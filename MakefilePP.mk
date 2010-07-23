@@ -42,6 +42,7 @@ COILSFILE:=$(INFILE:%.in=%.coils)
 COILSRAWFILE:=$(INFILE:%.in=%.coils_raw)
 NLSFILE:=$(INFILE:%.in=%.nls)
 NLSSUMFILE:=$(INFILE:%.in=%.nlsSum)
+NLSTRACEFILE:=$(INFILE:%.in=%.nlsTrace)
 PHDFILE:=$(INFILE:%.in=%.phdPred)
 PHDRDBFILE:=$(INFILE:%.in=%.phdRdb)
 PHDRDBHTMFILE:=$(INFILE:%.in=%.phdRdbHtm)
@@ -70,8 +71,7 @@ SAFFILE:=$(INFILE:%.in=%.safBlastPsi)
 FASTAFILE:=$(INFILE:%.in=%.fasta)
 GCGFILE:=$(INFILE:%.in=%.seqGCG)
 PROFBVALFILE:=$(INFILE:%.in=%.profbval)
-METADISORDERFILE:=$(INFILE:%.in=%.metadisorder)
-PROFFILE:=$(INFILE:%.in=%.profRdb)
+METADISORDERFILE:=$(INFILE:%.in=%.mdisorder)
 PROFTEXTFILE:=$(INFILE:%.in=%.profAscii)
 PROFCONFILE:=$(INFILE:%.in=%.profcon)
 PROFTMBFILE:=$(INFILE:%.in=%.proftmb)
@@ -97,7 +97,7 @@ PROFNORSCTRL := --win=70 --secCut=12 --accLen=10
 PROFTMBCTRL :=
 
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) disorder function interaction sec-struct 
+all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFORPHDFILE) disorder function interaction sec-struct 
 
 .PHONY: sec-struct
 sec-struct:  $(COILSFILE) $(PHDRDBFILE) $(PROFTEXTFILE) $(PROFTMBFILE)
@@ -180,8 +180,8 @@ $(DISULFINDERFILE): $(BLASTMATFILE) | $(DISULFINDDIR)
 .PHONY: disulfinder
 disulfinder: $(DISULFINDERFILE)
 
-$(NLSFILE) $(NLSSUMFILE): $(FASTAFILE) |$(WORKDIR)
-	predictnls $(PREDICTNLSCTRL) dirOut=$(WORKDIR) fileIn=$< fileOut=$(NLSFILE) fileSummary=1 fileTrace=1 html=1
+$(NLSFILE) $(NLSSUMFILE) $(NLSTRACEFILE): $(FASTAFILE) |$(WORKDIR)
+	predictnls $(PREDICTNLSCTRL) dirOut=$(WORKDIR) fileIn=$< fileOut=$(NLSFILE) fileSummary=$(NLSSUMFILE) fileTrace=$(NLSTRACEFILE) html=1
 
 .PHONY: predictnls
 predictnls: $(NLSFILE) $(NLSSUMFILE)
@@ -284,7 +284,7 @@ install:
 		$(INFILE) \
 		$(ISISFILE) \
 		$(METADISORDERFILE) \
-		$(NLSFILE) \
+		$(NLSFILE) $(NLSSUMFILE) \
 		$(NORSFILE) $(NORSSUMFILE) \
 		$(NORSNETFILE) \
 		$(PHDNOTHTMFILE) $(PHDFILE) $(PHDRDBFILE) \
@@ -296,7 +296,7 @@ install:
 		$(SAFFILE) \
 		$(SEGFILE) $(SEGGCGFILE) \
 		$(GCGFILE) \
-			$(DESTDIR)/ # do not blow up on for missing files
+			$(DESTDIR)/ # do not blow up on missing files
 
 .PHONY: help
 help:
