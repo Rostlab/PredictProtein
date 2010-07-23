@@ -182,18 +182,7 @@ if( $use_cache && !$force_cache_store )
     # in cache, so we do not run but copy files to $output_dir if that's given
     if( $output_dir )
     {
-      foreach my $cfile (@cachefiles)
-      {
-        chomp( $cfile );
-
-        # set filename to $prot_name
-        my( $filename, $directories, $suffix ) = fileparse( $cfile, qr/\.[^.]*$/o );
-
-        my $dfile = "$output_dir/$prot_name$suffix";
-
-        my @cp_cmd = ( 'cp', '--preserve=timestamps', $cfile, $dfile );
-        system( @cp_cmd ) && confess( "failed to execute '@cp_cmd': ".( $? >> 8 ) );
-      }
+      RG::PP::CacheMgr::restore_from_cache_to_output_dir( cachefiles => \@cachefiles, output_dir => $output_dir, prot_name => $prot_name );
 
       if( $dbg ){ warn( "prediction fetched from cache, results are in $output_dir" ); }
     }

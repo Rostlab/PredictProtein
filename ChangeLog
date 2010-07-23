@@ -1,3 +1,9 @@
+predictprotein (1.0.17)
+
+  * file restore logic moved to cache module
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 23 Jul 2010 13:23:00 +0200
+
 predictprotein (1.0.16)
 
   * redirecting standard output of make of methods to /dev/null if not --debug
