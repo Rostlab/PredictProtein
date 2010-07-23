@@ -271,7 +271,7 @@ clean-html:
 
 .PHONY: install
 install:
-	-cp -a \
+	for f in \
 		$(BLASTPFILTERFILE) \
 		$(ASPFILE) \
 		$(BLASTALIFILE) $(BLASTMATFILE) $(BLASTFILERDB) $(BLASTCHECKFILE) \
@@ -296,7 +296,7 @@ install:
 		$(SAFFILE) \
 		$(SEGFILE) $(SEGGCGFILE) \
 		$(GCGFILE) \
-			$(DESTDIR)/ # do not blow up on missing files
+	; do if [ -e $$f ]; then cp -a $$f $(DESTDIR)/ ; fi; done
 
 .PHONY: help
 help:

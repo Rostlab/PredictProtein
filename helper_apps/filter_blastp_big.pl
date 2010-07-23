@@ -149,14 +149,18 @@ while (<FHIN>){
 	      $line=~/^Sequences /) );
 
 
+# swiss|Q8HXX3|MC4R_MACFA Melanocortin receptor 4 OS=Macaca fascic...   625   e-179
 # swiss|Q0H8Y4|COX1_USTMA Cytochrome c oxidase subunit 1 OS=Ustila...    29   9.2
 # pdb|1crn PLANTSEEDPROTEIN CRAMBIN source=ABYSSINIAN CABB...   262  1.8e-32   1
 # 1ppt.pdb PANCREATICHORMONE AVIAN PANCREATIC POLYPEPTI               82  4e-16
     
+    #                 1      2       3          4
     if ($line=~/^\s*(\S+)\s+(.*)\s+(\d+)\s+([\-x\d\.e]+)\s*.*$/) {
 	
 				# finish reading if Pvalue too high
-	last if ($4 > $p_value_out);
+        # lkajan: perl does not recognize e-179 as a number. It does recognize 1e-179 though.
+        my $e_val = $4; if( $e_val =~ /^e/o ){ $e_val = "1$e_val"; }
+	if ($e_val > $p_value_out){ last; }
 
 	#$db_info=$1;
 				# (1) big redundant db 

@@ -45,9 +45,10 @@ my $use_cache = $config->val('predictprotein', 'use_cache');
 my $work_dir;
 
 # COMMAND LINE OPTIONS
-my($help, $man, $dbg, $dry_run, $prot_name, @method, $output_dir, $seqfile, $sequence_in, $setacl, @target, $version);
+my( $help, $man, $dbg, $dry_run, $prot_name, @method, $output_dir, $seqfile, $sequence_in, $setacl, @target, $version);
 #my $input_file;
 
+my $force_cache_store = 0;
 my $num_cpus = 1;
 my $blast_processors = 1;
 
@@ -59,6 +60,7 @@ my $result = GetOptions (
 			    "c|num-cpus=i" =>\$num_cpus,
 			    "d|debug!" => \$dbg,
 #			    "f|output-format=s" => \$output_format,
+          "force-cache-store!" => \$force_cache_store,
 			    "help|?" => \$help,
 #          "i|input-file=s" => \$input_file,
 			    "m|make-file=s" =>\$make_file,
@@ -151,7 +153,7 @@ if( ! -e $work_seq_file )
 if ($dbg){ cluck "work_dir=$work_dir"; }
 
 # cache fetch?
-if( $use_cache )
+if( $use_cache && !$force_cache_store )
 {
   # Do we have it in the cache?
   my @ppf_cmd = ('ppc_fetch', '--seq', $sequence_in );
@@ -386,6 +388,12 @@ Make jobs, default = 1
 =item B<-d>, B<--debug>
 
 A lot of verbiage
+
+=item B<--force-cache-store>
+
+=item B<--noforce-cache-store>
+
+Enable/disable forcing storage of results into cache.  Ineffective unless B<--use-cache> is also set.  Default: B<--noforce-cache-store>
 
 =item B<--help>
 

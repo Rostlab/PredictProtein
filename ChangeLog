@@ -1,3 +1,9 @@
+predictprotein (1.0.15)
+
+  * fixed filter_blastp_big.pl e-179 error
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 23 Jul 2010 13:23:00 +0200
+
 predictprotein (1.0.14)
 
   * fixed syntax error
