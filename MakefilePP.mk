@@ -112,7 +112,7 @@ function: $(NLSFILE) $(DISULFINDERFILE)
 interaction: $(ISISFILE) $(DISISFILE)
 
 $(PROFTMBFILE):  $(BLASTMATFILE)
-	proftmb @$(PROFTMBROOT)/options $(PROFTMBCTRL) -q $< -o $@
+	proftmb @$(PROFTMBROOT)/options $(PROFTMBCTRL) -q $< -o $@ --quiet
 
 .PHONY: proftmb
 proftmb: $(PROFTMBFILE)
@@ -130,7 +130,7 @@ $(DISISFILE): $(PROFFILE) $(HSSPBLASTFILTERFILE)
 profdisis: $(DISISFILE)
 
 $(PROFBVALFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
-	profbval $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $@ 1 5 $(JOBID)
+	profbval $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $@ 1 5 $(DEBUG)
 
 .PHONY: profbval
 profbval: $(PROFBVALFILE)

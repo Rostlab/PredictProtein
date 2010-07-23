@@ -227,8 +227,16 @@ if ($make_file){
 # target
 my @cmd_all = ( @cmd, @target );
 
-if ($dbg) { cluck("@cmd_all"); }
-system (@cmd_all) && die( "@cmd_all failed: ".($? >> 8 ) );
+my $oldout;
+if($dbg) { cluck("@cmd_all"); }
+else
+{
+  # so the methods speak on standard out ... let's just silence them all
+  open( $oldout, '>&', \*STDOUT ) || die( $! );
+  open( STDOUT, '>', '/dev/null' ) || die( $! );
+}
+                system(@cmd_all) && die( "@cmd_all failed: ".($? >> 8 ) );
+if( !$dbg ) { open( STDOUT, '>&', $oldout ) || die( $! ); }
 
 # cache store?
 if( $use_cache )
