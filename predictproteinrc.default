@@ -25,5 +25,6 @@ swiss=/mnt/project/rost_db/data/blast/swiss
 # path to proftmb 
 proftmb=/usr/share/proftmb/
 
-# path to proftmb 
+# path to profphd 
 prof=/usr/share/profphd/prof/
+

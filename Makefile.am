@@ -9,6 +9,7 @@ dist_bin_SCRIPTS = predictprotein
 
 CLEANFILES = $(dist_man_MANS)
 
+.INTERMEDIATE: predictprotein.pod
 predictprotein.pod:	predictprotein
 	sed -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;s|__bindir__|$(bindir)|g;s|__pkgver__|$(PACKAGE_VERSION)|g;' "$<" > "$@"
 
@@ -29,5 +30,5 @@ install-data-hook:
 
 install-exec-hook:
 	sed -i -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g; s|__pkgver__|$(PACKAGE_VERSION)|g;' "$(DESTDIR)$(bindir)/predictprotein"
-	ln -s predictprotein $(DESTDIR)$(bindir)/predprot
+	rm -f $(DESTDIR)$(bindir)/predprot && ln -s predictprotein $(DESTDIR)$(bindir)/predprot
 

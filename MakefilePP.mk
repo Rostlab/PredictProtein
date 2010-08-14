@@ -35,7 +35,9 @@ HTMLFOOTER=$(PPROOT)/resources/HtmlFooter.html
 
 # RESULTS FILES
 HSSPFILE:=$(INFILE:%.in=%.hssp)
+HSSPFILE4MD:=$(INFILE:%.in=%.hssp4md)
 HSSPBLASTFILTERFILE:=$(INFILE:%.in=%.hsspPsiFil)
+HSSPBLASTFILTERFILE4MD:=$(INFILE:%.in=%.hsspPsiFil4md)
 HSSPFILTERFILE:=$(INFILE:%.in=%.hsspFilter)
 HSSPFILTERFORPHDFILE:=$(INFILE:%.in=%.hsspMax4phd)
 COILSFILE:=$(INFILE:%.in=%.coils)
@@ -60,19 +62,24 @@ GLOBEFILE:=$(INFILE:%.in=%.globe)
 SEGFILE:=$(INFILE:%.in=%.segNorm)
 SEGGCGFILE:=$(INFILE:%.in=%.segNormGCG)
 BLASTFILE:=$(INFILE:%.in=%.blastPsiOutTmp)
+BLASTFILE4MD:=$(INFILE:%.in=%.blastPsiOutTmp4md)
 BLASTCHECKFILE:=$(INFILE:%.in=%.chk)
+BLASTCHECKFILE4MD:=$(INFILE:%.in=%.chk4md)
 BLASTFILERDB:=$(INFILE:%.in=%.blastPsiRdb)
 BLASTPSWISS:=$(INFILE:%.in=%.aliBlastpSwiss)
+# aliFil_list is not used by other rules. Guy says it may be used by loctree - we do not have loctree now.
 BLASTPFILTERFILE:=$(INFILE:%.in=%.aliFil_list)
 BLASTMATFILE:=$(INFILE:%.in=%.blastPsiMat)
 BLASTALIFILE:=$(INFILE:%.in=%.blastPsiAli)
 DISULFINDERFILE:=$(INFILE:%.in=%.disulfinder)
 SAFFILE:=$(INFILE:%.in=%.safBlastPsi)
+SAFFILE4MD:=$(INFILE:%.in=%.safBlastPsi4md)
 FASTAFILE:=$(INFILE:%.in=%.fasta)
 GCGFILE:=$(INFILE:%.in=%.seqGCG)
 PROFBVALFILE:=$(INFILE:%.in=%.profbval)
 METADISORDERFILE:=$(INFILE:%.in=%.mdisorder)
 PROFTEXTFILE:=$(INFILE:%.in=%.profAscii)
+# profcon is very slow and it is said not to have much effect on md results - so we do not run it
 PROFCONFILE:=$(INFILE:%.in=%.profcon)
 PROFTMBFILE:=$(INFILE:%.in=%.proftmb)
 PCCFILE:=$(INFILE:%.in=%.pcc)
@@ -97,19 +104,23 @@ PROFNORSCTRL := --win=70 --secCut=12 --accLen=10
 PROFTMBCTRL :=
 
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFORPHDFILE) disorder function interaction sec-struct 
-
-.PHONY: sec-struct
-sec-struct:  $(COILSFILE) $(PHDRDBFILE) $(PROFTEXTFILE) $(PROFTMBFILE)
+all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) disorder function interaction sec-struct
 
 .PHONY: disorder
 disorder: profasp profnors metadisorder
 
 .PHONY: function
-function: $(NLSFILE) $(DISULFINDERFILE)
+function: $(NLSFILE) $(DISULFINDERFILE) prodom
 
 .PHONY: interaction
 interaction: $(ISISFILE) $(DISISFILE)
+
+.PHONY: sec-struct
+sec-struct:  $(COILSFILE) $(PROFFILE) prof $(PROFTEXTFILE) $(PROFTMBFILE)
+
+# these files do not seem to be required by any method:
+.PHONY: hsspfilterfile
+hsspfilterfile:	$(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) 
 
 $(PROFTMBFILE):  $(BLASTMATFILE)
 	proftmb @$(PROFTMBROOT)/options $(PROFTMBCTRL) -q $< -o $@ --quiet
@@ -141,8 +152,13 @@ $(NORSNETFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $(PROFBVALFILE)
 .PHONY: norsnet
 norsnet: $(NORSNETFILE)
 
-$(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $(PROFBVALFILE) $(NORSNETFILE) $(BLASTCHECKFILE)
-	metadisorder $(METADISORDERCTRL) fasta=$(FASTAFILE) hssp=$(HSSPBLASTFILTERFILE) prof=$(PROFFILE) profbval_raw=$(PROFBVALFILE) norsnet=$(NORSNETFILE) chk=$(BLASTCHECKFILE) out=$@ out_mode=1
+$(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(PROFBVALFILE) $(NORSNETFILE) $(HSSPBLASTFILTERFILE) $(BLASTCHECKFILE)
+	# This line reuses blast files used by other methods as well. On a handful of test cases these two gave only a tiny difference in results.
+	metadisorder $(METADISORDERCTRL) fasta=$(FASTAFILE) prof=$(PROFFILE) profbval_raw=$(PROFBVALFILE) norsnet=$(NORSNETFILE) hssp=$(HSSPBLASTFILTERFILE) chk=$(BLASTCHECKFILE) out=$@ out_mode=1
+
+#$(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(PROFBVALFILE) $(NORSNETFILE) $(HSSPBLASTFILTERFILE4MD) $(BLASTCHECKFILE4MD)
+#	# This call depends on files prepared the way Avner's runMD.pl does it.
+#	metadisorder $(METADISORDERCTRL) fasta=$(FASTAFILE) prof=$(PROFFILE) profbval_raw=$(PROFBVALFILE) norsnet=$(NORSNETFILE) hssp=$(HSSPBLASTFILTERFILE4MD) chk=$(BLASTCHECKFILE4MD) out=$@ out_mode=1
 
 .PHONY: metadisorder
 metadisorder: $(METADISORDERFILE)
@@ -150,8 +166,14 @@ metadisorder: $(METADISORDERFILE)
 $(HSSPFILE): $(SAFFILE)
 	 $(LIBRGUTILS)/copf.pl $<  formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
 
+$(HSSPFILE4MD): $(SAFFILE4MD)
+	$(LIBRGUTILS)/copf.pl $< formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
+
+$(HSSPBLASTFILTERFILE4MD): $(HSSPFILE4MD)
+	$(LIBRGUTILS)/hssp_filter.pl  red=80 $< fileOut=$@ dirWork=$(WORKDIR)
+
 $(HSSPBLASTFILTERFILE): $(HSSPFILE)
-	 $(LIBRGUTILS)/hssp_filter.pl  red=80 $< fileOut=$@ dirWork=$(WORKDIR)
+	$(LIBRGUTILS)/hssp_filter.pl  red=80 $< fileOut=$@ dirWork=$(WORKDIR)
 
 $(BLASTPSWISS):  $(FASTAFILE)
 	blastall -a $(BLASTCORES) -p blastp -d $(BLASTDATADIR)swiss -b 4000 -i $< -o $@ 
@@ -216,6 +238,7 @@ profasp: $(ASPFILE)
 NORSDIR:= $(HELPERAPPSDIR)
 EXE_NORS:= $(NORSDIR)nors.pl
 $(NORSFILE) $(NORSSUMFILE): $(FASTAFILE) $(HSSPBLASTFILTERFILE) $(PROFFILE) $(PHDRDBFILE) $(COILSFILE)
+	# this call may throws warnings on STDERR (like 'wrong parsing coil file?? ctCoils=0') - silence it when we are not in debug mode
 	$(EXE_NORS) $(PROFNORSCTRL) -fileSeq $(FASTAFILE) -fileHssp $(HSSPBLASTFILTERFILE) \
 	-filePhd $(PROFFILE) -filePhdHtm $(PHDRDBFILE) -fileCoils $(COILSFILE) -o $(NORSFILE) -fileSum $(NORSSUMFILE) -html
 
@@ -245,13 +268,22 @@ $(SEGGCGFILE): $(SEGFILE)
 	$(LIBRGUTILS)/copf.pl $< formatOut=gcg fileOut=$@ dirWork=$(WORKDIR)
 
 $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE): $(FASTAFILE)
-	blastpgp -a $(BLASTCORES) -j 3 -b 3000 -e 1 -F F -h 1e-3 -d $(BLASTDATADIR)big_80 -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE)
+	# blast call may throws warnings on STDERR - silence it when we are not in debug mode
+	blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BLASTDATADIR)big_80 -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE) $(if $(DEBUG), , >&/dev/null)
 
 $(BLASTALIFILE): $(BLASTCHECKFILE) $(FASTAFILE)
-	blastpgp -a $(BLASTCORES) -b 1000 -e 1 -F F -d $(BLASTDATADIR)big -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE)
+	# blast call may throws warnings on STDERR - silence it when we are not in debug mode
+	blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BLASTDATADIR)big -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , >&/dev/null)
+
+#$(BLASTFILE4MD) $(BLASTCHECKFILE4MD): $(FASTAFILE)
+#	# blast call may throws warnings on STDERR - silence it when we are not in debug mode
+#	blastpgp -F F -a $(BLASTCORES) -j 3 -d $(BLASTDATADIR)big -i $(FASTAFILE) -o $(BLASTFILE4MD) -C $(BLASTCHECKFILE4MD) $(if $(DEBUG), , >&/dev/null)
 
 $(SAFFILE) $(BLASTFILERDB): $(BLASTALIFILE)  $(FASTAFILE)
 	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$@ red=100 maxAli=3000 tile=0 fileOutErr=$@.blast2safErr
+
+$(SAFFILE4MD): $(BLASTFILE4MD)
+	$(LIBRGUTILS)/blast2saf.pl $< maxAli=3000 eSaf=1 saf=$@
 
 $(FASTAFILE): $(INFILE)
 	$(LIBRGUTILS)/copf.pl $< formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
@@ -272,9 +304,9 @@ clean-html:
 .PHONY: install
 install:
 	for f in \
-		$(BLASTPFILTERFILE) \
 		$(ASPFILE) \
 		$(BLASTALIFILE) $(BLASTMATFILE) $(BLASTFILERDB) $(BLASTCHECKFILE) \
+		$(BLASTPFILTERFILE) \
 		$(COILSFILE) $(COILSRAWFILE) \
 		$(DISISFILE) \
 		$(DISULFINDERFILE) \
@@ -296,6 +328,7 @@ install:
 		$(SAFFILE) \
 		$(SEGFILE) $(SEGGCGFILE) \
 		$(GCGFILE) \
+		$(HSSPFILE4MD) $(HSSPBLASTFILTERFILE4MD) $(BLASTFILE4MD) $(BLASTCHECKFILE4MD) $(SAFFILE4MD) \
 	; do if [ -e $$f ]; then cp -a $$f $(DESTDIR)/ ; fi; done
 
 .PHONY: help

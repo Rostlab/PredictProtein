@@ -1,3 +1,10 @@
+predictprotein (1.0.18)
+
+  * silenced nors.pl
+  * MD make rules according to Avner's original runMD.pl are now included but are not used
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 12 Aug 2010 20:30:57 +0200
+
 predictprotein (1.0.17)
 
   * file restore logic moved to cache module

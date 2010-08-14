@@ -294,12 +294,12 @@ sub norsCheckCoils {
 
     open ( $fhCoils, $coilFileRaw ) or die "cannot open $coilFileRaw:$!";
     $ctCoil = 0;
+    #   0 1 2   3       4     5  6	 7
+    #   1 M a   0.598   0.000 (  0.000   2.965)
     while ( <$fhCoils> ) {
 	s/^\s+//g;
 	s/\s+$//g;
-	if ( $_ !~ /^\d+/ ) {
-	    next;
-	}
+	if ( $_ !~ /^\d+/ ) { next; }
 	
 	@tmpCoil = split /\s+/;
 	$pos = $tmpCoil[0];
@@ -311,7 +311,7 @@ sub norsCheckCoils {
     }
     close $fhCoils;
     if ( $ctCoil < 14 ) { # error
-	warn "wrong parsing coil file??\nctCoils=$ctCoil\n";
+	if( $opt_debug ){ warn( "wrong parsing coil file?? ctCoils=$ctCoil < 14" ); }
     }
 
     return $coilsRef;
