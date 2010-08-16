@@ -1,3 +1,10 @@
+predictprotein (1.0.20) UNRELEASED
+
+  * Corrected some grammar issues
+  * Reorganized predictprotein - only for more logical code, no change in what it does
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 16 Aug 2010 21:25:17 +0200
+
 predictprotein (1.0.19)
 
   * Introduced config file and cmd line params to control: bigblastdb big80blastdb swissblastdb prodomblastdb prositeconvdat

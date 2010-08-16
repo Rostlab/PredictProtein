@@ -121,9 +121,6 @@ if( $setacl ) { RG::PP::CacheMgr::acl2hash( $setacl ); }
 if( !@target ){ @target = ( 'all' ); }
 if( $target[0] ne 'all' ){ push @target, @$maketarget; } # all is `all', no need to specify them individually
 
-if( ! $work_dir ){ $work_dir = File::Temp::tempdir( CLEANUP => !$dbg ); }
-else { $work_dir = glob($work_dir); system ( "mkdir", '-p', $work_dir ) && die( "could not mkdir '$work_dir': ".($? >> 8) ); }
-
 if( $seqfile )
 {
   my $in = Bio::SeqIO->new( ( $seqfile eq '-' ? ( -fh => \*STDIN ) : ( -file => scalar( glob( $seqfile ) ) ) ), -format => 'Fasta' );
@@ -142,25 +139,12 @@ if( $seqfile )
 # Get sequence
 $sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
 
-# work_seq_file holds sequence information and resides in intermediate work directory
-my $work_seq_file = "$work_dir/$prot_name.in";
-
-if( ! -e $work_seq_file )
-{
-  my $seqobj = Bio::Seq->new( -display_id => $prot_name, -seq => $sequence_in);
-  my $seqout= Bio::SeqIO->new( -format => 'Fasta', -file => ">$work_seq_file" );
-  $seqout->write_seq($seqobj);
-}
-
 # get number of processors on this host
 #my @num_cpus=();
 #if (!($num_cpus) && -e '/proc/cpuinfo'){
 #     @num_cpus=`grep processor /proc/cpuinfo`;
 #     $num_cpus = scalar(@num_cpus);
 #}
-
-# PRINT OUT JOB ENV
-if ($dbg){ cluck "work_dir=$work_dir"; }
 
 # cache fetch?
 if( $use_cache && !$force_cache_store )
@@ -198,6 +182,22 @@ if( $use_cache && !$force_cache_store )
 }
 
 
+# not in cache - or forced to recalc
+if( ! $work_dir ){ $work_dir = File::Temp::tempdir( CLEANUP => !$dbg ); }
+else { $work_dir = glob($work_dir); system ( "mkdir", '-p', $work_dir ) && die( "could not mkdir '$work_dir': ".($? >> 8) ); }
+
+# PRINT OUT JOB ENV
+if ($dbg){ cluck "work_dir=$work_dir"; }
+
+# work_seq_file holds sequence information and resides in intermediate work directory
+my $work_seq_file = "$work_dir/$prot_name.in";
+
+if( ! -e $work_seq_file )
+{
+  my $seqobj = Bio::Seq->new( -display_id => $prot_name, -seq => $sequence_in);
+  my $seqout= Bio::SeqIO->new( -format => 'Fasta', -file => ">$work_seq_file" );
+  $seqout->write_seq($seqobj);
+}
 
 
 # RUN MAKEFILE
@@ -392,11 +392,12 @@ Current methods:
 
 Current collective resources:
 
- big (Uniprot+PDB) blast database
- big_80 (big @ 80% sequence identity redunancy level) blast database
- swiss blast database
- prodom blast database
- prosite_convert.dat
+ big (Uniprot+PDB) blast database     --bigblastdb
+ big_80 (big @ 80% sequence identity  --big80blastdb
+   redunancy level) blast database
+ swiss blast database                 --swissblastdb
+ prodom blast database                --prodomblastdb
+ prosite_convert.dat                  --prositeconvdat
 
 =head1 OPTIONS
 

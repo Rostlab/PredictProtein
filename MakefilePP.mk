@@ -155,7 +155,7 @@ $(NORSNETFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $(PROFBVALFILE)
 norsnet: $(NORSNETFILE)
 
 $(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(PROFBVALFILE) $(NORSNETFILE) $(HSSPBLASTFILTERFILE) $(BLASTCHECKFILE)
-	# This line reuses blast files used by other methods as well. On a handful of test cases these two gave only a tiny difference in results.
+	# This line reuses blast files used by other methods as well. On a handful of test cases this and Avner's version (below) gave only a tiny - seemingly insignificant - difference in results.
 	metadisorder $(METADISORDERCTRL) fasta=$(FASTAFILE) prof=$(PROFFILE) profbval_raw=$(PROFBVALFILE) norsnet=$(NORSNETFILE) hssp=$(HSSPBLASTFILTERFILE) chk=$(BLASTCHECKFILE) out=$@ out_mode=1
 
 #$(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(PROFBVALFILE) $(NORSNETFILE) $(HSSPBLASTFILTERFILE4MD) $(BLASTCHECKFILE4MD)
@@ -240,7 +240,7 @@ profasp: $(ASPFILE)
 NORSDIR:= $(HELPERAPPSDIR)
 EXE_NORS:= $(NORSDIR)nors.pl
 $(NORSFILE) $(NORSSUMFILE): $(FASTAFILE) $(HSSPBLASTFILTERFILE) $(PROFFILE) $(PHDRDBFILE) $(COILSFILE)
-	# this call may throws warnings on STDERR (like 'wrong parsing coil file?? ctCoils=0') - silence it when we are not in debug mode
+	# this call may throw warnings on STDERR (like 'wrong parsing coil file?? ctCoils=0') - silence it when we are not in debug mode
 	$(EXE_NORS) $(PROFNORSCTRL) -fileSeq $(FASTAFILE) -fileHssp $(HSSPBLASTFILTERFILE) \
 	-filePhd $(PROFFILE) -filePhdHtm $(PHDRDBFILE) -fileCoils $(COILSFILE) -o $(NORSFILE) -fileSum $(NORSSUMFILE) -html
 
@@ -270,15 +270,15 @@ $(SEGGCGFILE): $(SEGFILE)
 	$(LIBRGUTILS)/copf.pl $< formatOut=gcg fileOut=$@ dirWork=$(WORKDIR)
 
 $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE): $(FASTAFILE)
-	# blast call may throws warnings on STDERR - silence it when we are not in debug mode
+	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
 	blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BIG80BLASTDB) -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE) $(if $(DEBUG), , >&/dev/null)
 
 $(BLASTALIFILE): $(BLASTCHECKFILE) $(FASTAFILE)
-	# blast call may throws warnings on STDERR - silence it when we are not in debug mode
+	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
 	blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , >&/dev/null)
 
 #$(BLASTFILE4MD) $(BLASTCHECKFILE4MD): $(FASTAFILE)
-#	# blast call may throws warnings on STDERR - silence it when we are not in debug mode
+#	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
 #	blastpgp -F F -a $(BLASTCORES) -j 3 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $(BLASTFILE4MD) -C $(BLASTCHECKFILE4MD) $(if $(DEBUG), , >&/dev/null)
 
 $(SAFFILE) $(BLASTFILERDB): $(BLASTALIFILE)  $(FASTAFILE)
