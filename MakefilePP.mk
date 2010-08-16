@@ -22,10 +22,12 @@ PROFROOT:=/usr/share/profphd/prof/
 PROFTMBROOT:=/usr/share/proftmb/
 
 # DATA (CONFIGURABLE)
-BLASTDATADIR:=/mnt/project/rost_db/data/blast/
-PRODOMDIR:=/mnt/project/rost_db/data/prodom/
+BIGBLASTDB:=/mnt/project/rost_db/data/blast/big
+BIG80BLASTDB:=/mnt/project/rost_db/data/blast/big_80
+SWISSBLASTDB:=/mnt/project/rost_db/data/blast/swiss
+PRODOMBLASTDB:=/mnt/project/rost_db/data/prodom/prodom
 DBSWISS:=/mnt/project/rost_db/data/swissprot/current/
-PROSITEDIR:=/mnt/project/rost_db/data/prosite/
+PROSITECONVDAT:=/mnt/project/rost_db/data/prosite/prosite_convert.dat
 
 # STATIC FILES
 HTMLHEAD=$(PPROOT)/resources/HtmlHead.html
@@ -176,7 +178,7 @@ $(HSSPBLASTFILTERFILE): $(HSSPFILE)
 	$(LIBRGUTILS)/hssp_filter.pl  red=80 $< fileOut=$@ dirWork=$(WORKDIR)
 
 $(BLASTPSWISS):  $(FASTAFILE)
-	blastall -a $(BLASTCORES) -p blastp -d $(BLASTDATADIR)swiss -b 4000 -i $< -o $@ 
+	blastall -a $(BLASTCORES) -p blastp -d $(SWISSBLASTDB) -b 4000 -i $< -o $@ 
 
 $(BLASTPFILTERFILE): $(BLASTPSWISS)
 	$(HELPERAPPSDIR)filter_blastp_big.pl $< db=swiss dir=$(DBSWISS) > $@
@@ -247,13 +249,13 @@ profnors: $(NORSFILE) $(NORSSUMFILE)
 
 #PRODOM
 $(PRODOMFILE):  $(FASTAFILE)
-	blastall -a $(BLASTCORES)  -p blastp -d $(PRODOMDIR)prodom -B 500 -i $< -o $@ 
+	blastall -a $(BLASTCORES)  -p blastp -d $(PRODOMBLASTDB) -B 500 -i $< -o $@ 
 
 .PHONY: prodom
 prodom: $(PRODOMFILE)
 
 $(PROSITEFILE): $(GCGFILE)
-	$(HELPERAPPSDIR)prosite_scan.pl -h $(PROSITEDIR)prosite_convert.dat $< >> $@
+	$(HELPERAPPSDIR)prosite_scan.pl -h $(PROSITECONVDAT) $< >> $@
 
 .PHONY: prosite
 prosite: $(PROSITEFILE)
@@ -269,15 +271,15 @@ $(SEGGCGFILE): $(SEGFILE)
 
 $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE): $(FASTAFILE)
 	# blast call may throws warnings on STDERR - silence it when we are not in debug mode
-	blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BLASTDATADIR)big_80 -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE) $(if $(DEBUG), , >&/dev/null)
+	blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BIG80BLASTDB) -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE) $(if $(DEBUG), , >&/dev/null)
 
 $(BLASTALIFILE): $(BLASTCHECKFILE) $(FASTAFILE)
 	# blast call may throws warnings on STDERR - silence it when we are not in debug mode
-	blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BLASTDATADIR)big -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , >&/dev/null)
+	blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , >&/dev/null)
 
 #$(BLASTFILE4MD) $(BLASTCHECKFILE4MD): $(FASTAFILE)
 #	# blast call may throws warnings on STDERR - silence it when we are not in debug mode
-#	blastpgp -F F -a $(BLASTCORES) -j 3 -d $(BLASTDATADIR)big -i $(FASTAFILE) -o $(BLASTFILE4MD) -C $(BLASTCHECKFILE4MD) $(if $(DEBUG), , >&/dev/null)
+#	blastpgp -F F -a $(BLASTCORES) -j 3 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $(BLASTFILE4MD) -C $(BLASTCHECKFILE4MD) $(if $(DEBUG), , >&/dev/null)
 
 $(SAFFILE) $(BLASTFILERDB): $(BLASTALIFILE)  $(FASTAFILE)
 	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$@ red=100 maxAli=3000 tile=0 fileOutErr=$@.blast2safErr

@@ -1,3 +1,9 @@
+predictprotein (1.0.19)
+
+  * Introduced config file and cmd line params to control: bigblastdb big80blastdb swissblastdb prodomblastdb prositeconvdat
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 16 Aug 2010 19:05:18 +0200
+
 predictprotein (1.0.18)
 
   * silenced nors.pl

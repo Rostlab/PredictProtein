@@ -20,8 +20,8 @@ my $err = "***";
 
 # SYSTEM CONFIGURATION RETRIEVAL
 our $config;
-my ($pp_rootdir,$librg_utils_perl);
 BEGIN {
+    our $VERSION = "__PACKAGE_VERSION__";
     delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
     $ENV{PATH} = "/bin:/usr/bin";
     my ( $defaultconfig, $etcconfig );
@@ -31,15 +31,20 @@ BEGIN {
 }
 
 # NOTE: all configuration can be overridden by command line options
-$pp_rootdir  = glob($config->val('predictprotein', 'predictprotein_utildir')).'/';
-$librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')).'/' || '/usr/share/librg-utils-perl/';
-my $db_blast_train = glob($config->val('blast', 'uniref'));
-my $db_blast_final = glob($config->val('blast', 'uniref90'));
-my $prof_app_root = glob($config->val('support_apps', 'prof'));
-my $proftmb_app_root = glob($config->val('support_apps', 'proftmb'));
+my $pp_rootdir  = glob($config->val('predictprotein', 'predictprotein_utildir')).'/';
+#
+my $bigblastdb = glob( $config->val('predictprotein', 'bigblastdb' ) );
+my $big80blastdb = glob( $config->val('predictprotein', 'big80blastdb' ) );
+my $swissblastdb = glob( $config->val('predictprotein', 'swissblastdb' ) );
+my $librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')).'/' || '/usr/share/librg-utils-perl/';
+my $prof_app_root = glob($config->val('predictprotein', 'prof'));
+my $proftmb_app_root = glob($config->val('predictprotein', 'proftmb'));
+my $prodomblastdb = glob( $config->val('predictprotein', 'prodomblastdb' ) );
+my $prositeconvdat = glob( $config->val('predictprotein', 'prositeconvdat' ) );
+my $use_cache = $config->val('predictprotein', 'use_cache');
+#
 my $root_dir = $pp_rootdir || "__pkgdatadir__";
 my $make_file = $root_dir."/MakefilePP.mk";
-my $use_cache = $config->val('predictprotein', 'use_cache');
 
 #my $output_format = "text";
 my $work_dir;
@@ -56,6 +61,8 @@ if (@ARGV < 1){ die "Usage: $0 [OPTIONS]\n";}
 
 my $result = GetOptions (
           'acl|setacl=s' => \$setacl,
+          'bigblastdb=s' => \$bigblastdb,
+          'big80blastdb=s' => \$big80blastdb,
 			    "blast-processors=i" => \$blast_processors,
 			    "c|num-cpus=i" =>\$num_cpus,
 			    "d|debug!" => \$dbg,
@@ -69,8 +76,11 @@ my $result = GetOptions (
 			    "n|dryrun" => \$dry_run,
 			    "o|output-dir=s" => \$output_dir,
 			    "p|prot-name=s" =>\$prot_name,
+          "prodomblastdb=s" => \$prodomblastdb,
+          "prositeconvdat=s" => \$prositeconvdat,
 			    "s|seq|sequence=s" =>\$sequence_in,
           'seqfile=s' => \$seqfile,
+          'swissblastdb=s' => \$swissblastdb,
           'target=s@' => \@target,
           'use-cache!' => \$use_cache,
 			    "v|version" => \$version,
@@ -80,7 +90,7 @@ my $result = GetOptions (
 pod2usage(0) if $help;
 pod2usage(-verbose => 2) if $man;
 if ($version){
-    print STDERR qq|This is PredictProtein version __pkgver__
+    print STDERR qq|This is PredictProtein version __PACKAGE_VERSION__
 
 Copyright 1992-2010, Rostlab
 
@@ -203,14 +213,18 @@ push (@cmd, "LIBRGUTILS=".$librg_utils_perl);
 push (@cmd, "PPROOT=".$pp_rootdir);
 push (@cmd, "PROFROOT=".$prof_app_root);
 push (@cmd, "PROFTMBROOT=".$proftmb_app_root);
+# resource locations e.g. BIGBLASTDB, BIG80BLASTDB, PRODOMBLASTDB, PROSITECONVDAT, SWISSBLASTDB
+if( $bigblastdb ){ push @cmd, "BIGBLASTDB=$bigblastdb"; }
+if( $big80blastdb ){ push @cmd, "BIG80BLASTDB=$big80blastdb"; }
+if( $prodomblastdb ){ push @cmd, "PRODOMBLASTDB=$prodomblastdb"; }
+if( $prositeconvdat ){ push @cmd, "PROSITECONVDAT=$prositeconvdat"; }
+if( $swissblastdb ){ push @cmd, "SWISSBLASTDB=$swissblastdb"; }
+# method control params
 push (@cmd, @$makemethod );
 if( !$dbg ){ push @cmd, '--quiet'; } else { push (@cmd, "DEBUG=".$dbg); }
+push( @cmd, $make_file ? ( "-f", scalar( glob($make_file) ) ) : () );
 
-if ($make_file){
-    push( @cmd, "-f", scalar( glob($make_file) ) );
-}
-
-# target
+# list targets
 my @cmd_all = ( @cmd, @target );
 
 my $oldout;
@@ -285,9 +299,9 @@ exit(0);
 
 
 
-# method - translate and pass --method=asp,ws=3,... --method=... method control parameters to make file
-# idea: translate control params simply like this: --method=MNAME,CTRLP1=CTRLVAL1, -> NMAMECTRL=--CTRLP1=CTRLVAL1
-# Also return all methods as targets.
+# lkajan: method - translate and pass --method=asp,ws=3,... --method=... method control parameters to make file
+# lkajan: idea: translate control params simply like this: --method=MNAME,CTRLP1=CTRLVAL1, -> NMAMECTRL=--CTRLP1=CTRLVAL1
+# lkajan: Also return all methods as targets.
 sub               _get_makemethod
 {
   my( $__method ) = @_;
@@ -395,6 +409,14 @@ All previous ACLs are lost - no merging.  The read bit controls browsability of 
 
  u:lkajan:4,u:gyachdav:4,g:lkajan:4,o::0
 
+=item B<--bigblastdb>
+
+Path to comprehensive blast database
+
+=item B<--big80blastdb>
+
+Path to comprehensive blast database at 80% sequence identity redundancy level
+
 =item B<--blast-processors>
 
 Number of processors to use, default = 1
@@ -445,6 +467,14 @@ Do not execute, just shows what is about to be run
 
 Final location of outputfiles, required unless caching is used.
 
+=item B<--prodomblastdb>
+
+Path to `prodom' blast database
+
+=item B<--prositeconvdat>
+
+Path to `prosite_convert.dat' file, see L<https://rostlab.org/owiki/index.php/Packages#Resource_definitions>
+
 =item B<-p>, B<--prot-name>
 
 Query name, default = `query'
@@ -456,6 +486,10 @@ one letter amino acid sequence input
 =item B<--seqfile>
 
 FASTA amino acid sequence file; if `-', standard input is read
+
+=item B<--swissblastdb>
+
+Path to SwissProt blast database
 
 =item B<--target>
 

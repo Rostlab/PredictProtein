@@ -9,12 +9,12 @@ dist_bin_SCRIPTS = predictprotein
 
 CLEANFILES = $(dist_man_MANS)
 
-.INTERMEDIATE: predictprotein.pod
-predictprotein.pod:	predictprotein
-	sed -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;s|__bindir__|$(bindir)|g;s|__pkgver__|$(PACKAGE_VERSION)|g;' "$<" > "$@"
+.INTERMEDIATE: predictprotein.1.in
+predictprotein.1.in:	predictprotein
+	sed -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;s|__bindir__|$(bindir)|g;s|__PACKAGE_VERSION__|$(PACKAGE_VERSION)|g' "$<" > "$@"
 
-predictprotein.1:	predictprotein.pod
-	pod2man -c 'User Commands' -r "$(VERSION)" $< $@
+predictprotein.1:	predictprotein.1.in
+	pod2man -c 'User Commands' -r "$(VERSION)" -name $(shell tr '[:lower:]' '[:upper:]' <<< "$(basename $@)") $< $@
 
 predprot.1:		predictprotein.1
 	cp $< $@

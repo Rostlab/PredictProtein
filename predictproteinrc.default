@@ -9,22 +9,25 @@ librg_utils_perl=/usr/share/librg-utils-perl
 # use/do not use result cache
 use_cache=0
 
-[blast]
+# bigblastdb: Path to comprehensive blast database
+bigblastdb=/mnt/project/rost_db/data/blast/big
 
-# uniref=path to UniRef database
-uniref=/mnt/project/rost_db/data/blast/big
-
-# uniref90=path - path to UniRef filtered for 98% redundancy
-uniref90=/mnt/project/rost_db/data/blast/big_98
-
-# swiss=path - path to SwissProt database
-swiss=/mnt/project/rost_db/data/blast/swiss
-
-[support_apps]
+# big80blastdb: Path to comprehensive blast database at 80% sequence identity redundancy level
+big80blastdb=/mnt/project/rost_db/data/blast/big_80
 
 # path to proftmb 
 proftmb=/usr/share/proftmb/
 
 # path to profphd 
 prof=/usr/share/profphd/prof/
+
+# prodomblastdb: Path to `prodom' blast database
+prodomblastdb=/mnt/project/rost_db/data/prodom/prodom
+
+# prositeconvdat: Path to `prosite_convert.dat' file, see L<https://rostlab.org/owiki/index.php/Packages#Resource_definitions>
+prositeconvdat=/mnt/project/rost_db/data/prosite/prosite_convert.dat
+
+# swissblastdb: Path to SwissProt blast database
+swissblastdb=/mnt/project/rost_db/data/blast/swiss
+
 
