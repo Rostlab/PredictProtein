@@ -355,7 +355,7 @@ sub norsCheckHtm {
     }
     close $fhHtm;
     if ( $ctHtm == 0 ) {
-	warn "wrong parsin htm file??\nctHtm=$ctHtm\n";
+	if( $opt_debug ){ warn "wrong parsin htm file??\nctHtm=$ctHtm "; }
     }
 	    
     for ( $i = 1; $i <= $ctHtm; $i++ ) {

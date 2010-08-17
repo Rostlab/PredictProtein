@@ -1,5 +1,6 @@
-predictprotein (1.0.20) UNRELEASED
+predictprotein (1.0.20)
 
+  * Silenced 'wrong parsin htm file??\nctHtm=$ctHtm'
   * Corrected some grammar issues
   * Reorganized predictprotein - only for more logical code, no change in what it does
 
