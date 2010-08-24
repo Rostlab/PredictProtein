@@ -29,6 +29,6 @@ install-data-hook:
 	sed -i -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;s|__bindir__|$(bindir)|g;' "$(DESTDIR)$(pkgdatadir)/predictproteinrc.default"
 
 install-exec-hook:
-	sed -i -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g; s|__pkgver__|$(PACKAGE_VERSION)|g;' "$(DESTDIR)$(bindir)/predictprotein"
+	sed -i -e 's|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g; s|__PACKAGE_VERSION__|$(PACKAGE_VERSION)|g;' "$(DESTDIR)$(bindir)/predictprotein"
 	rm -f $(DESTDIR)$(bindir)/predprot && ln -s predictprotein $(DESTDIR)$(bindir)/predprot
 

@@ -1,3 +1,9 @@
+predictprotein (1.0.21) UNRELEASED
+
+  * Makefile.am now correctly modifies predictprotein with version number
+
+ -- ?
+
 predictprotein (1.0.20)
 
   * Silenced 'wrong parsin htm file??\nctHtm=$ctHtm'
