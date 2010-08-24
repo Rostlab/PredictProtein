@@ -4,7 +4,7 @@
 #	(c) 2010 Guy Yachdav rostlab
 #####################################
 
-MAKE_PP:=__pkgdatadir__/MakefilePP.mk
+MAKE_PP:=MakefilePP.mk
 include $(MAKE_PP)
 
 #OUTPUTDIR:=/mnt/home/gyachdav/public_html/
@@ -14,7 +14,7 @@ OUTPUTFILE:=$(OUTPUTDIR)$(JOBID).html
 # quotes of methods
 PROFQUOTE:=PROF predictions
 PROFTMBQUOTE:=Prediction of transmembrane beta-barrelsfor entire proteomes (Bigelow, H., Petrey, D., Liu, J.,Przybylski, D. & Rost, B.)
-MDQUOTE:=MD - Protein disorder prediction based on orthogonal sources of information (Avner Schlessinger, Burkhard Rost)
+MDQUOTE:=Meta Disorder (MD) - Protein disorder prediction based on orthogonal sources of information (Avner Schlessinger, Burkhard Rost)
 COILSQUOTE:=COILS prediction (A Lupas)
 DISULFINDQUOTE:=DISULFIND (A. Ceroni, A. Passerini, A. Vullo and P. Frasconi)
 ASPQUOTE:=Ambivalent Sequence Predictor(Malin Young, Kent Kirshenbaum, Stefan Highsmith)
@@ -30,151 +30,162 @@ BLASTQUOTE:=PSI-BLAST alignment header
 # html headers for results
 
 # tese are special cases where sed is used to append this header to top of results file
-PROFHEAD:="1i\<a name=\"prof_body\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('profhead')\"><strong>$(PROFQUOTE)</strong></div><div style=\"display: none;\" id=\"profhead\" class=\"advanced\">"
-PHDHEAD:="1i\<b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('phdhead')\"><strong>$(PHDQUOTE)</strong></div><div style=\"display: none;\" id=\"phdhead\" class=\"advanced\">"
-BLASTHEAD:="1i\<a name=\"ali_psiBlast_head\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('ali_psiBlasthead')\"><strong>$(BLASTQUOTE)</strong></div><div style=\"display: none;\" id=\"ali_psiBlasthead\" class=\"advanced\">"
-
+PROFHEAD:="1i\<div id='prof_body' class='nice'><h2>Secondary Structure</h2></div>"
+PHDHEAD:="1i\<div id='phd_body' class='nice'><h2>Transmembrane</h2></div>"
+BLASTHEAD:="1i<div id='phd_body' class='nice'><h2>Alignmnet</h2></div>"
 #these are "noraml" cases
-PROFTMBHEAD:="<a name=\"proftmb\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('proftmbhead')\"><strong>$(PROFTMBQUOTE)</strong></div><div style=\"display: none;\" id=\"proftmbhead\" class=\"advanced\">"
-MDHEAD:="<a name=\"mdisorder\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('mdisorderhead')\"><strong>$(MDQUOTE)</strong></div><div style=\"display: none;\" id=\"mdisorderhead\" class=\"advanced\">"
-COILSHEAD:="<a name=\"coils\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('coilshead')\"><strong>$(COILSQUOTE)</strong></div><div style=\"display: none;\" id=\"coilshead\" class=\"advanced\">"
-DISULFINDHEAD:="<a name=\"disulfind\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('disulfindhead')\"><strong>$(DISULFINDQUOTE)</strong></div><div style=\"display: none;\" id=\"disulfindhead\" class=\"advanced\">"
-ASPHEAD:="<a name=\"asp\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('asphead')\"><strong>$(ASPQUOTE)</strong></div><div style=\"display: none;\" id=\"asphead\" class=\"advanced\">"
-NORSHEAD:="<a name=\"nors\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('norshead')\"><strong>$(NORSQUOTE)</strong></div><div style=\"display: none;\" id=\"norshead\" class=\"advanced\">"
-PROSITEHEAD:="<a name=\"prosite\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('prositehead')\"><strong>$(PROSITEQUOTE)</strong></div><div style=\"display: none;\" id=\"prositehead\" class=\"advanced\">"
-SEGHEAD:="<a name=\"seg_norm\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('seghead')\"><strong>$(SEGQUOTE)</strong></div><div style=\"display: none;\" id=\"seghead\" class=\"advanced\">"
-FASTAHEAD:="<a name=\"in_given\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('fastahead')\"><strong>$(FASTAQUOTE)</strong></div><div style=\"display: none;\" id=\"fastahead\" class=\"advanced\">"
-GLOBEHEAD:="<a name=\"profglobe\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('globehead')\"><strong>$(GLOBEQUOTE)</strong></div><div style=\"display: none;\" id=\"globehead\" class=\"advanced\">"
-ISISHEAD:="<a name=\"isis\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('isishead')\"><strong>$(ISISQUOTE)</strong></div><div style=\"display: none;\" id=\"isishead\" class=\"advanced\">"
-DISISHEAD:="<a name=\"disis\"></a><b class=\"b1f\"></b><b class=\"b2f\"></b><b class=\"b3f\"></b><b class=\"b4f\"></b><div class=\"titlebar\" onClick=\"showHide('disishead')\"><strong>$(DISISQUOTE)</strong></div><div style=\"display: none;\" id=\"disishead\" class=\"advanced\">"
-TOCHEAD:=<div id="container"><b class="b1fc"></b><b class="b2fc"></b><b class="b3fc"></b><b class="b4fc"></b><div id="maintop"></div><div id="main"><div style="padding: 10px">
+PROFTMBHEAD:="<div id='proftmb' class='nice'><h2>Transmembrane Beta-Barrel</h2></div>"
+MDHEAD:="<div id='mdisorder' class='nice'><h2>Protein Disorder</h2></div>"
+COILSHEAD:="<div id='coils' class='nice'><h2>Coiled Coils</h2></div>"
+DISULFINDHEAD:="<div id='disulfind' class='nice'><h2>Disulphide Bonds</h2></div>"
+ASPHEAD:="<div id='asp' class='nice'><h2>Ambivalent Sequence Predictor</h2></div>"
+NORSHEAD:="<div id='nors' class='nice'><h2>Non-Ordinary Secondary Structure</h2></div>"
+PROSITEHEAD:="<div id='prosite' class='nice'><h2>Prosite</h2></div>"
+SEGHEAD:="<div id='seg_norm' class='nice'><h2>Low complexity segments</h2></div>"
+FASTAHEAD:="<div id='in_given' class='nice'><h2>Input</h2></div>"
+GLOBEHEAD:="<div id='profglobe' class='nice'><h2>Globularity</h2></div>"
+ISISHEAD:="<div id='isis' class='nice'><h2>Protein-Protein binding</h2></div>"
+DISISHEAD:="<div id='disis' class='nice'><h2>Protein-DNA binding</h2></div>"
+
+TOCHEAD:=<div class="toc">
+#TOCHEAD:=<div id="container"><b class="b1fc"></b><b class="b2fc"></b><b class="b3fc"></b><b class="b4fc"></b><div id="maintop"></div><div id="main"><div style="padding: 10px">
 
 # table of contents items
-PROFTOC:='<li><a href="\#prof_body">$(PROFQUOTE)</a></li>'
-PHDTOC:='<li><a href="\#phd_body">$(PHDQUOTE)</a></li>'
-PROFTMBTOC:='<li><a href ="\#proftmb">$(PROFTMBQUOTE)</a></li>'
-MDTOC:='<li><a href="\#mdisorder">$(MDQUOTE)</a></li>'
-COILSTOC:='<li><a href="\#coils">$(COILSQUOTE)</a></li>'
-DISULFINDTOC:='<li><a href="\#disulfind">$(DISULFINDQUOTE)</a></li>'
-ASPTOC:='<li><a href="\#asp">$(ASPQUOTE)</a></li>'
-NORSTOC:='<li><a href="\#nors">$(NORSQUOTE)</a></li>'
-PROSITETOC:='<li><a href="\#prosite">$(PROSITEQUOTE)</a></li>'
-SEGTOC:='<li><a href="\#seg_norm">$(SEGQUOTE)</a></li>'
-FASTATOC:='<li><a href="\#in_given">$(FASTAQUOTE)</a></li>'
-GLOBETOC:='<li><a href="\#profglobe">$(GLOBEQUOTE)</a></li>'
-BLASTTOC:='<li><a href="\#ali_psiBlast_head">$(BLASTQUOTE)</a></li>'
-ISISTOC:='<li><a href="\#isis">$(ISISQUOTE)</a></li>'
-DISISTOC:='<li><a href="\#disis">$(DISISQUOTE)</a></li>'
+PROFTOC:='<a href="\#prof_body">Secondary Structure</a>'
+PHDTOC:='<a href="\#phd_body">Transmembrane</a>'
+PROFTMBTOC:='<a href="\#proftmb">Trans-Membrane Beta-Barrel</a>'
+MDTOC:='<a href="\#mdisorder">Protein Disorder</a>'
+COILSTOC:='<a href="\#coils">Coiled Coils</a>'
+DISULFINDTOC:='<a href="\#disulfind">Disulphide Bonds</a>'
+ASPTOC:='<a href="\#asp">Ambivalent Switches</a>'
+NORSTOC:='<a href="\#nors">Non-Ordinary Secondary Structure</a>'
+PROSITETOC:='<a href="\#prosite" >Prosite</a>'
+SEGTOC:='<a href="\#seg_norm">Low complexity segments</a>'
+FASTATOC:='<a href="\#in_given" >Input</a>'
+GLOBETOC:='<a href="\#profglobe" >Globular</a>'
+BLASTTOC:='<a href="\#ali_psiBlast_head">Alignmnet</a>'
+ISISTOC:='<a href="\#isis"  >Protein-Protein binding</a>'
+DISISTOC:='<a href="\#disis">Protein-DNA binding</a>'
 
-$(OUTPUTFILE): $(FASTAFILE).html $(GCGFILE) $(PROSITEFILE).html $(SEGGCGFILE).html $(HSSPFILTERFILE) $(BLASTPFILTERFILE) $(PRODOMFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(BLASTFILERDB).html $(COILSFILE).html $(DISULFINDFILE).html $(PHDHTMLFILE)  $(PROFTEXTFILE) $(PROFHTMLFILE) $(GLOBEFILE).html  $(ASPFILE).html $(PROFTMBFILE).html $(NORSFILE).html $(METADISORDERFILE).html $(ISISFILE).html
-	sed -i '1i\<ol>'  $(TOCFILE) 
-	sed -i  '$$a\</ol>' $(TOCFILE)
-	sed -i '1i\$(TOCHEAD)'  $(TOCFILE) 
-	cat $(HTMLHEAD) $(TOCFILE) $(FASTAFILE).html $(HRFILE) $(PROSITEFILE).html $(HRFILE) $(BLASTFILERDB).html $(HRFILE) $(DISULFINDFILE).html $(HRFILE) $(SEGGCGFILE).html $(HRFILE)  $(COILSFILE).html $(HRFILE)  $(PHDHTMLFILE) $(HRFILE) $(PROFHTMLFILE) $(HRFILE) $(GLOBEFILE).html $(HRFILE) $(ASPFILE).html $(HRFILE) $(PROFTMBFILE).html $(HRFILE) $(NORSFILE).html $(HRFILE) $(METADISORDERFILE).html $(HRFILE) $(ISISFILE).html $(HRFILE)  $(HTMLQUOTE) $(HTMLFOOTER) > $@
+ENCLOSURE_OPEN:="<div id=\"sections\">"
+ENCLOSURE_CLOSE:='</div>'
+
+$(OUTPUTFILE): $(FASTAFILE).html $(PROFHTMLFILE) $(PHDHTMLFILE) $(COILSFILE).html $(SEGGCGFILE).html $(NORSFILE).html $(PROFTMBFILE).html  $(METADISORDERFILE).html $(ASPFILE).html $(ISISFILE).html $(GLOBEFILE).html $(PROSITEFILE).html $(BLASTFILERDB).html $(PROFTMBFILE).html $(HTMLQUOTE) $(HTMLFOOTER)
+	sed -i '1i\$(TOCHEAD)'  $(TOCFILE)
+	sed -i  '$$a\</div>' $(TOCFILE) 
+	cat $(HTMLHEAD) $(HTMLOPTIONS) $(TOCFILE) >$@
+	echo $(ENCLOSURE_OPEN) >>  $@ 
+	cat  $(FASTAFILE).html $(PROFHTMLFILE) $(PHDHTMLFILE) $(COILSFILE).html $(SEGGCGFILE).html $(NORSFILE).html $(PROFTMBFILE).html  $(METADISORDERFILE).html $(ASPFILE).html $(ISISFILE).html $(GLOBEFILE).html $(PROSITEFILE).html $(BLASTFILERDB).html $(PROFTMBFILE).html $(HTMLQUOTE)  >> $@
+	echo $(ENCLOSURE_CLOSE) >>  $@ 
+	cat $(HTMLFOOTER) >> $@
 	sed -i 's/VAR_jobid/$(JOBID)/' $@ 
 
-tquick.proftmb.html: $(SRCFOLDER)$(PROFTMBFILE)
+$(PROFTMBFILE).html: $(SRCFOLDER)$(PROFTMBFILE)
 	echo $(PROFTMBFILE)
 	echo $(PROFTMBHEAD) '<pre>' > $@ && \
 	cat $(SRCFOLDER)$(PROFTMBFILE) >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
+	echo '</pre>' >> $@ 
+#	echo '</div>' >> $@ 
 	echo $(PROFTMBTOC) >> $(TOCFILE)
 
 
 $(ISISFILE).html: $(ISISFILE)
 	echo $(ISISHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
+	echo '</pre>' >> $@ 
+#	echo '</div>' >> $@ 
 	echo $(ISISTOC) >> $(TOCFILE)
 
 $(METADISORDERFILE).html: $(METADISORDERFILE)
 	echo $(MDHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
+	echo '</pre>' >> $@
+#	echo '</div>' >> $@ 
 	echo $(MDTOC) >> $(TOCFILE)
 
 $(BLASTFILERDB).html: $(BLASTFILERDB)
 	$(HELPERAPPSDIR)blast2html.pl $< $@ html $(DBSWISS)
-	sed -i $(BLASTHEAD) $@  && \
-	echo '</div>' >> $@ 
+	sed -i $(BLASTHEAD) $@  
+#	echo '</div>' >> $@ 
 	echo $(BLASTTOC) >> $(TOCFILE)
 
 $(GLOBEFILE).html: $(GLOBEFILE)
 	echo $(GLOBEHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
+	echo '</pre>' >> $@ 
+#	echo '</div>' >> $@ 
 	echo $(GLOBETOC) >> $(TOCFILE)
 
 $(COILSFILE).html: $(COILSFILE)
 	echo $(COILSHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
+	echo '</pre>' >> $@ 
+#	echo '</div>' >> $@ 
 	echo $(COILSTOC) >> $(TOCFILE)
 
-$(DISULFINDFILE).html: $(DISULFINDFILE)
-	echo $(DISULFINDHEAD) > $@ && \
-	cat $< >> $@ && \
-	echo '</div>' >> $@ 
-	echo $(DISULFINDTOC) >> $(TOCFILE)
+#$(DISULFINDFILE).html: $(DISULFINDFILE)
+#	echo $(DISULFINDHEAD) > $@ && \
+#	cat $< >> $@ && \
+#	echo '</div>' >> $@ 
+#	echo $(DISULFINDTOC) >> $(TOCFILE)
+
+
 
 $(NLSFILE).html: $(NLSFILE)
 	echo '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
+	echo '</pre>' >> $@ 
+#	echo '</div>' >> $@ 
 	echo $(NLSTOC) >> $(TOCFILE)
 
 $(PHDHTMLFILE): $(PHDRDBFILE)
-	$(PROFROOT)embl/scr/conv_phd2html.pl $< fileOut=$@ parHtml=html:body,data:brief,data:normal
-	sed -i $(PHDHEAD) $@ && \
-	echo '</div>' >> $@ 
+	$(HELPERAPPSDIR)/conv_phd2html.pl $< fileOut=$@ parHtml=html:body,data:brief,data:normal
+#	$(PROFROOT)embl/scr/conv_phd2html.pl $< fileOut=$@ parHtml=html:body,data:brief,data:normal
+	sed -i $(PHDHEAD) $@ 
+#	echo '</div>' >> $@ 
 	echo $(PHDTOC) >> $(TOCFILE)	
 
 $(PROFHTMLFILE): $(PROFFILE)
-	$(PROFROOT)/scr/conv_prof.pl $< fileOut=$@ html noascii parHtml=html:body,data:brief,data:normal
-	sed -i $(PROFHEAD) $@ && \
-	echo '</div>' >> $@ 
+#	$(PROFROOT)/scr/conv_prof.pl $< fileOut=$@ html noascii noscroll nohead nobody
+	$(HELPERAPPSDIR)/conv_prof.pl $< fileOut=$@ html noscroll html noascii
+	sed -i $(PROFHEAD) $@ 
+#	echo '</div>' >> $@ 
 	echo $(PROFTOC) >> $(TOCFILE)
 
 
 $(NORSFILE).html: $(NORSFILE)
 	echo  $(NORSHEAD) > $@ && \
-	cat $< >> $@ && \
-	echo '</div>' >> $@ 
+	cat $< >> $@ 
+#	echo '</div>' >> $@ 
 	echo $(NORSTOC) >> $(TOCFILE)
 
 $(PROSITEFILE).html: $(PROSITEFILE)
 	echo $(PROSITEHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
+	echo '</pre>' >> $@ 
+#	echo '</div>' >> $@ 
 	echo $(PROSITETOC) >> $(TOCFILE)
 
 $(SEGGCGFILE).html: $(SEGGCGFILE)
 	sed -i 's/\(x\s\?\)\+/<font style=\"color:red\">&<\/font>/g' $< 	# highlight all X's in red
 	echo $(SEGHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
+	echo '</pre>' >> $@
+#	echo '</div>' >> $@ 
 	echo $(SEGTOC) >> $(TOCFILE)
 
 $(FASTAFILE).html: $(FASTAFILE)
-	echo  $(FASTAHEAD) '<pre>' >  $@ && \
+	echo  $(FASTAHEAD) '<div class="input-section"><pre>' >  $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
+	echo '</pre></div>' >> $@
+#	echo '</div>' >> $@ 
 	echo $(FASTATOC) >> $(TOCFILE)
 
 $(ASPFILE).html: $(ASPFILE)
 	echo $(ASPHEAD) '<pre>' > $@ && \
 	cat $< >> $@ && \
-	echo '</pre>' >> $@ && \
-	echo '</div>' >> $@ 
+	echo '</pre>' >> $@
+#	echo '</div>' >> $@ 
 	echo $(ASPTOC) >> $(TOCFILE)
 
 

@@ -34,7 +34,7 @@ HTMLHEAD=$(PPROOT)/resources/HtmlHead.html
 HTMLQUOTE=$(PPROOT)/resources/HtmlQuote.html
 HRFILE=$(PPROOT)/resources/HtmlHr.html
 HTMLFOOTER=$(PPROOT)/resources/HtmlFooter.html
-
+HTMLOPTIONS=$(PPROOT)/resources/HtmlOptions.html
 # RESULTS FILES
 HSSPFILE:=$(INFILE:%.in=%.hssp)
 HSSPFILE4MD:=$(INFILE:%.in=%.hssp4md)
