@@ -300,7 +300,7 @@ exit(0);
 
 
 # lkajan: method - translate and pass --method=asp,ws=3,... --method=... method control parameters to make file
-# lkajan: idea: translate control params simply like this: --method=MNAME,CTRLP1=CTRLVAL1, -> NMAMECTRL=--CTRLP1=CTRLVAL1
+# lkajan: idea: translate control params simply like this: `--method=MNAME,CTRLP1=CTRLVAL1,CTRLP2=CTRLVAL2' -> `NMAMECTRL=--CTRLP1=CTRLVAL1 --CTRLP2=CTRLVAL2'
 # lkajan: Also return all methods as targets.
 sub               _get_makemethod
 {
