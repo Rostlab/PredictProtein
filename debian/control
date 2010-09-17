@@ -1,0 +1,26 @@
+Source: predictprotein
+Section: science
+Priority: extra
+Maintainer: Guy Yachdav <gyachdav@rostlab.org>
+Uploaders: Laszlo Kajan <lkajan@rostlab.org>
+Build-Depends: debhelper (>= 7), autotools-dev
+Standards-Version: 3.8.0
+Homepage: http://www.predictprotein.org
+
+Package: predictprotein
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, blast2, bioperl, coiledcoils, disulfinder, libnhgri-blastall-perl, libnhgri-blastall-perl, librg-liu-bundle-perl, librg-pp-bundle-perl (>= 1.0.21), librg-utils-perl, loctree, lowcompseg, metadisorder, norsnet, pp-cache-mgr (>= 1.0.3), profasp, profbval, profchop, profcon, profdisis, profglobe, profisis, profphd, proftmb, snapfun, ucon
+Description: A suite of sequence analysis tools
+ PredictProtein is a sequence analysis suite providing prediction of protein
+ structure and function. It takes protein sequences or alignments and input
+ and provides the following per-residue or whole protein annotations: multiple
+ sequence alignments, PROSITE sequence motifs, low-complexity regions, nuclear
+ localisation signals, regions lacking regular structure (NORS), secondary
+ structure, solvent accessibility, globular regions, transmembrane helices,
+ coiled-coil regions, structural switch regions, disulfide-bonds, sub-cellular
+ localization, disordered regions, B-value flexibility, protein-protein
+ interaction sites and protein-DNA interaction sites. Upon request fold
+ recognition by prediction-based threading, CHOP domain assignments,
+ predictions of transmembrane strands and inter-residue contacts are also
+ available. 
+

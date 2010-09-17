@@ -11,12 +11,51 @@ use Pod::Usage;
 use Config::IniFiles;
 use Bio::Seq;
 use Bio::SeqIO;
-use RG::PP::CacheMgr;
+use RG::PP::Acl;
 
 $Carp::Verbose = 1; 
 
-my $warn = "---";
-my $err = "***";
+our %meth_ext_hash = (
+  aliBlastpSwiss => 'blastpswiss',
+  aliFil_list => 'blastpswiss',
+  asp => 'profasp',
+  blastPsiAli => 'blastpgp',
+  blastPsiMat => 'blastpgp',
+  blastPsiOutTmp => 'blastpgp',
+  blastPsiRdb => 'blastpgp',
+  chk => 'blastpgp',
+  coils => 'coiledcoils',
+  coils_raw => 'coiledcoils',
+  disis => 'profdisis',
+  disulfinder => 'disulfinder',
+  fasta => 'input',
+  globe => 'profglobe',
+  hssp => 'blastpgp',
+  hsspFilter => 'hssp_filter',
+  hsspMax4phd => 'hssp_filter',
+  hsspPsiFil => 'hssp_filter',
+  in => 'input',
+  isis => 'profisis',
+  mdisorder => 'metadisorder',
+  nls => 'predictnls',
+  nlsSum => 'predictnls',
+  norsnet => 'norsnet',
+  nors => 'nors',
+  phdNotHtm => 'phd',
+  phdPred => 'phd',
+  phdRdb => 'phd',
+  proDom => 'prodom',
+  profAscii => 'prof',
+  profbval => 'profbval',
+  profRdb => 'prof',
+  proftmb => 'proftmb',
+  prosite => 'prosite',
+  safBlastPsi => 'blastpgp',
+  segNormGCG => 'lowcompseg',
+  segNorm => 'lowcompseg',
+  seqGCG => 'input',
+  sumNors => 'nors'
+);
 
 # SYSTEM CONFIGURATION RETRIEVAL
 our $config;
@@ -116,7 +155,7 @@ if(! $prot_name){ $prot_name="query"; }
 if( $prot_name =~ /[^[:alnum:]._-]/o ){ die("Error: invalid protein name, please use only [[:alnum:] -._]".( $dbg ? '' : "\n" )); }
 
 # check acl syntax if given
-if( $setacl ) { RG::PP::CacheMgr::acl2hash( $setacl ); }
+if( $setacl ) { RG::PP::Acl::acl2hash( $setacl ); }
 
 if( !@target ){ @target = ( 'all' ); }
 if( $target[0] ne 'all' ){ push @target, @$maketarget; } # all is `all', no need to specify them individually
@@ -128,13 +167,6 @@ if( $seqfile )
   $sequence_in = $seq->seq();
 }
 
-
-# COLLECT USER INPUT
-#if( $input_file )
-#{
-#  my $user_params = Config::IniFiles->new( -file =>  glob($input_file) );
-#  if( !defined ($user_params) ){ confess("$err Cannot read user parameter file. Exiting."); }
-#}
 
 # Get sequence
 $sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
@@ -242,7 +274,7 @@ if( !$dbg ) { open( STDOUT, '>&', $oldout ) || die( $! ); }
 if( $use_cache )
 {
   # We have to combine method ctrl params (%$hash_meth) with result files here and that is not trivial. We are going to have logic here to establish which result file belongs to which method.
-  # Associate extensions with method names: %RG::PP::CacheMgr::meth_ext_hash
+  # Associate extensions with method names: %meth_ext_hash
   my $precache_dir = File::Temp::tempdir( CLEANUP => !$dbg );
   if( $dbg ){ warn("precache dir = $precache_dir"); }
    
@@ -259,8 +291,8 @@ if( $use_cache )
     my( $filename, $directories, $suffix ) = fileparse( $res_file, qr/\.[^.]*$/o );
     my $extkey = substr( $suffix, 1 );
 
-    my $method = $RG::PP::CacheMgr::meth_ext_hash{$extkey};
-    if( !$method ){ warn("Warning: extension '$extkey' does not have associated method in RG::PP::CacheMgr::meth_ext_hash"); $method = $extkey; }
+    my $method = $meth_ext_hash{$extkey};
+    if( !$method ){ warn("Warning: extension '$extkey' does not have associated method"); $method = $extkey; }
 
     $hash_meth->{$method}->{res}->{$extkey} = "$precache_dir/$res_file";
   }

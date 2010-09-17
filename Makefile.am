@@ -1,7 +1,9 @@
 SUBDIRS = example helper_apps resources
 
 man_MANS = predprot.1 predictprotein.1
-dist_noinst_DATA =
+
+dist_noinst_DATA = debian/changelog  debian/compat  debian/control  debian/copyright
+dist_noinst_SCRIPTS = debian/rules
 
 dist_pkgdata_DATA = predictproteinrc.default MakefilePP.mk
 
