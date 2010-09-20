@@ -166,7 +166,7 @@ $(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(PROFBVALFILE) $(NORSNETFILE) $(H
 metadisorder: $(METADISORDERFILE)
 
 $(HSSPFILE): $(SAFFILE)
-	 $(LIBRGUTILS)/copf.pl $<  formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
+	$(LIBRGUTILS)/copf.pl $< formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
 
 $(HSSPFILE4MD): $(SAFFILE4MD)
 	$(LIBRGUTILS)/copf.pl $< formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
@@ -288,10 +288,10 @@ $(SAFFILE4MD): $(BLASTFILE4MD)
 	$(LIBRGUTILS)/blast2saf.pl $< maxAli=3000 eSaf=1 saf=$@
 
 $(FASTAFILE): $(INFILE)
-	$(LIBRGUTILS)/copf.pl $< formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
+	$(LIBRGUTILS)/copf.pl $< formatIn=fasta formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
 
 $(GCGFILE): $(INFILE)
-	$(LIBRGUTILS)/copf.pl $< formatOut=gcg fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
+	$(LIBRGUTILS)/copf.pl $< formatIn=fasta formatOut=gcg fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
 
 $(WORKDIR) $(DISULFINDDIR):
 	mkdir -p $@

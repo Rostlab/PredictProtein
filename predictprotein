@@ -226,7 +226,7 @@ my $work_seq_file = "$work_dir/$prot_name.in";
 
 if( ! -e $work_seq_file )
 {
-  my $seqobj = Bio::Seq->new( -display_id => $prot_name, -seq => $sequence_in);
+  my $seqobj = Bio::Seq->new( -display_id => $prot_name, -seq => uc($sequence_in) );
   my $seqout= Bio::SeqIO->new( -format => 'Fasta', -file => ">$work_seq_file" );
   $seqout->write_seq($seqobj);
 }
