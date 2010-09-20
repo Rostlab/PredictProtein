@@ -1,7 +1,8 @@
 predictprotein (1.0.22) stable; urgency=low
 
   * Sequence now converted to upper case before fed into pipeline
-  * Copf now explicitely told to expect FASTA format input file (where appropriate)
+  * Copf now explicitely told to expect FASTA format input file (where
+    appropriate)
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 20 Sep 2010 17:13:20 +0200
 
@@ -23,7 +24,8 @@ predictprotein (1.0.20)
 
 predictprotein (1.0.19)
 
-  * Introduced config file and cmd line params to control: bigblastdb big80blastdb swissblastdb prodomblastdb prositeconvdat
+  * Introduced config file and cmd line params to control: bigblastdb
+    big80blastdb swissblastdb prodomblastdb prositeconvdat
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 16 Aug 2010 19:05:18 +0200
 
