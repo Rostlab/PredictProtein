@@ -2,12 +2,14 @@
 #	PREDICTPROTEIN PIPELINE
 #
 #	(c) 2010 Guy Yachdav rostlab
+#	(c) 2010 Laszlo Kajan rostlab
 #####################################
 
 JOBID:=$(basename $(notdir $(INFILE)))
 
 DEBUG:=
 DESTDIR:=.
+# lkajan: attention $(WORKDIR) is not to be used by the component methods themselves; allowing this could lead to them deleting each others files in a parallel (-j12) run. Each method is to use its own working directory.
 WORKDIR:=/tmp/pp/
 
 DISULFINDDIR:=$(WORKDIR)/disulfinder/
@@ -24,10 +26,18 @@ PROFTMBROOT:=/usr/share/proftmb/
 # DATA (CONFIGURABLE)
 BIGBLASTDB:=/mnt/project/rost_db/data/blast/big
 BIG80BLASTDB:=/mnt/project/rost_db/data/blast/big_80
-SWISSBLASTDB:=/mnt/project/rost_db/data/blast/swiss
-PRODOMBLASTDB:=/mnt/project/rost_db/data/prodom/prodom
 DBSWISS:=/mnt/project/rost_db/data/swissprot/current/
+PFAM2:=/mnt/project/rost_db/data/pfam/Pfam_ls
+PFAM3:=/mnt/project/rost_db/data/pfam/v24/Pfam-A.hmm
+PRODOMBLASTDB:=/mnt/project/rost_db/data/prodom/prodom
 PROSITECONVDAT:=/mnt/project/rost_db/data/prosite/prosite_convert.dat
+PSICMAT:=/usr/share/psic/blosum62_psic.txt
+SWISSBLASTDB:=/mnt/project/rost_db/data/blast/swiss
+
+# TOOLS (CONFIGURABLE)
+HMM2PFAMEXE:=hmm2pfam
+HMM3SCANEXE:=hmmscan
+PSICEXE:=/usr/share/snapfun/runNewPSIC.pl
 
 # STATIC FILES
 HTMLHEAD=$(PPROOT)/resources/HtmlHead.html
@@ -37,11 +47,8 @@ HTMLFOOTER=$(PPROOT)/resources/HtmlFooter.html
 HTMLOPTIONS=$(PPROOT)/resources/HtmlOptions.html
 # RESULTS FILES
 HSSPFILE:=$(INFILE:%.in=%.hssp)
-HSSPFILE4MD:=$(INFILE:%.in=%.hssp4md)
-HSSPBLASTFILTERFILE:=$(INFILE:%.in=%.hsspPsiFil)
-HSSPBLASTFILTERFILE4MD:=$(INFILE:%.in=%.hsspPsiFil4md)
-HSSPFILTERFILE:=$(INFILE:%.in=%.hsspFilter)
-HSSPFILTERFORPHDFILE:=$(INFILE:%.in=%.hsspMax4phd)
+HSSP80FILE:=$(INFILE:%.in=%.hssp80)
+HSSPFILTERFILE:=$(INFILE:%.in=%.hsspPsiFil)
 COILSFILE:=$(INFILE:%.in=%.coils)
 COILSRAWFILE:=$(INFILE:%.in=%.coils_raw)
 NLSFILE:=$(INFILE:%.in=%.nls)
@@ -49,10 +56,12 @@ NLSSUMFILE:=$(INFILE:%.in=%.nlsSum)
 NLSTRACEFILE:=$(INFILE:%.in=%.nlsTrace)
 PHDFILE:=$(INFILE:%.in=%.phdPred)
 PHDRDBFILE:=$(INFILE:%.in=%.phdRdb)
-PHDRDBHTMFILE:=$(INFILE:%.in=%.phdRdbHtm)
+# lkajan: never make PHDNOTHTMFILE a target - its creation depends on whether phd found an HTM region or not: it isn't always created
 PHDNOTHTMFILE:=$(INFILE:%.in=%.phdNotHtm)
 PHDHTMLFILE:=$(INFILE:%.in=%.phd.html)
 PROFFILE:=$(INFILE:%.in=%.profRdb)
+# prof output generated explicitely from one sequence - NO alignment - Chris Schaefer initiated this - B approved
+PROF1FILE:=$(INFILE:%.in=%.prof1Rdb)
 PROFHTMLFILE:=$(INFILE:%.in=%.prof.html)
 ASPFILE:=$(INFILE:%.in=%.asp)
 NORSFILE:=$(INFILE:%.in=%.nors)
@@ -63,19 +72,21 @@ PROSITEFILE:=$(INFILE:%.in=%.prosite)
 GLOBEFILE:=$(INFILE:%.in=%.globe)
 SEGFILE:=$(INFILE:%.in=%.segNorm)
 SEGGCGFILE:=$(INFILE:%.in=%.segNormGCG)
+# this file is output from the first blastpgp call with 3 iterations
 BLASTFILE:=$(INFILE:%.in=%.blastPsiOutTmp)
-BLASTFILE4MD:=$(INFILE:%.in=%.blastPsiOutTmp4md)
 BLASTCHECKFILE:=$(INFILE:%.in=%.chk)
-BLASTCHECKFILE4MD:=$(INFILE:%.in=%.chk4md)
 BLASTFILERDB:=$(INFILE:%.in=%.blastPsiRdb)
-BLASTPSWISS:=$(INFILE:%.in=%.aliBlastpSwiss)
-# aliFil_list is not used by other rules. Guy says it may be used by loctree - we do not have loctree now.
-BLASTPFILTERFILE:=$(INFILE:%.in=%.aliFil_list)
+BLAST80FILERDB:=$(INFILE:%.in=%.blastPsi80Rdb)
+BLASTPSWISSM8:=$(INFILE:%.in=%.blastpSwissM8)
 BLASTMATFILE:=$(INFILE:%.in=%.blastPsiMat)
 BLASTALIFILE:=$(INFILE:%.in=%.blastPsiAli)
 DISULFINDERFILE:=$(INFILE:%.in=%.disulfinder)
+HMM2PFAM:=$(INFILE:%.in=%.hmm2pfam)
+HMM3PFAM:=$(INFILE:%.in=%.hmm3pfam)
+HMM3PFAMTBL:=$(INFILE:%.in=%.hmm3pfamTbl)
+HMM3PFAMDOMTBL:=$(INFILE:%.in=%.hmm3pfamDomTbl)
 SAFFILE:=$(INFILE:%.in=%.safBlastPsi)
-SAFFILE4MD:=$(INFILE:%.in=%.safBlastPsi4md)
+SAF80FILE:=$(INFILE:%.in=%.safBlastPsi80)
 FASTAFILE:=$(INFILE:%.in=%.fasta)
 GCGFILE:=$(INFILE:%.in=%.seqGCG)
 PROFBVALFILE:=$(INFILE:%.in=%.profbval)
@@ -85,11 +96,19 @@ PROFTEXTFILE:=$(INFILE:%.in=%.profAscii)
 PROFCONFILE:=$(INFILE:%.in=%.profcon)
 PROFTMBFILE:=$(INFILE:%.in=%.proftmb)
 PCCFILE:=$(INFILE:%.in=%.pcc)
+LOCTREEANIMALFILE:=$(INFILE:%.in=%.loctreeAnimal)
+LOCTREEANIMALTXTFILE:=$(INFILE:%.in=%.loctreeAnimalTxt)
+LOCTREEPLANTFILE:=$(INFILE:%.in=%.loctreePlant)
+LOCTREEPLANTTXTFILE:=$(INFILE:%.in=%.loctreePlantTxt)
+LOCTREEPROKAFILE:=$(INFILE:%.in=%.loctreeProka)
+LOCTREEPROKATXTFILE:=$(INFILE:%.in=%.loctreeProkaTxt)
+PSICFILE:=$(INFILE:%.in=%.psic)
 SNAPFILE:=$(INFILE:%.in=%.snap)
 ISISFILE:=$(INFILE:%.in=%.isis)
 DISISFILE:=$(INFILE:%.in=%.disis)
 PPFILE:=$(INFILE:%.in=%.predictprotein)
 TOCFILE:=$(INFILE:%.in=%.toc.html)
+TMHMMFILE:=$(INFILE:%.in=%.tmhmm)
 
 DISULFINDERCTRL :=
 LOWCOMPSEGCTRL := "NOT APPLICABLE"
@@ -106,7 +125,13 @@ PROFNORSCTRL := --win=70 --secCut=12 --accLen=10
 PROFTMBCTRL :=
 
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) disorder function interaction sec-struct
+all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) disorder function interaction pfam psic sec-struct subcell-loc
+
+.PHONY: pfam
+pfam: hmm2pfam hmm3pfam
+
+.PHONY: psic
+psic: $(PSICFILE)
 
 .PHONY: disorder
 disorder: profasp profnors metadisorder
@@ -117,12 +142,54 @@ function: $(NLSFILE) $(DISULFINDERFILE) prodom
 .PHONY: interaction
 interaction: $(ISISFILE) $(DISISFILE)
 
-.PHONY: sec-struct
-sec-struct:  $(COILSFILE) $(PROFFILE) prof $(PROFTEXTFILE) $(PROFTMBFILE)
+.PHONY: subcell-loc
+subcell-loc: loctree
 
-# these files do not seem to be required by any method:
-.PHONY: hsspfilterfile
-hsspfilterfile:	$(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) 
+.PHONY: loctree
+loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
+
+$(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
+	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEANIMALFILE) --loctreetxt $(LOCTREEANIMALTXTFILE) \
+	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
+	  --org animal \
+	  $(if $(DEBUG), --debug, )
+
+$(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
+	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPLANTFILE) --loctreetxt $(LOCTREEPLANTTXTFILE) \
+	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
+	  --org plant \
+	  $(if $(DEBUG), --debug, )
+
+$(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE) : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
+	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPROKAFILE) --loctreetxt $(LOCTREEPROKATXTFILE) \
+	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
+	  --org proka \
+	  $(if $(DEBUG), --debug, )
+
+$(PSICFILE) : $(FASTAFILE)
+	# lkajan: this fails if sequence is shorter than 50 AA!
+	$(PSICEXE) --infile $< $(if $(DEBUG), --debug, ) --noconffiles --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $@; RETVAL=$$?; if (( $$RETVAL == 254 )); then echo "sequence too short" > $@; else exit $$RETVAL; fi
+
+.PHONY: hmm2pfam
+hmm2pfam: $(HMM2PFAM)
+
+$(HMM2PFAM): $(FASTAFILE)
+	$(HMM2PFAMEXE) --cpu $(BLASTCORES) --acc --cut_ga $(PFAM2) $< > $@
+
+$(HMM3PFAM) $(HMM3PFAMTBL) $(HMM3PFAMDOMTBL) : $(FASTAFILE)
+	$(HMM3SCANEXE) --cpu 4 --acc --cut_ga --notextw --tblout $(HMM3PFAMTBL) --domtblout $(HMM3PFAMDOMTBL) -o $(HMM3PFAM) $(PFAM3) $<
+
+.PHONY: hmm3pfam
+hmm3pfam: $(HMM3PFAM) $(HMM3PFAMTBL) $(HMM3PFAMDOMTBL)
+
+.PHONY: sec-struct
+sec-struct:  $(COILSFILE) $(PROFFILE) phd prof $(PROFTEXTFILE) $(PROFTMBFILE) tmhmm
+
+.PHONY: tmhmm
+tmhmm: $(TMHMMFILE)
+
+$(TMHMMFILE): $(FASTAFILE)
+	tmhmm $< > $@
 
 $(PROFTMBFILE):  $(BLASTMATFILE)
 	proftmb @$(PROFTMBROOT)/options $(PROFTMBCTRL) -q $< -o $@ --quiet
@@ -130,64 +197,51 @@ $(PROFTMBFILE):  $(BLASTMATFILE)
 .PHONY: proftmb
 proftmb: $(PROFTMBFILE)
 
-$(ISISFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
-	profisis $(PROFISISCTRL) --fastafile $(FASTAFILE)  --rdbproffile $(PROFFILE) --hsspfile $(HSSPBLASTFILTERFILE)  --outfile $@
+$(ISISFILE): $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE)
+	profisis $(PROFISISCTRL) --fastafile $(FASTAFILE)  --rdbproffile $(PROFFILE) --hsspfile $(HSSPFILTERFILE)  --outfile $@
 
 .PHONY: profisis
 profisis: $(ISISFILE)
 
-$(DISISFILE): $(PROFFILE) $(HSSPBLASTFILTERFILE)
-	profdisis $(PROFDISISCTRL) --hsspfile $(HSSPBLASTFILTERFILE)  --rdbproffile $(PROFFILE)  --outfile $@
+$(DISISFILE): $(PROFFILE) $(HSSPFILTERFILE)
+	profdisis $(PROFDISISCTRL) --hsspfile $(HSSPFILTERFILE)  --rdbproffile $(PROFFILE)  --outfile $@
 
 .PHONY: profdisis
 profdisis: $(DISISFILE)
 
-$(PROFBVALFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE)
-	profbval $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $@ 1 5 $(DEBUG)
+$(PROFBVALFILE): $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE)
+	profbval $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE) $@ 1 5 $(DEBUG)
 
 .PHONY: profbval
 profbval: $(PROFBVALFILE)
 
-$(NORSNETFILE): $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $(PROFBVALFILE)
-	norsnet $(FASTAFILE) $(PROFFILE) $(HSSPBLASTFILTERFILE) $@ $(JOBID) $(PROFBVALFILE)
+$(NORSNETFILE): $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE) $(PROFBVALFILE)
+	norsnet $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE) $@ $(JOBID) $(PROFBVALFILE)
 
 .PHONY: norsnet
 norsnet: $(NORSNETFILE)
 
-$(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(PROFBVALFILE) $(NORSNETFILE) $(HSSPBLASTFILTERFILE) $(BLASTCHECKFILE)
+$(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(PROFBVALFILE) $(NORSNETFILE) $(HSSPFILTERFILE) $(BLASTCHECKFILE)
 	# This line reuses blast files used by other methods as well. On a handful of test cases this and Avner's version (below) gave only a tiny - seemingly insignificant - difference in results.
-	metadisorder $(METADISORDERCTRL) fasta=$(FASTAFILE) prof=$(PROFFILE) profbval_raw=$(PROFBVALFILE) norsnet=$(NORSNETFILE) hssp=$(HSSPBLASTFILTERFILE) chk=$(BLASTCHECKFILE) out=$@ out_mode=1
-
-#$(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(PROFBVALFILE) $(NORSNETFILE) $(HSSPBLASTFILTERFILE4MD) $(BLASTCHECKFILE4MD)
-#	# This call depends on files prepared the way Avner's runMD.pl does it.
-#	metadisorder $(METADISORDERCTRL) fasta=$(FASTAFILE) prof=$(PROFFILE) profbval_raw=$(PROFBVALFILE) norsnet=$(NORSNETFILE) hssp=$(HSSPBLASTFILTERFILE4MD) chk=$(BLASTCHECKFILE4MD) out=$@ out_mode=1
+	metadisorder $(METADISORDERCTRL) fasta=$(FASTAFILE) prof=$(PROFFILE) profbval_raw=$(PROFBVALFILE) norsnet=$(NORSNETFILE) hssp=$(HSSPFILTERFILE) chk=$(BLASTCHECKFILE) out=$@ out_mode=1
 
 .PHONY: metadisorder
 metadisorder: $(METADISORDERFILE)
 
 $(HSSPFILE): $(SAFFILE)
-	$(LIBRGUTILS)/copf.pl $< formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
+	$(LIBRGUTILS)/copf.pl $< formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq
 
-$(HSSPFILE4MD): $(SAFFILE4MD)
-	$(LIBRGUTILS)/copf.pl $< formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
+$(HSSP80FILE): $(SAF80FILE)
+	$(LIBRGUTILS)/copf.pl $< formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq
 
-$(HSSPBLASTFILTERFILE4MD): $(HSSPFILE4MD)
-	$(LIBRGUTILS)/hssp_filter.pl  red=80 $< fileOut=$@ dirWork=$(WORKDIR)
+$(HSSPFILTERFILE): $(HSSP80FILE)
+	$(LIBRGUTILS)/hssp_filter.pl  red=80 $< fileOut=$@
 
-$(HSSPBLASTFILTERFILE): $(HSSPFILE)
-	$(LIBRGUTILS)/hssp_filter.pl  red=80 $< fileOut=$@ dirWork=$(WORKDIR)
+.PHONY: blastpSwissM8
+blastpSwissM8: $(BLASTPSWISSM8)
 
-$(BLASTPSWISS):  $(FASTAFILE)
-	blastall -a $(BLASTCORES) -p blastp -d $(SWISSBLASTDB) -b 4000 -i $< -o $@ 
-
-$(BLASTPFILTERFILE): $(BLASTPSWISS)
-	$(HELPERAPPSDIR)filter_blastp_big.pl $< db=swiss dir=$(DBSWISS) > $@
-
-$(HSSPFILTERFILE): $(HSSPBLASTFILTERFILE) |$(WORKDIR)
-	 $(LIBRGUTILS)/hssp_filter.pl $(HSSPBLASTFILTERFILE) fileOut=$@  thresh=8 threshSgi=-10 mode=ide exeFilterHssp=filter_hssp dirWork=$(WORKDIR) jobid=$(JOBID)  fileOutScreen=$@.filterScreen dirWork=$(WORKDIR)
-
-$(HSSPFILTERFORPHDFILE): $(HSSPBLASTFILTERFILE) |$(WORKDIR)
-	 $(LIBRGUTILS)/hssp_filter.pl $(HSSPBLASTFILTERFILE) fileOut=$@  thresh=8 threshSgi=-10 mode=ide red=90 exeFilterHssp=filter_hssp dirWork=$(WORKDIR) jobid=$(JOBID)  fileOutScreen=$@.filterScreen dirWork=$(WORKDIR)
+$(BLASTPSWISSM8): $(FASTAFILE)
+	blastall -a $(BLASTCORES) -p blastp -d $(SWISSBLASTDB) -b 1000 -e 100 -m 8 -i $< -o $@
 
 $(GLOBEFILE) : $(PROFFILE) 
 	profglobe $(PROFGLOBECTRL) --prof_file $<  --output_file $@
@@ -204,28 +258,33 @@ $(DISULFINDERFILE): $(BLASTMATFILE) | $(DISULFINDDIR)
 .PHONY: disulfinder
 disulfinder: $(DISULFINDERFILE)
 
-$(NLSFILE) $(NLSSUMFILE) $(NLSTRACEFILE): $(FASTAFILE) |$(WORKDIR)
-	predictnls $(PREDICTNLSCTRL) dirOut=$(WORKDIR) fileIn=$< fileOut=$(NLSFILE) fileSummary=$(NLSSUMFILE) fileTrace=$(NLSTRACEFILE) html=1
+$(NLSFILE) $(NLSSUMFILE) $(NLSTRACEFILE): $(FASTAFILE)
+	predictnls $(PREDICTNLSCTRL) fileIn=$< fileOut=$(NLSFILE) fileSummary=$(NLSSUMFILE) fileTrace=$(NLSTRACEFILE) html=1
 
 .PHONY: predictnls
 predictnls: $(NLSFILE) $(NLSSUMFILE)
 
-$(PHDFILE) $(PHDRDBFILE) $(PHDNOTHTMFILE): $(HSSPBLASTFILTERFILE)
-	$(PROFROOT)embl/phd.pl $(HSSPBLASTFILTERFILE) htm exePhd=phd1994 filterHsspMetric=$(PROFROOT)embl/mat/Maxhom_Blosum.metric  exeHtmfil=$(PROFROOT)embl/scr/phd_htmfil.pl \
+$(PHDFILE) $(PHDRDBFILE): $(HSSPFILTERFILE)
+	$(PROFROOT)embl/phd.pl $(HSSPFILTERFILE) htm exePhd=phd1994 filterHsspMetric=$(PROFROOT)embl/mat/Maxhom_Blosum.metric  exeHtmfil=$(PROFROOT)embl/scr/phd_htmfil.pl \
 	 exeHtmtop=$(PROFROOT)embl/scr/phd_htmtop.pl paraSec=$(PROFROOT)embl/para/Para-sec317-may94.com paraAcc=$(PROFROOT)embl/para/Para-exp152x-mar94.com \
-	paraHtm=$(PROFROOT)embl/para/Para-htm69-aug94.com user=phd noPhdHeader dirOut=$(WORKDIR) dirWork=$(WORKDIR) jobid=$(JOBID) fileOutPhd=$(PHDFILE) \
-	fileOutRdb=$(PHDRDBFILE)  fileOutRdbHtm=$(PHDRDBHTMFILE) fileNotHtm=$(PHDNOTHTMFILE)  optDoHtmref=1  optDoHtmtop=1 optHtmisitMin=0.2 exeCopf=$(LIBRGUTILS)/copf.pl \
+	paraHtm=$(PROFROOT)embl/para/Para-htm69-aug94.com user=phd noPhdHeader \
+	fileOutPhd=$(PHDFILE)  fileOutRdb=$(PHDRDBFILE)  fileNotHtm=$(PHDNOTHTMFILE)  \
+	optDoHtmref=1  optDoHtmtop=1 optHtmisitMin=0.2 exeCopf=$(LIBRGUTILS)/copf.pl \
 	nresPerLineAli=60 exePhd2msf=$(PROFROOT)embl/scr/conv_phd2msf.pl exePhd2dssp=$(PROFROOT)/embl/scr/conv_phd2dssp.pl  exeConvertSeq=convert_seq \
-	exeHsspFilter=filter_hssp doCleanTrace=1 > $(PHDFILE).screenPhd
+	exeHsspFilter=filter_hssp doCleanTrace=1
 
-$(PROFFILE): $(HSSPBLASTFILTERFILE)
-	prof $< both  exeProfFor=profnet_prof  exePhd1994=$(PROFROOT)embl/phd.pl exePhd1994For=phd1994 para3=$(PROFROOT)net/PROFboth.par paraBoth=$(PROFROOT)net/PROFboth.par \
-	paraSec=$(PROFROOT)net/PROFsec.par paraAcc=$(PROFROOT)net/PROFacc.par numresMin=17 nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=. \
-	dirOut=$(WORKDIR) dirWork=$(WORKDIR) jobid=$(JOBID) fileRdb=$@ $(if $(DEBUG), 'dbg', ) verbose > $@.screenProf
-	rm -f $(WORKDIR)/PROF*
+#	paraHtm=$(PROFROOT)embl/para/Para-htm69-aug94.com user=phd noPhdHeader dirOut=$(WORKDIR) dirWork=$(WORKDIR) jobid=$(JOBID) \
+.PHONY: phd
+phd: $(PHDFILE) $(PHDRDBFILE)
+
+$(PROFFILE): $(HSSPFILTERFILE)
+	prof $< both fileRdb=$@ $(if $(DEBUG), 'dbg', ) numresMin=17 nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=.
+
+$(PROF1FILE): $(FASTAFILE)
+	prof $< both fileRdb=$@ $(if $(DEBUG), 'dbg', ) numresMin=17 nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=.
 
 .PHONY: prof
-prof: $(PROFFILE)
+prof: $(PROFFILE) $(PROF1FILE)
 
 $(PROFTEXTFILE): $(PROFFILE)
 	$(PROFROOT)scr/conv_prof.pl $< fileOut=$@ ascii nohtml nodet nograph
@@ -239,16 +298,16 @@ profasp: $(ASPFILE)
 # NORS
 NORSDIR:= $(HELPERAPPSDIR)
 EXE_NORS:= $(NORSDIR)nors.pl
-$(NORSFILE) $(NORSSUMFILE): $(FASTAFILE) $(HSSPBLASTFILTERFILE) $(PROFFILE) $(PHDRDBFILE) $(COILSFILE)
+$(NORSFILE) $(NORSSUMFILE): $(FASTAFILE) $(HSSPFILTERFILE) $(PROFFILE) $(PHDRDBFILE) $(COILSFILE)
 	# this call may throw warnings on STDERR (like 'wrong parsing coil file?? ctCoils=0') - silence it when we are not in debug mode
-	$(EXE_NORS) $(PROFNORSCTRL) -fileSeq $(FASTAFILE) -fileHssp $(HSSPBLASTFILTERFILE) \
+	$(EXE_NORS) $(PROFNORSCTRL) -fileSeq $(FASTAFILE) -fileHssp $(HSSPFILTERFILE) \
 	-filePhd $(PROFFILE) -filePhdHtm $(PHDRDBFILE) -fileCoils $(COILSFILE) -o $(NORSFILE) -fileSum $(NORSSUMFILE) -html
 
 .PHONY: profnors
 profnors: $(NORSFILE) $(NORSSUMFILE)
 
 #PRODOM
-$(PRODOMFILE):  $(FASTAFILE)
+$(PRODOMFILE): $(FASTAFILE)
 	blastall -a $(BLASTCORES)  -p blastp -d $(PRODOMBLASTDB) -B 500 -i $< -o $@ 
 
 .PHONY: prodom
@@ -267,7 +326,7 @@ $(SEGFILE): $(FASTAFILE)
 lowcompseg: $(SEGFILE)
 
 $(SEGGCGFILE): $(SEGFILE)
-	$(LIBRGUTILS)/copf.pl $< formatOut=gcg fileOut=$@ dirWork=$(WORKDIR)
+	$(LIBRGUTILS)/copf.pl $< formatOut=gcg fileOut=$@
 
 $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE): $(FASTAFILE)
 	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
@@ -277,27 +336,23 @@ $(BLASTALIFILE): $(BLASTCHECKFILE) $(FASTAFILE)
 	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
 	blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , >&/dev/null)
 
-#$(BLASTFILE4MD) $(BLASTCHECKFILE4MD): $(FASTAFILE)
-#	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
-#	blastpgp -F F -a $(BLASTCORES) -j 3 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $(BLASTFILE4MD) -C $(BLASTCHECKFILE4MD) $(if $(DEBUG), , >&/dev/null)
-
 $(SAFFILE) $(BLASTFILERDB): $(BLASTALIFILE)  $(FASTAFILE)
 	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$@ red=100 maxAli=3000 tile=0 fileOutErr=$@.blast2safErr
 
-$(SAFFILE4MD): $(BLASTFILE4MD)
-	$(LIBRGUTILS)/blast2saf.pl $< maxAli=3000 eSaf=1 saf=$@
+$(SAF80FILE) $(BLAST80FILERDB): $(BLASTFILE)  $(FASTAFILE)
+	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLAST80FILERDB) fileOutSaf=$@ red=100 maxAli=3000 tile=0 fileOutErr=$@.blast2safErr
 
 $(FASTAFILE): $(INFILE)
-	$(LIBRGUTILS)/copf.pl $< formatIn=fasta formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
+	$(LIBRGUTILS)/copf.pl $< formatIn=fasta formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq
 
 $(GCGFILE): $(INFILE)
-	$(LIBRGUTILS)/copf.pl $< formatIn=fasta formatOut=gcg fileOut=$@ exeConvertSeq=convert_seq dirWork=$(WORKDIR)
+	$(LIBRGUTILS)/copf.pl $< formatIn=fasta formatOut=gcg fileOut=$@ exeConvertSeq=convert_seq
 
-$(WORKDIR) $(DISULFINDDIR):
+$(DISULFINDDIR):
 	mkdir -p $@
 
 clean:
-	rm -rf $(WORKDIR)
+	rm -rf $(WORKDIR)/*
 
 # Development purposes only remove this target in production
 clean-html:
@@ -307,30 +362,33 @@ clean-html:
 install:
 	for f in \
 		$(ASPFILE) \
-		$(BLASTALIFILE) $(BLASTMATFILE) $(BLASTFILERDB) $(BLASTCHECKFILE) \
-		$(BLASTPFILTERFILE) \
+		$(BLASTFILE) $(BLASTALIFILE) $(BLASTMATFILE) $(BLASTFILERDB) $(BLAST80FILERDB) $(BLASTCHECKFILE) \
+		$(BLASTPSWISSM8) \
 		$(COILSFILE) $(COILSRAWFILE) \
 		$(DISISFILE) \
 		$(DISULFINDERFILE) \
 		$(FASTAFILE) \
 		$(GLOBEFILE) \
-		$(HSSPFILE) $(HSSPFILTERFILE) $(HSSPFILTERFORPHDFILE) $(HSSPBLASTFILTERFILE) \
+		$(HMM2PFAM) $(HMM3PFAM) $(HMM3PFAMTBL) $(HMM3PFAMDOMTBL) \
+		$(HSSPFILE) $(HSSP80FILE) $(HSSPFILTERFILE) \
 		$(INFILE) \
 		$(ISISFILE) \
+		$(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE) \
 		$(METADISORDERFILE) \
 		$(NLSFILE) $(NLSSUMFILE) \
 		$(NORSFILE) $(NORSSUMFILE) \
 		$(NORSNETFILE) \
-		$(PHDNOTHTMFILE) $(PHDFILE) $(PHDRDBFILE) \
+		$(PHDFILE) $(PHDNOTHTMFILE) $(PHDRDBFILE) \
 		$(PRODOMFILE) \
-		$(PROFTEXTFILE) $(PROFFILE) \
+		$(PROFTEXTFILE) $(PROFFILE) $(PROF1FILE) \
 		$(PROFBVALFILE) \
 		$(PROFTMBFILE) \
 		$(PROSITEFILE) \
-		$(SAFFILE) \
+		$(PSICFILE) \
+		$(SAFFILE) $(SAF80FILE) \
 		$(SEGFILE) $(SEGGCGFILE) \
 		$(GCGFILE) \
-		$(HSSPFILE4MD) $(HSSPBLASTFILTERFILE4MD) $(BLASTFILE4MD) $(BLASTCHECKFILE4MD) $(SAFFILE4MD) \
+		$(TMHMMFILE) \
 	; do if [ -e $$f ]; then cp -a $$f $(DESTDIR)/ ; fi; done
 
 .PHONY: help

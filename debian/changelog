@@ -1,3 +1,13 @@
+predictprotein (1.0.23) stable; urgency=low
+
+  * added psic from snap
+  * added loctree with all 3 organism 'types'
+  * added hmmer2 and 3
+  * added prof runs on fasta sequence only (no alignment)
+  * added tmhmm
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 08 Oct 2010 13:59:43 +0200
+
 predictprotein (1.0.22) stable; urgency=low
 
   * Sequence now converted to upper case before fed into pipeline

@@ -16,13 +16,13 @@ use RG::PP::Acl;
 $Carp::Verbose = 1; 
 
 our %meth_ext_hash = (
-  aliBlastpSwiss => 'blastpswiss',
-  aliFil_list => 'blastpswiss',
   asp => 'profasp',
   blastPsiAli => 'blastpgp',
   blastPsiMat => 'blastpgp',
   blastPsiOutTmp => 'blastpgp',
   blastPsiRdb => 'blastpgp',
+  blastPsi80Rdb => 'blastpgp',
+  blastpSwissM8 => 'blastpswiss',
   chk => 'blastpgp',
   coils => 'coiledcoils',
   coils_raw => 'coiledcoils',
@@ -30,12 +30,21 @@ our %meth_ext_hash = (
   disulfinder => 'disulfinder',
   fasta => 'input',
   globe => 'profglobe',
+  hmm2pfam => 'hmmer',
+  hmm3pfam => 'hmmer',
+  hmm3pfamTbl => 'hmmer',
+  hmm3pfamDomTbl => 'hmmer',
   hssp => 'blastpgp',
-  hsspFilter => 'hssp_filter',
-  hsspMax4phd => 'hssp_filter',
+  hssp80 => 'blastpgp',
   hsspPsiFil => 'hssp_filter',
   in => 'input',
   isis => 'profisis',
+  loctreeAnimal => 'loctree',
+  loctreeAnimalTxt => 'loctree',
+  loctreePlant => 'loctree',
+  loctreePlantTxt => 'loctree',
+  loctreeProka => 'loctree',
+  loctreeProkaTxt => 'loctree',
   mdisorder => 'metadisorder',
   nls => 'predictnls',
   nlsSum => 'predictnls',
@@ -47,14 +56,18 @@ our %meth_ext_hash = (
   proDom => 'prodom',
   profAscii => 'prof',
   profbval => 'profbval',
+  prof1Rdb => 'prof',
   profRdb => 'prof',
   proftmb => 'proftmb',
   prosite => 'prosite',
+  psic => 'psic',
   safBlastPsi => 'blastpgp',
+  safBlastPsi80 => 'blastpgp',
   segNormGCG => 'lowcompseg',
   segNorm => 'lowcompseg',
   seqGCG => 'input',
-  sumNors => 'nors'
+  sumNors => 'nors',
+  tmhmm => 'tmhmm'
 );
 
 # SYSTEM CONFIGURATION RETRIEVAL
@@ -80,6 +93,7 @@ my $prof_app_root = glob($config->val('predictprotein', 'prof'));
 my $proftmb_app_root = glob($config->val('predictprotein', 'proftmb'));
 my $prodomblastdb = glob( $config->val('predictprotein', 'prodomblastdb' ) );
 my $prositeconvdat = glob( $config->val('predictprotein', 'prositeconvdat' ) );
+my $psicexe = glob( $config->val('predictprotein', 'psicexe' ) );
 my $use_cache = $config->val('predictprotein', 'use_cache');
 #
 my $root_dir = $pp_rootdir || "__pkgdatadir__";
@@ -117,6 +131,7 @@ my $result = GetOptions (
 			    "p|prot-name=s" =>\$prot_name,
           "prodomblastdb=s" => \$prodomblastdb,
           "prositeconvdat=s" => \$prositeconvdat,
+          "psicexe=s" => \$psicexe,
 			    "s|seq|sequence=s" =>\$sequence_in,
           'seqfile=s' => \$seqfile,
           'swissblastdb=s' => \$swissblastdb,
@@ -142,9 +157,12 @@ this system using "man predictprotein" or at http://www.predictprotein.org/.
     exit (0);
 }
 
+# force-cache-store implies use-cache
+if( $force_cache_store ){ $use_cache = 1; }
+
 my( $makemethod, $maketarget, $hash_meth ) = _get_makemethod( \@method );
 
-if( !$output_dir && !$use_cache ){ die("Error: no output directory given and no cache is to be used. Results would be lost unless you use --output-dir or --use-cache.".( $dbg ? '' : "\n" ) ); }
+if( !$output_dir && !$use_cache && !$work_dir ){ die("Error: no output directory or work directory given and no cache is to be used. Results would be lost unless you use --output-dir, --work-dir or --use-cache.".( $dbg ? '' : "\n" ) ); }
 if( $output_dir )
 {
   $output_dir = glob($output_dir);
@@ -152,7 +170,7 @@ if( $output_dir )
 }
 
 if(! $prot_name){ $prot_name="query"; }
-if( $prot_name =~ /[^[:alnum:]._-]/o ){ die("Error: invalid protein name, please use only [[:alnum:] -._]".( $dbg ? '' : "\n" )); }
+if( $prot_name =~ /[^[:alnum:]._-]/o ){ die("Error: invalid protein name, please use only [[:alnum:]._-]".( $dbg ? '' : "\n" )); }
 
 # check acl syntax if given
 if( $setacl ) { RG::PP::Acl::acl2hash( $setacl ); }
@@ -250,6 +268,7 @@ if( $bigblastdb ){ push @cmd, "BIGBLASTDB=$bigblastdb"; }
 if( $big80blastdb ){ push @cmd, "BIG80BLASTDB=$big80blastdb"; }
 if( $prodomblastdb ){ push @cmd, "PRODOMBLASTDB=$prodomblastdb"; }
 if( $prositeconvdat ){ push @cmd, "PROSITECONVDAT=$prositeconvdat"; }
+if( $psicexe ){ push @cmd, "PSICEXE=$psicexe"; }
 if( $swissblastdb ){ push @cmd, "SWISSBLASTDB=$swissblastdb"; }
 # method control params
 push (@cmd, @$makemethod );
@@ -287,7 +306,7 @@ if( $use_cache )
   {
     if( substr( $res_file, 0, 1 ) eq '.' ){ next; }
 
-    # query.aliBlastpSwiss => $method->{blastpswiss}->{res}->{aliBlastpSwiss} = "$precache_dir/$res_file";
+    # query.blastpSwissM8 => $method->{blastpswiss}->{res}->{blastpSwissM8} = "$precache_dir/$res_file";
     my( $filename, $directories, $suffix ) = fileparse( $res_file, qr/\.[^.]*$/o );
     my $extkey = substr( $suffix, 1 );
 
@@ -466,7 +485,7 @@ A lot of verbiage
 
 =item B<--noforce-cache-store>
 
-Enable/disable forcing storage of results into cache.  Ineffective unless B<--use-cache> is also set.  Default: B<--noforce-cache-store>
+Enable/disable forcing storage of results into cache.  Implies B<--use-cache>.  Default: B<--noforce-cache-store>
 
 =item B<--help>
 
@@ -508,9 +527,15 @@ Path to `prodom' blast database
 
 Path to `prosite_convert.dat' file, see L<https://rostlab.org/owiki/index.php/Packages#Resource_definitions>
 
+=item B<--psicexe>
+
+psic wrapper executable, default: /usr/share/snapfun/runNewPSIC.pl
+
 =item B<-p>, B<--prot-name>
 
-Query name, default = `query'
+Base name of result files and protein name in - for example - FASTA files. Default = `query'.
+
+Valid names are of the character set C<[[:alnum:]._-]>.
 
 =item B<-s>, B<--seq>, B<--sequence>
 

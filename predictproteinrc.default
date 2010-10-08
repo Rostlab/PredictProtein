@@ -1,5 +1,4 @@
 [predictprotein]
-
 # predictprotein_utildir=path - path to package utilities, default: /usr/share/predictprotein
 predictprotein_utildir=__pkgdatadir__
 
@@ -30,4 +29,6 @@ prositeconvdat=/mnt/project/rost_db/data/prosite/prosite_convert.dat
 # swissblastdb: Path to SwissProt blast database
 swissblastdb=/mnt/project/rost_db/data/blast/swiss
 
+# psicexe: psic wrapper executable
+psicexe=/usr/share/snapfun/runNewPSIC.pl
 
