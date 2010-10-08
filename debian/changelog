@@ -1,3 +1,9 @@
+predictprotein (1.0.24) stable; urgency=low
+
+  * fixed tmhmm work dir issue - not current dir but tmp dir now
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 08 Oct 2010 23:31:44 +0200
+
 predictprotein (1.0.23) stable; urgency=low
 
   * added psic from snap

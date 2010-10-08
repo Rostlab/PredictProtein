@@ -189,7 +189,7 @@ sec-struct:  $(COILSFILE) $(PROFFILE) phd prof $(PROFTEXTFILE) $(PROFTMBFILE) tm
 tmhmm: $(TMHMMFILE)
 
 $(TMHMMFILE): $(FASTAFILE)
-	tmhmm $< > $@
+	WD=$$(mktemp -d) && trap "rm -rf '$$WD'" EXIT; cd $$WD && tmhmm --nohtml --noplot $< > $@
 
 $(PROFTMBFILE):  $(BLASTMATFILE)
 	proftmb @$(PROFTMBROOT)/options $(PROFTMBCTRL) -q $< -o $@ --quiet
