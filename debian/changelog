@@ -1,3 +1,9 @@
+predictprotein (1.0.26) stable; urgency=low
+
+  * added required version to hmmer dep
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Sat, 09 Oct 2010 14:11:34 +0200
+
 predictprotein (1.0.25) stable; urgency=low
 
   * added missing dependencies

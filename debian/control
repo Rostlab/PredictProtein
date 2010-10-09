@@ -9,7 +9,7 @@ Homepage: http://www.predictprotein.org
 
 Package: predictprotein
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, blast2, bioperl, coiledcoils, disulfinder, hmmer, hmmer2, libnhgri-blastall-perl, libnhgri-blastall-perl, librg-liu-bundle-perl, librg-pp-bundle-perl (>= 1.0.21), librg-utils-perl (>= 1.0.14), loctree (>= 1.0.11), lowcompseg, metadisorder, norsnet, pp-cache-mgr (>= 1.0.3), profasp, profbval (>= 1.0.13), profchop, profcon, profdisis, profglobe, profisis, profphd, proftmb, snapfun (>= 1.0.15), tmhmm (>= 2.0), ucon
+Depends: ${shlibs:Depends}, ${misc:Depends}, blast2, bioperl, coiledcoils, disulfinder, hmmer (>= 3.0), hmmer2, libnhgri-blastall-perl, libnhgri-blastall-perl, librg-liu-bundle-perl, librg-pp-bundle-perl (>= 1.0.21), librg-utils-perl (>= 1.0.14), loctree (>= 1.0.11), lowcompseg, metadisorder, norsnet, pp-cache-mgr (>= 1.0.3), profasp, profbval (>= 1.0.13), profchop, profcon, profdisis, profglobe, profisis, profphd, proftmb, snapfun (>= 1.0.15), tmhmm (>= 2.0), ucon
 Description: A suite of sequence analysis tools
  PredictProtein is a sequence analysis suite providing prediction of protein
  structure and function. It takes protein sequences or alignments and input
