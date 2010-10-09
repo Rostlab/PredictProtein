@@ -1,3 +1,9 @@
+predictprotein (1.0.25) stable; urgency=low
+
+  * added missing dependencies
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Sat, 09 Oct 2010 14:01:48 +0200
+
 predictprotein (1.0.24) stable; urgency=low
 
   * fixed tmhmm work dir issue - not current dir but tmp dir now
