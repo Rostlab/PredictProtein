@@ -32,3 +32,8 @@ swissblastdb=/mnt/project/rost_db/data/blast/swiss
 # psicexe: psic wrapper executable
 psicexe=/usr/share/snapfun/runNewPSIC.pl
 
+# pfam2 db
+pfam2db=/mnt/project/rost_db/data/pfam/Pfam_ls
+
+# pfam3 db
+pfam3db=/mnt/project/rost_db/data/pfam/Pfam-A.hmm

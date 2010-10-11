@@ -27,8 +27,8 @@ PROFTMBROOT:=/usr/share/proftmb/
 BIGBLASTDB:=/mnt/project/rost_db/data/blast/big
 BIG80BLASTDB:=/mnt/project/rost_db/data/blast/big_80
 DBSWISS:=/mnt/project/rost_db/data/swissprot/current/
-PFAM2:=/mnt/project/rost_db/data/pfam/Pfam_ls
-PFAM3:=/mnt/project/rost_db/data/pfam/v24/Pfam-A.hmm
+PFAM2DB:=/mnt/project/rost_db/data/pfam/Pfam_ls
+PFAM3DB:=/mnt/project/rost_db/data/pfam/Pfam-A.hmm
 PRODOMBLASTDB:=/mnt/project/rost_db/data/prodom/prodom
 PROSITECONVDAT:=/mnt/project/rost_db/data/prosite/prosite_convert.dat
 PSICMAT:=/usr/share/psic/blosum62_psic.txt
@@ -174,10 +174,10 @@ $(PSICFILE) : $(FASTAFILE)
 hmm2pfam: $(HMM2PFAM)
 
 $(HMM2PFAM): $(FASTAFILE)
-	$(HMM2PFAMEXE) --cpu $(BLASTCORES) --acc --cut_ga $(PFAM2) $< > $@
+	$(HMM2PFAMEXE) --cpu $(BLASTCORES) --acc --cut_ga $(PFAM2DB) $< > $@
 
 $(HMM3PFAM) $(HMM3PFAMTBL) $(HMM3PFAMDOMTBL) : $(FASTAFILE)
-	$(HMM3SCANEXE) --cpu 4 --acc --cut_ga --notextw --tblout $(HMM3PFAMTBL) --domtblout $(HMM3PFAMDOMTBL) -o $(HMM3PFAM) $(PFAM3) $<
+	$(HMM3SCANEXE) --cpu 4 --acc --cut_ga --notextw --tblout $(HMM3PFAMTBL) --domtblout $(HMM3PFAMDOMTBL) -o $(HMM3PFAM) $(PFAM3DB) $<
 
 .PHONY: hmm3pfam
 hmm3pfam: $(HMM3PFAM) $(HMM3PFAMTBL) $(HMM3PFAMDOMTBL)

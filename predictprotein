@@ -89,6 +89,8 @@ my $bigblastdb = glob( $config->val('predictprotein', 'bigblastdb' ) );
 my $big80blastdb = glob( $config->val('predictprotein', 'big80blastdb' ) );
 my $swissblastdb = glob( $config->val('predictprotein', 'swissblastdb' ) );
 my $librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')).'/' || '/usr/share/librg-utils-perl/';
+my $pfam2db = glob($config->val('predictprotein', 'pfam2db'));
+my $pfam3db = glob($config->val('predictprotein', 'pfam3db'));
 my $prof_app_root = glob($config->val('predictprotein', 'prof'));
 my $proftmb_app_root = glob($config->val('predictprotein', 'proftmb'));
 my $prodomblastdb = glob( $config->val('predictprotein', 'prodomblastdb' ) );
@@ -129,6 +131,8 @@ my $result = GetOptions (
 			    "n|dryrun" => \$dry_run,
 			    "o|output-dir=s" => \$output_dir,
 			    "p|prot-name=s" =>\$prot_name,
+          "pfam2db=s" => \$pfam2db,
+          "pfam3db=s" => \$pfam3db,
           "prodomblastdb=s" => \$prodomblastdb,
           "prositeconvdat=s" => \$prositeconvdat,
           "psicexe=s" => \$psicexe,
@@ -266,6 +270,8 @@ push (@cmd, "PROFTMBROOT=".$proftmb_app_root);
 # resource locations e.g. BIGBLASTDB, BIG80BLASTDB, PRODOMBLASTDB, PROSITECONVDAT, SWISSBLASTDB
 if( $bigblastdb ){ push @cmd, "BIGBLASTDB=$bigblastdb"; }
 if( $big80blastdb ){ push @cmd, "BIG80BLASTDB=$big80blastdb"; }
+if( $pfam2db ){ push @cmd, "PFAM2DB=$pfam2db"; }
+if( $pfam3db ){ push @cmd, "PFAM3DB=$pfam3db"; }
 if( $prodomblastdb ){ push @cmd, "PRODOMBLASTDB=$prodomblastdb"; }
 if( $prositeconvdat ){ push @cmd, "PROSITECONVDAT=$prositeconvdat"; }
 if( $psicexe ){ push @cmd, "PSICEXE=$psicexe"; }
@@ -447,6 +453,8 @@ Current collective resources:
  big_80 (big @ 80% sequence identity  --big80blastdb
    redunancy level) blast database
  swiss blast database                 --swissblastdb
+ pfam v2 database                     --pfam2db
+ pfam v3 database                     --pfam3db
  prodom blast database                --prodomblastdb
  prosite_convert.dat                  --prositeconvdat
 
@@ -518,6 +526,14 @@ Do not execute, just shows what is about to be run
 =item B<-o>, B<--output-dir>
 
 Final location of outputfiles, required unless caching is used.
+
+=item B<--pfam2db>
+
+Pfam v2 database, e.g. F<Pfam_ls>
+
+=item B<--pfam3db>
+
+Pfam v3 database, e.g. F<Pfam-A.hmm>
 
 =item B<--prodomblastdb>
 
