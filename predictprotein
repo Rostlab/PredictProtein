@@ -436,6 +436,7 @@ Current methods:
  coiledcoils
  disulfinder
  metadisorder
+ pfam v2 and v3
  predictnls
  prodom, blast against
  profasp
@@ -446,6 +447,8 @@ Current methods:
  profphd
  proftmb
  prosite_scan
+ psic
+ tmhmm
 
 Current collective resources:
 
