@@ -125,7 +125,10 @@ PROFNORSCTRL := --win=70 --secCut=12 --accLen=10
 PROFTMBCTRL :=
 
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) disorder function interaction pfam psic sec-struct subcell-loc
+all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) disorder function html interaction pfam psic sec-struct subcell-loc
+
+.PHONY: html
+html: $(BLASTFILERDB) $(HSSPFILE) $(SAFFILE)
 
 .PHONY: pfam
 pfam: hmm2pfam hmm3pfam
@@ -167,8 +170,14 @@ $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE) : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM
 	  $(if $(DEBUG), --debug, )
 
 $(PSICFILE) : $(FASTAFILE)
-	# lkajan: this fails if sequence is shorter than 50 AA!
-	$(PSICEXE) --infile $< $(if $(DEBUG), --debug, ) --noconffiles --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $@; RETVAL=$$?; if (( $$RETVAL == 254 )); then echo "sequence too short" > $@; else exit $$RETVAL; fi
+	# lkajan: this fails if sequence is shorter than 50 AA or when there are no blast hits - catch those conditions
+	$(PSICEXE) --infile $< $(if $(DEBUG), --debug, ) --quiet --noconffiles --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $@; \
+	RETVAL=$$?; \
+	case "$$RETVAL" in \
+	  253) echo "blastpgp: No hits found" > $@; ;; \
+	  254) echo "sequence too short" > $@; ;; \
+	  *) exit $$RETVAL; ;; \
+	esac
 
 .PHONY: hmm2pfam
 hmm2pfam: $(HMM2PFAM)
@@ -241,7 +250,10 @@ $(HSSPFILTERFILE): $(HSSP80FILE)
 blastpSwissM8: $(BLASTPSWISSM8)
 
 $(BLASTPSWISSM8): $(FASTAFILE)
-	blastall -a $(BLASTCORES) -p blastp -d $(SWISSBLASTDB) -b 1000 -e 100 -m 8 -i $< -o $@
+	# lkajan: we have to switch off filtering (default for blastpgp) or sequences like ASDSADADASDASDASDSADASA fail with
+	# 'WARNING: query: Could not calculate ungapped Karlin-Altschul parameters due to an invalid query sequence or its translation. Please verify the query sequence(s) and/or filtering options'
+	# Does switching off filtering hurt us? Loctree uses the results of this for extracting keywords from swissprot, so I am not worried.
+	blastall -F F -a $(BLASTCORES) -p blastp -d $(SWISSBLASTDB) -b 1000 -e 100 -m 8 -i $< -o $@
 
 $(GLOBEFILE) : $(PROFFILE) 
 	profglobe $(PROFGLOBECTRL) --prof_file $<  --output_file $@
@@ -308,7 +320,7 @@ profnors: $(NORSFILE) $(NORSSUMFILE)
 
 #PRODOM
 $(PRODOMFILE): $(FASTAFILE)
-	blastall -a $(BLASTCORES)  -p blastp -d $(PRODOMBLASTDB) -B 500 -i $< -o $@ 
+	blastall -F F -a $(BLASTCORES) -p blastp -d $(PRODOMBLASTDB) -B 500 -i $< -o $@ 
 
 .PHONY: prodom
 prodom: $(PRODOMFILE)
@@ -337,10 +349,10 @@ $(BLASTALIFILE): $(BLASTCHECKFILE) $(FASTAFILE)
 	blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , >&/dev/null)
 
 $(SAFFILE) $(BLASTFILERDB): $(BLASTALIFILE)  $(FASTAFILE)
-	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$@ red=100 maxAli=3000 tile=0 fileOutErr=$@.blast2safErr
+	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$(SAFFILE) red=100 maxAli=3000 tile=0 fileOutErr=$(SAFFILE).blast2safErr
 
 $(SAF80FILE) $(BLAST80FILERDB): $(BLASTFILE)  $(FASTAFILE)
-	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLAST80FILERDB) fileOutSaf=$@ red=100 maxAli=3000 tile=0 fileOutErr=$@.blast2safErr
+	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLAST80FILERDB) fileOutSaf=$(SAF80FILE) red=100 maxAli=3000 tile=0 fileOutErr=$(SAF80FILE).blast2safErr
 
 $(FASTAFILE): $(INFILE)
 	$(LIBRGUTILS)/copf.pl $< formatIn=fasta formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq
