@@ -1,3 +1,10 @@
+predictprotein (1.0.30) stable; urgency=low
+
+  * silenced warnings of %.blastpSwissM8 blastall call (e.g.
+    'Selenocysteine (U) at position 59 replaced by X')
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 14 Oct 2010 09:28:27 +0200
+
 predictprotein (1.0.29) stable; urgency=low
 
   * MakefilePP now properly defined rules producing multiple targets -
