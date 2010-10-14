@@ -15,6 +15,7 @@ WORKDIR:=/tmp/pp/
 DISULFINDDIR:=$(WORKDIR)/disulfinder/
 
 BLASTCORES := 1
+PROFNUMRESMIN := 17
 
 # FOLDER LOCATION (CONFIGURABLE)
 PPROOT:=/usr/share/predictprotein
@@ -292,10 +293,10 @@ predictnls: $(NLSFILE) $(NLSDATFILE) $(NLSSUMFILE)
 phd: $(PHDFILE) $(PHDRDBFILE)
 
 $(PROFFILE): $(HSSPFILTERFILE)
-	prof $< both fileRdb=$@ $(if $(DEBUG), 'dbg', ) numresMin=17 nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=.
+	prof $< both fileRdb=$@ $(if $(DEBUG), 'dbg', ) numresMin=$(PROFNUMRESMIN) nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=.
 
 $(PROF1FILE): $(FASTAFILE)
-	prof $< both fileRdb=$@ $(if $(DEBUG), 'dbg', ) numresMin=17 nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=.
+	prof $< both fileRdb=$@ $(if $(DEBUG), 'dbg', ) numresMin=$(PROFNUMRESMIN) nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=.
 
 .PHONY: prof
 prof: $(PROFFILE) $(PROF1FILE)

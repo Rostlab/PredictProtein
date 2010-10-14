@@ -1,3 +1,12 @@
+predictprotein (1.0.31) stable; urgency=low
+
+  * --profnumresmin: minimum sequence length required by prof. Sequences
+    shorter than this will make predictprotein fail with 254
+    This value is 17 by default, configurable from the cmd line or config
+    file.
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 14 Oct 2010 16:43:48 +0200
+
 predictprotein (1.0.30) stable; urgency=low
 
   * silenced warnings of %.blastpSwissM8 blastall call (e.g.

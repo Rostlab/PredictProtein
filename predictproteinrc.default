@@ -20,6 +20,9 @@ proftmb=/usr/share/proftmb/
 # path to profphd 
 prof=/usr/share/profphd/prof/
 
+# prof numresMin, default: 17
+profnumresmin=17
+
 # prodomblastdb: Path to `prodom' blast database
 prodomblastdb=/mnt/project/rost_db/data/prodom/prodom
 

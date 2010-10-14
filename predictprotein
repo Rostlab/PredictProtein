@@ -92,6 +92,7 @@ my $librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')).
 my $pfam2db = glob($config->val('predictprotein', 'pfam2db'));
 my $pfam3db = glob($config->val('predictprotein', 'pfam3db'));
 my $prof_app_root = glob($config->val('predictprotein', 'prof'));
+my $profnumresmin = $config->val('predictprotein', 'profnumresmin') || 17;
 my $proftmb_app_root = glob($config->val('predictprotein', 'proftmb'));
 my $prodomblastdb = glob( $config->val('predictprotein', 'prodomblastdb' ) );
 my $prositeconvdat = glob( $config->val('predictprotein', 'prositeconvdat' ) );
@@ -134,6 +135,7 @@ my $result = GetOptions (
           "pfam2db=s" => \$pfam2db,
           "pfam3db=s" => \$pfam3db,
           "prodomblastdb=s" => \$prodomblastdb,
+          "profnumresmin=i" => \$profnumresmin,
           "prositeconvdat=s" => \$prositeconvdat,
           "psicexe=s" => \$psicexe,
 			    "s|seq|sequence=s" =>\$sequence_in,
@@ -237,6 +239,11 @@ if( $use_cache && !$force_cache_store )
 
 
 # not in cache - or forced to recalc
+if( length($sequence_in) < $profnumresmin )
+{
+  $! = 254; die("ERROR: sequence is too short, shorter than minimum length required by prof ($profnumresmin)".( $dbg ? '' : "\n" ));
+}
+
 if( ! $work_dir ){ $work_dir = File::Temp::tempdir( CLEANUP => !$dbg ); }
 else { $work_dir = glob($work_dir); system ( "mkdir", '-p', $work_dir ) && die( "could not mkdir '$work_dir': ".($? >> 8) ); }
 
@@ -265,6 +272,7 @@ push (@cmd, "-j", $num_cpus);
 push (@cmd, "BLASTCORES=".$blast_processors);
 push (@cmd, "LIBRGUTILS=".$librg_utils_perl);
 push (@cmd, "PPROOT=".$pp_rootdir);
+push (@cmd, "PROFNUMRESMIN=$profnumresmin");
 push (@cmd, "PROFROOT=".$prof_app_root);
 push (@cmd, "PROFTMBROOT=".$proftmb_app_root);
 # resource locations e.g. BIGBLASTDB, BIG80BLASTDB, PRODOMBLASTDB, PROSITECONVDAT, SWISSBLASTDB
@@ -542,6 +550,10 @@ Pfam v3 database, e.g. F<Pfam-A.hmm>
 
 Path to `prodom' blast database
 
+=item B<--profnumresmin>
+
+Minimum sequence length required by prof, default:I<17>. Sequences shorter than this will make predictprotein fail with the respective error code, see L<ERRORS>.
+
 =item B<--prositeconvdat>
 
 Path to `prosite_convert.dat' file, see L<https://rostlab.org/owiki/index.php/Packages#Resource_definitions>
@@ -587,6 +599,16 @@ Print package version
 =item B<-w>, B<--work-dir>
 
 Working directory, optional
+
+=back
+
+=head1 ERRORS
+
+=over
+
+=item 254
+
+Sequence is too short, shorter than minimum length required by prof. See B<--profnumresmin>.
 
 =back
 
