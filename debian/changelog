@@ -1,3 +1,23 @@
+predictprotein (1.0.32) stable; urgency=low
+
+  * --numresmax: maximum sequence length allowed
+    I think convert_seq fails for a seq over 19000.
+    Marco's swissprot analysis:
+    TOTAL NUMBER OF SEQUENCES =  12,265,120
+    0-1000   11,962,876      0.975
+    1000-2000       261,633   0.021
+    2000-3000       25,677   0.002
+    3000-4000       9,944     0
+    4000-5000       2,735     0
+    5000-6000       1,060     0
+    6000-7000       428     0
+    7000-8000       366     0
+    8000-9000       164     0
+    9000-10000       65       0
+    >10000         171     0
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Tue, 19 Oct 2010 14:38:04 +0200
+
 predictprotein (1.0.31) stable; urgency=low
 
   * --profnumresmin: minimum sequence length required by prof. Sequences

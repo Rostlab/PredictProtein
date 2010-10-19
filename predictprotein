@@ -87,6 +87,7 @@ my $pp_rootdir  = glob($config->val('predictprotein', 'predictprotein_utildir'))
 #
 my $bigblastdb = glob( $config->val('predictprotein', 'bigblastdb' ) );
 my $big80blastdb = glob( $config->val('predictprotein', 'big80blastdb' ) );
+my $numresmax = $config->val('predictprotein', 'numresmax') || 6000; # Marco's suggestion, we know it now blows up for over 19000 (convert_seq I think)
 my $swissblastdb = glob( $config->val('predictprotein', 'swissblastdb' ) );
 my $librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')).'/' || '/usr/share/librg-utils-perl/';
 my $pfam2db = glob($config->val('predictprotein', 'pfam2db'));
@@ -129,6 +130,7 @@ my $result = GetOptions (
 			    "m|make-file=s" =>\$make_file,
 			    "man" => \$man,
           'method=s@' => \@method,
+          "numresmax=i" => \$numresmax,
 			    "n|dryrun" => \$dry_run,
 			    "o|output-dir=s" => \$output_dir,
 			    "p|prot-name=s" =>\$prot_name,
@@ -242,6 +244,10 @@ if( $use_cache && !$force_cache_store )
 if( length($sequence_in) < $profnumresmin )
 {
   $! = 254; die("ERROR: sequence is too short, shorter than minimum length required by prof ($profnumresmin)".( $dbg ? '' : "\n" ));
+}
+if( length($sequence_in) > $numresmax )
+{
+  $! = 253; die("ERROR: sequence is too long, longer than maximum length ($numresmax)".( $dbg ? '' : "\n" ));
 }
 
 if( ! $work_dir ){ $work_dir = File::Temp::tempdir( CLEANUP => !$dbg ); }
@@ -534,6 +540,10 @@ Not all methods support passing control parameters in this way due to their prim
 
 Do not execute, just shows what is about to be run
 
+=item B<--numresmax>
+
+Maximum sequence length, default: I<6000>. Sequences longer than this will make predictprotein fail with the respective error code, see L<ERRORS>.
+
 =item B<-o>, B<--output-dir>
 
 Final location of outputfiles, required unless caching is used.
@@ -552,7 +562,7 @@ Path to `prodom' blast database
 
 =item B<--profnumresmin>
 
-Minimum sequence length required by prof, default:I<17>. Sequences shorter than this will make predictprotein fail with the respective error code, see L<ERRORS>.
+Minimum sequence length required by prof, default: I<17>. Sequences shorter than this will make predictprotein fail with the respective error code, see L<ERRORS>.
 
 =item B<--prositeconvdat>
 
@@ -605,6 +615,10 @@ Working directory, optional
 =head1 ERRORS
 
 =over
+
+=item 253
+
+Sequence is too long, see B<--numresmax>
 
 =item 254
 

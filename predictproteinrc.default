@@ -23,6 +23,9 @@ prof=/usr/share/profphd/prof/
 # prof numresMin, default: 17
 profnumresmin=17
 
+# maximum length of input AA sequence, default: 6000
+numresmax=6000
+
 # prodomblastdb: Path to `prodom' blast database
 prodomblastdb=/mnt/project/rost_db/data/prodom/prodom
 
