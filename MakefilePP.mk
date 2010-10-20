@@ -323,7 +323,7 @@ profnors: $(NORSFILE) $(NORSSUMFILE)
 
 #PRODOM
 $(PRODOMFILE): $(FASTAFILE)
-	blastall -F F -a $(BLASTCORES) -p blastp -d $(PRODOMBLASTDB) -B 500 -i $< -o $@ 
+	blastall -F F -a $(BLASTCORES) -p blastp -d $(PRODOMBLASTDB) -B 500 -i $< -o $@ $(if $(DEBUG), , >&/dev/null)
 
 .PHONY: prodom
 prodom: $(PRODOMFILE)
