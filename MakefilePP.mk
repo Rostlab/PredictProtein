@@ -138,7 +138,7 @@ pfam: hmm2pfam hmm3pfam
 psic: $(PSICFILE)
 
 .PHONY: disorder
-disorder: profasp profnors metadisorder
+disorder: metadisorder norsnet profasp profnors
 
 .PHONY: function
 function: $(DISULFINDERFILE) predictnls prodom

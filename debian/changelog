@@ -1,3 +1,10 @@
+predictprotein (1.0.34) UNRELEASED stable; urgency=low
+
+  * norsnet now on disorder target
+  * ...
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Tue, 14 Dec 2010 15:34:32 +0100
+
 predictprotein (1.0.33) stable; urgency=low
 
   * all blasts now 2>/dev/null if not debug
