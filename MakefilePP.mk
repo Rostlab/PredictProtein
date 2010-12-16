@@ -128,8 +128,17 @@ PROFTMBCTRL :=
 .PHONY: all
 all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) disorder function html interaction pfam psic sec-struct subcell-loc
 
+.PHONY: disorder
+disorder: metadisorder norsnet profasp profnors
+
+.PHONY: function
+function: $(DISULFINDERFILE) predictnls prodom
+
 .PHONY: html
 html: $(BLASTFILERDB) $(HSSPFILE) $(SAFFILE)
+
+.PHONY: interaction
+interaction: $(ISISFILE) $(DISISFILE)
 
 .PHONY: pfam
 pfam: hmm2pfam hmm3pfam
@@ -137,14 +146,8 @@ pfam: hmm2pfam hmm3pfam
 .PHONY: psic
 psic: $(PSICFILE)
 
-.PHONY: disorder
-disorder: metadisorder norsnet profasp profnors
-
-.PHONY: function
-function: $(DISULFINDERFILE) predictnls prodom
-
-.PHONY: interaction
-interaction: $(ISISFILE) $(DISISFILE)
+.PHONY: sec-struct
+sec-struct: $(COILSFILE) $(PROFFILE) phd prof $(PROFTEXTFILE) proftmb tmhmm
 
 .PHONY: subcell-loc
 subcell-loc: loctree
@@ -192,9 +195,6 @@ $(HMM2PFAM): $(FASTAFILE)
 
 .PHONY: hmm3pfam
 hmm3pfam: $(HMM3PFAM) $(HMM3PFAMTBL) $(HMM3PFAMDOMTBL)
-
-.PHONY: sec-struct
-sec-struct:  $(COILSFILE) $(PROFFILE) phd prof $(PROFTEXTFILE) $(PROFTMBFILE) tmhmm
 
 .PHONY: tmhmm
 tmhmm: $(TMHMMFILE)
