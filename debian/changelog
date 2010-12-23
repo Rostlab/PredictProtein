@@ -1,6 +1,6 @@
 predictprotein (1.0.35) stable; urgency=low
 
-  * norsp - switched from included scripts in the pp package to an independent norsp package  
+  * switched from included norsp scripts to independent package  
 
  -- Guy Yachdav <gyachdav@rostlab.org>  Thu, 23 Dec 2010 15:35:21 +0100
 	
