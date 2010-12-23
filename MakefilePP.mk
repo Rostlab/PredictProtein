@@ -310,9 +310,8 @@ $(ASPFILE): $(PROFFILE)
 .PHONY: profasp
 profasp: $(ASPFILE)
 
-# NORS
-NORSDIR:= $(HELPERAPPSDIR)
-EXE_NORS:= $(NORSDIR)nors.pl
+# NORSp
+EXE_NORS:= norsp
 %.nors %.sumNors : $(FASTAFILE) $(HSSPFILTERFILE) $(PROFFILE) $(PHDRDBFILE) $(COILSFILE)
 	# this call may throw warnings on STDERR (like 'wrong parsing coil file?? ctCoils=0') - silence it when we are not in debug mode
 	$(EXE_NORS) $(PROFNORSCTRL) -fileSeq $(FASTAFILE) -fileHssp $(HSSPFILTERFILE) \
