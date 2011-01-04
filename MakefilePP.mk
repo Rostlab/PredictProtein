@@ -176,7 +176,7 @@ loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCT
 	  $(if $(DEBUG), --debug, )
 
 $(PSICFILE) : $(FASTAFILE)
-	# lkajan: this fails if sequence is shorter than 50 AA or when there are no blast hits - catch those conditions
+	# lkajan: Yana's $(PSICEXE) fails if sequence is shorter than 50 AA or when there are no blast hits - catch those conditions
 	$(PSICEXE) --infile $< $(if $(DEBUG), --debug, ) --quiet --noconffiles --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $@; \
 	RETVAL=$$?; \
 	case "$$RETVAL" in \
