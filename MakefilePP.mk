@@ -38,6 +38,7 @@ SWISSBLASTDB:=/mnt/project/rost_db/data/blast/swiss
 # TOOLS (CONFIGURABLE)
 HMM2PFAMEXE:=hmm2pfam
 HMM3SCANEXE:=hmmscan
+NORSPEXE:=norsp
 PSICEXE:=/usr/share/snapfun/runNewPSIC.pl
 
 # STATIC FILES
@@ -115,6 +116,7 @@ DISULFINDERCTRL :=
 LOWCOMPSEGCTRL := "NOT APPLICABLE"
 METADISORDERCTRL :=
 NORSNETCTRL := "NOT APPLICABLE"
+NORSPCTRL := --win=70 --secCut=12 --accLen=10
 PREDICTNLSCTRL :=
 PROFCTRL := "NOT APPLICABLE"
 PROFASPCTRL := --ws=5 --z=-1.75 --min=9
@@ -122,14 +124,13 @@ PROFBVALCTRL := "NOT APPLICABLE"
 PROFDISISCTRL :=
 PROFGLOBECTRL :=
 PROFISISCTRL :=
-PROFNORSCTRL := --win=70 --secCut=12 --accLen=10
 PROFTMBCTRL :=
 
 .PHONY: all
 all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) disorder function html interaction pfam psic sec-struct subcell-loc
 
 .PHONY: disorder
-disorder: metadisorder norsnet profasp profnors
+disorder: metadisorder norsnet profasp norsp
 
 .PHONY: function
 function: $(DISULFINDERFILE) predictnls prodom
@@ -311,14 +312,13 @@ $(ASPFILE): $(PROFFILE)
 profasp: $(ASPFILE)
 
 # NORSp
-EXE_NORS:= norsp
 %.nors %.sumNors : $(FASTAFILE) $(HSSPFILTERFILE) $(PROFFILE) $(PHDRDBFILE) $(COILSFILE)
 	# this call may throw warnings on STDERR (like 'wrong parsing coil file?? ctCoils=0') - silence it when we are not in debug mode
-	$(EXE_NORS) $(PROFNORSCTRL) -fileSeq $(FASTAFILE) -fileHssp $(HSSPFILTERFILE) \
+	$(NORSPEXE) $(NORSPCTRL) -fileSeq $(FASTAFILE) -fileHssp $(HSSPFILTERFILE) \
 	-filePhd $(PROFFILE) -filePhdHtm $(PHDRDBFILE) -fileCoils $(COILSFILE) -o $(NORSFILE) -fileSum $(NORSSUMFILE) -html
 
-.PHONY: profnors
-profnors: $(NORSFILE) $(NORSSUMFILE)
+.PHONY: norsp
+norsp: $(NORSFILE) $(NORSSUMFILE)
 
 #PRODOM
 $(PRODOMFILE): $(FASTAFILE)
