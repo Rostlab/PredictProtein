@@ -1,3 +1,9 @@
+predictprotein (1.0.37) stable; urgency=low
+
+  * made tmhmm a suggested package and not a dependency
+
+ -- Guy Yachdav <gyachdav@rostlab.org>  Sun, 16 Jan 2011 16:59:06 +0100
+	
 predictprotein (1.0.36) stable; urgency=low
 
   * tidied up MakefilePP.mk: changed references to profnors to norsp
