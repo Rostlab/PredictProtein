@@ -43,3 +43,7 @@ pfam2db=/mnt/project/rost_db/data/pfam/Pfam_ls
 
 # pfam3 db
 pfam3db=/mnt/project/rost_db/data/pfam/Pfam-A.hmm
+
+# default_targets: targets to make if none is given on the command line (separate targets with space)
+default_targets=all
+

@@ -1,12 +1,12 @@
-predictprotein (1.0.38) NOT YET RELEASED stable; urgency=low
+predictprotein (1.0.38) stable; urgency=low
 
   * made loctree recommended 'cause it depends on the non-redistributable
     SignalP
   * extended debian/control with paragraphs about tmhmm and loctree
   * took tmhmm and loctree out of the default target all:, these are now
     in the optional: target
-  TODO: find a way to /configure/ a default set of targets, in Munich
-  that's gonna be 'all optional' on the image it's gonna be 'all'
+  * new config file option: default_targets to control targets made
+    when none is given on the cmd line
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 17 Jan 2011 17:58:02 +0100
 

@@ -126,6 +126,8 @@ PROFGLOBECTRL :=
 PROFISISCTRL :=
 PROFTMBCTRL :=
 
+# lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'mandatory' methods: those that are available through hard Debian dependencies.
+# lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
 .PHONY: all
 all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) disorder function html interaction pfam psic sec-struct subcell-loc
 

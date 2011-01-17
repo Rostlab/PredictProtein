@@ -87,6 +87,7 @@ my $pp_rootdir  = glob($config->val('predictprotein', 'predictprotein_utildir'))
 #
 my $bigblastdb = glob( $config->val('predictprotein', 'bigblastdb' ) );
 my $big80blastdb = glob( $config->val('predictprotein', 'big80blastdb' ) );
+my @default_targets = ( $config->val('predictprotein', 'default_targets') ? split(/ /o, $config->val('predictprotein', 'default_targets') ) : () );
 my $numresmax = $config->val('predictprotein', 'numresmax') || 6000; # Marco's suggestion, we know it now blows up for over 19000 (convert_seq I think)
 my $swissblastdb = glob( $config->val('predictprotein', 'swissblastdb' ) );
 my $librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')).'/' || '/usr/share/librg-utils-perl/';
@@ -183,8 +184,14 @@ if( $prot_name =~ /[^[:alnum:]._-]/o ){ die("Error: invalid protein name, please
 # check acl syntax if given
 if( $setacl ) { RG::PP::Acl::acl2hash( $setacl ); }
 
-if( !@target ){ @target = ( 'all' ); }
-if( $target[0] ne 'all' ){ push @target, @$maketarget; } # all is `all', no need to specify them individually
+if( !@target ){ if( @default_targets ){ @target = @default_targets; } else { @target = ( 'all' ); } } # lkajan: attention: `all' does not mean all methods, there also are the `optional' ones
+push @target, @$maketarget;
+
+# there's no need to give a target more than once - collapse duplicates
+{
+  my %tgt_hash = map { ( $_ => 1 ); } @target;
+  @target = keys %tgt_hash;
+}
 
 if( $seqfile )
 {
@@ -592,7 +599,9 @@ Path to SwissProt blast database
 
 =item B<--target>
 
-Method groups to run. Default: `all'.  Look at the Makefile for a list of targets (``Use the source Luke'').
+Method groups to run.  Default: the value of `default_targets' in the configuration file; `all' if that is not given.
+
+Look at the Makefile for a list of targets ("Use the source Luke").
 
 =item B<--use-cache>
 
