@@ -1,9 +1,21 @@
+predictprotein (1.0.38) NOT YET RELEASED stable; urgency=low
+
+  * made loctree recommended 'cause it depends on the non-redistributable
+    SignalP
+  * extended debian/control with paragraphs about tmhmm and loctree
+  * took tmhmm and loctree out of the default target all:, these are now
+    in the optional: target
+  TODO: find a way to /configure/ a default set of targets, in Munich
+  that's gonna be 'all optional' on the image it's gonna be 'all'
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 17 Jan 2011 17:58:02 +0100
+
 predictprotein (1.0.37) stable; urgency=low
 
   * made tmhmm a suggested package and not a dependency
 
  -- Guy Yachdav <gyachdav@rostlab.org>  Sun, 16 Jan 2011 16:59:06 +0100
-	
+
 predictprotein (1.0.36) stable; urgency=low
 
   * tidied up MakefilePP.mk: changed references to profnors to norsp

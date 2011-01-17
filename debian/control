@@ -9,8 +9,8 @@ Homepage: http://www.predictprotein.org
 
 Package: predictprotein
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, blast2, bioperl, coiledcoils, disulfinder, hmmer (>= 3.0), hmmer2, libnhgri-blastall-perl, libnhgri-blastall-perl, librg-liu-bundle-perl, librg-pp-bundle-perl (>= 1.0.21), librg-utils-perl (>= 1.0.14), loctree (>= 1.0.11), lowcompseg, metadisorder, norsnet, norsp, pp-cache-mgr (>= 1.0.3), profasp, profbval (>= 1.0.13), profchop, profcon, profdisis, profglobe, profisis, profphd, proftmb, snapfun (>= 1.0.15), ucon
-Recommends: tmhmm (>= 2.0)
+Depends: ${shlibs:Depends}, ${misc:Depends}, blast2, bioperl, coiledcoils, disulfinder, hmmer (>= 3.0), hmmer2, libnhgri-blastall-perl, libnhgri-blastall-perl, librg-liu-bundle-perl, librg-pp-bundle-perl (>= 1.0.21), librg-utils-perl (>= 1.0.14), lowcompseg, metadisorder, norsnet, norsp, pp-cache-mgr (>= 1.0.3), profasp, profbval (>= 1.0.13), profchop, profcon, profdisis, profglobe, profisis, profphd, proftmb, snapfun (>= 1.0.15), ucon
+Recommends: loctree (>= 1.0.11), tmhmm (>= 2.0)
 Description: A suite of sequence analysis tools
  PredictProtein is a sequence analysis suite providing prediction of protein
  structure and function. It takes protein sequences or alignments as input
@@ -24,4 +24,11 @@ Description: A suite of sequence analysis tools
  recognition by prediction-based threading, CHOP domain assignments,
  predictions of transmembrane strands and inter-residue contacts are also
  available. 
-
+ .
+ tmhmm (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?tmhmm) is non-
+ redistributable.  Please obtain your own version and configure
+ predictprotein accordingly.
+ .
+ loctree depends on SignalP (http://www.cbs.dtu.dk/services/SignalP/) that
+ is non-redistributable.  Please obtain your own version and configure
+ predictprotein accordingly.

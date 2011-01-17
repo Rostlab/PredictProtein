@@ -148,13 +148,18 @@ pfam: hmm2pfam hmm3pfam
 psic: $(PSICFILE)
 
 .PHONY: sec-struct
-sec-struct: $(COILSFILE) $(PROFFILE) phd prof $(PROFTEXTFILE) proftmb tmhmm
+sec-struct: $(COILSFILE) $(PROFFILE) phd prof $(PROFTEXTFILE) proftmb
 
 .PHONY: subcell-loc
-subcell-loc: loctree
+subcell-loc:
 
 .PHONY: loctree
 loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
+
+# optional: these targets may not work in case the packages that provide them are missing - these packages are not hard requirements of PP
+#           These packages are usually non-redistributable or have some other problem with them.
+.PHONY: optional
+optional: loctree tmhmm
 
 # lkajan: rules that make multiple targets HAVE TO be expressed with %
 %.loctreeAnimal %.loctreeAnimalTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
@@ -410,12 +415,17 @@ help:
 	@echo "Targets:"
 	@echo "all - default"
 	@echo "clean - purge the intermediary files foder"
-	@echo "disorder - run disorder predictors"
-	@echo "disulfinder"
 	@echo "install - copy results to DESTDIR"
+	@echo
+	@echo "disorder - run disorder predictors"
+	@echo "function - function prediction"
 	@echo "interaction - run binding site predictors"
-	@echo "proftmb"
-	@echo "sec-struct - run secondary structure predictors"
+	@echo "pfam"
+	@echo "psic"
+	@echo "sec-struct - secondary structure prediction"
+	@echo
+	@echo "optional - optional targets available when respective packages are"
+	@echo "  installed"
 	@echo
 	@echo "help - this message"
 	@echo
