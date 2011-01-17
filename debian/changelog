@@ -1,3 +1,9 @@
+predictprotein (1.0.39) stable; urgency=low
+
+  * --cpu 4 corrected on hmmscan
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 17 Jan 2011 23:36:54 +0100
+
 predictprotein (1.0.38) stable; urgency=low
 
   * made loctree recommended 'cause it depends on the non-redistributable
