@@ -36,7 +36,7 @@ prositeconvdat=/mnt/project/rost_db/data/prosite/prosite_convert.dat
 swissblastdb=/mnt/project/rost_db/data/blast/swiss
 
 # psicexe: psic wrapper executable
-psicexe=/usr/share/snapfun/runNewPSIC.pl
+psicexe=/usr/share/librg-utils-perl/runNewPSIC.pl
 
 # pfam2 db
 pfam2db=/mnt/project/rost_db/data/pfam/Pfam_ls

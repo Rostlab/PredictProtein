@@ -1,3 +1,11 @@
+predictprotein (1.0.40) stable; urgency=low
+
+  * psicexe default changed to /usr/share/librg-utils-perl/runNewPSIC.pl
+  * no more snapfun dependency
+  * added 'make', 'perl' dependency
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 19 Jan 2011 17:12:42 +0100
+
 predictprotein (1.0.39) stable; urgency=low
 
   * --cpu 4 corrected on hmmscan

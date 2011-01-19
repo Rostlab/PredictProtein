@@ -39,7 +39,7 @@ SWISSBLASTDB:=/mnt/project/rost_db/data/blast/swiss
 HMM2PFAMEXE:=hmm2pfam
 HMM3SCANEXE:=hmmscan
 NORSPEXE:=norsp
-PSICEXE:=/usr/share/snapfun/runNewPSIC.pl
+PSICEXE:=/usr/share/librg-utils-perl/runNewPSIC.pl
 
 # STATIC FILES
 HTMLHEAD=$(PPROOT)/resources/HtmlHead.html
@@ -129,7 +129,7 @@ PROFTMBCTRL :=
 # lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'mandatory' methods: those that are available through hard Debian dependencies.
 # lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) disorder function html interaction pfam psic sec-struct subcell-loc
+all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) disorder function html interaction pfam sec-struct subcell-loc
 
 .PHONY: disorder
 disorder: metadisorder norsnet profasp norsp
@@ -160,8 +160,11 @@ loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCT
 
 # optional: these targets may not work in case the packages that provide them are missing - these packages are not hard requirements of PP
 #           These packages are usually non-redistributable or have some other problem with them.
+#           loctree depends on SignalP that is non-redistributable
+#           The license of psic is unknown, it depends (through runNewPSIC.pl) on clustalw, clustalw is usable for non-commercial purposes only
+#           tmhmm is non-redistributable
 .PHONY: optional
-optional: loctree tmhmm
+optional: loctree psic tmhmm
 
 # lkajan: rules that make multiple targets HAVE TO be expressed with %
 %.loctreeAnimal %.loctreeAnimalTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
@@ -184,7 +187,7 @@ optional: loctree tmhmm
 
 $(PSICFILE) : $(FASTAFILE)
 	# lkajan: Yana's $(PSICEXE) fails if sequence is shorter than 50 AA or when there are no blast hits - catch those conditions
-	$(PSICEXE) --infile $< $(if $(DEBUG), --debug, ) --quiet --noconffiles --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $@; \
+	$(PSICEXE) --infile $< $(if $(DEBUG), --debug, ) --quiet --min-seqlen $(PROFNUMRESMIN) --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $@; \
 	RETVAL=$$?; \
 	case "$$RETVAL" in \
 	  253) echo "blastpgp: No hits found" > $@; ;; \

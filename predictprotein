@@ -457,6 +457,7 @@ Current methods:
  coiledcoils
  disulfinder
  metadisorder
+ loctree
  pfam v2 and v3
  predictnls
  prodom, blast against
@@ -577,7 +578,7 @@ Path to `prosite_convert.dat' file, see L<https://rostlab.org/owiki/index.php/Pa
 
 =item B<--psicexe>
 
-psic wrapper executable, default: /usr/share/snapfun/runNewPSIC.pl
+psic wrapper executable, default: /usr/share/librg-utils-perl/runNewPSIC.pl
 
 =item B<-p>, B<--prot-name>
 
