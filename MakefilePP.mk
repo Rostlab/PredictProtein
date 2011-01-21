@@ -185,9 +185,9 @@ optional: loctree psic tmhmm
 	  --org proka \
 	  $(if $(DEBUG), --debug, )
 
-$(PSICFILE) : $(FASTAFILE)
-	# lkajan: Yana's $(PSICEXE) fails if sequence is shorter than 50 AA or when there are no blast hits - catch those conditions
-	$(PSICEXE) --infile $< $(if $(DEBUG), --debug, ) --quiet --min-seqlen $(PROFNUMRESMIN) --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $@; \
+$(PSICFILE) : $(FASTAFILE) $(BLASTFILE)
+	# lkajan: Yana's $(PSICEXE) fails when there are no blast hits - catch those conditions
+	$(PSICEXE) --use-blastfile $(BLASTFILE) --infile $< $(if $(DEBUG), --debug, ) --quiet --min-seqlen $(PROFNUMRESMIN) --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $@; \
 	RETVAL=$$?; \
 	case "$$RETVAL" in \
 	  253) echo "blastpgp: No hits found" > $@; ;; \
@@ -279,7 +279,8 @@ profglobe: $(GLOBEFILE)
 	COILSTMP=$$(mktemp -d) && trap "rm -rf '$$COILSTMP'" EXIT; cd $$COILSTMP && coils-wrap.pl -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE);
 
 $(DISULFINDERFILE): $(BLASTMATFILE) | $(DISULFINDDIR)
-	disulfinder $(DISULFINDERCTRL) -a 1 -p $<  -o $(DISULFINDDIR) -r $(DISULFINDDIR) -F html && \cp -a $(DISULFINDDIR)/$(notdir $<) $@
+	# lkajan: disulfinder now is talkative on STDERR showing progress - silence it when not DEBUG
+	disulfinder $(DISULFINDERCTRL) -a 1 -p $<  -o $(DISULFINDDIR) -r $(DISULFINDDIR) -F html $(if $(DEBUG), , >&/dev/null) && \cp -a $(DISULFINDDIR)/$(notdir $<) $@
 
 .PHONY: disulfinder
 disulfinder: $(DISULFINDERFILE)
