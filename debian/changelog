@@ -1,3 +1,9 @@
+predictprotein (1.0.42) stable; urgency=low
+
+  * added predictnls dependency
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 27 Jan 2011 16:35:13 +0100
+
 predictprotein (1.0.41) stable; urgency=low
 
   * silenced disulfinder
