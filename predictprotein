@@ -598,11 +598,16 @@ FASTA amino acid sequence file; if `-', standard input is read
 
 Path to SwissProt blast database
 
-=item B<--target>
+=item B<--target>=I<string>
 
-Method groups to run.  Default: the value of `default_targets' in the configuration file; `all' if that is not given.
+Method groups to run.  Give this argument for each target you need.  Default: the value of `default_targets' in the configuration file; `all' if that is not given.
 
-Look at the Makefile for a list of targets ("Use the source Luke").
+Some targets of interest:
+
+ I<all>: methods that are GPL or redistributable to non-commercial entities
+ I<optional>: methods that do not fit into I<all>
+
+Look at MakefilePP.mk for a list of targets ("Use the source Luke").
 
 =item B<--use-cache>
 
