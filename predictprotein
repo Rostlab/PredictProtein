@@ -612,8 +612,17 @@ Method groups to run.  Give this argument for each target you need.  Default: th
 
 Some targets of interest:
 
- I<all>: methods that are GPL or redistributable to non-commercial entities
- I<optional>: methods that do not fit into I<all>
+=over
+
+=item I<all>
+
+methods that are GPL or redistributable to non-commercial entities
+
+=item I<optional>
+
+methods that do not fit into I<all>
+
+=back
 
 Look at __pkgdatadir__/MakefilePP.mk for a list of targets ("Use the source Luke").
 
