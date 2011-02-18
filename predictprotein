@@ -53,7 +53,7 @@ our %meth_ext_hash = (
   phdNotHtm => 'phd',
   phdPred => 'phd',
   phdRdb => 'phd',
-  proDom => 'prodom',
+  proDom => 'prodom', # obsolete
   profAscii => 'prof',
   profbval => 'profbval',
   prof1Rdb => 'prof',
@@ -82,6 +82,9 @@ BEGIN {
     if( ( $ENV{PREDICTPROTEINCONF} && -e "$ENV{PREDICTPROTEINCONF}" ) || -e "$ENV{HOME}/.predictproteinrc" ) { $config = Config::IniFiles->new( -file => $ENV{PREDICTPROTEINCONF} || "$ENV{HOME}/.predictproteinrc", -import => $etcconfig ); } else { $config = $etcconfig; }
 }
 
+# popularity contest
+system('pp_popcon_cnt -p predictprotein');
+
 # NOTE: all configuration can be overridden by command line options
 my $pp_rootdir  = glob($config->val('predictprotein', 'predictprotein_utildir')).'/';
 #
@@ -93,10 +96,10 @@ my $swissblastdb = glob( $config->val('predictprotein', 'swissblastdb' ) );
 my $librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')).'/' || '/usr/share/librg-utils-perl/';
 my $pfam2db = glob($config->val('predictprotein', 'pfam2db'));
 my $pfam3db = glob($config->val('predictprotein', 'pfam3db'));
+my $prodomblastdb; # obsolete, kept here to not break interfaces that still use this cmd line option
 my $prof_app_root = glob($config->val('predictprotein', 'prof'));
 my $profnumresmin = $config->val('predictprotein', 'profnumresmin') || 17;
 my $proftmb_app_root = glob($config->val('predictprotein', 'proftmb'));
-my $prodomblastdb = glob( $config->val('predictprotein', 'prodomblastdb' ) );
 my $prositeconvdat = glob( $config->val('predictprotein', 'prositeconvdat' ) );
 my $psicexe = glob( $config->val('predictprotein', 'psicexe' ) );
 my $use_cache = $config->val('predictprotein', 'use_cache');
@@ -137,7 +140,7 @@ my $result = GetOptions (
 			    "p|prot-name=s" =>\$prot_name,
           "pfam2db=s" => \$pfam2db,
           "pfam3db=s" => \$pfam3db,
-          "prodomblastdb=s" => \$prodomblastdb,
+          "prodomblastdb=s" => \$prodomblastdb, # kept for compatibility
           "profnumresmin=i" => \$profnumresmin,
           "prositeconvdat=s" => \$prositeconvdat,
           "psicexe=s" => \$psicexe,
@@ -288,12 +291,11 @@ push (@cmd, "PPROOT=".$pp_rootdir);
 push (@cmd, "PROFNUMRESMIN=$profnumresmin");
 push (@cmd, "PROFROOT=".$prof_app_root);
 push (@cmd, "PROFTMBROOT=".$proftmb_app_root);
-# resource locations e.g. BIGBLASTDB, BIG80BLASTDB, PRODOMBLASTDB, PROSITECONVDAT, SWISSBLASTDB
+# resource locations e.g. BIGBLASTDB, BIG80BLASTDB, PROSITECONVDAT, SWISSBLASTDB
 if( $bigblastdb ){ push @cmd, "BIGBLASTDB=$bigblastdb"; }
 if( $big80blastdb ){ push @cmd, "BIG80BLASTDB=$big80blastdb"; }
 if( $pfam2db ){ push @cmd, "PFAM2DB=$pfam2db"; }
 if( $pfam3db ){ push @cmd, "PFAM3DB=$pfam3db"; }
-if( $prodomblastdb ){ push @cmd, "PRODOMBLASTDB=$prodomblastdb"; }
 if( $prositeconvdat ){ push @cmd, "PROSITECONVDAT=$prositeconvdat"; }
 if( $psicexe ){ push @cmd, "PSICEXE=$psicexe"; }
 if( $swissblastdb ){ push @cmd, "SWISSBLASTDB=$swissblastdb"; }
@@ -442,65 +444,99 @@ __END__
 
 =head1 NAME
 
-predictprotein - Protein sequence analysis suite
+predictprotein - analyse protein sequence
 
 =head1 SYNOPSIS
 
-predictprotein [options] [file ...]
+predictprotein [options]
 
 =head1 DESCRIPTION
 
-predictprotein runs a set of protein sequnce analysis methods.  Method outputs are deposited into B<--output-dir>.  If no B<--output-dir> is given but B<--use-cache> is in effect it will store and fetch results from the cache.
+predictprotein runs a set of protein sequnce analysis methods:
 
-Current methods:
+=head2 Standard methods
 
- coiledcoils
- disulfinder
- metadisorder
- loctree
- pfam v2 and v3
- predictnls
- prodom, blast against
- profasp
- profdisis
- profglobe
- profisis
- profnors
- profphd
- proftmb
- prosite_scan
- psic
- tmhmm
+These methods are run by the default target 'all'.
 
-Current collective resources:
+ Feature                Target            Extension               Man page
+ -------                ------            ---------               --------
+ coiled-coils           coiledcoils       coils, coils_raw        coils-wrap.pl
+                                                                  ncoils
+ disulfide bridges      disulfinder       disulfinder             disulfinder
+ disordered regions     metadisorder      mdisorder               metadisorder
+ unstructured loops     norsnet           norsnet                 norsnet
+ non-regular secondary  norsp             nors, sumNors           norsp
+  structure
+ local complexity       lowcompseg        segNorm, segNormGCG     lowcompseg
+ Pfam scan hmmer v2     hmm2pfam          hmm2pfam                hmm2pfam
+ Pfam scan hmmer v3     hmm3pfam          hmm3pfam                hmmscan
+ nuclear localization   predictnls        nls, nlsDat, nlsSum     predictnls
+ conformational         profasp           asp                     profasp
+  switches
+ protein globularity    profglobe         globe                   profglobe
+ protein-protein        profisis          isis                    profisis
+  interaction sites
+ secondary structure,   prof              profRdb                 prof
+  accessibility from
+  multiple hits
+ secondary structure,   prof              prof1Rdb                prof
+  accessibility from
+  single sequence
+ transmembrane          phd               phdPred, phdRdb         prof
+  helices
+ bacterial transmem-    proftmb           proftmb                 proftmb
+  brane beta barrels
+ PROSITE scan           prosite           prosite                 prosite_scan
 
+=head2 Optional methods
+
+These methods are non-redistributable or depend on non-redistributable software (indicated by '*').  You have to acquire the non-redistributable components yourself before you can use these methods.
+
+These methods are run by the target 'optional'.
+
+ Feature                Target            Extension               Man page
+ -------                ------            ---------               --------
+ subcellular            loctree           loctree{Animal,Plant,   loctree
+  localization           |                 Proka}{,Txt}
+                         psic*            psic                    psic
+                         tmhmm*           tmhmm                   -
+ protein-DNA            profdisis         disis                   profdisis
+  interaction sites      |
+                         svm-light5*                              svm_classify5
+
+=head2 Resources
+
+ Database                             Cmd line argument
+ --------                             -----------------
  big (Uniprot+PDB) blast database     --bigblastdb
  big_80 (big @ 80% sequence identity  --big80blastdb
    redunancy level) blast database
  swiss blast database                 --swissblastdb
  pfam v2 database                     --pfam2db
  pfam v3 database                     --pfam3db
- prodom blast database                --prodomblastdb
  prosite_convert.dat                  --prositeconvdat
+
+=head2 Output format
+
+Method outputs are deposited into B<--output-dir>.  Each method has one or more file name extensions associated with it, see the table above.  Refer to the man page of the individual methods for further details.
+
+=head1 REFERENCES
+
+=over
+
+=item Rost, B., Yachdav, G., and Liu, J. (2004). The PredictProtein server. Nucleic Acids Res, 32(Web Server issue), W321-6.
+
+=back
+
+In case you find predictprotein and the tools within useful please cite:
+
+* the references for PredictProtein, see above
+
+* the references for the tools you used, see REFERENCES on the man page of the tool
 
 =head1 OPTIONS
 
 =over
-
-=item B<--acl>, B<--setacl>
-
-Set access control lists.  Access control lists are set I<only> in case results are stored in the cache.  This option is ineffective otherwise.
-All previous ACLs are lost - no merging.  The read bit controls browsability of results. Other bits are not used. E.g.
-
- u:lkajan:4,u:gyachdav:4,g:lkajan:4,o::0
-
-=item B<--bigblastdb>
-
-Path to comprehensive blast database
-
-=item B<--big80blastdb>
-
-Path to comprehensive blast database at 80% sequence identity redundancy level
 
 =item B<--blast-processors>
 
@@ -511,14 +547,6 @@ Number of processors to use, default = 1
 Make jobs, default = 1
 
 =item B<-d>, B<--debug>
-
-A lot of verbiage
-
-=item B<--force-cache-store>
-
-=item B<--noforce-cache-store>
-
-Enable/disable forcing storage of results into cache.  Implies B<--use-cache>.  Default: B<--noforce-cache-store>
 
 =item B<--help>
 
@@ -556,25 +584,9 @@ Maximum sequence length, default: I<6000>. Sequences longer than this will make 
 
 Final location of outputfiles, required unless caching is used.
 
-=item B<--pfam2db>
-
-Pfam v2 database, e.g. F<Pfam_ls>
-
-=item B<--pfam3db>
-
-Pfam v3 database, e.g. F<Pfam-A.hmm>
-
-=item B<--prodomblastdb>
-
-Path to `prodom' blast database
-
 =item B<--profnumresmin>
 
 Minimum sequence length required by prof, default: I<17>. Sequences shorter than this will make predictprotein fail with the respective error code, see L<ERRORS>.
-
-=item B<--prositeconvdat>
-
-Path to `prosite_convert.dat' file, see L<https://rostlab.org/owiki/index.php/Packages#Resource_definitions>
 
 =item B<--psicexe>
 
@@ -594,10 +606,6 @@ one letter amino acid sequence input
 
 FASTA amino acid sequence file; if `-', standard input is read
 
-=item B<--swissblastdb>
-
-Path to SwissProt blast database
-
 =item B<--target>=I<string>
 
 Method groups to run.  Give this argument for each target you need.  Default: the value of `default_targets' in the configuration file; `all' if that is not given.
@@ -607,15 +615,7 @@ Some targets of interest:
  I<all>: methods that are GPL or redistributable to non-commercial entities
  I<optional>: methods that do not fit into I<all>
 
-Look at MakefilePP.mk for a list of targets ("Use the source Luke").
-
-=item B<--use-cache>
-
-=item B<--nouse-cache>
-
-Use/do not use cache for predictprotein results. If enabled retrieve and store results automatically. Default: B<--nouse-cache>.
-
-Option `use_cache' may be given in configuration files to override default.
+Look at __pkgdatadir__/MakefilePP.mk for a list of targets ("Use the source Luke").
 
 =item B<-v>, B<--version>
 
@@ -624,6 +624,67 @@ Print package version
 =item B<-w>, B<--work-dir>
 
 Working directory, optional
+
+=back
+
+=head2 Database options
+
+=over
+
+=item B<--bigblastdb>
+
+Path to comprehensive blast database
+
+=item B<--big80blastdb>
+
+Path to comprehensive blast database at 80% sequence identity redundancy level
+
+=item B<--pfam2db>
+
+Pfam v2 database, e.g. F<Pfam_ls>
+
+=item B<--pfam3db>
+
+Pfam v3 database, e.g. F<Pfam-A.hmm>
+
+=item B<--prodomblastdb>
+
+Obsolete.  This argument is kept only to maintain compatibility with older versions.
+
+=item B<--prositeconvdat>
+
+Path to `prosite_convert.dat' file, see L<https://rostlab.org/owiki/index.php/Packages#Resource_definitions>
+
+=item B<--swissblastdb>
+
+Path to SwissProt blast database
+
+=back
+
+=head2 Cache related options
+
+=over
+
+=item B<--acl>, B<--setacl>
+
+Set access control lists.  Access control lists are set I<only> in case results are stored in the cache.  This option is ineffective otherwise.
+All previous ACLs are lost - no merging.  The read bit controls browsability of results. Other bits are not used. E.g.
+
+ u:lkajan:4,u:gyachdav:4,g:lkajan:4,o::0
+
+=item B<--force-cache-store>
+
+=item B<--noforce-cache-store>
+
+Enable/disable forcing storage of results into cache.  Implies B<--use-cache>.  Default: B<--noforce-cache-store>
+
+=item B<--use-cache>
+
+=item B<--nouse-cache>
+
+Use/do not use cache for predictprotein results.  Default: B<--nouse-cache>.
+
+Option `use_cache' may be given in configuration files to override default.
 
 =back
 
@@ -646,6 +707,8 @@ Sequence is too short, shorter than minimum length required by prof. See B<--pro
  predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --output-dir /tmp/$USER/pp 
 
  predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --method=profasp,ws=3 --output-dir /tmp/$USER/pp 
+
+=head2 Cache examples
 
 =over
 
@@ -683,13 +746,33 @@ System configuration file overriding values in F<__pkgdatadir__/predictproteinrc
 
 =back
 
+=head1 NOTES
+
+=head2 Popularity contest
+
+The pp-popularity-contest package included with this image sets up a cron job
+that will periodically anonymously submit to the Rost Lab developers
+statistics about the most used Rost Lab packages on this system.
+
+This information helps us making decisions such as which packages
+should receive high priority when fixing bugs.
+It also helps us decide which packages should receive funding for further
+development and support.
+This information is also very important when the Rost Lab applies for funding.
+
+Without the funding we receive based on the usage statistics you volunteer
+none of the packages on this image could be made available to you at no cost.
+
+In case you do not wish to participate in the popularity contest please
+remove the pp-popularity-contest package.
+
 =head1 AUTHOR
 
-Burkhard Rost, Antoine de Daruvar, Jinfeng Liu, Guy Yachdav, Laszlo Kajan, Markus Schmidberger
+Burkhard Rost, Antoine de Daruvar, Jinfeng Liu, Guy Yachdav, Laszlo Kajan
 
 =head1 SEE ALSO
 
-ppqsub(1),  ppc_store(1),  ppc_fetch(1)
+ppc_store(1), ppc_fetch(1), ppqsub(1)
 
 =cut
 

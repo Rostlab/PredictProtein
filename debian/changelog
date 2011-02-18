@@ -1,3 +1,12 @@
+predictprotein (1.0.44) stable; urgency=low
+
+  * pp man page mentions popularity contest
+  * in popularity contest
+  * coils-wrap.pl now uses proper tmp dir
+  * removed prodom but kept cmd line arg for compatibility
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 18 Feb 2011 13:27:52 +0100
+
 predictprotein (1.0.43) stable; urgency=low
 
   * pp-cache-mgr is only recommended now, not a dep; loctree and tmhmm are suggests

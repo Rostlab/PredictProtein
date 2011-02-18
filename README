@@ -154,7 +154,7 @@ Who are we?
           o Burkhard Rost (CUBIC, Columbia Univ, New York / LION, Heidelberg WWW, rost@columbia.edu ) pioneered the PredictProtein service; wrote the PHD prediction programs: PHDsec, PHDacc, PHDhtm, and PHDtopology; developed the prediction-based threading method PHDthreader/TOPITS; programmed, and proposed the scores compiled by EvalSec; hacked some of the PredictProtein scripts; is helping to keep the service up and running, and is responsible for the documentation.
 o Guy Yachdav (CUBIC, Columbia Univ, New York WWW, yachdav@rostlab.org ) is currently maintaining the PredictProtein server and providing on-going support.
 o Laszlo Kajan - visualPP
-o Joe Karlin – web master
+o Joe Karlin - web master
      
     * Others who contributed (in the past):
           o Reinhard Schneider (
@@ -179,14 +179,14 @@ o Jinfeng Liu provided scientific support for the PredictProtein server.
           o Reinhard Schneider (EMBL, Heidelberg, WWW) wrote the program MaxHom (multiple sequence alignment).
           o John C Wootton and Scott Federhen (NCBI, WWW, federhen@ncbi.nlm.nih.gov) wrote the classic program for detecting regions of low-complexity (composition bias).
           o Malin M Young(Sandia National Lab, mmyoung@sandia.gov), Kent Kirshenbaum, Ken Dill, and Stefan Highsmith wrote the program for detecting regions likely to undergo structural switches (ASP).
-•	Jinfeng Liu – wrote CHOP and NORS
-•	Dariusz Przybylski – developed fold recognition
-•	Rajesh Nair – sub cellular localization
-•	 Yanay Ofran – protein-protein and protein DNA binding sites
-•	 Avner Schlessinger – protein disorder
-•	Marco Punta – intra residue contacts
-•	Andrea Passserini – disulphide bridges 
-•	Yana Bormberg – functional changed affected by SNP
+•	Jinfeng Liu - wrote CHOP and NORS
+•	Dariusz Przybylski - developed fold recognition
+•	Rajesh Nair - sub cellular localization
+•	 Yanay Ofran - protein-protein and protein DNA binding sites
+•	 Avner Schlessinger - protein disorder
+•	Marco Punta - intra residue contacts
+•	Andrea Passserini - disulphide bridges 
+•	Yana Bormberg - functional changed affected by SNP
 •	Henry Bigelow - 
 
 

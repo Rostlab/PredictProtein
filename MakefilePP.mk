@@ -30,7 +30,6 @@ BIG80BLASTDB:=/mnt/project/rost_db/data/blast/big_80
 DBSWISS:=/mnt/project/rost_db/data/swissprot/current/
 PFAM2DB:=/mnt/project/rost_db/data/pfam/Pfam_ls
 PFAM3DB:=/mnt/project/rost_db/data/pfam/Pfam-A.hmm
-PRODOMBLASTDB:=/mnt/project/rost_db/data/prodom/prodom
 PROSITECONVDAT:=/mnt/project/rost_db/data/prosite/prosite_convert.dat
 PSICMAT:=/usr/share/psic/blosum62_psic.txt
 SWISSBLASTDB:=/mnt/project/rost_db/data/blast/swiss
@@ -69,7 +68,6 @@ ASPFILE:=$(INFILE:%.in=%.asp)
 NORSFILE:=$(INFILE:%.in=%.nors)
 NORSSUMFILE:=$(INFILE:%.in=%.sumNors)
 NORSNETFILE:=$(INFILE:%.in=%.norsnet)
-PRODOMFILE:=$(INFILE:%.in=%.proDom)
 PROSITEFILE:=$(INFILE:%.in=%.prosite)
 GLOBEFILE:=$(INFILE:%.in=%.globe)
 SEGFILE:=$(INFILE:%.in=%.segNorm)
@@ -105,7 +103,6 @@ LOCTREEPLANTTXTFILE:=$(INFILE:%.in=%.loctreePlantTxt)
 LOCTREEPROKAFILE:=$(INFILE:%.in=%.loctreeProka)
 LOCTREEPROKATXTFILE:=$(INFILE:%.in=%.loctreeProkaTxt)
 PSICFILE:=$(INFILE:%.in=%.psic)
-SNAPFILE:=$(INFILE:%.in=%.snap)
 ISISFILE:=$(INFILE:%.in=%.isis)
 DISISFILE:=$(INFILE:%.in=%.disis)
 PPFILE:=$(INFILE:%.in=%.predictprotein)
@@ -126,37 +123,31 @@ PROFGLOBECTRL :=
 PROFISISCTRL :=
 PROFTMBCTRL :=
 
-# lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'mandatory' methods: those that are available through hard Debian dependencies.
+# lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'standard' methods: those that are available through hard Debian dependencies.
 # lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(PROSITEFILE) $(SEGGCGFILE) $(GLOBEFILE) disorder function html interaction pfam sec-struct subcell-loc
+all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) disorder function html interaction lowcompseg pfam profglobe sec-struct subcell-loc
 
 .PHONY: disorder
 disorder: metadisorder norsnet profasp norsp
 
 .PHONY: function
-function: $(DISULFINDERFILE) predictnls prodom
+function: disulfinder predictnls prosite
 
 .PHONY: html
 html: $(BLASTFILERDB) $(HSSPFILE) $(SAFFILE)
 
 .PHONY: interaction
-interaction: $(ISISFILE) $(DISISFILE)
+interaction: profisis
 
 .PHONY: pfam
 pfam: hmm2pfam hmm3pfam
 
-.PHONY: psic
-psic: $(PSICFILE)
-
 .PHONY: sec-struct
-sec-struct: $(COILSFILE) $(PROFFILE) phd prof $(PROFTEXTFILE) proftmb
+sec-struct: $(PROFTEXTFILE) coiledcoils phd prof proftmb
 
 .PHONY: subcell-loc
 subcell-loc:
-
-.PHONY: loctree
-loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
 
 # optional: these targets may not work in case the packages that provide them are missing - these packages are not hard requirements of PP
 #           These packages are usually non-redistributable or have some other problem with them.
@@ -164,7 +155,16 @@ loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCT
 #           The license of psic is unknown, it depends (through runNewPSIC.pl) on clustalw, clustalw is usable for non-commercial purposes only
 #           tmhmm is non-redistributable
 .PHONY: optional
-optional: loctree psic tmhmm
+optional: loctree profdisis psic tmhmm
+
+.PHONY: coiledcoils
+coiledcoils: $(COILSFILE)
+
+.PHONY: loctree
+loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
+
+.PHONY: psic
+psic: $(PSICFILE)
 
 # lkajan: rules that make multiple targets HAVE TO be expressed with %
 %.loctreeAnimal %.loctreeAnimalTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
@@ -276,7 +276,7 @@ $(GLOBEFILE) : $(PROFFILE)
 profglobe: $(GLOBEFILE)
 
 %.coils %.coils_raw : $(FASTAFILE)
-	COILSTMP=$$(mktemp -d) && trap "rm -rf '$$COILSTMP'" EXIT; cd $$COILSTMP && coils-wrap.pl -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE);
+	coils-wrap.pl -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE)
 
 $(DISULFINDERFILE): $(BLASTMATFILE) | $(DISULFINDDIR)
 	# lkajan: disulfinder now is talkative on STDERR showing progress - silence it when not DEBUG
@@ -330,13 +330,6 @@ profasp: $(ASPFILE)
 
 .PHONY: norsp
 norsp: $(NORSFILE) $(NORSSUMFILE)
-
-#PRODOM
-$(PRODOMFILE): $(FASTAFILE)
-	blastall -F F -a $(BLASTCORES) -p blastp -d $(PRODOMBLASTDB) -B 500 -i $< -o $@ $(if $(DEBUG), , >&/dev/null)
-
-.PHONY: prodom
-prodom: $(PRODOMFILE)
 
 $(PROSITEFILE): $(GCGFILE)
 	$(HELPERAPPSDIR)prosite_scan.pl -h $(PROSITECONVDAT) $< >> $@
@@ -404,7 +397,6 @@ install:
 		$(NORSFILE) $(NORSSUMFILE) \
 		$(NORSNETFILE) \
 		$(PHDFILE) $(PHDNOTHTMFILE) $(PHDRDBFILE) \
-		$(PRODOMFILE) \
 		$(PROFTEXTFILE) $(PROFFILE) $(PROF1FILE) \
 		$(PROFBVALFILE) \
 		$(PROFTMBFILE) \

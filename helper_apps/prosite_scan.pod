@@ -1,0 +1,27 @@
+=head1 NAME
+
+prosite_scan - scans a protein sequence with regular expression patterns
+
+=head1 DESCRIPTION
+
+prosite_scan scans a protein sequence or database with a collection of regular expression patterns.
+
+=head2 Output format
+
+HTML formatted, self-annotating.
+
+=head1 REFERENCES
+
+=over
+
+=item Sigrist, C. J., Cerutti, L., de Castro, E., Langendijk-Genevaux, P. S., Bulliard, V., Bairoch, A., and Hulo, N. (2010). PROSITE, a protein domain database for functional characterization and annotation. Nucleic Acids Res, 38(Database issue), D161-6.
+
+=back
+
+=head1 AUTHOR
+
+Kay Hofmann <khofmann@isrec-sun1.unil.ch>
+
+=cut
+
+# vim:et:ts=2:
