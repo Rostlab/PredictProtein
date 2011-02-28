@@ -1,3 +1,9 @@
+predictprotein (1.0.45) stable; urgency=low
+
+  * message when pp-popcon is not installed
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 28 Feb 2011 17:56:33 +0100
+
 predictprotein (1.0.44) stable; urgency=low
 
   * pp man page mentions popularity contest
