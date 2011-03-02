@@ -1,4 +1,4 @@
-predictprotein (1.0.46) stable; urgency=low
+predictprotein (1.0.46) unstable; urgency=low
 
   * dash compatible shell syntax
 
