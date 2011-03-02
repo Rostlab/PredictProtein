@@ -267,7 +267,7 @@ $(BLASTPSWISSM8): $(FASTAFILE)
 	# 'WARNING: query: Could not calculate ungapped Karlin-Altschul parameters due to an invalid query sequence or its translation. Please verify the query sequence(s) and/or filtering options'
 	# Does switching off filtering hurt us? Loctree uses the results of this for extracting keywords from swissprot, so I am not worried.
 	# This blast call also often writes 'Selenocysteine (U) at position 59 replaced by X' - we are not really interested. Silence this in non-debug mode.
-	blastall -F F -a $(BLASTCORES) -p blastp -d $(SWISSBLASTDB) -b 1000 -e 100 -m 8 -i $< -o $@ $(if $(DEBUG), , 2>&1 >/dev/null)
+	blastall -F F -a $(BLASTCORES) -p blastp -d $(SWISSBLASTDB) -b 1000 -e 100 -m 8 -i $< -o $@ $(if $(DEBUG), , >/dev/null 2>&1)
 
 $(GLOBEFILE) : $(PROFFILE) 
 	profglobe $(PROFGLOBECTRL) --prof_file $<  --output_file $@
@@ -280,7 +280,7 @@ profglobe: $(GLOBEFILE)
 
 $(DISULFINDERFILE): $(BLASTMATFILE) | $(DISULFINDDIR)
 	# lkajan: disulfinder now is talkative on STDERR showing progress - silence it when not DEBUG
-	disulfinder $(DISULFINDERCTRL) -a 1 -p $<  -o $(DISULFINDDIR) -r $(DISULFINDDIR) -F html $(if $(DEBUG), , 2>&1 >/dev/null) && \cp -a $(DISULFINDDIR)/$(notdir $<) $@
+	disulfinder $(DISULFINDERCTRL) -a 1 -p $<  -o $(DISULFINDDIR) -r $(DISULFINDDIR) -F html $(if $(DEBUG), , >/dev/null 2>&1) && \cp -a $(DISULFINDDIR)/$(notdir $<) $@
 
 .PHONY: disulfinder
 disulfinder: $(DISULFINDERFILE)
@@ -348,11 +348,11 @@ $(SEGGCGFILE): $(SEGFILE)
 
 %.blastPsiOutTmp %.chk %.blastPsiMat : $(FASTAFILE)
 	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
-	blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BIG80BLASTDB) -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE) $(if $(DEBUG), , 2>&1 >/dev/null)
+	blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BIG80BLASTDB) -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE) $(if $(DEBUG), , >/dev/null 2>&1)
 
 $(BLASTALIFILE): $(BLASTCHECKFILE) $(FASTAFILE)
 	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
-	blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , 2>&1 >/dev/null)
+	blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , >/dev/null 2>&1)
 
 %.safBlastPsi %.blastPsiRdb : $(BLASTALIFILE)  $(FASTAFILE)
 	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$(SAFFILE) red=100 maxAli=3000 tile=0 fileOutErr=$(SAFFILE).blast2safErr

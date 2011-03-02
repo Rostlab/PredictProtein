@@ -1,3 +1,9 @@
+predictprotein (1.0.47) unstable; urgency=low
+
+  * >& now correctly
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 02 Mar 2011 13:08:31 +0100
+
 predictprotein (1.0.46) unstable; urgency=low
 
   * dash compatible shell syntax
