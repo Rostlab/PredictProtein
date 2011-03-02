@@ -499,7 +499,8 @@ These methods are run by the target 'optional'.
  subcellular            loctree           loctree{Animal,Plant,   loctree
   localization           |                 Proka}{,Txt}
                          psic*            psic                    psic
-                         tmhmm*           tmhmm                   -
+                         svm-light5*                              svm_classify5
+                         tmhmm*           tmhmm
  protein-DNA            profdisis         disis                   profdisis
   interaction sites      |
                          svm-light5*                              svm_classify5
