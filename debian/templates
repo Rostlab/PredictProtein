@@ -1,7 +1,7 @@
-Template: shared/predictprotein/nonprofit_org
+Template: shared/predictprotein/academic
 Type: boolean
 Default: false
-_Description: Do you represent a non-profit organization?
+_Description: Do you represent a non-profit educational, academic, and/or research institution?
  ACADEMIC SOFTWARE LICENSE AGREEMENT FOR END-USERS AT PUBLICLY FUNDED ACADEMIC, EDUCATION OR RESEARCH INSTITUTIONS FOR THE USE OF PredictProtein
  .
  By downloading the Software you are consenting to be bound by and become a party to this agreement as the "Licensee". If you do not agree to all of the terms of this agreement, you must not download the software, not install the product nor use the product, and you do not become a LICENSEE under this agreement.       
@@ -117,4 +117,4 @@ _Description: Do you represent a non-profit organization?
 Template: shared/predictprotein/contact_biosof
 Type: note
 _Description: Please contact info@bio-sof.com to obtain a commercial license
- This package is provided for non-profit organizations only.  This installation is now going to abort.
+ This package is provided for non-profit educational, academic, and/or research institutions only.  This installation is now going to abort.

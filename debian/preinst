@@ -22,39 +22,40 @@ fi
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-validate_nonprofit() {
+validate_academic() {
     if [ -n "$DEBCONF" ]; then
-	db_input high shared/predictprotein/nonprofit_org || true
+	db_input high shared/predictprotein/academic || true
 	db_go || true
 
-	# Throw error if not non-profit:
-	db_get shared/predictprotein/nonprofit_org
+	# Throw error if not academic or equivalent:
+	db_get shared/predictprotein/academic
 	if [ "$RET" != "true" ]; then
 		# The user is for profit - $$$ - but perhaps this system should forget about it so that the question is asked again.
-		#db_unregister shared/predictprotein/nonprofit_org
+		#db_unregister shared/predictprotein/academic
 
 		#db_fset shared/predictprotein/contact_biosof seen false
 		db_input high shared/predictprotein/contact_biosof || true
 		db_go || true
 		db_purge || true
-		echo "aborting - profit organization" >&2;
+		echo "aborting - ineligible organization" >&2;
 		exit 1;
 	fi
     else
 	# no debconf, fall back
 	cat << EOF
-This package is provided for non-profit organizations only.
-For profit organizations and users representing them please contact
-info@bio-sof.com to obtain a commercial license.
+This package is provided for non-profit educational, academic, and/or research
+institutions only.
+Organizations not covered under the license and users representing them please
+contact info@bio-sof.com to obtain a commercial license.
 EOF
-	echo -n "Do you represent a non-profit organization? (y/n)" >&2
+	echo -n "Do you represent a non-profit educational, academic, and/or research institution? (y/n)" >&2
 	read line
 	case ${line} in
 	    y|yes|Y|Yes|YES)
 	    		;;
 
 	    *)		echo "Please contact info@bio-sof.com to obtain a commercial license." >&2
-	    		echo "This package is provided for non-profit organizations only.  This installation is now going to abort." >&2
+	    		echo "This package is provided for non-profit educational, academic, and/or research institutions only.  This installation is now going to abort." >&2
 			exit 1
 			;;
 	esac
@@ -64,7 +65,7 @@ EOF
 
 case "$1" in
     install)
-    	validate_nonprofit
+    	validate_academic
     ;;
 
     upgrade)

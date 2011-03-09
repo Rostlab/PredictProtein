@@ -1,3 +1,9 @@
+predictprotein (1.0.49) unstable; urgency=low
+
+  * proper license presentation in debconf
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 09 Mar 2011 11:41:26 +0100
+
 predictprotein (1.0.48) unstable; urgency=low
 
   * added debconf check for non-profitness
