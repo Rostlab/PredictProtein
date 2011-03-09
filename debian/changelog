@@ -1,3 +1,10 @@
+predictprotein (1.0.48) unstable; urgency=low
+
+  * added debconf check for non-profitness
+  * changed license to academi ala ppmi license
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 09 Mar 2011 10:53:44 +0100
+
 predictprotein (1.0.47) unstable; urgency=low
 
   * >& now correctly
