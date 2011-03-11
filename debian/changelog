@@ -1,3 +1,9 @@
+predictprotein (1.0.50) unstable; urgency=low
+
+  * added --makedebug cmd line argument to trigger --debug of make
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 11 Mar 2011 15:37:14 +0100
+
 predictprotein (1.0.49) unstable; urgency=low
 
   * proper license presentation in debconf

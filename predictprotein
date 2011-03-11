@@ -111,7 +111,7 @@ my $make_file = $root_dir."/MakefilePP.mk";
 my $work_dir;
 
 # COMMAND LINE OPTIONS
-my( $help, $man, $dbg, $dry_run, $prot_name, @method, $output_dir, $seqfile, $sequence_in, $setacl, @target, $version);
+my( $help, $man, $dbg, $dry_run, $prot_name, $makedebug, @method, $output_dir, $seqfile, $sequence_in, $setacl, @target, $version);
 #my $input_file;
 
 my $force_cache_store = 0;
@@ -132,6 +132,7 @@ my $result = GetOptions (
 			    "help|?" => \$help,
 #          "i|input-file=s" => \$input_file,
 			    "m|make-file=s" =>\$make_file,
+          "makedebug=s" => \$makedebug,
 			    "man" => \$man,
           'method=s@' => \@method,
           "numresmax=i" => \$numresmax,
@@ -285,6 +286,7 @@ if( $work_dir ){ push (@cmd,"WORKDIR=$work_dir/"); }
 push (@cmd,"JOBID=".$prot_name);
 push (@cmd, "-n") if ($dry_run);
 push (@cmd, "-j", $num_cpus);
+if( $makedebug ){ push (@cmd, "--debug=$makedebug" ); }
 push (@cmd, "BLASTCORES=".$blast_processors);
 push (@cmd, "LIBRGUTILS=".$librg_utils_perl);
 push (@cmd, "PPROOT=".$pp_rootdir);
@@ -556,6 +558,10 @@ Print a brief help message and exits.
 =item B<-m>, B<--make-file>
 
 make file to use, default = __pkgdatadir__/MakefilePP.mk
+
+=item B<--makedebug>
+
+debug argument for make, see make(1)
 
 =item B<--man>
 
