@@ -38,7 +38,7 @@ SWISSBLASTDB:=/mnt/project/rost_db/data/blast/swiss
 HMM2PFAMEXE:=hmm2pfam
 HMM3SCANEXE:=hmmscan
 NORSPEXE:=norsp
-PSICEXE:=/usr/share/librg-utils-perl/runNewPSIC.pl
+PSICEXE:=/usr/share/rost-runpsic/runNewPSIC.pl
 
 # STATIC FILES
 HTMLHEAD=$(PPROOT)/resources/HtmlHead.html
