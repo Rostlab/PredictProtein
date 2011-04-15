@@ -91,9 +91,9 @@ my $pp_rootdir  = glob($config->val('predictprotein', 'predictprotein_utildir'))
 my $bigblastdb = glob( $config->val('predictprotein', 'bigblastdb' ) );
 my $big80blastdb = glob( $config->val('predictprotein', 'big80blastdb' ) );
 my @default_targets = ( $config->val('predictprotein', 'default_targets') ? split(/ /o, $config->val('predictprotein', 'default_targets') ) : () );
-my $numresmax = $config->val('predictprotein', 'numresmax') || 6000; # Marco's suggestion, we know it now blows up for over 19000 (convert_seq I think)
-my $swissblastdb = glob( $config->val('predictprotein', 'swissblastdb' ) );
 my $librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')).'/' || '/usr/share/librg-utils-perl/';
+my $light_cache = $config->val('predictprotein', 'light_cache') || 0;
+my $numresmax = $config->val('predictprotein', 'numresmax') || 6000; # Marco's suggestion, we know it now blows up for over 19000 (convert_seq I think)
 my $pfam2db = glob($config->val('predictprotein', 'pfam2db'));
 my $pfam3db = glob($config->val('predictprotein', 'pfam3db'));
 my $prodomblastdb; # obsolete, kept here to not break interfaces that still use this cmd line option
@@ -102,6 +102,7 @@ my $profnumresmin = $config->val('predictprotein', 'profnumresmin') || 17;
 my $proftmb_app_root = glob($config->val('predictprotein', 'proftmb'));
 my $prositeconvdat = glob( $config->val('predictprotein', 'prositeconvdat' ) );
 my $psicexe = glob( $config->val('predictprotein', 'psicexe' ) );
+my $swissblastdb = glob( $config->val('predictprotein', 'swissblastdb' ) );
 my $use_cache = $config->val('predictprotein', 'use_cache');
 #
 my $root_dir = $pp_rootdir || "__pkgdatadir__";
@@ -336,6 +337,11 @@ if( $use_cache )
   foreach my $res_file (@$result_files)
   {
     if( substr( $res_file, 0, 1 ) eq '.' ){ next; }
+
+    # lkajan 20100415: certain result files we do not want to store into the cache in order to save space
+    # lkajan: these are result files that are big, derived from other files kept and not needed for the web interface (or anything of importance) so regeneration time is not crucial
+    # lkajan: at present these are: safBlastPsi safBlastPsi80 hssp hssp80
+    if( $light_cache && $res_file =~ /\.(safBlastPsi|safBlastPsi80|hssp|hssp80)$/o ){ next; }
 
     # query.blastpSwissM8 => $method->{blastpswiss}->{res}->{blastpSwissM8} = "$precache_dir/$res_file";
     my( $filename, $directories, $suffix ) = fileparse( $res_file, qr/\.[^.]*$/o );

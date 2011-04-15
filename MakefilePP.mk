@@ -75,7 +75,9 @@ SEGGCGFILE:=$(INFILE:%.in=%.segNormGCG)
 # this file is output from the first blastpgp call with 3 iterations
 BLASTFILE:=$(INFILE:%.in=%.blastPsiOutTmp)
 BLASTCHECKFILE:=$(INFILE:%.in=%.chk)
+# as of 20110415 Guy says the following IS needed by the web interface
 BLASTFILERDB:=$(INFILE:%.in=%.blastPsiRdb)
+# as of 20110415 Guy says the following is NOT needed by the web interface
 BLAST80FILERDB:=$(INFILE:%.in=%.blastPsi80Rdb)
 BLASTPSWISSM8:=$(INFILE:%.in=%.blastpSwissM8)
 BLASTMATFILE:=$(INFILE:%.in=%.blastPsiMat)
