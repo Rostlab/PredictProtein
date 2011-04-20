@@ -1,3 +1,9 @@
+predictprotein (1.0.53) unstable; urgency=low
+
+  * .hssp80 is removed from light_cache list because Esmeralda needs it
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 20 Apr 2011 18:24:11 +0200
+
 predictprotein (1.0.52) unstable; urgency=low
 
   * Added light_cache config file value to control caching of big and rarely
