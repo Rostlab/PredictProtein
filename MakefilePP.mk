@@ -9,10 +9,8 @@ JOBID:=$(basename $(notdir $(INFILE)))
 
 DEBUG:=
 DESTDIR:=.
-# lkajan: attention $(WORKDIR) is not to be used by the component methods themselves; allowing this could lead to them deleting each others files in a parallel (-j12) run. Each method is to use its own working directory.
-WORKDIR:=/tmp/pp/
 
-DISULFINDDIR:=$(WORKDIR)/disulfinder/
+DISULFINDDIR:=$(abspath ./disulfinder)/
 
 BLASTCORES := 1
 PROFNUMRESMIN := 17
@@ -40,12 +38,6 @@ HMM3SCANEXE:=hmmscan
 NORSPEXE:=norsp
 PSICEXE:=/usr/share/rost-runpsic/runNewPSIC.pl
 
-# STATIC FILES
-HTMLHEAD=$(PPROOT)/resources/HtmlHead.html
-HTMLQUOTE=$(PPROOT)/resources/HtmlQuote.html
-HRFILE=$(PPROOT)/resources/HtmlHr.html
-HTMLFOOTER=$(PPROOT)/resources/HtmlFooter.html
-HTMLOPTIONS=$(PPROOT)/resources/HtmlOptions.html
 # RESULTS FILES
 HSSPFILE:=$(INFILE:%.in=%.hssp)
 HSSP80FILE:=$(INFILE:%.in=%.hssp80)
@@ -59,11 +51,9 @@ PHDFILE:=$(INFILE:%.in=%.phdPred)
 PHDRDBFILE:=$(INFILE:%.in=%.phdRdb)
 # lkajan: never make PHDNOTHTMFILE a target - its creation depends on whether phd found an HTM region or not: it isn't always created
 PHDNOTHTMFILE:=$(INFILE:%.in=%.phdNotHtm)
-PHDHTMLFILE:=$(INFILE:%.in=%.phd.html)
 PROFFILE:=$(INFILE:%.in=%.profRdb)
 # prof output generated explicitely from one sequence - NO alignment - Chris Schaefer initiated this - B approved
 PROF1FILE:=$(INFILE:%.in=%.prof1Rdb)
-PROFHTMLFILE:=$(INFILE:%.in=%.prof.html)
 ASPFILE:=$(INFILE:%.in=%.asp)
 NORSFILE:=$(INFILE:%.in=%.nors)
 NORSSUMFILE:=$(INFILE:%.in=%.sumNors)
@@ -108,7 +98,6 @@ PSICFILE:=$(INFILE:%.in=%.psic)
 ISISFILE:=$(INFILE:%.in=%.isis)
 DISISFILE:=$(INFILE:%.in=%.disis)
 PPFILE:=$(INFILE:%.in=%.predictprotein)
-TOCFILE:=$(INFILE:%.in=%.toc.html)
 TMHMMFILE:=$(INFILE:%.in=%.tmhmm)
 
 DISULFINDERCTRL :=
@@ -131,7 +120,7 @@ PROFTMBCTRL :=
 all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) disorder function html interaction lowcompseg pfam profglobe sec-struct subcell-loc
 
 .PHONY: disorder
-disorder: metadisorder norsnet profasp norsp
+disorder: metadisorder norsnet profasp profbval norsp
 
 .PHONY: function
 function: disulfinder predictnls prosite
@@ -166,7 +155,7 @@ coiledcoils: $(COILSFILE)
 loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
 
 .PHONY: psic
-psic: $(PSICFILE)
+psic: $(PSICFILE) $(CLUSTALNGZ)
 
 # lkajan: rules that make multiple targets HAVE TO be expressed with %
 %.loctreeAnimal %.loctreeAnimalTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
@@ -187,13 +176,13 @@ psic: $(PSICFILE)
 	  --org proka \
 	  $(if $(DEBUG), --debug, )
 
-$(PSICFILE) : $(FASTAFILE) $(BLASTFILE)
+%.psic %.clustalngz : $(FASTAFILE) $(BLASTFILE)
 	# lkajan: Yana's $(PSICEXE) fails when there are no blast hits - catch those conditions
-	$(PSICEXE) --use-blastfile $(BLASTFILE) --infile $< $(if $(DEBUG), --debug, ) --quiet --min-seqlen $(PROFNUMRESMIN) --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $@; \
+	$(PSICEXE) --use-blastfile $(BLASTFILE) --infile $< $(if $(DEBUG), --debug, ) --quiet --min-seqlen $(PROFNUMRESMIN) --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $@ --save-clustaln $(CLUSTALNGZ) --gzip-clustaln; \
 	RETVAL=$$?; \
 	case "$$RETVAL" in \
-	  253) echo "blastpgp: No hits found" > $@; ;; \
-	  254) echo "sequence too short" > $@; ;; \
+	  253) echo "blastpgp: No hits found" > $(PSICFILE); ;; \
+	  254) echo "sequence too short" > $(PSICFILE); ;; \
 	  *) exit $$RETVAL; ;; \
 	esac
 
@@ -233,11 +222,11 @@ $(DISISFILE): $(PROFFILE) $(HSSPFILTERFILE)
 .PHONY: profdisis
 profdisis: $(DISISFILE)
 
-$(PROFBVALFILE): $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE)
-	profbval $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE) $@ 1 5 $(DEBUG)
+%.profbval %.profb4snap : $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE)
+	profbval $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE) $(PROFBVALFILE),$(PROFB4SNAPFILE) 1 5,snap $(DEBUG)
 
 .PHONY: profbval
-profbval: $(PROFBVALFILE)
+profbval: $(PROFBVALFILE) $(PROFB4SNAPFILE)
 
 $(NORSNETFILE): $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE) $(PROFBVALFILE)
 	norsnet $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE) $@ $(JOBID) $(PROFBVALFILE)
@@ -302,7 +291,6 @@ predictnls: $(NLSFILE) $(NLSDATFILE) $(NLSSUMFILE)
 	nresPerLineAli=60 exePhd2msf=$(PROFROOT)embl/scr/conv_phd2msf.pl exePhd2dssp=$(PROFROOT)/embl/scr/conv_phd2dssp.pl  exeConvertSeq=convert_seq \
 	exeHsspFilter=filter_hssp doCleanTrace=1
 
-#	paraHtm=$(PROFROOT)embl/para/Para-htm69-aug94.com user=phd noPhdHeader dirOut=$(WORKDIR) dirWork=$(WORKDIR) jobid=$(JOBID) \
 .PHONY: phd
 phd: $(PHDFILE) $(PHDRDBFILE)
 
@@ -372,11 +360,7 @@ $(DISULFINDDIR):
 	mkdir -p $@
 
 clean:
-	rm -rf $(WORKDIR)/*
-
-# Development purposes only remove this target in production
-clean-html:
-	rm -rf $(WORKDIR)/*.html $(OUTPUTFILE) $(DISULFINDERFILE).html
+	rm -rf ./*
 
 .PHONY: install
 install:
@@ -403,7 +387,7 @@ install:
 		$(PROFBVALFILE) \
 		$(PROFTMBFILE) \
 		$(PROSITEFILE) \
-		$(PSICFILE) \
+		$(PSICFILE) $(CLUSTALNGZ) \
 		$(SAFFILE) $(SAF80FILE) \
 		$(SEGFILE) $(SEGGCGFILE) \
 		$(GCGFILE) \
@@ -421,6 +405,7 @@ help:
 	@echo "function - function prediction"
 	@echo "interaction - run binding site predictors"
 	@echo "pfam"
+	@echo "profbval"
 	@echo "psic"
 	@echo "sec-struct - secondary structure prediction"
 	@echo
@@ -432,6 +417,5 @@ help:
 	@echo "Variables:"
 	@echo "BLASTCORES - default: 1"
 	@echo "DESTDIR - result files are copied here on 'install'"
-	@echo "WORKDIR - default: /tmp/pp/, mind the trailing /"
 
 # vim:ai:

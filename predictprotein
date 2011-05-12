@@ -24,6 +24,7 @@ our %meth_ext_hash = (
   blastPsi80Rdb => 'blastpgp',
   blastpSwissM8 => 'blastpswiss',
   chk => 'blastpgp',
+  clustalngz => 'psic',
   coils => 'coiledcoils',
   coils_raw => 'coiledcoils',
   disis => 'profdisis',
@@ -56,6 +57,7 @@ our %meth_ext_hash = (
   proDom => 'prodom', # obsolete
   profAscii => 'prof',
   profbval => 'profbval',
+  profb4snap => 'profbval',
   prof1Rdb => 'prof',
   profRdb => 'prof',
   proftmb => 'proftmb',
@@ -282,8 +284,8 @@ if( ! -e $work_seq_file )
 # RUN MAKEFILE
 my @cmd = ();
 push (@cmd,"make");
-push (@cmd,"INFILE=$work_seq_file");
-if( $work_dir ){ push (@cmd,"WORKDIR=$work_dir/"); }
+push (@cmd,"INFILE=$prot_name.in");
+if( $work_dir ){ push (@cmd,"-C", $work_dir); }
 push (@cmd,"JOBID=".$prot_name);
 push (@cmd, "-n") if ($dry_run);
 push (@cmd, "-j", $num_cpus);
@@ -506,7 +508,9 @@ These methods are run by the target 'optional'.
  -------                ------            ---------               --------
  subcellular            loctree           loctree{Animal,Plant,   loctree
   localization           |                 Proka}{,Txt}
-                         psic*            psic                    psic
+                         psic*            psic, clustalngz        psic, 
+                                                                  runNewPSIC
+                                                                  clustalw
                          svm-light5*                              svm_classify5
                          tmhmm*           tmhmm
  protein-DNA            profdisis         disis                   profdisis
@@ -527,7 +531,7 @@ These methods are run by the target 'optional'.
 
 =head2 Output format
 
-Method outputs are deposited into B<--output-dir>.  Each method has one or more file name extensions associated with it, see the table above.  Refer to the man page of the individual methods for further details.
+Method outputs are deposited into B<--output-dir>.  Each method has one or more file name extensions associated with it, see the table above.  Refer to the man page of the individual methods for further details.  Extensions ending with `gz' are compressed with gzip(1).
 
 =head1 REFERENCES
 
@@ -699,6 +703,8 @@ All previous ACLs are lost - no merging.  The read bit controls browsability of 
 =item B<--noforce-cache-store>
 
 Enable/disable forcing storage of results into cache.  Implies B<--use-cache>.  Default: B<--noforce-cache-store>
+
+With B<--noforce-cache-store> when predictprotein finds cached results it simply fetches them from the cache and does no processing (even if the results are incomplete).  With B<--force-cache-store> predictprotein does not fetch anything from the cache but does store the results, completely replacing what was cached.
 
 =item B<--use-cache>
 

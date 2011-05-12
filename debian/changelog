@@ -1,3 +1,11 @@
+predictprotein (1.0.54) unstable; urgency=low
+
+  * clustalw results from psic are now retained in cache - gzipped
+  * switch make to workdir with -C now - this makes targets like query.asp
+    work
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 05 May 2011 21:49:16 +0200
+
 predictprotein (1.0.53) unstable; urgency=low
 
   * .hssp80 is removed from light_cache list because Esmeralda needs it
