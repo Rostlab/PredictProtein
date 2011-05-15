@@ -1,3 +1,9 @@
+predictprotein (1.0.55) unstable; urgency=low
+
+  * blastall error.log is now automatically removed
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Sun, 15 May 2011 20:16:02 +0200
+
 predictprotein (1.0.54) unstable; urgency=low
 
   * clustalw results from psic are now retained in cache - gzipped

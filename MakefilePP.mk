@@ -277,6 +277,7 @@ $(BLASTPSWISSM8): $(FASTAFILE)
 	# 'WARNING: query: Could not calculate ungapped Karlin-Altschul parameters due to an invalid query sequence or its translation. Please verify the query sequence(s) and/or filtering options'
 	# Does switching off filtering hurt us? Loctree uses the results of this for extracting keywords from swissprot, so I am not worried.
 	# This blast call also often writes 'Selenocysteine (U) at position 59 replaced by X' - we are not really interested. Silence this in non-debug mode.
+	trap "rm -f error.log" EXIT && \
 	blastall -F F -a $(BLASTCORES) -p blastp -d $(SWISSBLASTDB) -b 1000 -e 100 -m 8 -i $< -o $@ $(if $(DEBUG), , >/dev/null 2>&1)
 
 $(GLOBEFILE) : $(PROFFILE) 
@@ -363,7 +364,7 @@ $(SEGGCGFILE): $(SEGFILE)
 
 .SECONDARY: $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE)
 %.blastPsiOutTmp %.chk %.blastPsiMat : $(FASTAFILE)
-	# blast call may throw warnings on STDERR - silence it when we are not in debug mode; this one creates a normally 0-sized 'error.log' - maybe they all do
+	# blast call may throw warnings on STDERR - silence it when we are not in debug mode; blastpgp and blastall create a normally 0-sized 'error.log' - remove it
 	trap "rm -f error.log" EXIT && \
 	blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BIG80BLASTDB) -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE) $(if $(DEBUG), , >/dev/null 2>&1)
 
