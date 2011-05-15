@@ -10,7 +10,9 @@ JOBID:=$(basename $(notdir $(INFILE)))
 DEBUG:=
 DESTDIR:=.
 
-DISULFINDDIR:=$(abspath ./disulfinder)/
+# These temporary directories are automatically removed after use
+DISULFINDDIR:=$(shell mktemp -d)
+TMHMMDIR:=$(shell mktemp -d)
 
 BLASTCORES := 1
 PROFNUMRESMIN := 17
@@ -82,6 +84,7 @@ SAF80FILE:=$(INFILE:%.in=%.safBlastPsi80)
 FASTAFILE:=$(INFILE:%.in=%.fasta)
 GCGFILE:=$(INFILE:%.in=%.seqGCG)
 PROFBVALFILE:=$(INFILE:%.in=%.profbval)
+PROFB4SNAPFILE:=$(INFILE:%.in=%.profb4snap)
 METADISORDERFILE:=$(INFILE:%.in=%.mdisorder)
 PROFTEXTFILE:=$(INFILE:%.in=%.profAscii)
 # profcon is very slow and it is said not to have much effect on md results - so we do not run it
@@ -95,6 +98,7 @@ LOCTREEPLANTTXTFILE:=$(INFILE:%.in=%.loctreePlantTxt)
 LOCTREEPROKAFILE:=$(INFILE:%.in=%.loctreeProka)
 LOCTREEPROKATXTFILE:=$(INFILE:%.in=%.loctreeProkaTxt)
 PSICFILE:=$(INFILE:%.in=%.psic)
+CLUSTALNGZ:=$(INFILE:%.in=%.clustalngz)
 ISISFILE:=$(INFILE:%.in=%.isis)
 DISISFILE:=$(INFILE:%.in=%.disis)
 PPFILE:=$(INFILE:%.in=%.predictprotein)
@@ -117,13 +121,19 @@ PROFTMBCTRL :=
 # lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'standard' methods: those that are available through hard Debian dependencies.
 # lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) disorder function html interaction lowcompseg pfam profglobe sec-struct subcell-loc
+all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction lowcompseg pfam profglobe saf sec-struct subcell-loc
+
+.PHONY: blast
+blast: $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE) $(BLASTALIFILE)
 
 .PHONY: disorder
 disorder: metadisorder norsnet profasp profbval norsp
 
 .PHONY: function
 function: disulfinder predictnls prosite
+
+.PHONY: hssp
+hssp: $(HSSPFILE) $(HSSP80FILE) $(HSSPFILTERFILE)
 
 .PHONY: html
 html: $(BLASTFILERDB) $(HSSPFILE) $(SAFFILE)
@@ -133,6 +143,9 @@ interaction: profisis
 
 .PHONY: pfam
 pfam: hmm2pfam hmm3pfam
+
+.PHONY: saf
+saf: $(SAFFILE) $(BLASTFILERDB) $(SAF80FILE) $(BLAST80FILERDB)
 
 .PHONY: sec-struct
 sec-struct: $(PROFTEXTFILE) coiledcoils phd prof proftmb
@@ -158,27 +171,31 @@ loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCT
 psic: $(PSICFILE) $(CLUSTALNGZ)
 
 # lkajan: rules that make multiple targets HAVE TO be expressed with %
+.SECONDARY: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE)
 %.loctreeAnimal %.loctreeAnimalTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
 	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEANIMALFILE) --loctreetxt $(LOCTREEANIMALTXTFILE) \
 	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
 	  --org animal \
 	  $(if $(DEBUG), --debug, )
 
+.SECONDARY: $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE)
 %.loctreePlant %.loctreePlantTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
 	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPLANTFILE) --loctreetxt $(LOCTREEPLANTTXTFILE) \
 	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
 	  --org plant \
 	  $(if $(DEBUG), --debug, )
 
+.SECONDARY: $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
 %.loctreeProka %.loctreeProkaTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
 	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPROKAFILE) --loctreetxt $(LOCTREEPROKATXTFILE) \
 	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
 	  --org proka \
 	  $(if $(DEBUG), --debug, )
 
+.SECONDARY: $(PSICFILE) $(CLUSTALNGZ)
 %.psic %.clustalngz : $(FASTAFILE) $(BLASTFILE)
 	# lkajan: Yana's $(PSICEXE) fails when there are no blast hits - catch those conditions
-	$(PSICEXE) --use-blastfile $(BLASTFILE) --infile $< $(if $(DEBUG), --debug, ) --quiet --min-seqlen $(PROFNUMRESMIN) --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $@ --save-clustaln $(CLUSTALNGZ) --gzip-clustaln; \
+	$(PSICEXE) --use-blastfile $(BLASTFILE) --infile $< $(if $(DEBUG), --debug, ) --quiet --min-seqlen $(PROFNUMRESMIN) --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $(PSICFILE) --save-clustaln '$(CLUSTALNGZ)' --gzip-clustaln; \
 	RETVAL=$$?; \
 	case "$$RETVAL" in \
 	  253) echo "blastpgp: No hits found" > $(PSICFILE); ;; \
@@ -192,6 +209,7 @@ hmm2pfam: $(HMM2PFAM)
 $(HMM2PFAM): $(FASTAFILE)
 	$(HMM2PFAMEXE) --cpu $(BLASTCORES) --acc --cut_ga $(PFAM2DB) $< > $@
 
+.SECONDARY: $(HMM3PFAM) $(HMM3PFAMTBL) $(HMM3PFAMDOMTBL)
 %.hmm3pfam %.hmm3pfamTbl %.hmm3pfamDomTbl : $(FASTAFILE)
 	$(HMM3SCANEXE) --cpu $(BLASTCORES) --acc --cut_ga --notextw --tblout $(HMM3PFAMTBL) --domtblout $(HMM3PFAMDOMTBL) -o $(HMM3PFAM) $(PFAM3DB) $<
 
@@ -202,7 +220,7 @@ hmm3pfam: $(HMM3PFAM) $(HMM3PFAMTBL) $(HMM3PFAMDOMTBL)
 tmhmm: $(TMHMMFILE)
 
 $(TMHMMFILE): $(FASTAFILE)
-	WD=$$(mktemp -d) && trap "rm -rf '$$WD'" EXIT; cd $$WD && tmhmm --nohtml --noplot $< > $@
+	trap "rm -rf '$(TMHMMDIR)'" EXIT; tmhmm --workdir=$(TMHMMDIR) --nohtml --noplot $< > $@
 
 $(PROFTMBFILE):  $(BLASTMATFILE)
 	proftmb @$(PROFTMBROOT)/options $(PROFTMBCTRL) -q $< -o $@ --quiet
@@ -222,6 +240,7 @@ $(DISISFILE): $(PROFFILE) $(HSSPFILTERFILE)
 .PHONY: profdisis
 profdisis: $(DISISFILE)
 
+.SECONDARY: $(PROFBVALFILE) $(PROFB4SNAPFILE)
 %.profbval %.profb4snap : $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE)
 	profbval $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE) $(PROFBVALFILE),$(PROFB4SNAPFILE) 1 5,snap $(DEBUG)
 
@@ -266,25 +285,29 @@ $(GLOBEFILE) : $(PROFFILE)
 .PHONY: profglobe
 profglobe: $(GLOBEFILE)
 
+.SECONDARY: $(COILSFILE) $(COILSRAWFILE)
 %.coils %.coils_raw : $(FASTAFILE)
 	coils-wrap.pl -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE)
 
-$(DISULFINDERFILE): $(BLASTMATFILE) | $(DISULFINDDIR)
+$(DISULFINDERFILE): $(BLASTMATFILE)
 	# lkajan: disulfinder now is talkative on STDERR showing progress - silence it when not DEBUG
+	trap "rm -rf '$(DISULFINDDIR)'" EXIT; \
 	disulfinder $(DISULFINDERCTRL) -a 1 -p $<  -o $(DISULFINDDIR) -r $(DISULFINDDIR) -F html $(if $(DEBUG), , >/dev/null 2>&1) && \cp -a $(DISULFINDDIR)/$(notdir $<) $@
 
 .PHONY: disulfinder
 disulfinder: $(DISULFINDERFILE)
 
+.SECONDARY: $(NLSFILE) $(NLSDATFILE) $(NLSSUMFILE)
 %.nls %.nlsDat %.nlsSum : %.fasta
 	predictnls $(PREDICTNLSCTRL) fileIn=$< fileOut=$(NLSFILE) fileSummary=$(NLSSUMFILE) html=1 nlsdat=$(NLSDATFILE)
 
 .PHONY: predictnls
 predictnls: $(NLSFILE) $(NLSDATFILE) $(NLSSUMFILE)
 
+.SECONDARY: $(PHDFILE) $(PHDRDBFILE)
 %.phdPred %.phdRdb : $(HSSPFILTERFILE)
 	$(PROFROOT)embl/phd.pl $(HSSPFILTERFILE) htm exePhd=phd1994 filterHsspMetric=$(PROFROOT)embl/mat/Maxhom_Blosum.metric  exeHtmfil=$(PROFROOT)embl/scr/phd_htmfil.pl \
-	 exeHtmtop=$(PROFROOT)embl/scr/phd_htmtop.pl paraSec=$(PROFROOT)embl/para/Para-sec317-may94.com paraAcc=$(PROFROOT)embl/para/Para-exp152x-mar94.com \
+	exeHtmtop=$(PROFROOT)embl/scr/phd_htmtop.pl paraSec=$(PROFROOT)embl/para/Para-sec317-may94.com paraAcc=$(PROFROOT)embl/para/Para-exp152x-mar94.com \
 	paraHtm=$(PROFROOT)embl/para/Para-htm69-aug94.com user=phd noPhdHeader \
 	fileOutPhd=$(PHDFILE)  fileOutRdb=$(PHDRDBFILE)  fileNotHtm=$(PHDNOTHTMFILE)  \
 	optDoHtmref=1  optDoHtmtop=1 optHtmisitMin=0.2 exeCopf=$(LIBRGUTILS)/copf.pl \
@@ -304,15 +327,17 @@ $(PROF1FILE): $(FASTAFILE)
 prof: $(PROFFILE) $(PROF1FILE)
 
 $(PROFTEXTFILE): $(PROFFILE)
-	$(PROFROOT)scr/conv_prof.pl $< fileOut=$@ ascii nohtml nodet nograph
+	# conv_prof creates query.profAscii.tmp in case query.profAscii already exists - make sure it does not
+	rm -f $(PROFTEXTFILE); $(PROFROOT)scr/conv_prof.pl $< fileOut=$@ ascii nohtml nodet nograph
 
 $(ASPFILE): $(PROFFILE)
-	profasp $(PROFASPCTRL) -in $< -out $@ -err $@.errASP
+	profasp $(PROFASPCTRL) -in $< -out $@
 
 .PHONY: profasp
 profasp: $(ASPFILE)
 
 # NORSp
+.SECONDARY: $(NORSFILE) $(NORSSUMFILE)
 %.nors %.sumNors : $(FASTAFILE) $(HSSPFILTERFILE) $(PROFFILE) $(PHDRDBFILE) $(COILSFILE)
 	# this call may throw warnings on STDERR (like 'wrong parsing coil file?? ctCoils=0') - silence it when we are not in debug mode
 	$(NORSPEXE) $(NORSPCTRL) -fileSeq $(FASTAFILE) -fileHssp $(HSSPFILTERFILE) \
@@ -336,19 +361,24 @@ lowcompseg: $(SEGFILE)
 $(SEGGCGFILE): $(SEGFILE)
 	$(LIBRGUTILS)/copf.pl $< formatOut=gcg fileOut=$@
 
+.SECONDARY: $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE)
 %.blastPsiOutTmp %.chk %.blastPsiMat : $(FASTAFILE)
-	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
+	# blast call may throw warnings on STDERR - silence it when we are not in debug mode; this one creates a normally 0-sized 'error.log' - maybe they all do
+	trap "rm -f error.log" EXIT && \
 	blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BIG80BLASTDB) -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE) $(if $(DEBUG), , >/dev/null 2>&1)
 
 $(BLASTALIFILE): $(BLASTCHECKFILE) $(FASTAFILE)
 	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
+	trap "rm -f error.log" EXIT && \
 	blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , >/dev/null 2>&1)
 
+.SECONDARY: $(SAFFILE) $(BLASTFILERDB)
 %.safBlastPsi %.blastPsiRdb : $(BLASTALIFILE)  $(FASTAFILE)
-	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$(SAFFILE) red=100 maxAli=3000 tile=0 fileOutErr=$(SAFFILE).blast2safErr
+	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$(SAFFILE) red=100 maxAli=3000 tile=0
 
+.SECONDARY: $(SAF80FILE) $(BLAST80FILERDB)
 %.safBlastPsi80 %.blastPsi80Rdb : $(BLASTFILE)  $(FASTAFILE)
-	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLAST80FILERDB) fileOutSaf=$(SAF80FILE) red=100 maxAli=3000 tile=0 fileOutErr=$(SAF80FILE).blast2safErr
+	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLAST80FILERDB) fileOutSaf=$(SAF80FILE) red=100 maxAli=3000 tile=0
 
 $(FASTAFILE): $(INFILE)
 	$(LIBRGUTILS)/copf.pl $< formatIn=fasta formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq
@@ -358,9 +388,6 @@ $(GCGFILE): $(INFILE)
 
 $(DISULFINDDIR):
 	mkdir -p $@
-
-clean:
-	rm -rf ./*
 
 .PHONY: install
 install:
@@ -398,7 +425,6 @@ install:
 help:
 	@echo "Targets:"
 	@echo "all - default"
-	@echo "clean - purge the intermediary files foder"
 	@echo "install - copy results to DESTDIR"
 	@echo
 	@echo "disorder - run disorder predictors"

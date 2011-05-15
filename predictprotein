@@ -48,6 +48,7 @@ our %meth_ext_hash = (
   loctreeProkaTxt => 'loctree',
   mdisorder => 'metadisorder',
   nls => 'predictnls',
+  nlsDat => 'predictnls',
   nlsSum => 'predictnls',
   norsnet => 'norsnet',
   nors => 'nors',
@@ -117,6 +118,7 @@ my $work_dir;
 my( $help, $man, $dbg, $dry_run, $prot_name, $makedebug, @method, $output_dir, $seqfile, $sequence_in, $setacl, @target, $version);
 #my $input_file;
 
+my $cache_merge_cl;
 my $force_cache_store = 0;
 my $num_cpus = 1;
 my $blast_processors = 1;
@@ -129,6 +131,7 @@ my $result = GetOptions (
           'big80blastdb=s' => \$big80blastdb,
 			    "blast-processors=i" => \$blast_processors,
 			    "c|num-cpus=i" =>\$num_cpus,
+          "cache-merge!" => \$cache_merge_cl,
 			    "d|debug!" => \$dbg,
 #			    "f|output-format=s" => \$output_format,
           "force-cache-store!" => \$force_cache_store,
@@ -166,15 +169,22 @@ Copyright 1992-2010, Rostlab
 
 Please see COPYING file for license information
 
-Complete documentation for PredictProtein,  should be found on
+Complete documentation for PredictProtein should be found on
 this system using "man predictprotein" or at http://www.predictprotein.org/.
 
 |;
     exit (0);
 }
 
-# force-cache-store implies use-cache
-if( $force_cache_store ){ $use_cache = 1; }
+# if --noforce-cache-store and --target is used, make $cache_merge ON by default, OFF otherwise
+my $cache_merge = ( ( !$force_cache_store && @target ) ? 1 : 0 );
+if( defined( $cache_merge_cl ) ){ $cache_merge = $cache_merge_cl; }
+
+# force_cache_store, cache_merge_cl imply use-cache
+if( $force_cache_store || $cache_merge_cl ){ $use_cache = 1; }
+
+# force_cache_store can not be used together with cache_merge
+if( $force_cache_store && $cache_merge ){ die("Error: --force-cache-store is incompatible with --cache_merge".( $dbg ? '' : "\n" )); }
 
 my( $makemethod, $maketarget, $hash_meth ) = _get_makemethod( \@method );
 
@@ -218,43 +228,57 @@ $sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
 #     $num_cpus = scalar(@num_cpus);
 #}
 
-# cache fetch?
+my $cache_dir;
+my $hashlockhdl;
+my $hashlockpid; END { if( $hashlockpid ){ kill 15, $hashlockpid; undef($hashlockpid); close( $hashlockhdl ); } }
+my @hash_meth_as_options = _get_method_options( $hash_meth );
+
+# use cache, no force, no merge: fetch results to the output dir if not cache merge
 if( $use_cache && !$force_cache_store )
 {
   # Do we have it in the cache?
   my @ppf_cmd = ('ppc_fetch', '--seq', $sequence_in );
 
-  if( $output_dir ){ push @ppf_cmd, ( '--output-dir', $output_dir ); }
-  if( $prot_name ){ push @ppf_cmd, ( '--prot-name', $prot_name ); }
+  if( !$cache_merge )
+  {
+    if( $output_dir ){ push @ppf_cmd, ( '--output-dir', $output_dir ); }
+    if( $prot_name ){ push @ppf_cmd, ( '--prot-name', $prot_name ); }
+  }
+  else
+  {
+    # Obtain lock, keep ppc_fetch from locking
+    my @ppl_cmd = ( 'ppc_lock', '--seq', $sequence_in, '--parent', $$, '--allow-cache-write', @hash_meth_as_options );
+    if( $dbg ){ cluck( "@ppl_cmd" ); }
+    $hashlockpid = open( $hashlockhdl, '-|' ); if( !defined( $hashlockpid ) ){ die("failed to execute '|@ppl_cmd': ".( $? >> 8 )); }
+    if( !$hashlockpid ){ if( !exec { $ppl_cmd[0] } @ppl_cmd ){ confess( "failed to call @ppl_cmd: $!" ); } }
+    chomp( $cache_dir = <$hashlockhdl> );
+    # lkajan 20110514: with acls -w does not report correctly
+    if( !defined($cache_dir) || !-e $cache_dir ){ confess("error: $cache_dir".( -e $cache_dir ? '' : ' does not exist' ) ); }
+    #
+    push @ppf_cmd, '--skip-hash-lock';
+  }
 
   #   method
-  push @ppf_cmd, map {
-    my $method = $_;
-    my $ctrl = join(',', map {
-      my $ctrl = $_; "$ctrl=$hash_meth->{$method}->{ctrl}->{$ctrl}";
-    } keys(%{$hash_meth->{$method}->{ctrl}}) );
-    ( '--method', $method.( $ctrl ? ",$ctrl" : '' ) );
-  } keys(%$hash_meth);
+  push @ppf_cmd, @hash_meth_as_options;
 
   if( $dbg ){ cluck( "@ppf_cmd" ); }
 
-  my( $closeret, @cachefiles );
+  my( @cachefiles, $closeret );
   {
     my $pid = open( my $pipe, '-|' ); if( !defined( $pid ) ){ die("failed to execute '|@ppf_cmd': ".( $? >> 8 )); }
-    if( !$pid ){ exec( @ppf_cmd ); }
+    if( !$pid ){ if( !exec { $ppf_cmd[0] } @ppf_cmd ){ confess( "failed to call @ppf_cmd: $!" ); } }
     @cachefiles = <$pipe>;
     $closeret = close( $pipe );
   }
   #
-  if( $closeret )
+  if( !$cache_merge && $closeret )
   {
     # in cache, so we do not run. The ppc_fetch call fetched results to output-dir if we had that set, nothing left to do.
     exit(0);
   }
 }
 
-
-# not in cache - or forced to recalc
+# not in cache or merge or forced recalc
 if( length($sequence_in) < $profnumresmin )
 {
   $! = 254; die("ERROR: sequence is too short, shorter than minimum length required by prof ($profnumresmin)".( $dbg ? '' : "\n" ));
@@ -264,8 +288,16 @@ if( length($sequence_in) > $numresmax )
   $! = 253; die("ERROR: sequence is too long, longer than maximum length ($numresmax)".( $dbg ? '' : "\n" ));
 }
 
-if( ! $work_dir ){ $work_dir = File::Temp::tempdir( CLEANUP => !$dbg ); }
-else { $work_dir = glob($work_dir); system ( "mkdir", '-p', $work_dir ) && die( "could not mkdir '$work_dir': ".($? >> 8) ); }
+# If not cache_merge, run in given or tmp work dir. If cache_merge then run directly on cache directory.
+if( !$cache_merge )
+{
+  if( ! $work_dir ){ $work_dir = File::Temp::tempdir( CLEANUP => !$dbg ); }
+  else { $work_dir = glob($work_dir); system ( "mkdir", '-p', $work_dir ) && die( "could not mkdir '$work_dir': ".($? >> 8) ); }
+}
+else
+{
+  $work_dir = $cache_dir;
+}
 
 # PRINT OUT JOB ENV
 if ($dbg){ cluck "work_dir=$work_dir"; }
@@ -285,11 +317,11 @@ if( ! -e $work_seq_file )
 my @cmd = ();
 push (@cmd,"make");
 push (@cmd,"INFILE=$prot_name.in");
-if( $work_dir ){ push (@cmd,"-C", $work_dir); }
+push (@cmd,"-C", $work_dir);
 push (@cmd,"JOBID=".$prot_name);
 push (@cmd, "-n") if ($dry_run);
 push (@cmd, "-j", $num_cpus);
-if( $makedebug ){ push (@cmd, "--debug=$makedebug" ); }
+if( defined($makedebug) ){ push (@cmd, "--debug=$makedebug" ); }
 push (@cmd, "BLASTCORES=".$blast_processors);
 push (@cmd, "LIBRGUTILS=".$librg_utils_perl);
 push (@cmd, "PPROOT=".$pp_rootdir);
@@ -320,21 +352,34 @@ else
   open( $oldout, '>&', \*STDOUT ) || die( $! );
   open( STDOUT, '>', '/dev/null' ) || die( $! );
 }
-                system(@cmd_all) && die( "@cmd_all failed: ".($? >> 8 ) );
+  #
+    ##
+      system(@cmd_all) && die( "@cmd_all failed: ".($? >> 8 ) );
+    ##
+  #
 if( !$dbg ) { open( STDOUT, '>&', $oldout ) || die( $! ); }
+
+# copy to output dir?
+# We have to copy results to the output directory /before/ storing because in case light_cache is on and the cache is being directly accessed, some result files are deleted from $work_dir during storing.
+if( $output_dir )
+{
+  my @cmd_install = ( @cmd, "DESTDIR=$output_dir", 'install' );
+
+  if ($dbg) { cluck("@cmd_install"); }
+  system( @cmd_install ) && die( "@cmd_install DESTDIR=$output_dir install failed: ".( $? >> 8 ) );
+
+  if( $dbg ){ warn( "results were copied into $output_dir" ); }
+}
 
 # cache store?
 if( $use_cache )
 {
   # We have to combine method ctrl params (%$hash_meth) with result files here and that is not trivial. We are going to have logic here to establish which result file belongs to which method.
   # Associate extensions with method names: %meth_ext_hash
-  my $precache_dir = File::Temp::tempdir( CLEANUP => !$dbg );
+  # lkajan 20110514: there is no need for a precache_dir and an install into it since PP now leaves the working directory in pristine condition DOESNT'T IT?!
+  my $precache_dir = $work_dir;
   if( $dbg ){ warn("precache dir = $precache_dir"); }
    
-  my @cmd_install = ( @cmd, "DESTDIR=$precache_dir", 'install' );
-  if ($dbg) { cluck("@cmd_install"); }
-  system( @cmd_install ) && die( "@cmd_install DESTDIR=$precache_dir install failed: ".( $? >> 8 ) );
-
   my $result_files = _ls_dir( $precache_dir );
   foreach my $res_file (@$result_files)
   {
@@ -343,7 +388,12 @@ if( $use_cache )
     # lkajan 20100415: certain result files we do not want to store into the cache in order to save space
     # lkajan: these are result files that are big, derived from other files kept and not needed for the web interface (or anything of importance) so regeneration time is not crucial
     # lkajan: at present these are: safBlastPsi safBlastPsi80 hssp
-    if( $light_cache && $res_file =~ /\.(safBlastPsi|safBlastPsi80|hssp)$/o ){ next; }
+    # lkajan: When cache_merge is in use, these files need to be actively removed from the precache_dir since in this case it is /the/ cache dir
+    if( $light_cache && $res_file =~ /\.(safBlastPsi|safBlastPsi80|hssp)$/o )
+    {
+      if( $cache_merge ){ if( $dbg ){ warn("light-cache removing '$precache_dir/$res_file'"); } unlink( "$precache_dir/$res_file" ) || confess("failed to remove '$precache_dir/$res_file': $!"); }
+      next;
+    }
 
     # query.blastpSwissM8 => $method->{blastpswiss}->{res}->{blastpSwissM8} = "$precache_dir/$res_file";
     my( $filename, $directories, $suffix ) = fileparse( $res_file, qr/\.[^.]*$/o );
@@ -367,22 +417,13 @@ if( $use_cache )
   my @cmd = (
     'ppc_store',
     ( $setacl ? ( '--setacl', $setacl ) : () ),
+    ( $cache_merge ? ( '--merge-res', '--skip-hash-lock' ) :  () ),
     @method_args,
     '--seq', $sequence_in
   );
 
   if( $dbg ){ cluck( "@cmd" ); }
   system( @cmd ) && die( "@cmd failed: ".( $? >> 8 ) );
-}
-
-if( $output_dir )
-{
-  my @cmd_install = ( @cmd, "DESTDIR=$output_dir", 'install' );
-
-  if ($dbg) { cluck("@cmd_install"); }
-  system( @cmd_install ) && die( "@cmd_install DESTDIR=$output_dir install failed: ".( $? >> 8 ) );
-
-  if( $dbg ){ warn( "prediction complete, results are in $output_dir" ); }
 }
 
 exit(0);
@@ -449,6 +490,21 @@ sub               _ls_dir
   return $files;
 }
 
+
+sub               _get_method_options
+{
+  my( $__hash_meth ) = @_;
+
+  my @ret = map {
+    my $method = $_;
+    my $ctrl = join(',', map {
+      my $ctrl = $_; "$ctrl=$__hash_meth->{$method}->{ctrl}->{$ctrl}";
+    } keys(%{$__hash_meth->{$method}->{ctrl}}) );
+    ( '--method', $method.( $ctrl ? ",$ctrl" : '' ) );
+  } keys(%$__hash_meth);
+
+  return @ret;
+}
 
 __END__
 
@@ -698,6 +754,14 @@ All previous ACLs are lost - no merging.  The read bit controls browsability of 
 
  u:lkajan:4,u:gyachdav:4,g:lkajan:4,o::0
 
+=item B<--cache-merge>
+
+=item B<--nocache-merge>
+
+Merge/do not merge results into cache.  B<--cache-merge> reuses results already in cache; this implies B<--use-cache>.  B<--cache-merge> is incompatible with B<--force-cache-store>.
+
+B<--nocache-merge> is the default UNLESS B<--noforce-cache-store> is in effect and B<--target> is used: then B<--cache-merge> is the default.
+
 =item B<--force-cache-store>
 
 =item B<--noforce-cache-store>
@@ -705,6 +769,8 @@ All previous ACLs are lost - no merging.  The read bit controls browsability of 
 Enable/disable forcing storage of results into cache.  Implies B<--use-cache>.  Default: B<--noforce-cache-store>
 
 With B<--noforce-cache-store> when predictprotein finds cached results it simply fetches them from the cache and does no processing (even if the results are incomplete).  With B<--force-cache-store> predictprotein does not fetch anything from the cache but does store the results, completely replacing what was cached.
+
+B<--force-cache-store> is incompatible with B<--cache-merge>.
 
 =item B<--use-cache>
 

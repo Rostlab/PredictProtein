@@ -3,6 +3,8 @@ predictprotein (1.0.54) unstable; urgency=low
   * clustalw results from psic are now retained in cache - gzipped
   * switch make to workdir with -C now - this makes targets like query.asp
     work
+  * --cache-merge cache merging implemented, this is now ON by default
+    in case use_cache is in effect
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 05 May 2011 21:49:16 +0200
 
