@@ -1,3 +1,9 @@
+predictprotein (1.0.56) unstable; urgency=low
+
+  * more rigorous cleaning up after ppc_lock
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 18 May 2011 14:05:32 +0200
+
 predictprotein (1.0.55) unstable; urgency=low
 
   * blastall error.log is now automatically removed

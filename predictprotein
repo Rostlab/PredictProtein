@@ -230,7 +230,7 @@ $sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
 
 my $cache_dir;
 my $hashlockhdl;
-my $hashlockpid; END { if( $hashlockpid ){ kill 15, $hashlockpid; undef($hashlockpid); close( $hashlockhdl ); } }
+my $hashlockpid; END { if( $hashlockpid ){ kill 15, $hashlockpid; undef($hashlockpid); if( !close( $hashlockhdl ) ){ warn("failed to close ppc_lock pipe: ".( $! ? "$!" : " command exited with ".( $? >> 8 ) )); } while(wait != -1){}; if($dbg){ warn("no children left"); } } }
 my @hash_meth_as_options = _get_method_options( $hash_meth );
 
 # use cache, no force, no merge: fetch results to the output dir if not cache merge
@@ -526,6 +526,7 @@ These methods are run by the default target 'all'.
 
  Feature                Target            Extension               Man page
  -------                ------            ---------               --------
+ atom mobility          profbval          profbval, profb4snap    profbval
  coiled-coils           coiledcoils       coils, coils_raw        coils-wrap.pl
                                                                   ncoils
  disulfide bridges      disulfinder       disulfinder             disulfinder
