@@ -124,7 +124,7 @@ PROFTMBCTRL :=
 all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction lowcompseg pfam profglobe saf sec-struct subcell-loc
 
 .PHONY: blast
-blast: $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE) $(BLASTALIFILE)
+blast: $(BLASTALIFILE) $(BLASTCHECKFILE) $(BLASTFILE) $(BLASTMATFILE) $(BLASTPSWISSM8)
 
 .PHONY: disorder
 disorder: metadisorder norsnet profasp profbval norsp
@@ -277,8 +277,10 @@ $(BLASTPSWISSM8): $(FASTAFILE)
 	# 'WARNING: query: Could not calculate ungapped Karlin-Altschul parameters due to an invalid query sequence or its translation. Please verify the query sequence(s) and/or filtering options'
 	# Does switching off filtering hurt us? Loctree uses the results of this for extracting keywords from swissprot, so I am not worried.
 	# This blast call also often writes 'Selenocysteine (U) at position 59 replaced by X' - we are not really interested. Silence this in non-debug mode.
-	trap "rm -f error.log" EXIT && \
-	blastall -F F -a $(BLASTCORES) -p blastp -d $(SWISSBLASTDB) -b 1000 -e 100 -m 8 -i $< -o $@ $(if $(DEBUG), , >/dev/null 2>&1)
+	trap "rm -f error.log" EXIT; \
+	if ! ( blastall -F F -a $(BLASTCORES) -p blastp -d $(SWISSBLASTDB) -b 1000 -e 100 -m 8 -i $< -o $@ $(if $(DEBUG), , >>error.log 2>&1) ); then \
+		EXIT=$$?; cat error.log >&2; exit $$EXIT; \
+	fi
 
 $(GLOBEFILE) : $(PROFFILE) 
 	profglobe $(PROFGLOBECTRL) --prof_file $<  --output_file $@
@@ -292,8 +294,10 @@ profglobe: $(GLOBEFILE)
 
 $(DISULFINDERFILE): $(BLASTMATFILE)
 	# lkajan: disulfinder now is talkative on STDERR showing progress - silence it when not DEBUG
-	trap "rm -rf '$(DISULFINDDIR)'" EXIT; \
-	disulfinder $(DISULFINDERCTRL) -a 1 -p $<  -o $(DISULFINDDIR) -r $(DISULFINDDIR) -F html $(if $(DEBUG), , >/dev/null 2>&1) && \cp -a $(DISULFINDDIR)/$(notdir $<) $@
+	trap "rm -rf '$(DISULFINDDIR)' error.log" EXIT; \
+	if ! ( disulfinder $(DISULFINDERCTRL) -a 1 -p $<  -o $(DISULFINDDIR) -r $(DISULFINDDIR) -F html $(if $(DEBUG), , >>error.log 2>&1) ); then \
+		EXIT=$$?; cat error.log >&2; exit $$EXIT; \
+	else \cp -a $(DISULFINDDIR)/$(notdir $<) $@; fi
 
 .PHONY: disulfinder
 disulfinder: $(DISULFINDERFILE)
@@ -365,13 +369,17 @@ $(SEGGCGFILE): $(SEGFILE)
 .SECONDARY: $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE)
 %.blastPsiOutTmp %.chk %.blastPsiMat : $(FASTAFILE)
 	# blast call may throw warnings on STDERR - silence it when we are not in debug mode; blastpgp and blastall create a normally 0-sized 'error.log' - remove it
-	trap "rm -f error.log" EXIT && \
-	blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BIG80BLASTDB) -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE) $(if $(DEBUG), , >/dev/null 2>&1)
+	trap "rm -f error.log" EXIT; \
+	if ! ( blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BIG80BLASTDB) -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE) $(if $(DEBUG), , >>error.log 2>&1) ); then \
+		EXIT=$$?; cat error.log >&2; exit $$EXIT; \
+	fi
 
 $(BLASTALIFILE): $(BLASTCHECKFILE) $(FASTAFILE)
 	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
-	trap "rm -f error.log" EXIT && \
-	blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , >/dev/null 2>&1)
+	trap "rm -f error.log" EXIT; \
+	if ! ( blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , >>error.log 2>&1) ); then \
+		EXIT=$$?; cat error.log >&2; exit $$EXIT; \
+	fi
 
 .SECONDARY: $(SAFFILE) $(BLASTFILERDB)
 %.safBlastPsi %.blastPsiRdb : $(BLASTALIFILE)  $(FASTAFILE)

@@ -1,3 +1,10 @@
+predictprotein (1.0.58) unstable; urgency=low
+
+  * added code to recover STDERR of blast calls and disulfinder in case
+    of failure even if not in debug mode
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 20 May 2011 22:13:21 +0200
+
 predictprotein (1.0.57) unstable; urgency=low
 
   * fixed exit 255 bug
