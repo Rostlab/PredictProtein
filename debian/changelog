@@ -1,3 +1,9 @@
+predictprotein (1.0.59) unstable; urgency=low
+
+  * removed >> 8 from $? error reporting in predictprotein
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 03 Jun 2011 14:13:55 +0200
+
 predictprotein (1.0.58) unstable; urgency=low
 
   * added code to recover STDERR of blast calls and disulfinder in case

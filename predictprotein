@@ -192,7 +192,7 @@ if( !$output_dir && !$use_cache && !$work_dir ){ die("Error: no output directory
 if( $output_dir )
 {
   $output_dir = glob($output_dir);
-  system( 'mkdir', '-p', $output_dir ) && die( "could not mkdir '$output_dir': ".($? >> 8 ));
+  system( 'mkdir', '-p', $output_dir ) && die( "could not mkdir '$output_dir': $?" );
 }
 
 if(! $prot_name){ $prot_name="query"; }
@@ -230,7 +230,7 @@ $sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
 
 my $cache_dir;
 my $hashlockhdl;
-my $hashlockpid; END { if( $hashlockpid ){ local $?; kill 15, $hashlockpid; undef($hashlockpid); if( !close( $hashlockhdl ) ){ warn("failed to close ppc_lock pipe: ".( $! ? "$!" : " command exited with ".( $? >> 8 ) )); } while(wait != -1){}; if($dbg){ warn("no children left"); } } }
+my $hashlockpid; END { if( $hashlockpid ){ local $?; kill 15, $hashlockpid; undef($hashlockpid); if( !close( $hashlockhdl ) ){ warn("failed to close ppc_lock pipe: ".( $! ? "$!" : " command exited with $?" )); } while(wait != -1){}; if($dbg){ warn("no children left"); } } }
 my @hash_meth_as_options = _get_method_options( $hash_meth );
 
 # use cache, no force, no merge: fetch results to the output dir if not cache merge
@@ -249,7 +249,7 @@ if( $use_cache && !$force_cache_store )
     # Obtain lock, keep ppc_fetch from locking
     my @ppl_cmd = ( 'ppc_lock', '--seq', $sequence_in, '--parent', $$, '--allow-cache-write', @hash_meth_as_options );
     if( $dbg ){ cluck( "@ppl_cmd" ); }
-    $hashlockpid = open( $hashlockhdl, '-|' ); if( !defined( $hashlockpid ) ){ die("failed to execute '|@ppl_cmd': ".( $? >> 8 )); }
+    $hashlockpid = open( $hashlockhdl, '-|' ); if( !defined( $hashlockpid ) ){ die("failed to execute '|@ppl_cmd': $?"); }
     if( !$hashlockpid ){ if( !exec { $ppl_cmd[0] } @ppl_cmd ){ confess( "failed to call @ppl_cmd: $!" ); } }
     chomp( $cache_dir = <$hashlockhdl> );
     # lkajan 20110514: with acls -w does not report correctly
@@ -265,7 +265,7 @@ if( $use_cache && !$force_cache_store )
 
   my( @cachefiles, $closeret );
   {
-    my $pid = open( my $pipe, '-|' ); if( !defined( $pid ) ){ die("failed to execute '|@ppf_cmd': ".( $? >> 8 )); }
+    my $pid = open( my $pipe, '-|' ); if( !defined( $pid ) ){ die("failed to execute '|@ppf_cmd': $?"); }
     if( !$pid ){ if( !exec { $ppf_cmd[0] } @ppf_cmd ){ confess( "failed to call @ppf_cmd: $!" ); } }
     @cachefiles = <$pipe>;
     $closeret = close( $pipe );
@@ -292,7 +292,7 @@ if( length($sequence_in) > $numresmax )
 if( !$cache_merge )
 {
   if( ! $work_dir ){ $work_dir = File::Temp::tempdir( CLEANUP => !$dbg ); }
-  else { $work_dir = glob($work_dir); system ( "mkdir", '-p', $work_dir ) && die( "could not mkdir '$work_dir': ".($? >> 8) ); }
+  else { $work_dir = glob($work_dir); system ( "mkdir", '-p', $work_dir ) && die( "could not mkdir '$work_dir': $?" ); }
 }
 else
 {
@@ -354,7 +354,7 @@ else
 }
   #
     ##
-      system(@cmd_all) && die( "@cmd_all failed: ".($? >> 8 ) );
+      system(@cmd_all) && die( "@cmd_all failed: $?" );
     ##
   #
 if( !$dbg ) { open( STDOUT, '>&', $oldout ) || die( $! ); }
@@ -366,7 +366,7 @@ if( $output_dir )
   my @cmd_install = ( @cmd, "DESTDIR=$output_dir", 'install' );
 
   if ($dbg) { cluck("@cmd_install"); }
-  system( @cmd_install ) && die( "@cmd_install DESTDIR=$output_dir install failed: ".( $? >> 8 ) );
+  system( @cmd_install ) && die( "@cmd_install DESTDIR=$output_dir install failed: $?" );
 
   if( $dbg ){ warn( "results were copied into $output_dir" ); }
 }
@@ -423,7 +423,7 @@ if( $use_cache )
   );
 
   if( $dbg ){ cluck( "@cmd" ); }
-  system( @cmd ) && die( "@cmd failed: ".( $? >> 8 ) );
+  system( @cmd ) && die( "@cmd failed: $?" );
 }
 
 exit(0);
