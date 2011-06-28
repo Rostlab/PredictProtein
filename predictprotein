@@ -176,8 +176,9 @@ this system using "man predictprotein" or at http://www.predictprotein.org/.
     exit (0);
 }
 
-# if --noforce-cache-store and --target is used, make $cache_merge ON by default, OFF otherwise
-my $cache_merge = ( ( !$force_cache_store && @target ) ? 1 : 0 );
+# lkajan: warning: meddling with default value ahead:
+# if --use-cache and --noforce-cache-store and --target is used, make $cache_merge ON by default, OFF otherwise
+my $cache_merge = ( ( $use_cache && !$force_cache_store && @target ) ? 1 : 0 );
 if( defined( $cache_merge_cl ) ){ $cache_merge = $cache_merge_cl; }
 
 # force_cache_store, cache_merge_cl imply use-cache
@@ -761,7 +762,7 @@ All previous ACLs are lost - no merging.  The read bit controls browsability of 
 
 Merge/do not merge results into cache.  B<--cache-merge> reuses results already in cache; this implies B<--use-cache>.  B<--cache-merge> is incompatible with B<--force-cache-store>.
 
-B<--nocache-merge> is the default UNLESS B<--noforce-cache-store> is in effect and B<--target> is used: then B<--cache-merge> is the default.
+B<--nocache-merge> is the default UNLESS B<--use-cache> is on and B<--noforce-cache-store> is in effect and B<--target> is used.
 
 =item B<--force-cache-store>
 
@@ -838,6 +839,10 @@ Default configuration file. See this file for a description of the parameters.
 =item F<__sysconfdir__/predictproteinrc>
 
 System configuration file overriding values in F<__pkgdatadir__/predictproteinrc.default>
+
+=item F<~/.predictproteinrc>
+
+User configuration file overriding values in F<__sysconfdir__/predictproteinrc>
 
 =back
 

@@ -1,3 +1,10 @@
+predictprotein (1.0.60) unstable; urgency=low
+
+  * fixed --target switching on cache merging when nouse-cache is given
+  * added ~/.predictproteinrc to the conf file list
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Tue, 28 Jun 2011 17:42:29 +0200
+
 predictprotein (1.0.59) unstable; urgency=low
 
   * removed >> 8 from $? error reporting in predictprotein
