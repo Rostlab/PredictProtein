@@ -1,3 +1,9 @@
+predictprotein (1.0.61) unstable; urgency=low
+
+  * fixed --output-dir bug when it is not a fully qualified path
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 15 Sep 2011 15:44:48 +0200
+
 predictprotein (1.0.60) unstable; urgency=low
 
   * fixed --target switching on cache merging when nouse-cache is given
