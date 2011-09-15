@@ -1,3 +1,9 @@
+predictprotein (1.0.62) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 15 Sep 2011 16:18:10 +0200
+
 predictprotein (1.0.61) unstable; urgency=low
 
   * fixed --output-dir bug when it is not a fully qualified path
