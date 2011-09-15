@@ -1,12 +1,13 @@
 #!/usr/bin/perl -w
 use warnings;
 use strict;
-use Data::Dumper;
 use Carp qw(cluck :DEFAULT);
-use Getopt::Long;
+use Cwd qw||;
+use Data::Dumper;
 use File::Copy;
 use File::Temp;
 use File::Basename;
+use Getopt::Long;
 use Pod::Usage;
 use Config::IniFiles;
 use Bio::Seq;
@@ -192,7 +193,7 @@ my( $makemethod, $maketarget, $hash_meth ) = _get_makemethod( \@method );
 if( !$output_dir && !$use_cache && !$work_dir ){ die("Error: no output directory or work directory given and no cache is to be used. Results would be lost unless you use --output-dir, --work-dir or --use-cache.".( $dbg ? '' : "\n" ) ); }
 if( $output_dir )
 {
-  $output_dir = glob($output_dir);
+  $output_dir = Cwd::realpath(glob($output_dir));
   system( 'mkdir', '-p', $output_dir ) && die( "could not mkdir '$output_dir': $?" );
 }
 
@@ -293,7 +294,7 @@ if( length($sequence_in) > $numresmax )
 if( !$cache_merge )
 {
   if( ! $work_dir ){ $work_dir = File::Temp::tempdir( CLEANUP => !$dbg ); }
-  else { $work_dir = glob($work_dir); system ( "mkdir", '-p', $work_dir ) && die( "could not mkdir '$work_dir': $?" ); }
+  else { $work_dir = Cwd::realpath(glob($work_dir)); system ( "mkdir", '-p', $work_dir ) && die( "could not mkdir '$work_dir': $?" ); }
 }
 else
 {
@@ -340,7 +341,7 @@ if( $swissblastdb ){ push @cmd, "SWISSBLASTDB=$swissblastdb"; }
 # method control params
 push (@cmd, @$makemethod );
 if( !$dbg ){ push @cmd, '--quiet'; } else { push (@cmd, "DEBUG=".$dbg); }
-push( @cmd, $make_file ? ( "-f", scalar( glob($make_file) ) ) : () );
+push( @cmd, $make_file ? ( "-f", Cwd::realpath(scalar(glob($make_file))) ) : () );
 
 # list targets
 my @cmd_all = ( @cmd, @target );
