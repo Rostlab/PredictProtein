@@ -1,8 +1,9 @@
-predictprotein (1.0.62) UNRELEASED; urgency=low
+predictprotein (1.0.62) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * Merging, when --target is used, is now default only when there already
+    is something in the cache.
 
- -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 15 Sep 2011 16:18:10 +0200
+ -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 19 Sep 2011 17:55:26 +0200
 
 predictprotein (1.0.61) unstable; urgency=low
 

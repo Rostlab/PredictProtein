@@ -177,18 +177,30 @@ this system using "man predictprotein" or at http://www.predictprotein.org/.
     exit (0);
 }
 
+if( $seqfile )
+{
+  my $in = Bio::SeqIO->new( ( $seqfile eq '-' ? ( -fh => \*STDIN ) : ( -file => scalar( glob( $seqfile ) ) ) ), -format => 'Fasta' );
+  my $seq = $in->next_seq();
+  $sequence_in = $seq->seq();
+}
+# Get sequence
+$sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
+
+my( $makemethod, $maketarget, $hash_meth ) = _get_makemethod( \@method );
+my $hash_meth_as_options = _get_method_options( $hash_meth );
+
 # lkajan: warning: meddling with default value ahead:
-# if --use-cache and --noforce-cache-store and --target is used, make $cache_merge ON by default, OFF otherwise
-my $cache_merge = ( ( $use_cache && !$force_cache_store && @target ) ? 1 : 0 );
+# if --use-cache and --noforce-cache-store and --target is used and the cache is not empty, make $cache_merge ON by default, OFF otherwise
+my $cache_merge = ( ( $use_cache && !$force_cache_store && @target && _in_cache( $sequence_in, $hash_meth_as_options ) ) ? 1 : 0 );
 if( defined( $cache_merge_cl ) ){ $cache_merge = $cache_merge_cl; }
+
+if($dbg){ warn("cache merging is ".( $cache_merge ? 'on' : 'off' )); }
 
 # force_cache_store, cache_merge_cl imply use-cache
 if( $force_cache_store || $cache_merge_cl ){ $use_cache = 1; }
 
 # force_cache_store can not be used together with cache_merge
 if( $force_cache_store && $cache_merge ){ die("Error: --force-cache-store is incompatible with --cache_merge".( $dbg ? '' : "\n" )); }
-
-my( $makemethod, $maketarget, $hash_meth ) = _get_makemethod( \@method );
 
 if( !$output_dir && !$use_cache && !$work_dir ){ die("Error: no output directory or work directory given and no cache is to be used. Results would be lost unless you use --output-dir, --work-dir or --use-cache.".( $dbg ? '' : "\n" ) ); }
 if( $output_dir )
@@ -212,17 +224,6 @@ push @target, @$maketarget;
   @target = keys %tgt_hash;
 }
 
-if( $seqfile )
-{
-  my $in = Bio::SeqIO->new( ( $seqfile eq '-' ? ( -fh => \*STDIN ) : ( -file => scalar( glob( $seqfile ) ) ) ), -format => 'Fasta' );
-  my $seq = $in->next_seq();
-  $sequence_in = $seq->seq();
-}
-
-
-# Get sequence
-$sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
-
 # get number of processors on this host
 #my @num_cpus=();
 #if (!($num_cpus) && -e '/proc/cpuinfo'){
@@ -233,23 +234,22 @@ $sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
 my $cache_dir;
 my $hashlockhdl;
 my $hashlockpid; END { if( $hashlockpid ){ local $?; kill 15, $hashlockpid; undef($hashlockpid); if( !close( $hashlockhdl ) ){ warn("failed to close ppc_lock pipe: ".( $! ? "$!" : " command exited with $?" )); } while(wait != -1){}; if($dbg){ warn("no children left"); } } }
-my @hash_meth_as_options = _get_method_options( $hash_meth );
 
-# use cache, no force, no merge: fetch results to the output dir if not cache merge
 if( $use_cache && !$force_cache_store )
 {
   # Do we have it in the cache?
-  my @ppf_cmd = ('ppc_fetch', '--seq', $sequence_in );
+  my @ppf_cmd = _get_ppf_cmd_base( $sequence_in, $hash_meth_as_options );
 
   if( !$cache_merge )
   {
+    # use cache, no force, no merge: fetch results to the output dir if not cache merge
     if( $output_dir ){ push @ppf_cmd, ( '--output-dir', $output_dir ); }
     if( $prot_name ){ push @ppf_cmd, ( '--prot-name', $prot_name ); }
   }
   else
   {
     # Obtain lock, keep ppc_fetch from locking
-    my @ppl_cmd = ( 'ppc_lock', '--seq', $sequence_in, '--parent', $$, '--allow-cache-write', @hash_meth_as_options );
+    my @ppl_cmd = ( 'ppc_lock', '--seq', $sequence_in, '--parent', $$, '--allow-cache-write', @$hash_meth_as_options );
     if( $dbg ){ cluck( "@ppl_cmd" ); }
     $hashlockpid = open( $hashlockhdl, '-|' ); if( !defined( $hashlockpid ) ){ die("failed to execute '|@ppl_cmd': $?"); }
     if( !$hashlockpid ){ if( !exec { $ppl_cmd[0] } @ppl_cmd ){ confess( "failed to call @ppl_cmd: $!" ); } }
@@ -260,9 +260,6 @@ if( $use_cache && !$force_cache_store )
     push @ppf_cmd, '--skip-hash-lock';
   }
 
-  #   method
-  push @ppf_cmd, @hash_meth_as_options;
-
   if( $dbg ){ cluck( "@ppf_cmd" ); }
 
   my( @cachefiles, $closeret );
@@ -271,6 +268,7 @@ if( $use_cache && !$force_cache_store )
     if( !$pid ){ if( !exec { $ppf_cmd[0] } @ppf_cmd ){ confess( "failed to call @ppf_cmd: $!" ); } }
     @cachefiles = <$pipe>;
     $closeret = close( $pipe );
+    if( !$closeret && $! ){ confess("failed to call @ppf_cmd: $!"); }
   }
   #
   if( !$cache_merge && $closeret )
@@ -505,8 +503,41 @@ sub               _get_method_options
     ( '--method', $method.( $ctrl ? ",$ctrl" : '' ) );
   } keys(%$__hash_meth);
 
-  return @ret;
+  return [ @ret ];
 }
+
+
+sub               _in_cache
+{
+  # lkajan: this is a very quick check, it should not do anything else but tell if the cache slot is empty or not
+  # lkajan: warning: race condition here: whatever this call finds may not be true by the time ppc_lock or another fetch is executed
+  my( $__seq, $__hash_meth_as_options ) = @_;
+
+  my @ppf_cmd = _get_ppf_cmd_base( $__seq, $__hash_meth_as_options ); # ppc_fetch --seq ... --method ... --method ...
+  push @ppf_cmd, "--print-dir";
+
+  if( $dbg ){ cluck( "@ppf_cmd" ); }
+
+  my( @cachefiles, $closeret );
+  {
+    my $pid = open( my $pipe, '-|' ); if( !defined( $pid ) ){ die("failed to execute '|@ppf_cmd': $?"); }
+    if( !$pid ){ if( !exec { $ppf_cmd[0] } @ppf_cmd ){ confess( "failed to call @ppf_cmd: $!" ); } }
+    @cachefiles = <$pipe>;
+    $closeret = close( $pipe );
+    if( !$closeret && $! ){ confess("failed to call @ppf_cmd: $!"); }
+  }
+
+  return $closeret;
+}
+
+
+sub               _get_ppf_cmd_base
+{
+  my( $__seq, $__hash_meth_as_options ) = @_;
+  
+  my @ret = ( 'ppc_fetch', '--seq', $sequence_in, @$__hash_meth_as_options );
+}
+
 
 __END__
 
@@ -761,9 +792,14 @@ All previous ACLs are lost - no merging.  The read bit controls browsability of 
 
 =item B<--nocache-merge>
 
-Merge/do not merge results into cache.  B<--cache-merge> reuses results already in cache; this implies B<--use-cache>.  B<--cache-merge> is incompatible with B<--force-cache-store>.
+Merge/do not merge results into cache.  B<--cache-merge> reuses results already in cache; this turns B<--use-cache> on automatically.  B<--cache-merge> is incompatible with B<--force-cache-store>.
 
-B<--nocache-merge> is the default UNLESS B<--use-cache> is on and B<--noforce-cache-store> is in effect and B<--target> is used.
+B<--nocache-merge> is the default UNLESS
+
+ * B<--use-cache> is on and
+ * B<--noforce-cache-store> is in effect and
+ * B<--target> is used and
+ * the cache is not empty
 
 =item B<--force-cache-store>
 
