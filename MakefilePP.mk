@@ -135,7 +135,7 @@ function: disulfinder predictnls prosite
 .PHONY: hssp
 hssp: $(HSSPFILE) $(HSSP80FILE) $(HSSPFILTERFILE)
 
-# lkajan: only files that are only needed by the web interface
+# lkajan: this target is for files that are solely needed by the web interface
 .PHONY: html
 html: $(BLASTFILERDB)
 

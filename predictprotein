@@ -189,10 +189,16 @@ $sequence_in || die("Error: no input sequence".( $dbg ? '' : "\n" ));
 my( $makemethod, $maketarget, $hash_meth ) = _get_makemethod( \@method );
 my $hash_meth_as_options = _get_method_options( $hash_meth );
 
-# lkajan: warning: meddling with default value ahead:
-# if --use-cache and --noforce-cache-store and --target is used and the cache is not empty, make $cache_merge ON by default, OFF otherwise
-my $cache_merge = ( ( $use_cache && !$force_cache_store && @target && _in_cache( $sequence_in, $hash_meth_as_options ) ) ? 1 : 0 );
-if( defined( $cache_merge_cl ) ){ $cache_merge = $cache_merge_cl; }
+my $cache_merge = 0;
+{
+  # lkajan: warning: meddling with default value ahead:
+  # if --use-cache and --noforce-cache-store and --target is used and the cache is not empty, make $cache_merge ON by default, OFF otherwise
+  $cache_merge = ( ( $use_cache && !$force_cache_store && @target ) ? 1 : 0 );
+  if( defined( $cache_merge_cl ) ){ $cache_merge = $cache_merge_cl; }
+
+  # lkajan: if there is nothing in the cache, silently ignore a request (on the cmd line or otherwise) for cache merging:
+  if( $cache_merge && !_in_cache( $sequence_in, $hash_meth_as_options ) ){ $cache_merge = 0; }
+}
 
 if($dbg){ warn("cache merging is ".( $cache_merge ? 'on' : 'off' )); }
 
@@ -807,6 +813,8 @@ B<--nocache-merge> is the default UNLESS
 =item * the cache is not empty
 
 =back
+
+B<--cache-merge> is silently ignored in case the cache is empty.
 
 =item B<--force-cache-store>
 
