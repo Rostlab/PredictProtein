@@ -796,10 +796,17 @@ Merge/do not merge results into cache.  B<--cache-merge> reuses results already 
 
 B<--nocache-merge> is the default UNLESS
 
- * B<--use-cache> is on and
- * B<--noforce-cache-store> is in effect and
- * B<--target> is used and
- * the cache is not empty
+=over
+
+=item * B<--use-cache> is on and
+
+=item * B<--noforce-cache-store> is in effect and
+
+=item * B<--target> is used and
+
+=item * the cache is not empty
+
+=back
 
 =item B<--force-cache-store>
 
