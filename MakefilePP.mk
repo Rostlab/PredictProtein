@@ -146,7 +146,7 @@ interaction: profisis
 pfam: hmm2pfam hmm3pfam
 
 .PHONY: saf
-saf: $(SAFFILE) $(BLASTFILERDB) $(SAF80FILE) $(BLAST80FILERDB)
+saf: $(SAFFILE) $(SAF80FILE)
 
 .PHONY: sec-struct
 sec-struct: $(PROFTEXTFILE) coiledcoils phd prof proftmb
