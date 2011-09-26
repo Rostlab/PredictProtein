@@ -1,6 +1,6 @@
 predictprotein (1.0.63) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * updated cache_merge logic: now no merging occurs when the cache is empty
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 19 Sep 2011 17:57:01 +0200
 
