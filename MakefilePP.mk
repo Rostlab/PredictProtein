@@ -8,7 +8,7 @@
 JOBID:=$(basename $(notdir $(INFILE)))
 
 DEBUG:=
-DESTDIR:=.
+export DESTDIR:=.
 
 # These temporary directories are automatically removed after use
 DISULFINDDIR:=$(shell mktemp -d)
@@ -429,7 +429,7 @@ install:
 		$(SEGFILE) $(SEGGCGFILE) \
 		$(GCGFILE) \
 		$(TMHMMFILE) \
-	; do if [ -e $$f ]; then cp -a $$f $(DESTDIR)/ ; fi; done
+	; do if [ -e $$f ]; then cp -a $$f "$$DESTDIR/" ; fi; done
 
 .PHONY: help
 help:

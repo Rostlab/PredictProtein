@@ -1,12 +1,8 @@
-predictprotein (1.0.63) UNRELEASED; urgency=low
+predictprotein (1.0.63) unstable; urgency=low
 
   * updated cache_merge logic: now no merging occurs when the cache is empty
-  * Implimented new policy for files stored in cache:
-    - we keep files directly shown on the web interface
-    - we keep the immediate input files of (top level) predictors so that
-      they can be re-run, files such as .hsspPsiFil and .blastpSwissM8
-    - we do not keep ancestors of these files, such as .blastPsiOutTmp and
-      .hssp80
+  * fixed DESTDIR vulnerability due to lack of quoting in Makefile - DESTDIR
+    now accepts all valid paths
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 19 Sep 2011 17:57:01 +0200
 
