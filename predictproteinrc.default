@@ -30,6 +30,9 @@ profnumresmin=17
 # maximum length of input AA sequence, default: 6000
 numresmax=6000
 
+# prositedat: Path to `prosite.dat' file, see L<https://rostlab.org/owiki/index.php/Packages#Resource_definitions>
+prositedat=/mnt/project/rost_db/data/prosite/prosite.dat
+
 # prositeconvdat: Path to `prosite_convert.dat' file, see L<https://rostlab.org/owiki/index.php/Packages#Resource_definitions>
 prositeconvdat=/mnt/project/rost_db/data/prosite/prosite_convert.dat
 
@@ -44,6 +47,9 @@ pfam2db=/mnt/project/rost_db/data/pfam/Pfam_ls
 
 # pfam3 db
 pfam3db=/mnt/project/rost_db/data/pfam/Pfam-A.hmm
+
+# Swiss-Prot key 'index' (e.g.) for loctree
+spkeyidx=/mnt/project/rost_db/data/swissprot/keyindex_loctree.txt
 
 # default_targets: targets to make if none is given on the command line (separate targets with space)
 default_targets=all
