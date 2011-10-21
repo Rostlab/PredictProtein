@@ -45,6 +45,9 @@ pfam2db=/mnt/project/rost_db/data/pfam/Pfam_ls
 # pfam3 db
 pfam3db=/mnt/project/rost_db/data/pfam/Pfam-A.hmm
 
+# Swiss-Prot key 'index' (e.g.) for loctree
+spkeyidx=/mnt/project/rost_db/data/swissprot/keyindex_loctree.txt
+
 # default_targets: targets to make if none is given on the command line (separate targets with space)
 default_targets=all
 

@@ -106,6 +106,7 @@ my $profnumresmin = $config->val('predictprotein', 'profnumresmin') || 17;
 my $proftmb_app_root = glob($config->val('predictprotein', 'proftmb'));
 my $prositeconvdat = glob( $config->val('predictprotein', 'prositeconvdat' ) );
 my $psicexe = glob( $config->val('predictprotein', 'psicexe' ) );
+my $spkeyidx = glob( $config->val('predictprotein', 'spkeyidx' ) );
 my $swissblastdb = glob( $config->val('predictprotein', 'swissblastdb' ) );
 my $use_cache = $config->val('predictprotein', 'use_cache');
 #
@@ -152,6 +153,7 @@ my $result = GetOptions (
           "profnumresmin=i" => \$profnumresmin,
           "prositeconvdat=s" => \$prositeconvdat,
           "psicexe=s" => \$psicexe,
+          "spkeyidx=s" => \$spkeyidx,
 			    "s|seq|sequence=s" =>\$sequence_in,
           'seqfile=s' => \$seqfile,
           'swissblastdb=s' => \$swissblastdb,
@@ -341,6 +343,7 @@ if( $pfam2db ){ push @cmd, "PFAM2DB=$pfam2db"; }
 if( $pfam3db ){ push @cmd, "PFAM3DB=$pfam3db"; }
 if( $prositeconvdat ){ push @cmd, "PROSITECONVDAT=$prositeconvdat"; }
 if( $psicexe ){ push @cmd, "PSICEXE=$psicexe"; }
+if( $spkeyidx ){ push @cmd, "SPKEYIDX=$spkeyidx"; }
 if( $swissblastdb ){ push @cmd, "SWISSBLASTDB=$swissblastdb"; }
 # method control params
 push (@cmd, @$makemethod );
@@ -600,6 +603,10 @@ These methods are run by the default target 'all'.
  bacterial transmem-    proftmb           proftmb                 proftmb
   brane beta barrels
  PROSITE scan           prosite           prosite                 prosite_scan
+ position-specific      psic              psic, clustalngz        psic,
+  independent counts                                              runNewPSIC,
+  and its base multi-                                             clustalw
+  ple alignment
 
 =head2 Optional methods
 
@@ -611,9 +618,6 @@ These methods are run by the target 'optional'.
  -------                ------            ---------               --------
  subcellular            loctree           loctree{Animal,Plant,   loctree
   localization           |                 Proka}{,Txt}
-                         psic*            psic, clustalngz        psic, 
-                                                                  runNewPSIC
-                                                                  clustalw
                          svm-light5*                              svm_classify5
                          tmhmm*           tmhmm
  protein-DNA            profdisis         disis                   profdisis
@@ -631,6 +635,8 @@ These methods are run by the target 'optional'.
  pfam v2 database                     --pfam2db
  pfam v3 database                     --pfam3db
  prosite_convert.dat                  --prositeconvdat
+ Swiss-Prot keyword-to-accession      --spkeyidx
+  'index'
 
 =head2 Output format
 
@@ -725,6 +731,10 @@ one letter amino acid sequence input
 =item B<--seqfile>
 
 FASTA amino acid sequence file; if `-', standard input is read
+
+=item B<--spkeyidx>
+
+Swiss-Prot keyword-to-identifier 'index' file (e.g.) for loctree
 
 =item B<--target>=I<string>
 

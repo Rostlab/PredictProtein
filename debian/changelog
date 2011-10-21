@@ -1,6 +1,7 @@
-predictprotein (1.0.64) UNRELEASED; urgency=low
+predictprotein (1.0.64) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * exposed new loctree cmd line arg for Swiss-Prot keyword-to-accession
+    'index'
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Tue, 18 Oct 2011 16:58:36 +0200
 
