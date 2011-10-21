@@ -32,6 +32,7 @@ PFAM2DB:=/mnt/project/rost_db/data/pfam/Pfam_ls
 PFAM3DB:=/mnt/project/rost_db/data/pfam/Pfam-A.hmm
 PROSITECONVDAT:=/mnt/project/rost_db/data/prosite/prosite_convert.dat
 PSICMAT:=/usr/share/psic/blosum62_psic.txt
+SPKEYIDX:=/mnt/project/rost_db/data/swissprot/keyindex_loctree.txt
 SWISSBLASTDB:=/mnt/project/rost_db/data/blast/swiss
 
 # TOOLS (CONFIGURABLE)
@@ -121,7 +122,7 @@ PROFTMBCTRL :=
 # lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'standard' methods: those that are available through hard Debian dependencies.
 # lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction lowcompseg pfam profglobe saf sec-struct subcell-loc
+all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction lowcompseg pfam profglobe saf sec-struct subcell-loc psic
 
 .PHONY: blast
 blast: $(BLASTALIFILE) $(BLASTCHECKFILE) $(BLASTFILE) $(BLASTMATFILE) $(BLASTPSWISSM8)
@@ -157,10 +158,9 @@ subcell-loc:
 # optional: these targets may not work in case the packages that provide them are missing - these packages are not hard requirements of PP
 #           These packages are usually non-redistributable or have some other problem with them.
 #           loctree depends on SignalP that is non-redistributable
-#           The license of psic is unknown, it depends (through runNewPSIC.pl) on clustalw, clustalw is usable for non-commercial purposes only
 #           tmhmm is non-redistributable
 .PHONY: optional
-optional: loctree profdisis psic tmhmm
+optional: loctree profdisis tmhmm
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
@@ -176,6 +176,7 @@ psic: $(PSICFILE) $(CLUSTALNGZ)
 %.loctreeAnimal %.loctreeAnimalTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
 	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEANIMALFILE) --loctreetxt $(LOCTREEANIMALTXTFILE) \
 	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
+	  --swissprot-docs-keyindex $(SPKEYIDX) \
 	  --org animal \
 	  $(if $(DEBUG), --debug, )
 
@@ -183,6 +184,7 @@ psic: $(PSICFILE) $(CLUSTALNGZ)
 %.loctreePlant %.loctreePlantTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
 	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPLANTFILE) --loctreetxt $(LOCTREEPLANTTXTFILE) \
 	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
+	  --swissprot-docs-keyindex $(SPKEYIDX) \
 	  --org plant \
 	  $(if $(DEBUG), --debug, )
 
@@ -190,6 +192,7 @@ psic: $(PSICFILE) $(CLUSTALNGZ)
 %.loctreeProka %.loctreeProkaTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
 	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPROKAFILE) --loctreetxt $(LOCTREEPROKATXTFILE) \
 	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
+	  --swissprot-docs-keyindex $(SPKEYIDX) \
 	  --org proka \
 	  $(if $(DEBUG), --debug, )
 
