@@ -104,6 +104,7 @@ my $prodomblastdb; # obsolete, kept here to not break interfaces that still use 
 my $prof_app_root = glob($config->val('predictprotein', 'prof'));
 my $profnumresmin = $config->val('predictprotein', 'profnumresmin') || 17;
 my $proftmb_app_root = glob($config->val('predictprotein', 'proftmb'));
+my $prositedat = glob( $config->val('predictprotein', 'prositedat' ) );
 my $prositeconvdat = glob( $config->val('predictprotein', 'prositeconvdat' ) );
 my $psicexe = glob( $config->val('predictprotein', 'psicexe' ) );
 my $spkeyidx = glob( $config->val('predictprotein', 'spkeyidx' ) );
@@ -151,6 +152,7 @@ my $result = GetOptions (
           "pfam3db=s" => \$pfam3db,
           "prodomblastdb=s" => \$prodomblastdb, # kept for compatibility
           "profnumresmin=i" => \$profnumresmin,
+          "prositedat=s" => \$prositedat,
           "prositeconvdat=s" => \$prositeconvdat,
           "psicexe=s" => \$psicexe,
           "spkeyidx=s" => \$spkeyidx,
@@ -341,6 +343,7 @@ if( $bigblastdb ){ push @cmd, "BIGBLASTDB=$bigblastdb"; }
 if( $big80blastdb ){ push @cmd, "BIG80BLASTDB=$big80blastdb"; }
 if( $pfam2db ){ push @cmd, "PFAM2DB=$pfam2db"; }
 if( $pfam3db ){ push @cmd, "PFAM3DB=$pfam3db"; }
+if( $prositedat ){ push @cmd, "PROSITEDAT=$prositedat"; }
 if( $prositeconvdat ){ push @cmd, "PROSITECONVDAT=$prositeconvdat"; }
 if( $psicexe ){ push @cmd, "PSICEXE=$psicexe"; }
 if( $spkeyidx ){ push @cmd, "SPKEYIDX=$spkeyidx"; }
@@ -635,6 +638,12 @@ These methods are run by the target 'optional'.
  pfam v2 database                     --pfam2db
  pfam v3 database                     --pfam3db
  prosite_convert.dat                  --prositeconvdat
+
+=head3 Resources for optional targets
+
+ Database                             Cmd line argument
+ --------                             -----------------
+ prosite.dat                          --prositedat
  Swiss-Prot keyword-to-accession      --spkeyidx
   'index'
 
@@ -789,6 +798,10 @@ Pfam v3 database, e.g. F<Pfam-A.hmm>
 =item B<--prodomblastdb>
 
 Obsolete.  This argument is kept only to maintain compatibility with older versions.
+
+=item B<--prositedat>
+
+Path to `prosite.dat' file, see L<https://rostlab.org/owiki/index.php/Packages#Resource_definitions>
 
 =item B<--prositeconvdat>
 

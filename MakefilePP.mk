@@ -30,6 +30,7 @@ BIG80BLASTDB:=/mnt/project/rost_db/data/blast/big_80
 DBSWISS:=/mnt/project/rost_db/data/swissprot/current/
 PFAM2DB:=/mnt/project/rost_db/data/pfam/Pfam_ls
 PFAM3DB:=/mnt/project/rost_db/data/pfam/Pfam-A.hmm
+PROSITEDAT:=/mnt/project/rost_db/data/prosite/prosite.dat
 PROSITECONVDAT:=/mnt/project/rost_db/data/prosite/prosite_convert.dat
 PSICMAT:=/usr/share/psic/blosum62_psic.txt
 SPKEYIDX:=/mnt/project/rost_db/data/swissprot/keyindex_loctree.txt
@@ -176,7 +177,7 @@ psic: $(PSICFILE) $(CLUSTALNGZ)
 %.loctreeAnimal %.loctreeAnimalTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
 	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEANIMALFILE) --loctreetxt $(LOCTREEANIMALTXTFILE) \
 	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
-	  --swissprot-docs-keyindex $(SPKEYIDX) \
+	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
 	  --org animal \
 	  $(if $(DEBUG), --debug, )
 
@@ -184,7 +185,7 @@ psic: $(PSICFILE) $(CLUSTALNGZ)
 %.loctreePlant %.loctreePlantTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
 	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPLANTFILE) --loctreetxt $(LOCTREEPLANTTXTFILE) \
 	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
-	  --swissprot-docs-keyindex $(SPKEYIDX) \
+	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
 	  --org plant \
 	  $(if $(DEBUG), --debug, )
 
@@ -192,7 +193,7 @@ psic: $(PSICFILE) $(CLUSTALNGZ)
 %.loctreeProka %.loctreeProkaTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
 	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPROKAFILE) --loctreetxt $(LOCTREEPROKATXTFILE) \
 	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
-	  --swissprot-docs-keyindex $(SPKEYIDX) \
+	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
 	  --org proka \
 	  $(if $(DEBUG), --debug, )
 

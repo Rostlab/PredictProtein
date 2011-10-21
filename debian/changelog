@@ -1,6 +1,6 @@
-predictprotein (1.0.65) UNRELEASED; urgency=low
+predictprotein (1.0.65) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * --prosite-dat to give loctree the prosite.dat database path
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 21 Oct 2011 12:07:18 +0200
 

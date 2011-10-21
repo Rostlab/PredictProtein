@@ -30,6 +30,9 @@ profnumresmin=17
 # maximum length of input AA sequence, default: 6000
 numresmax=6000
 
+# prositedat: Path to `prosite.dat' file, see L<https://rostlab.org/owiki/index.php/Packages#Resource_definitions>
+prositedat=/mnt/project/rost_db/data/prosite/prosite.dat
+
 # prositeconvdat: Path to `prosite_convert.dat' file, see L<https://rostlab.org/owiki/index.php/Packages#Resource_definitions>
 prositeconvdat=/mnt/project/rost_db/data/prosite/prosite_convert.dat
 
