@@ -10,9 +10,9 @@ Homepage: http://www.predictprotein.org
 Package: predictprotein
 Architecture: all
 Pre-Depends: debconf (>= 0.5)
-Depends: ${shlibs:Depends}, ${misc:Depends}, blast2, bioperl, coiledcoils (>= 200208221855-rg6), disulfinder, hmmer (>= 3.0), hmmer2, libnhgri-blastall-perl, libnhgri-blastall-perl, librg-liu-bundle-perl, librg-pp-bundle-perl (>= 1.0.21), librg-utils-perl (>= 1.0.24), lowcompseg, make, metadisorder, norsnet, norsp, perl, predictnls, profasp, profbval (>= 1.0.15), profchop, profcon, profglobe, profisis, profphd, proftmb
-Recommends: pp-cache-mgr (>= 1.0.3), pp-popularity-contest, rost-runpsic (>= 1.0.2)
-Suggests: loctree (>= 1.0.11), profdisis, tmhmm (>= 2.0)
+Depends: ${shlibs:Depends}, ${misc:Depends}, blast2, bioperl, coiledcoils (>= 200208221855-rg6), disulfinder, hmmer (>= 3.0), hmmer2, libnhgri-blastall-perl, libnhgri-blastall-perl, librg-liu-bundle-perl, librg-pp-bundle-perl (>= 1.0.21), librg-utils-perl (>= 1.0.24), lowcompseg, make, metadisorder, norsnet, norsp, perl, predictnls, profasp, profbval (>= 1.0.15), profchop, profcon, profglobe, profisis, profphd, proftmb, rost-runpsic (>= 1.0.2)
+Recommends: pp-cache-mgr (>= 1.0.3), pp-popularity-contest
+Suggests: loctree (>= 1.0.19), profdisis, tmhmm (>= 2.0)
 Description: A suite of sequence analysis tools
  PredictProtein is a sequence analysis suite providing prediction of protein
  structure and function. It takes protein sequences or alignments as input
@@ -34,7 +34,3 @@ Description: A suite of sequence analysis tools
  loctree depends on SignalP (http://www.cbs.dtu.dk/services/SignalP/) that
  is non-redistributable.  Please obtain your own version and configure
  predictprotein accordingly.
- .
- The license of psic is unclear (unknown). psic works on clustalw output.
- clustalw is available only to non-commercial purposes - see its license.
- clustalw is in the [non-free] section of Debian.
