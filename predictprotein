@@ -645,7 +645,7 @@ These methods are run by the target 'optional'.
  --------                             -----------------
  prosite.dat                          --prositedat
  Swiss-Prot keyword-to-accession      --spkeyidx
-  'index'
+  'index' for loctree
 
 =head2 Output format
 
@@ -743,7 +743,7 @@ FASTA amino acid sequence file; if `-', standard input is read
 
 =item B<--spkeyidx>
 
-Swiss-Prot keyword-to-identifier 'index' file (e.g.) for loctree
+Swiss-Prot keyword-to-identifier 'index' file for loctree
 
 =item B<--target>=I<string>
 
