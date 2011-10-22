@@ -200,8 +200,11 @@ psic: $(PSICFILE) $(CLUSTALNGZ)
 .SECONDARY: $(PSICFILE) $(CLUSTALNGZ)
 %.psic %.clustalngz : $(FASTAFILE) $(BLASTFILE)
 	# lkajan: Yana's $(PSICEXE) fails when there are no blast hits - catch those conditions. Even in those conditions we have to make the targets, preferably in the expected format (compressed for clustalngz).
+	# lkajan: there's a blast in here - remove its empty error.log
+	trap "rm -f error.log" EXIT; \
 	$(PSICEXE) --use-blastfile $(BLASTFILE) --infile $< $(if $(DEBUG), --debug, ) --quiet --min-seqlen $(PROFNUMRESMIN) --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $(PSICFILE) --save-clustaln '$(CLUSTALNGZ)' --gzip-clustaln; \
 	RETVAL=$$?; \
+	if [ -s error.log ]; then cat error.log >&2; fi; \
 	case "$$RETVAL" in \
 	  253) MSG="blastpgp: No hits found"; echo $$MSG > $(PSICFILE); echo $$MSG | gzip -c > $(CLUSTALNGZ) ;; \
 	  254) MSG="sequence too short"; echo $$MSG > $(PSICFILE); echo $$MSG | gzip -c > $(CLUSTALNGZ) ;; \
