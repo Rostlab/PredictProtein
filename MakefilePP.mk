@@ -298,7 +298,7 @@ profglobe: $(GLOBEFILE)
 
 .SECONDARY: $(COILSFILE) $(COILSRAWFILE)
 %.coils %.coils_raw : $(FASTAFILE)
-	coils-wrap.pl -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE)
+	coils-wrap -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE)
 
 $(DISULFINDERFILE): $(BLASTMATFILE)
 	# lkajan: disulfinder now is talkative on STDERR showing progress - silence it when not DEBUG

@@ -579,7 +579,7 @@ These methods are run by the default target 'all'.
  Feature                Target            Extension               Man page
  -------                ------            ---------               --------
  atom mobility          profbval          profbval, profb4snap    profbval
- coiled-coils           coiledcoils       coils, coils_raw        coils-wrap.pl
+ coiled-coils           coiledcoils       coils, coils_raw        coils-wrap
                                                                   ncoils
  disulfide bridges      disulfinder       disulfinder             disulfinder
  disordered regions     metadisorder      mdisorder               metadisorder
