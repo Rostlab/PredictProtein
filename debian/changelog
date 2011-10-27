@@ -1,3 +1,9 @@
+predictprotein (1.0.68) unstable; urgency=low
+
+  * conflicts with coiledcoils
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 27 Oct 2011 20:24:16 +0200
+
 predictprotein (1.0.67) unstable; urgency=low
 
   * dep now on ncoils as a replacement of coiledcoils
