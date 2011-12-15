@@ -1,3 +1,10 @@
+predictprotein (1.0.69) unstable; urgency=low
+
+  * hmm3pfam moved to be an optional target because Bio-Linux dependencies
+    can not handle the upgrade to version 3 of it
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 15 Dec 2011 21:47:21 +0100
+
 predictprotein (1.0.68) unstable; urgency=low
 
   * conflicts with coiledcoils

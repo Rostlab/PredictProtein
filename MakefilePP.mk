@@ -123,7 +123,7 @@ PROFTMBCTRL :=
 # lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'standard' methods: those that are available through hard Debian dependencies.
 # lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction lowcompseg pfam profglobe saf sec-struct subcell-loc psic
+all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction lowcompseg hmm2pfam profglobe saf sec-struct subcell-loc psic
 
 .PHONY: blast
 blast: $(BLASTALIFILE) $(BLASTCHECKFILE) $(BLASTFILE) $(BLASTMATFILE) $(BLASTPSWISSM8)
@@ -161,7 +161,7 @@ subcell-loc:
 #           loctree depends on SignalP that is non-redistributable
 #           tmhmm is non-redistributable
 .PHONY: optional
-optional: loctree profdisis tmhmm
+optional: hmm3pfam loctree profdisis tmhmm
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
@@ -447,7 +447,7 @@ help:
 	@echo "disorder - run disorder predictors"
 	@echo "function - function prediction"
 	@echo "interaction - run binding site predictors"
-	@echo "pfam"
+	@echo "pfam, hmm2pfam, hmm3pfam"
 	@echo "profbval"
 	@echo "psic"
 	@echo "sec-struct - secondary structure prediction"

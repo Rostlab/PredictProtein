@@ -588,7 +588,6 @@ These methods are run by the default target 'all'.
   structure
  local complexity       lowcompseg        segNorm, segNormGCG     lowcompseg
  Pfam scan hmmer v2     hmm2pfam          hmm2pfam                hmm2pfam
- Pfam scan hmmer v3     hmm3pfam          hmm3pfam                hmmscan
  nuclear localization   predictnls        nls, nlsDat, nlsSum     predictnls
  conformational         profasp           asp                     profasp
   switches
@@ -615,10 +614,14 @@ These methods are run by the default target 'all'.
 
 These methods are non-redistributable or depend on non-redistributable software (indicated by '*').  You have to acquire the non-redistributable components yourself before you can use these methods.
 
+'Pfam scan hmmer v3' is also in this group becuase v3 of hmmer is not compatible with v2, however installing v3 of the tool replaces v2.  Dependent packages are unavare and are broken by this.  PredictProtein expects hmmer v2 in package 'hmmer2' and expects I<v3> of hmmer in the 'hmmer' package.
+
 These methods are run by the target 'optional'.
 
  Feature                Target            Extension               Man page
  -------                ------            ---------               --------
+ Pfam scan hmmer v3     hmm3pfam          hmm3pfam, hmm3pfamTbl,  hmmscan
+                                          hmm3pfamDomTbl
  subcellular            loctree           loctree{Animal,Plant,   loctree
   localization           |                 Proka}{,Txt}
                          svm-light5*                              svm_classify5
