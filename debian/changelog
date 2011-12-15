@@ -1,3 +1,9 @@
+predictprotein (1.0.70) unstable; urgency=low
+
+  * removed profchop dependency as we never actually called it
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 15 Dec 2011 22:09:07 +0100
+
 predictprotein (1.0.69) unstable; urgency=low
 
   * hmm3pfam moved to be an optional target because Bio-Linux dependencies

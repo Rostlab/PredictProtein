@@ -11,7 +11,7 @@ Package: predictprotein
 Architecture: all
 Conflicts: coiledcoils
 Pre-Depends: debconf (>= 0.5)
-Depends: ${shlibs:Depends}, ${misc:Depends}, blast2, bioperl, ncoils (>= 2002-3), disulfinder, hmmer2, libnhgri-blastall-perl, libnhgri-blastall-perl, librg-liu-bundle-perl, librg-pp-bundle-perl (>= 1.0.21), librg-utils-perl (>= 1.0.24), lowcompseg, make, metadisorder, norsnet, norsp, perl, predictnls, profasp, profbval (>= 1.0.15), profchop, profcon, profglobe, profisis, profphd, proftmb, rost-runpsic (>= 1.0.2)
+Depends: ${shlibs:Depends}, ${misc:Depends}, blast2, bioperl, ncoils (>= 2002-3), disulfinder, hmmer2, libnhgri-blastall-perl, libnhgri-blastall-perl, librg-liu-bundle-perl, librg-pp-bundle-perl (>= 1.0.21), librg-utils-perl (>= 1.0.24), lowcompseg, make, metadisorder, norsnet, norsp, perl, predictnls, profasp, profbval (>= 1.0.15), profcon, profglobe, profisis, profphd, proftmb, rost-runpsic (>= 1.0.2)
 Recommends: pp-cache-mgr (>= 1.0.3), pp-popularity-contest
 Suggests: hmmer (>= 3.0), loctree (>= 1.0.20), profdisis, tmhmm (>= 2.0)
 Description: A suite of sequence analysis tools
@@ -24,9 +24,8 @@ Description: A suite of sequence analysis tools
  coiled-coil regions, structural switch regions, disulfide-bonds, sub-cellular
  localization, disordered regions, B-value flexibility, protein-protein
  interaction sites and protein-DNA interaction sites. Upon request fold
- recognition by prediction-based threading, CHOP domain assignments,
- predictions of transmembrane strands and inter-residue contacts are also
- available. 
+ recognition by prediction-based threading, predictions of transmembrane
+ strands and inter-residue contacts are also available. 
  .
  tmhmm (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?tmhmm) is non-
  redistributable.  Please obtain your own version and configure
