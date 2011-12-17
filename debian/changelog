@@ -1,3 +1,9 @@
+predictprotein (1.0.71) unstable; urgency=low
+
+  * output dir for examples now /tmp/pp
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 15 Dec 2011 22:10:11 +0100
+
 predictprotein (1.0.70) unstable; urgency=low
 
   * removed profchop dependency as we never actually called it

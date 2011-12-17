@@ -885,9 +885,9 @@ Sequence is too short, shorter than minimum length required by prof. See B<--pro
 
 =head1 EXAMPLES
 
- predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --output-dir /tmp/$USER/pp 
+ predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --output-dir /tmp/pp 
 
- predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --method=profasp,ws=3 --output-dir /tmp/$USER/pp 
+ predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --method=profasp,ws=3 --output-dir /tmp/pp 
 
 =head2 Cache examples
 
@@ -899,7 +899,7 @@ Sequence is too short, shorter than minimum length required by prof. See B<--pro
 
 =item If not in cache store, otherwise fetch results from cache into B<--output-dir>:
 
- predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --method=profasp,ws=3 --use-cache --setacl g:rostlab:7 --output-dir /tmp/$USER/pp
+ predictprotein --seqfile __pkgdatadir__/example/tquick.fasta --method=profasp,ws=3 --use-cache --setacl g:rostlab:7 --output-dir /tmp/pp
 
 =back
 
