@@ -578,37 +578,41 @@ These methods are run by the default target 'all'.
 
  Feature                Target            Extension               Man page
  -------                ------            ---------               --------
- atom mobility          profbval          profbval, profb4snap    profbval
- coiled-coils           coiledcoils       coils, coils_raw        coils-wrap
-                                                                  ncoils
- disulfide bridges      disulfinder       disulfinder             disulfinder
- disordered regions     metadisorder      mdisorder               metadisorder
- unstructured loops     norsnet           norsnet                 norsnet
- non-regular secondary  norsp             nors, sumNors           norsp
-  structure
- local complexity       lowcompseg        segNorm, segNormGCG     lowcompseg
- Pfam scan hmmer v2     hmm2pfam          hmm2pfam                hmm2pfam
- nuclear localization   predictnls        nls, nlsDat, nlsSum     predictnls
- conformational         profasp           asp                     profasp
+ atom mobility          profbval          profbval, profb4snap    profbval(1)
+ bacterial transmem-    proftmb           proftmb                 proftmb(1)
+  brane beta barrels
+ coiled-coils           coiledcoils       coils, coils_raw        coils-wrap(1)
+                                                                  ncoils(1)
+ conformational         profasp           asp                     profasp(1)
   switches
- protein globularity    profglobe         globe                   profglobe
- protein-protein        profisis          isis                    profisis
+ disulfide bridges      disulfinder       disulfinder             disulfinder(1)
+ disordered regions     metadisorder      mdisorder               metadisorder(1)
+ local alignment        blast             blastPsiOutTmp, chk,    blastpgp(1)
+                                          blastPsiMat,
+                                          blastPsiAli,
+                                          blastpSwissM8           blastall(1)
+ local complexity       lowcompseg        segNorm, segNormGCG     lowcompseg(1)
+ non-regular secondary  norsp             nors, sumNors           norsp(1)
+  structure
+ nuclear localization   predictnls        nls, nlsDat, nlsSum     predictnls(1)
+ Pfam scan hmmer v2     hmm2pfam          hmm2pfam                hmm2pfam(1)
+ position-specific      psic              psic, clustalngz        psic(1),
+  independent counts                                              runNewPSIC(1),
+  and its base multi-                                             clustalw(1)
+  ple alignment
+ PROSITE scan           prosite           prosite                 prosite_scan(1)
+ protein globularity    profglobe         globe                   profglobe(1)
+ protein-protein        profisis          isis                    profisis(1)
   interaction sites
- secondary structure,   prof              profRdb                 prof
+ secondary structure,   prof              profRdb                 prof(1)
   accessibility from
-  multiple hits
- secondary structure,   prof              prof1Rdb                prof
+  sequence profile
+ secondary structure,   prof              prof1Rdb                prof(1)
   accessibility from
   single sequence
- transmembrane          phd               phdPred, phdRdb         prof
+ transmembrane          phd               phdPred, phdRdb         prof(1)
   helices
- bacterial transmem-    proftmb           proftmb                 proftmb
-  brane beta barrels
- PROSITE scan           prosite           prosite                 prosite_scan
- position-specific      psic              psic, clustalngz        psic,
-  independent counts                                              runNewPSIC,
-  and its base multi-                                             clustalw
-  ple alignment
+ unstructured loops     norsnet           norsnet                 norsnet(1)
 
 =head2 Optional methods
 
@@ -620,15 +624,15 @@ These methods are run by the target 'optional'.
 
  Feature                Target            Extension               Man page
  -------                ------            ---------               --------
- Pfam scan hmmer v3     hmm3pfam          hmm3pfam, hmm3pfamTbl,  hmmscan
+ Pfam scan hmmer v3     hmm3pfam          hmm3pfam, hmm3pfamTbl,  hmmscan(1)
                                           hmm3pfamDomTbl
- subcellular            loctree           loctree{Animal,Plant,   loctree
+ subcellular            loctree           loctree{Animal,Plant,   loctree(1)
   localization           |                 Proka}{,Txt}
-                         svm-light5*                              svm_classify5
+                         svm-light5*                              svm_classify5(1)
                          tmhmm*           tmhmm
- protein-DNA            profdisis         disis                   profdisis
+ protein-DNA            profdisis         disis                   profdisis(1)
   interaction sites      |
-                         svm-light5*                              svm_classify5
+                         svm-light5*                              svm_classify5(1)
 
 =head2 Resources
 
