@@ -1,3 +1,9 @@
+predictprotein (1.0.74) unstable; urgency=low
+
+  * fixed proftmb Makefile rule bug
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 17 Feb 2012 17:12:45 +0100
+
 predictprotein (1.0.73) unstable; urgency=low
 
   * Reconfigure to work with HHomp-compatible (newer) proftmb.

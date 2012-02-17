@@ -235,7 +235,7 @@ proftmb: $(PROFTMBFILE) $(PROFTMBDATFILE)
 
 .SECONDARY: $(PROFTMBFILE) $(PROFTMBDATFILE)
 %.proftmb %.proftmbdat: $(BLASTMATFILE)
-	proftmb -d /usr/share/proftmb -a StateRedux4 -b ReduxDecode4 -m StrandStates -z Swiss_Zcurve -x ZCalibration -n bact.comp -c 4 -s Swiss8.arch -t Swiss8.params -w '$(JOBID)' $(PROFTMBCTRL) -q '$<' --outfile-pretty '$@' --outfile-tab '' --outfile-dat '$(PROFTMBDATFILE)' --quiet
+	proftmb -d /usr/share/proftmb -a StateRedux4 -b ReduxDecode4 -m StrandStates -z Swiss_Zcurve -x ZCalibration -n bact.comp -c 4 -s Swiss8.arch -t Swiss8.params -w '$(JOBID)' $(PROFTMBCTRL) -q '$<' --outfile-pretty '$(PROFTMBFILE)' --outfile-tab '' --outfile-dat '$(PROFTMBDATFILE)' --quiet
 
 $(ISISFILE): $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE)
 	profisis $(PROFISISCTRL) --fastafile $(FASTAFILE)  --rdbproffile $(PROFFILE) --hsspfile $(HSSPFILTERFILE)  --outfile $@
