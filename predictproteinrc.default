@@ -18,9 +18,6 @@ bigblastdb=/mnt/project/rost_db/data/blast/big
 # big80blastdb: Path to comprehensive blast database at 80% sequence identity redundancy level
 big80blastdb=/mnt/project/rost_db/data/blast/big_80
 
-# path to proftmb 
-proftmb=/usr/share/proftmb/
-
 # path to profphd 
 prof=/usr/share/profphd/prof/
 

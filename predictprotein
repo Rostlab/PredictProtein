@@ -63,6 +63,7 @@ our %meth_ext_hash = (
   prof1Rdb => 'prof',
   profRdb => 'prof',
   proftmb => 'proftmb',
+  proftmbdat => 'proftmb',
   prosite => 'prosite',
   psic => 'psic',
   safBlastPsi => 'blastpgp',
@@ -103,7 +104,6 @@ my $pfam3db = glob($config->val('predictprotein', 'pfam3db'));
 my $prodomblastdb; # obsolete, kept here to not break interfaces that still use this cmd line option
 my $prof_app_root = glob($config->val('predictprotein', 'prof'));
 my $profnumresmin = $config->val('predictprotein', 'profnumresmin') || 17;
-my $proftmb_app_root = glob($config->val('predictprotein', 'proftmb'));
 my $prositedat = glob( $config->val('predictprotein', 'prositedat' ) );
 my $prositeconvdat = glob( $config->val('predictprotein', 'prositeconvdat' ) );
 my $psicexe = glob( $config->val('predictprotein', 'psicexe' ) );
@@ -337,7 +337,6 @@ push (@cmd, "LIBRGUTILS=".$librg_utils_perl);
 push (@cmd, "PPROOT=".$pp_rootdir);
 push (@cmd, "PROFNUMRESMIN=$profnumresmin");
 push (@cmd, "PROFROOT=".$prof_app_root);
-push (@cmd, "PROFTMBROOT=".$proftmb_app_root);
 # resource locations e.g. BIGBLASTDB, BIG80BLASTDB, PROSITECONVDAT, SWISSBLASTDB
 if( $bigblastdb ){ push @cmd, "BIGBLASTDB=$bigblastdb"; }
 if( $big80blastdb ){ push @cmd, "BIG80BLASTDB=$big80blastdb"; }
@@ -579,7 +578,7 @@ These methods are run by the default target 'all'.
  Feature                Target            Extension               Man page
  -------                ------            ---------               --------
  atom mobility          profbval          profbval, profb4snap    profbval(1)
- bacterial transmem-    proftmb           proftmb                 proftmb(1)
+ bacterial transmem-    proftmb           proftmb, proftmbdat     proftmb(1)
   brane beta barrels
  coiled-coils           coiledcoils       coils, coils_raw        coils-wrap(1)
                                                                   ncoils(1)

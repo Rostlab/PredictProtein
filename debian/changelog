@@ -1,3 +1,9 @@
+predictprotein (1.0.73) unstable; urgency=low
+
+  * Reconfigure to work with HHomp-compatible (newer) proftmb.
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 17 Feb 2012 16:03:47 +0100
+
 predictprotein (1.0.72) unstable; urgency=low
 
   * Changed section to non-free/science.

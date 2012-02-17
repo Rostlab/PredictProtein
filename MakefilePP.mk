@@ -22,7 +22,6 @@ PPROOT:=/usr/share/predictprotein
 HELPERAPPSDIR:=$(PPROOT)/helper_apps/
 LIBRGUTILS:=/usr/share/librg-utils-perl/
 PROFROOT:=/usr/share/profphd/prof/
-PROFTMBROOT:=/usr/share/proftmb/
 
 # DATA (CONFIGURABLE)
 BIGBLASTDB:=/mnt/project/rost_db/data/blast/big
@@ -92,6 +91,7 @@ PROFTEXTFILE:=$(INFILE:%.in=%.profAscii)
 # profcon is very slow and it is said not to have much effect on md results - so we do not run it
 PROFCONFILE:=$(INFILE:%.in=%.profcon)
 PROFTMBFILE:=$(INFILE:%.in=%.proftmb)
+PROFTMBDATFILE:=$(INFILE:%.in=%.proftmbdat)
 PCCFILE:=$(INFILE:%.in=%.pcc)
 LOCTREEANIMALFILE:=$(INFILE:%.in=%.loctreeAnimal)
 LOCTREEANIMALTXTFILE:=$(INFILE:%.in=%.loctreeAnimalTxt)
@@ -230,11 +230,12 @@ tmhmm: $(TMHMMFILE)
 $(TMHMMFILE): $(FASTAFILE)
 	trap "rm -rf '$(TMHMMDIR)'" EXIT; tmhmm --workdir=$(TMHMMDIR) --nohtml --noplot $< > $@
 
-$(PROFTMBFILE):  $(BLASTMATFILE)
-	proftmb @$(PROFTMBROOT)/options $(PROFTMBCTRL) -q $< -o $@ --quiet
-
 .PHONY: proftmb
-proftmb: $(PROFTMBFILE)
+proftmb: $(PROFTMBFILE) $(PROFTMBDATFILE)
+
+.SECONDARY: $(PROFTMBFILE) $(PROFTMBDATFILE)
+%.proftmb %.proftmbdat: $(BLASTMATFILE)
+	proftmb -d /usr/share/proftmb -a StateRedux4 -b ReduxDecode4 -m StrandStates -z Swiss_Zcurve -x ZCalibration -n bact.comp -c 4 -s Swiss8.arch -t Swiss8.params -w '$(JOBID)' $(PROFTMBCTRL) -q '$<' --outfile-pretty '$@' --outfile-tab '' --outfile-dat '$(PROFTMBDATFILE)' --quiet
 
 $(ISISFILE): $(FASTAFILE) $(PROFFILE) $(HSSPFILTERFILE)
 	profisis $(PROFISISCTRL) --fastafile $(FASTAFILE)  --rdbproffile $(PROFFILE) --hsspfile $(HSSPFILTERFILE)  --outfile $@
@@ -429,7 +430,7 @@ install:
 		$(PHDFILE) $(PHDNOTHTMFILE) $(PHDRDBFILE) \
 		$(PROFTEXTFILE) $(PROFFILE) $(PROF1FILE) \
 		$(PROFBVALFILE) \
-		$(PROFTMBFILE) \
+		$(PROFTMBFILE) $(PROFTMBDATFILE) \
 		$(PROSITEFILE) \
 		$(PSICFILE) $(CLUSTALNGZ) \
 		$(SAFFILE) $(SAF80FILE) \
