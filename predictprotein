@@ -595,6 +595,8 @@ These methods are run by the default target 'all'.
   structure
  nuclear localization   predictnls        nls, nlsDat, nlsSum     predictnls(1)
  Pfam scan hmmer v2     hmm2pfam          hmm2pfam                hmm2pfam(1)
+ protein-DNA            profdisis         disis                   profdisis(1)
+  interaction sites
  position-specific      psic              psic, clustalngz        psic(1),
   independent counts                                              runNewPSIC(1),
   and its base multi-                                             clustalw(1)
@@ -627,11 +629,7 @@ These methods are run by the target 'optional'.
                                           hmm3pfamDomTbl
  subcellular            loctree           loctree{Animal,Plant,   loctree(1)
   localization           |                 Proka}{,Txt}
-                         svm-light5*                              svm_classify5(1)
                          tmhmm*           tmhmm
- protein-DNA            profdisis         disis                   profdisis(1)
-  interaction sites      |
-                         svm-light5*                              svm_classify5(1)
 
 =head2 Resources
 

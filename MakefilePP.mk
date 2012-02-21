@@ -142,7 +142,7 @@ hssp: $(HSSPFILE) $(HSSP80FILE) $(HSSPFILTERFILE)
 html: $(BLASTFILERDB)
 
 .PHONY: interaction
-interaction: profisis
+interaction: profdisis profisis
 
 .PHONY: pfam
 pfam: hmm2pfam hmm3pfam
@@ -161,7 +161,7 @@ subcell-loc:
 #           loctree depends on SignalP that is non-redistributable
 #           tmhmm is non-redistributable
 .PHONY: optional
-optional: hmm3pfam loctree profdisis tmhmm
+optional: hmm3pfam loctree tmhmm
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)

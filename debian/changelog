@@ -1,3 +1,9 @@
+predictprotein (1.0.75) unstable; urgency=low
+
+  * profdisis target now in 'all' as svm-light5 is now redistributable by us
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Tue, 21 Feb 2012 13:29:31 +0100
+
 predictprotein (1.0.74) unstable; urgency=low
 
   * fixed proftmb Makefile rule bug
