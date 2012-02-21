@@ -1,3 +1,9 @@
+predictprotein (1.0.76) unstable; urgency=low
+
+  * Depends on profdisis
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Tue, 21 Feb 2012 14:06:07 +0100
+
 predictprotein (1.0.75) unstable; urgency=low
 
   * profdisis target now in 'all' as svm-light5 is now redistributable by us
