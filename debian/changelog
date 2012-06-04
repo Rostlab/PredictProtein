@@ -1,3 +1,10 @@
+predictprotein (1.0.77) unstable; urgency=low
+
+  * Added reprof in alpha mode
+
+ -- Guy Yachdav <gyachdav@rostlab.org>  Mon, 4 Jun 2012 21:03:15 +0200
+ 
+ 
 predictprotein (1.0.76) unstable; urgency=low
 
   * Depends on profdisis

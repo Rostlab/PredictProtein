@@ -55,6 +55,7 @@ PHDRDBFILE:=$(INFILE:%.in=%.phdRdb)
 # lkajan: never make PHDNOTHTMFILE a target - its creation depends on whether phd found an HTM region or not: it isn't always created
 PHDNOTHTMFILE:=$(INFILE:%.in=%.phdNotHtm)
 PROFFILE:=$(INFILE:%.in=%.profRdb)
+REPROFFILE:=$(INFILE:%.in=%.reprof)
 # prof output generated explicitely from one sequence - NO alignment - Chris Schaefer initiated this - B approved
 PROF1FILE:=$(INFILE:%.in=%.prof1Rdb)
 ASPFILE:=$(INFILE:%.in=%.asp)
@@ -337,8 +338,14 @@ $(PROFFILE): $(HSSPFILTERFILE)
 $(PROF1FILE): $(FASTAFILE)
 	prof $< both fileRdb=$@ $(if $(DEBUG), 'dbg', ) numresMin=$(PROFNUMRESMIN) nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=.
 
+## Eperimental starting V1.0.77 new SS predictor
+$(REPROFFILE): $(BLASTMATFILE)
+	reprof -i $< -o $@
+
 .PHONY: prof
-prof: $(PROFFILE) $(PROF1FILE)
+prof: $(PROFFILE) $(PROF1FILE) $(REPROFFILE)
+
+
 
 $(PROFTEXTFILE): $(PROFFILE)
 	# conv_prof creates query.profAscii.tmp in case query.profAscii already exists - make sure it does not
