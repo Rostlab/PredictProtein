@@ -1,9 +1,14 @@
 predictprotein (1.0.77) unstable; urgency=low
 
-  * Added reprof in alpha mode
+  * [Laszlo Kajan <lkajan@rostlab.org>]
+    Demoting pp-cache-mgr dependency to Suggests - as this pack is not
+    necessary for the default configuration and should not be pulled in
+    automatically because of 'Recommends'.
+
+  * [Guy Yachdav <gyachdav@rostlab.org>]
+    Added reprof in alpha mode
 
  -- Guy Yachdav <gyachdav@rostlab.org>  Mon, 4 Jun 2012 21:03:15 +0200
- 
  
 predictprotein (1.0.76) unstable; urgency=low
 
