@@ -118,7 +118,7 @@ my $make_file = $root_dir."/MakefilePP.mk";
 my $work_dir;
 
 # COMMAND LINE OPTIONS
-my( $help, $man, $dbg, $dry_run, $prot_name, $makedebug, @method, $output_dir, $seqfile, $sequence_in, $setacl, @target, $version);
+my( $help, $man, $dbg, $dry_run, $prot_name, $makedebug, @method, $output_dir, $print_ext_method_map, $seqfile, $sequence_in, $setacl, @target, $version);
 #my $input_file;
 
 my $cache_merge_cl;
@@ -150,6 +150,7 @@ my $result = GetOptions (
 			    "p|prot-name=s" =>\$prot_name,
           "pfam2db=s" => \$pfam2db,
           "pfam3db=s" => \$pfam3db,
+          "print-ext-method-map!" => \$print_ext_method_map,
           "prodomblastdb=s" => \$prodomblastdb, # kept for compatibility
           "profnumresmin=i" => \$profnumresmin,
           "prositedat=s" => \$prositedat,
@@ -180,6 +181,8 @@ this system using "man predictprotein" or at http://www.predictprotein.org/.
 |;
     exit (0);
 }
+
+if( $print_ext_method_map ) { foreach my $ext ( sort{$a cmp $b}(keys(%meth_ext_hash)) ){ print $ext, "\t", $meth_ext_hash{$ext}, "\n"; }; exit(0); }
 
 if( $seqfile )
 {
@@ -722,6 +725,10 @@ Maximum sequence length, default: I<6000>. Sequences longer than this will make 
 =item B<-o>, B<--output-dir>
 
 Final location of outputfiles, required unless caching is used.
+
+=item B<--print-ext-method-map>
+
+Print externsion-to-method map.  Useful as input file for consistency checkers.  Format: <extension><tab><method>.
 
 =item B<--profnumresmin>
 

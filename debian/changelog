@@ -1,3 +1,9 @@
+predictprotein (1.0.78) UNRELEASED; urgency=low
+
+  * Added --print-ext-method-map cmd line argument.
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Tue, 19 Jun 2012 11:24:31 +0200
+
 predictprotein (1.0.77) unstable; urgency=low
 
   * [Laszlo Kajan <lkajan@rostlab.org>]
