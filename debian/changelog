@@ -1,6 +1,7 @@
 predictprotein (1.0.78) UNRELEASED; urgency=low
 
   * Added --print-ext-method-map cmd line argument.
+  * profcon is now a Suggests
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Tue, 19 Jun 2012 11:24:31 +0200
 
