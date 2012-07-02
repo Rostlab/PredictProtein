@@ -576,7 +576,7 @@ predictprotein runs a set of protein sequnce analysis methods:
 
 =head2 Standard methods
 
-These methods are run by the default target 'all'.
+These methods are run by the default target 'all':
 
  Feature                Target            Extension               Man page
  -------                ------            ---------               --------
@@ -598,12 +598,8 @@ These methods are run by the default target 'all'.
   structure
  nuclear localization   predictnls        nls, nlsDat, nlsSum     predictnls(1)
  Pfam scan hmmer v2     hmm2pfam          hmm2pfam                hmm2pfam(1)
- protein-DNA            profdisis         disis                   profdisis(1)
-  interaction sites
- position-specific      psic              psic, clustalngz        psic(1),
-  independent counts                                              runNewPSIC(1),
-  and its base multi-                                             clustalw(1)
-  ple alignment
+ Pfam scan hmmer v3     hmm3pfam          hmm3pfam, hmm3pfamTbl,  hmmscan(1)
+                                          hmm3pfamDomTbl
  PROSITE scan           prosite           prosite                 prosite_scan(1)
  protein globularity    profglobe         globe                   profglobe(1)
  protein-protein        profisis          isis                    profisis(1)
@@ -622,17 +618,20 @@ These methods are run by the default target 'all'.
 
 These methods are non-redistributable or depend on non-redistributable software (indicated by '*').  You have to acquire the non-redistributable components yourself before you can use these methods.
 
-'Pfam scan hmmer v3' is also in this group becuase v3 of hmmer is not compatible with v2, however installing v3 of the tool replaces v2.  Dependent packages are unavare and are broken by this.  PredictProtein expects hmmer v2 in package 'hmmer2' and expects I<v3> of hmmer in the 'hmmer' package.
-
 These methods are run by the target 'optional'.
 
  Feature                Target            Extension               Man page
  -------                ------            ---------               --------
- Pfam scan hmmer v3     hmm3pfam          hmm3pfam, hmm3pfamTbl,  hmmscan(1)
-                                          hmm3pfamDomTbl
  subcellular            loctree           loctree{Animal,Plant,   loctree(1)
   localization           |                 Proka}{,Txt}
                          tmhmm*           tmhmm
+ protein-DNA            profdisis         disis                   profdisis(1)
+  interaction sites
+ position-specific      psic*             psic, clustalngz        psic(1),
+  independent counts                                              runNewPSIC(1),
+  and its base multi-                                             clustalw(1)
+  ple alignment
+ transmembrane helices  tmhmm             tmhmm                   n.a.
 
 =head2 Resources
 
@@ -650,6 +649,7 @@ These methods are run by the target 'optional'.
 
  Database                             Cmd line argument
  --------                             -----------------
+ big (Uniprot+PDB) blast database     --bigblastdb
  prosite.dat                          --prositedat
  Swiss-Prot keyword-to-accession      --spkeyidx
   'index' for loctree

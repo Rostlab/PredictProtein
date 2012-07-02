@@ -1,8 +1,10 @@
-predictprotein (1.0.78) UNRELEASED; urgency=low
+predictprotein (1.0.78) unstable; urgency=low
 
   * Added --print-ext-method-map cmd line argument.
   * Removed unnecessary libnhgri-blastall-perl dependency.
   * profcon is no longer a dependency of any sort.
+  * hmm3pfam is now a default target. Promoted Suggests: of hmmer to Depends:.
+  * disis back to Suggests and an optional target because of svm-light5 dependency that can not make it into Debian (non-redistributable).
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Tue, 19 Jun 2012 11:24:31 +0200
 

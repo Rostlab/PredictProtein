@@ -124,7 +124,7 @@ PROFTMBCTRL :=
 # lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'standard' methods: those that are available through hard Debian dependencies.
 # lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction lowcompseg hmm2pfam profglobe saf sec-struct subcell-loc psic
+all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp lowcompseg pfam profglobe profisis saf sec-struct subcell-loc
 
 .PHONY: blast
 blast: $(BLASTALIFILE) $(BLASTCHECKFILE) $(BLASTFILE) $(BLASTMATFILE) $(BLASTPSWISSM8)
@@ -159,10 +159,15 @@ subcell-loc:
 
 # optional: these targets may not work in case the packages that provide them are missing - these packages are not hard requirements of PP
 #           These packages are usually non-redistributable or have some other problem with them.
-#           loctree depends on SignalP that is non-redistributable
+#           loctree depends on SignalP
+#           profdisis depends on svm-light5
+#
+#           psic is non-redistributable
+#           SignalP is non-redistributable
+#           svm-light5 is non-redistributable but there is an exception for the Rost Lab
 #           tmhmm is non-redistributable
 .PHONY: optional
-optional: hmm3pfam loctree tmhmm
+optional: loctree profdisis psic tmhmm
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
@@ -343,9 +348,7 @@ $(REPROFFILE): $(BLASTMATFILE)
 	reprof -i $< -o $@
 
 .PHONY: prof
-prof: $(PROFFILE) $(PROF1FILE) $(REPROFFILE)
-
-
+prof: $(PROFFILE) $(PROF1FILE)
 
 $(PROFTEXTFILE): $(PROFFILE)
 	# conv_prof creates query.profAscii.tmp in case query.profAscii already exists - make sure it does not

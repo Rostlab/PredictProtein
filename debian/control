@@ -11,9 +11,9 @@ Package: predictprotein
 Architecture: all
 Conflicts: coiledcoils
 Pre-Depends: debconf (>= 0.5)
-Depends: ${shlibs:Depends}, ${misc:Depends}, blast2, bioperl, ncoils (>= 2002-3), disulfinder, hmmer2, librg-liu-bundle-perl, librg-pp-bundle-perl (>= 1.0.21), librg-utils-perl (>= 1.0.24), lowcompseg, make, metadisorder, norsnet, norsp, perl, predictnls, profasp, profbval (>= 1.0.15), profdisis, profglobe, profisis, profphd, proftmb (>= 1.1.9-1), rost-runpsic (>= 1.0.2)
+Depends: ${shlibs:Depends}, ${misc:Depends}, blast2, bioperl, ncoils (>= 2002-3), disulfinder, hmmer (>= 3.0), hmmer2, librg-liu-bundle-perl, librg-pp-bundle-perl (>= 1.0.21), librg-utils-perl (>= 1.0.24), lowcompseg, make, metadisorder, norsnet, norsp, perl, predictnls, profasp, profbval (>= 1.0.15), profglobe, profisis, profphd, proftmb (>= 1.1.9-1)
 Recommends: pp-popularity-contest
-Suggests: hmmer (>= 3.0), loctree (>= 1.0.20), pp-cache-mgr (>= 1.0.3), tmhmm (>= 2.0)
+Suggests: loctree (>= 1.0.20), pp-cache-mgr (>= 1.0.3), profdisis, rost-runpsic (>= 1.0.5), tmhmm (>= 2.0)
 Description: A suite of sequence analysis tools
  PredictProtein is a sequence analysis suite providing prediction of protein
  structure and function. It takes protein sequences or alignments as input
