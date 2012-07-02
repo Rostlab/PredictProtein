@@ -588,7 +588,6 @@ These methods are run by the default target 'all':
  conformational         profasp           asp                     profasp(1)
   switches
  disulfide bridges      disulfinder       disulfinder             disulfinder(1)
- disordered regions     metadisorder      mdisorder               metadisorder(1)
  local alignment        blast             blastPsiOutTmp, chk,    blastpgp(1)
                                           blastPsiMat,
                                           blastPsiAli,
@@ -622,6 +621,7 @@ These methods are run by the target 'optional'.
 
  Feature                Target            Extension               Man page
  -------                ------            ---------               --------
+ disordered regions     metadisorder      mdisorder               metadisorder(1)
  subcellular            loctree           loctree{Animal,Plant,   loctree(1)
   localization           |                 Proka}{,Txt}
                          tmhmm*           tmhmm

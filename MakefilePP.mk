@@ -123,13 +123,13 @@ PROFTMBCTRL :=
 # lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'standard' methods: those that are available through hard Debian dependencies.
 # lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp lowcompseg pfam profglobe profisis saf sec-struct subcell-loc
+all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction lowcompseg pfam profglobe saf sec-struct subcell-loc
 
 .PHONY: blast
 blast: $(BLASTALIFILE) $(BLASTCHECKFILE) $(BLASTFILE) $(BLASTMATFILE) $(BLASTPSWISSM8)
 
 .PHONY: disorder
-disorder: metadisorder norsnet profasp profbval norsp
+disorder: norsnet profasp profbval norsp
 
 .PHONY: function
 function: disulfinder predictnls prosite
@@ -142,7 +142,7 @@ hssp: $(HSSPFILE) $(HSSP80FILE) $(HSSPFILTERFILE)
 html: $(BLASTFILERDB)
 
 .PHONY: interaction
-interaction: profdisis profisis
+interaction: profisis
 
 .PHONY: pfam
 pfam: hmm2pfam hmm3pfam
@@ -165,8 +165,10 @@ subcell-loc:
 #           SignalP is non-redistributable
 #           svm-light5 is non-redistributable but there is an exception for the Rost Lab
 #           tmhmm is non-redistributable
+#
+# Optional targets should never appear in other aggregate targets (such as 'interaction').
 .PHONY: optional
-optional: loctree profdisis psic tmhmm
+optional: loctree metadisorder profdisis psic tmhmm
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
