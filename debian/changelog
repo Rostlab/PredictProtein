@@ -1,3 +1,9 @@
+predictprotein (1.0.79) UNRELEASED; urgency=low
+
+  * reprof integration moved to its own branch while experimental
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 02 Jul 2012 16:10:40 +0200
+
 predictprotein (1.0.78) unstable; urgency=low
 
   * Added --print-ext-method-map cmd line argument.
