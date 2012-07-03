@@ -129,7 +129,7 @@ all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp in
 blast: $(BLASTALIFILE) $(BLASTCHECKFILE) $(BLASTFILE) $(BLASTMATFILE) $(BLASTPSWISSM8)
 
 .PHONY: disorder
-disorder: norsnet profasp profbval norsp
+disorder: norsnet profbval norsp
 
 .PHONY: function
 function: disulfinder predictnls prosite
@@ -168,7 +168,7 @@ subcell-loc:
 #
 # Optional targets should never appear in other aggregate targets (such as 'interaction').
 .PHONY: optional
-optional: loctree metadisorder profdisis psic tmhmm
+optional: loctree metadisorder profasp psic tmhmm
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)

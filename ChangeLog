@@ -2,8 +2,7 @@ predictprotein (1.0.79) UNRELEASED; urgency=low
 
   * reprof integration moved to its own branch while experimental
   * metadisorder a Suggests: because it is non-redistributable for all.
-  * Removing disis Suggests per Burkhard's request: we do not trust the
-    method any more, Yanay had some funny results with the packaged version.
+  * profasp is not ours, license unknown, moving to optional and Suggests.
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 02 Jul 2012 16:10:40 +0200
 
