@@ -123,7 +123,7 @@ PROFTMBCTRL :=
 # lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'standard' methods: those that are available through hard Debian dependencies.
 # lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction lowcompseg pfam profglobe saf sec-struct subcell-loc
+all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction lowcompseg pfam saf sec-struct subcell-loc
 
 .PHONY: blast
 blast: $(BLASTALIFILE) $(BLASTCHECKFILE) $(BLASTFILE) $(BLASTMATFILE) $(BLASTPSWISSM8)
@@ -298,11 +298,12 @@ $(BLASTPSWISSM8): $(FASTAFILE)
 		EXIT=$$?; cat error.log >&2; exit $$EXIT; \
 	fi
 
-$(GLOBEFILE) : $(PROFFILE) 
-	profglobe $(PROFGLOBECTRL) --prof_file $<  --output_file $@
-
-.PHONY: profglobe
-profglobe: $(GLOBEFILE)
+# lkajan 20120703: Burkhard says profglobe should not be released under the GPL - support is terminated.
+#$(GLOBEFILE) : $(PROFFILE) 
+#	profglobe $(PROFGLOBECTRL) --prof_file $<  --output_file $@
+#
+#.PHONY: profglobe
+#profglobe: $(GLOBEFILE)
 
 .SECONDARY: $(COILSFILE) $(COILSRAWFILE)
 %.coils %.coils_raw : $(FASTAFILE)

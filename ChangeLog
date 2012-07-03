@@ -3,6 +3,7 @@ predictprotein (1.0.79) UNRELEASED; urgency=low
   * reprof integration moved to its own branch while experimental
   * metadisorder a Suggests: because it is non-redistributable for all.
   * profasp is not ours, license unknown, moving to optional and Suggests.
+  * profglobe should be out, Burkhard says.
 
  -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 02 Jul 2012 16:10:40 +0200
 
