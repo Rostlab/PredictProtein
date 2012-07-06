@@ -31,7 +31,6 @@ our %meth_ext_hash = (
   disis => 'profdisis',
   disulfinder => 'disulfinder',
   fasta => 'input',
-  globe => 'profglobe',
   hmm2pfam => 'hmmer',
   hmm3pfam => 'hmmer',
   hmm3pfamTbl => 'hmmer',
@@ -600,7 +599,6 @@ These methods are run by the default target 'all':
  Pfam scan hmmer v3     hmm3pfam          hmm3pfam, hmm3pfamTbl,  hmmscan(1)
                                           hmm3pfamDomTbl
  PROSITE scan           prosite           prosite                 prosite_scan(1)
- protein globularity    profglobe         globe                   profglobe(1)
  protein-protein        profisis          isis                    profisis(1)
   interaction sites
  secondary structure,   prof              profRdb                 prof(1)

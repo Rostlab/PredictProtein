@@ -62,7 +62,6 @@ NORSFILE:=$(INFILE:%.in=%.nors)
 NORSSUMFILE:=$(INFILE:%.in=%.sumNors)
 NORSNETFILE:=$(INFILE:%.in=%.norsnet)
 PROSITEFILE:=$(INFILE:%.in=%.prosite)
-GLOBEFILE:=$(INFILE:%.in=%.globe)
 SEGFILE:=$(INFILE:%.in=%.segNorm)
 SEGGCGFILE:=$(INFILE:%.in=%.segNormGCG)
 # this file is output from the first blastpgp call with 3 iterations
@@ -116,7 +115,6 @@ PROFCTRL := "NOT APPLICABLE"
 PROFASPCTRL := --ws=5 --z=-1.75 --min=9
 PROFBVALCTRL := "NOT APPLICABLE"
 PROFDISISCTRL :=
-PROFGLOBECTRL :=
 PROFISISCTRL :=
 PROFTMBCTRL :=
 
@@ -298,13 +296,6 @@ $(BLASTPSWISSM8): $(FASTAFILE)
 		EXIT=$$?; cat error.log >&2; exit $$EXIT; \
 	fi
 
-# lkajan 20120703: Burkhard says profglobe should not be released under the GPL - support is terminated.
-#$(GLOBEFILE) : $(PROFFILE) 
-#	profglobe $(PROFGLOBECTRL) --prof_file $<  --output_file $@
-#
-#.PHONY: profglobe
-#profglobe: $(GLOBEFILE)
-
 .SECONDARY: $(COILSFILE) $(COILSRAWFILE)
 %.coils %.coils_raw : $(FASTAFILE)
 	coils-wrap -m MTIDK -i $< -o $(COILSFILE) -r $(COILSRAWFILE)
@@ -429,7 +420,6 @@ install:
 		$(DISISFILE) \
 		$(DISULFINDERFILE) \
 		$(FASTAFILE) \
-		$(GLOBEFILE) \
 		$(HMM2PFAM) $(HMM3PFAM) $(HMM3PFAMTBL) $(HMM3PFAMDOMTBL) \
 		$(HSSPFILE) $(HSSP80FILE) $(HSSPFILTERFILE) \
 		$(INFILE) \

@@ -9,7 +9,8 @@ predictprotein (1.0.79) unstable; urgency=low
   * reprof integration moved to its own branch while experimental
   * metadisorder a Suggests: because it is non-redistributable for all.
   * profasp is not ours, license unknown, moving to optional and Suggests.
-  * profglobe should be out, Burkhard says.
+  * profglobe should be released under the GPL Burkhard says, so I pull it
+    from PP.
   * Removed Debianization.
   * GPLv3
 
