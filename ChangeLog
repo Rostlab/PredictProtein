@@ -1,3 +1,9 @@
+predictprotein (1.0.80) unstable; urgency=low
+
+  * lowcompseg rename to ncbi-seg.
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Fri, 06 Jul 2012 13:56:30 +0200
+
 predictprotein (1.0.79) unstable; urgency=low
 
   * reprof integration moved to its own branch while experimental

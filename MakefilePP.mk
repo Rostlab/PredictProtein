@@ -107,7 +107,7 @@ PPFILE:=$(INFILE:%.in=%.predictprotein)
 TMHMMFILE:=$(INFILE:%.in=%.tmhmm)
 
 DISULFINDERCTRL :=
-LOWCOMPSEGCTRL := "NOT APPLICABLE"
+NCBISEGCTRL := "NOT APPLICABLE"
 METADISORDERCTRL :=
 NORSNETCTRL := "NOT APPLICABLE"
 NORSPCTRL := --win=70 --secCut=12 --accLen=10
@@ -123,7 +123,7 @@ PROFTMBCTRL :=
 # lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'standard' methods: those that are available through hard Debian dependencies.
 # lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction lowcompseg pfam saf sec-struct subcell-loc
+all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction ncbi-seg pfam saf sec-struct subcell-loc
 
 .PHONY: blast
 blast: $(BLASTALIFILE) $(BLASTCHECKFILE) $(BLASTFILE) $(BLASTMATFILE) $(BLASTPSWISSM8)
@@ -375,10 +375,14 @@ $(PROSITEFILE): $(GCGFILE)
 prosite: $(PROSITEFILE)
 
 $(SEGFILE): $(FASTAFILE)
-	lowcompseg $< -x > $@
+	ncbi-seg $< -x > $@
 
+# lkajan: legacy name for ncbi-seg
 .PHONY: lowcompseg
-lowcompseg: $(SEGFILE)
+lowcompseg: ncbi-seg
+
+.PHONY: ncbi-seg
+ncbi-seg: $(SEGFILE)
 
 $(SEGGCGFILE): $(SEGFILE)
 	$(LIBRGUTILS)/copf.pl $< formatOut=gcg fileOut=$@

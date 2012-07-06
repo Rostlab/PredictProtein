@@ -68,8 +68,8 @@ our %meth_ext_hash = (
   psic => 'psic',
   safBlastPsi => 'blastpgp',
   safBlastPsi80 => 'blastpgp',
-  segNormGCG => 'lowcompseg',
-  segNorm => 'lowcompseg',
+  segNormGCG => 'ncbi-seg',
+  segNorm => 'ncbi-seg',
   seqGCG => 'input',
   sumNors => 'nors',
   tmhmm => 'tmhmm'
@@ -592,7 +592,7 @@ These methods are run by the default target 'all':
                                           blastPsiMat,
                                           blastPsiAli,
                                           blastpSwissM8           blastall(1)
- local complexity       lowcompseg        segNorm, segNormGCG     lowcompseg(1)
+ local complexity       ncbi-seg          segNorm, segNormGCG     ncbi-seg(1)
  non-regular secondary  norsp             nors, sumNors           norsp(1)
   structure
  nuclear localization   predictnls        nls, nlsDat, nlsSum     predictnls(1)
