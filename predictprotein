@@ -31,6 +31,7 @@ our %meth_ext_hash = (
   disis => 'profdisis',
   disulfinder => 'disulfinder',
   fasta => 'input',
+  globe => 'profglobe',
   hmm2pfam => 'hmmer',
   hmm3pfam => 'hmmer',
   hmm3pfamTbl => 'hmmer',

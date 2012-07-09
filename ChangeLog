@@ -1,3 +1,10 @@
+predictprotein (1.0.81) unstable; urgency=low
+
+  * Added back globe extension mapping for a transition period
+    as profglobe is being removed.
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 09 Jul 2012 14:06:05 +0200
+
 predictprotein (1.0.80) unstable; urgency=low
 
   * lowcompseg rename to ncbi-seg.
