@@ -173,7 +173,7 @@ if ($version){
 
 Copyright 1992-2010, Rostlab
 
-Please see COPYING file for license information
+Please see the COPYING file for license information.
 
 Complete documentation for PredictProtein should be found on
 this system using "man predictprotein" or at http://www.predictprotein.org/.
