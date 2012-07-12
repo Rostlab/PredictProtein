@@ -1,0 +1,15 @@
+use warnings;
+use strict;
+use Module::Build;
+
+Module::Build->new(
+  module_name => 'RG::PP::ACL',
+  license  => 'perl',
+  configure_requires => { 'Module::Build' => 0.38 },
+  dist_name => '@PACKAGE_NAME@',
+  dist_version => '@VERSION@',
+  dist_author => [ 'Laszlo Kajan <lkajan@rostlab.org>' ],
+  dist_abstract => 'This package provides the RG::PP::ACL module.'
+)->create_build_script;
+
+# vim:et:ts=2:ai:

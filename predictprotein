@@ -12,7 +12,7 @@ use Pod::Usage;
 use Config::IniFiles;
 use Bio::Seq;
 use Bio::SeqIO;
-use RG::PP::Acl;
+use RG::PP::ACL;
 
 $Carp::Verbose = 1; 
 
@@ -226,7 +226,7 @@ if(! $prot_name){ $prot_name="query"; }
 if( $prot_name =~ /[^[:alnum:]._-]/o ){ die("Error: invalid protein name, please use only [[:alnum:]._-]".( $dbg ? '' : "\n" )); }
 
 # check acl syntax if given
-if( $setacl ) { RG::PP::Acl::acl2hash( $setacl ); }
+if( $setacl ) { RG::PP::ACL::acl2hash( $setacl ); }
 
 if( !@target ){ if( @default_targets ){ @target = @default_targets; } else { @target = ( 'all' ); } } # lkajan: attention: `all' does not mean all methods, there also are the `optional' ones
 push @target, @$maketarget;

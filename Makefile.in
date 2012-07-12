@@ -52,9 +52,10 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(dist_bin_SCRIPTS) \
-	$(dist_pkgdata_DATA) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(top_srcdir)/configure AUTHORS COPYING \
-	ChangeLog INSTALL NEWS install-sh missing
+	$(dist_noinst_DATA) $(dist_pkgdata_DATA) $(srcdir)/Build.PL.in \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(top_srcdir)/configure AUTHORS COPYING ChangeLog INSTALL NEWS \
+	install-sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -62,7 +63,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = Build.PL
 CONFIG_CLEAN_VPATH_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -111,7 +112,7 @@ am__can_run_installinfo = \
 man1dir = $(mandir)/man1
 NROFF = nroff
 MANS = $(man_MANS)
-DATA = $(dist_pkgdata_DATA)
+DATA = $(dist_noinst_DATA) $(dist_pkgdata_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
@@ -232,8 +233,10 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+EXTRA_DIST = lib/RG/PP/ACL.pm
 SUBDIRS = examples helper_apps resources
 man_MANS = predictprotein.1
+dist_noinst_DATA = Build.PL.in
 dist_pkgdata_DATA = predictproteinrc.default MakefilePP.mk
 dist_bin_SCRIPTS = predictprotein
 CLEANFILES = $(dist_man_MANS)
@@ -274,6 +277,8 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
+Build.PL: $(top_builddir)/config.status $(srcdir)/Build.PL.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-dist_binSCRIPTS: $(dist_bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	@list='$(dist_bin_SCRIPTS)'; test -n "$(bindir)" || list=; \
@@ -714,7 +719,7 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(SCRIPTS) $(MANS) $(DATA)
+all-am: Makefile $(SCRIPTS) $(MANS) $(DATA) all-local
 installdirs: installdirs-recursive
 installdirs-am:
 	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(pkgdatadir)"; do \
@@ -758,7 +763,8 @@ clean-am: clean-generic clean-local mostlyclean-am
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-tags
+distclean-am: clean-am distclean-generic distclean-local \
+	distclean-tags
 
 dvi: dvi-recursive
 
@@ -772,7 +778,8 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-dist_pkgdataDATA install-man
+install-data-am: install-data-local install-dist_pkgdataDATA \
+	install-man
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-recursive
@@ -830,13 +837,14 @@ uninstall-man: uninstall-man1
 	tags-recursive
 
 .PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
-	all all-am am--refresh check check-am clean clean-generic \
-	clean-local ctags ctags-recursive dist dist-all dist-bzip2 \
-	dist-gzip dist-hook dist-lzip dist-lzma dist-shar dist-tarZ \
-	dist-xz dist-zip distcheck distclean distclean-generic \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-data-hook \
+	all all-am all-local am--refresh check check-am clean \
+	clean-generic clean-local ctags ctags-recursive dist dist-all \
+	dist-bzip2 dist-gzip dist-hook dist-lzip dist-lzma dist-shar \
+	dist-tarZ dist-xz dist-zip distcheck distclean \
+	distclean-generic distclean-local distclean-tags \
+	distcleancheck distdir distuninstallcheck dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-data-hook install-data-local \
 	install-dist_binSCRIPTS install-dist_pkgdataDATA install-dvi \
 	install-dvi-am install-exec install-exec-am install-exec-hook \
 	install-html install-html-am install-info install-info-am \
@@ -849,12 +857,24 @@ uninstall-man: uninstall-man1
 	uninstall-man uninstall-man1
 
 
+all-local: build-stamp
+
+clean-local:
+	if [ -e Build ]; then perl Build clean && rm -f Build build-stamp; fi
+	rm -f $(man_MANS)
+
+distclean-local:
+	rm -rf _build MYMETA.{json,yml} MANIFEST.SKIP.bak
+
+build-stamp: Build.PL
+	perl Build.PL installdirs=vendor && perl Build && touch build-stamp
+
+install-data-local:
+	perl Build install destdir=$(DESTDIR) install_base=$(prefix) create_packlist=0
+
 %.1:	%
 	sed -e 's|__docdir__|$(docdir)|g;s|__pkgdatadir__|$(pkgdatadir)|g;s|__sysconfdir__|$(sysconfdir)|g;s|__bindir__|$(bindir)|g;s|__VERSION__|$(VERSION)|g;s|__PACKAGE_VERSION__|$(PACKAGE_VERSION)|g;' "$<" | \
 	pod2man -c 'User Commands' -r "$(VERSION)" -name $(shell tr '[:lower:]' '[:upper:]' <<< "$(basename $@)") > "$@"
-
-clean-local:
-	rm -f $(man_MANS)
 
 dist-hook:
 	rm -rf `find $(distdir) -name .svn`

@@ -2202,7 +2202,7 @@ am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 
 
 
-ac_config_files="$ac_config_files Makefile examples/Makefile helper_apps/Makefile resources/Makefile"
+ac_config_files="$ac_config_files Makefile Build.PL examples/Makefile helper_apps/Makefile resources/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -2914,6 +2914,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "Build.PL") CONFIG_FILES="$CONFIG_FILES Build.PL" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
     "helper_apps/Makefile") CONFIG_FILES="$CONFIG_FILES helper_apps/Makefile" ;;
     "resources/Makefile") CONFIG_FILES="$CONFIG_FILES resources/Makefile" ;;
