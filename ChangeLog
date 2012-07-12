@@ -1,3 +1,9 @@
+predictprotein (1.0.83) unstable; urgency=low
+
+  * RG::PP::ACL is now in this pack. That depends on RG::Exception.
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 12 Jul 2012 20:30:58 +0200
+
 predictprotein (1.0.82) unstable; urgency=low
 
   * Moved examples to $(docdir)/examples.
