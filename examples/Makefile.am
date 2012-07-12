@@ -1,5 +1,5 @@
 docexamplesdir = $(docdir)/examples
-dist_docexample_DATA = \
+dist_docexamples_DATA = \
 	$(srcdir)/*.fasta
 
 #	$(srcdir)/cad23.in \
