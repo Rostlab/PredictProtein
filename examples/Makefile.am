@@ -1,5 +1,5 @@
-pkgdataexampledir = $(pkgdatadir)/example
-dist_pkgdataexample_DATA = \
+docexamplesdir = $(docdir)/examples
+dist_docexample_DATA = \
 	$(srcdir)/*.fasta
 
 #	$(srcdir)/cad23.in \

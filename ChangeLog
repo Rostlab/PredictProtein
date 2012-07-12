@@ -1,3 +1,9 @@
+predictprotein (1.0.82) unstable; urgency=low
+
+  * Moved examples to $(docdir)/examples.
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Thu, 12 Jul 2012 19:06:07 +0200
+
 predictprotein (1.0.81) unstable; urgency=low
 
   * Added back globe extension mapping for a transition period
