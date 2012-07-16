@@ -1,3 +1,12 @@
+Files: helper_apps/prosite_scan.pl
+License:
+	* original (ftp://lausanne.isb-sib.ch/pub/software/unix/prosite_scan/prosite_scan) in public-domain: http://lists.alioth.debian.org/pipermail/debian-med-packaging/2012-July/016408.html
+	* modifications: GPL-3+
+
+Files: *
+License: GPL-3+
+
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 

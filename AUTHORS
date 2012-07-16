@@ -1,20 +1,7 @@
-Files: helper_apps/prosite_scan (ftp://lausanne.isb-sib.ch/pub/software/unix/prosite_scan/prosite_scan)
+Files: helper_apps/prosite_scan.pl
 Copyright:
-	public-domain
-	Declared by original author Kay Hofmann <kay.hofmann@uni-koeln.de>:
-	http://lists.alioth.debian.org/pipermail/debian-med-packaging/2012-July/016408.html
-License: public-domain
-	http://lists.alioth.debian.org/pipermail/debian-med-packaging/2012-July/016408.html
-	Dear Lazlo,
-	.
-	Like all other software I have made available (so far), the script prosite_scan.pl that you refer to is in the public domain.
-	Feel free to do with it whatever you like.
-	.
-	Best Wishes,
-	.
-	Kay
-	.
-	Modifications by Guy Yachdav <gyachdav@rostlab.org>.
+	* Original (ftp://lausanne.isb-sib.ch/pub/software/unix/prosite_scan/prosite_scan) in public-domain, author Kay Hofmann <kay.hofmann@uni-koeln.de>.
+	* Modifications: 2008 Guy Yachdav <gyachdav@rostlab.org>
 
 Files: *
 Copyright:
@@ -24,4 +11,3 @@ Copyright:
 	Guy Yachdav <gyachdav@rostlab.org>
 	Laszlo Kajan <lkajan@rostlab.org>
 	Markus Schmidberger <schmidberger@rostlab.org>
-License: GPL-3+

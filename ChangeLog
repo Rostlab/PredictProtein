@@ -1,3 +1,12 @@
+predictprotein (1.0.84) unstable; urgency=low
+
+  * helper_apps/prosite_scan.pl is a modification of
+    ftp://lausanne.isb-sib.ch/pub/software/unix/prosite_scan/prosite_scan
+    for PP - not for general use; removing man page
+  * Added public domain notice for helper_apps/prosite_scan.pl to COPYING and AUTHORS.
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 16 Jul 2012 12:50:56 +0200
+
 predictprotein (1.0.83) unstable; urgency=low
 
   * RG::PP::ACL is now in this pack. That depends on RG::Exception.
