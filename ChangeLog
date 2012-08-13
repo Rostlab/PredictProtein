@@ -1,3 +1,9 @@
+predictprotein (1.0.85) unstable; urgency=low
+
+  * profisis now runs in succinct mode
+
+ -- Guy Yachdav <gyachdav@rostlab.org>  Mon, 13 Aug 2012 15:50:22 +0200
+	
 predictprotein (1.0.84) unstable; urgency=low
 
   * helper_apps/prosite_scan.pl is a modification of
