@@ -451,7 +451,7 @@ exit(0);
 
 
 
-# lkajan: method - translate and pass --method=asp,ws=3,... --method=... method control parameters to make file
+# lkajan: method - translate and pass --method=norsp,win=50,... --method=... method control parameters to make file
 # lkajan: idea: translate control params simply like this: `--method=MNAME,CTRLP1=CTRLVAL1,CTRLP2=CTRLVAL2' -> `NMAMECTRL=--CTRLP1=CTRLVAL1 --CTRLP2=CTRLVAL2'
 # lkajan: Also return all methods as targets.
 sub               _get_makemethod
@@ -585,8 +585,6 @@ These methods are run by the default target 'all':
   brane beta barrels
  coiled-coils           coiledcoils       coils, coils_raw        coils-wrap(1)
                                                                   ncoils(1)
- conformational         profasp           asp                     profasp(1)
-  switches
  disulfide bridges      disulfinder       disulfinder             disulfinder(1)
  local alignment        blast             blastPsiOutTmp, chk,    blastpgp(1)
                                           blastPsiMat,
@@ -705,11 +703,11 @@ This documentation page
 
 Describes method control parameters and requests methods to run when B<--target> is not I<all>. Format example:
  
- --method=profasp,ws=3
+ --method=norsp,win=50
  
-* begin with the method name, e.g. `profasp'
+* begin with the method name, e.g. `norsp'
 
-* list method control parameters, e.g. ws=3
+* list method control parameters, e.g. win=50
 
 Not all methods support passing control parameters in this way due to their primitive command line interfaces.
 

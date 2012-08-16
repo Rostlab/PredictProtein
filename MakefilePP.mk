@@ -57,6 +57,7 @@ PHDNOTHTMFILE:=$(INFILE:%.in=%.phdNotHtm)
 PROFFILE:=$(INFILE:%.in=%.profRdb)
 # prof output generated explicitely from one sequence - NO alignment - Chris Schaefer initiated this - B approved
 PROF1FILE:=$(INFILE:%.in=%.prof1Rdb)
+# lkajan: 20120816: profasp is now removed (https://rostlab.org/bugzilla3/show_bug.cgi?id=154)
 ASPFILE:=$(INFILE:%.in=%.asp)
 NORSFILE:=$(INFILE:%.in=%.nors)
 NORSSUMFILE:=$(INFILE:%.in=%.sumNors)
@@ -112,7 +113,6 @@ NORSNETCTRL := "NOT APPLICABLE"
 NORSPCTRL := --win=70 --secCut=12 --accLen=10
 PREDICTNLSCTRL :=
 PROFCTRL := "NOT APPLICABLE"
-PROFASPCTRL := --ws=5 --z=-1.75 --min=9
 PROFBVALCTRL := "NOT APPLICABLE"
 PROFDISISCTRL :=
 PROFISISCTRL :=
@@ -166,7 +166,7 @@ subcell-loc:
 #
 # Optional targets should never appear in other aggregate targets (such as 'interaction').
 .PHONY: optional
-optional: loctree metadisorder profasp psic tmhmm
+optional: loctree metadisorder psic tmhmm
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
@@ -342,12 +342,6 @@ prof: $(PROFFILE) $(PROF1FILE)
 $(PROFTEXTFILE): $(PROFFILE)
 	# conv_prof creates query.profAscii.tmp in case query.profAscii already exists - make sure it does not
 	rm -f $(PROFTEXTFILE); $(PROFROOT)scr/conv_prof.pl $< fileOut=$@ ascii nohtml nodet nograph
-
-$(ASPFILE): $(PROFFILE)
-	profasp $(PROFASPCTRL) -in $< -out $@
-
-.PHONY: profasp
-profasp: $(ASPFILE)
 
 # NORSp
 .SECONDARY: $(NORSFILE) $(NORSSUMFILE)
