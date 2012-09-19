@@ -1,3 +1,10 @@
+predictprotein (1.0.87) UNRELEASED; urgency=low
+
+  * Added missing nlsDat to copy loop of MakefilePP.
+  * Added missing profb4snap to copy loop of MakefilePP.
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 19 Sep 2012 17:37:06 +0200
+
 predictprotein (1.0.86) unstable; urgency=low
 
   * profasp removed (https://rostlab.org/bugzilla3/show_bug.cgi?id=154)
