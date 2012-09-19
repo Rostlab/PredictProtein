@@ -1,4 +1,4 @@
-predictprotein (1.0.87) UNRELEASED; urgency=low
+predictprotein (1.0.87) unstable; urgency=low
 
   * Added missing nlsDat to copy loop of MakefilePP.
   * Added missing profb4snap to copy loop of MakefilePP.
