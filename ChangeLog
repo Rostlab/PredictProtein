@@ -1,3 +1,9 @@
+predictprotein (1.0.88) UNRELEASED; urgency=low
+
+  * loctree2 integration IN PROGRESS
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 17 Oct 2012 14:35:49 +0200
+
 predictprotein (1.0.87) unstable; urgency=low
 
   * Added missing nlsDat to copy loop of MakefilePP.

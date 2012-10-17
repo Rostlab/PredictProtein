@@ -99,6 +99,9 @@ LOCTREEPLANTFILE:=$(INFILE:%.in=%.loctreePlant)
 LOCTREEPLANTTXTFILE:=$(INFILE:%.in=%.loctreePlantTxt)
 LOCTREEPROKAFILE:=$(INFILE:%.in=%.loctreeProka)
 LOCTREEPROKATXTFILE:=$(INFILE:%.in=%.loctreeProkaTxt)
+LOCTREE2ARCH:=$(INFILE:%.in=%.lt2arch)
+LOCTREE2BACT:=$(INFILE:%.in=%.lt2bact)
+LOCTREE2EUKA:=$(INFILE:%.in=%.lt2euka)
 PSICFILE:=$(INFILE:%.in=%.psic)
 CLUSTALNGZ:=$(INFILE:%.in=%.clustalngz)
 ISISFILE:=$(INFILE:%.in=%.isis)
@@ -157,6 +160,7 @@ subcell-loc:
 # optional: these targets may not work in case the packages that provide them are missing - these packages are not hard requirements of PP
 #           These packages are usually non-redistributable or have some other problem with them.
 #           loctree depends on SignalP
+#           loctree2 contains non-free binary
 #           profdisis depends on svm-light5
 #
 #           psic is non-redistributable
@@ -166,13 +170,16 @@ subcell-loc:
 #
 # Optional targets should never appear in other aggregate targets (such as 'interaction').
 .PHONY: optional
-optional: loctree metadisorder psic tmhmm
+optional: loctree loctree2 metadisorder psic tmhmm
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
 
 .PHONY: loctree
 loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
+
+.PHONY: loctree2
+loctree2: $(LOCTREE2ARCH) $(LOCTREE2BACT) $(LOCTREE2EUKA)
 
 .PHONY: psic
 psic: $(PSICFILE) $(CLUSTALNGZ)
@@ -201,6 +208,15 @@ psic: $(PSICFILE) $(CLUSTALNGZ)
 	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
 	  --org proka \
 	  $(if $(DEBUG), --debug, )
+
+$(LOCTREE2ARCH): $(FASTAFILE) $(BLASTMATFILE)
+	loctree2 --quiet --domain arch # TODO
+
+$(LOCTREE2BACT): $(FASTAFILE) $(BLASTMATFILE)
+	loctree2 --quiet --domain bact # TODO
+
+$(LOCTREE2EUKA): $(FASTAFILE) $(BLASTMATFILE)
+	loctree2 --quiet --domain euka # TODO
 
 .SECONDARY: $(PSICFILE) $(CLUSTALNGZ)
 %.psic %.clustalngz : $(FASTAFILE) $(BLASTFILE)
