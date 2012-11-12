@@ -938,7 +938,7 @@ User configuration file overriding values in F<__sysconfdir__/predictproteinrc>
 
 =head1 NOTES
 
-=head2 Popularity contest
+=head2 Popularity Contest
 
 The pp-popularity-contest package included with this image sets up a cron job
 that will periodically anonymously submit to the Rost Lab developers
@@ -955,6 +955,14 @@ none of the packages on this image could be made available to you at no cost.
 
 In case you do not wish to participate in the popularity contest please
 remove the pp-popularity-contest package.
+
+=head2 Generating Databases
+
+Courtesy of Wiktor Jurkowski:
+
+ * rostlab-data-prosite_convert prosite.dat prosite_convert.dat
+ * perl /usr/share/loctree/perl/keyindex4loctree.pl < keyindex.txt > keyindex_loctree.txt
+ * hmmpress Pfam-A.hmm
 
 =head1 AUTHOR
 
