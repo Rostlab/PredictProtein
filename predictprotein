@@ -910,7 +910,7 @@ Sequence is too short, shorter than minimum length required by prof. See B<--pro
 
  predictprotein --seqfile __docdir__/examples/tquick.fasta --output-dir /tmp/pp 
 
- predictprotein --seqfile __docdir__/examples/tquick.fasta --output-dir /tmp/pp --target query.profRdb --target query.loctree2
+ predictprotein --seqfile __docdir__/examples/tquick.fasta --output-dir /tmp/pp --target query.profRdb --target loctree2
 
  predictprotein --seqfile __docdir__/examples/tquick.fasta --method=norsp,win=100 --output-dir /tmp/pp 
 

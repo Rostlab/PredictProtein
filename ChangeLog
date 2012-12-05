@@ -1,3 +1,9 @@
+predictprotein (1.0.89) UNRELEASED; urgency=low
+
+  * Minor fix to man page example.
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 05 Dec 2012 15:21:36 +0100
+
 predictprotein (1.0.88) unstable; urgency=low
 
   * loctree2 integrated as an optional target
