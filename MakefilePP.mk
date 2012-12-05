@@ -99,9 +99,9 @@ LOCTREEPLANTFILE:=$(INFILE:%.in=%.loctreePlant)
 LOCTREEPLANTTXTFILE:=$(INFILE:%.in=%.loctreePlantTxt)
 LOCTREEPROKAFILE:=$(INFILE:%.in=%.loctreeProka)
 LOCTREEPROKATXTFILE:=$(INFILE:%.in=%.loctreeProkaTxt)
-LOCTREE2ARCH:=$(INFILE:%.in=%.lt2arch)
-LOCTREE2BACT:=$(INFILE:%.in=%.lt2bact)
-LOCTREE2EUKA:=$(INFILE:%.in=%.lt2euka)
+LOCTREE2ARCH:=$(INFILE:%.in=%.arch.lc2)
+LOCTREE2BACT:=$(INFILE:%.in=%.bact.lc2)
+LOCTREE2EUKA:=$(INFILE:%.in=%.euka.lc2)
 PSICFILE:=$(INFILE:%.in=%.psic)
 CLUSTALNGZ:=$(INFILE:%.in=%.clustalngz)
 ISISFILE:=$(INFILE:%.in=%.isis)
@@ -210,13 +210,13 @@ psic: $(PSICFILE) $(CLUSTALNGZ)
 	  $(if $(DEBUG), --debug, )
 
 $(LOCTREE2ARCH): $(FASTAFILE) $(BLASTMATFILE)
-	loctree2 --quiet --domain arch # TODO
+	loctree2 --quiet --domain arch --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
 
 $(LOCTREE2BACT): $(FASTAFILE) $(BLASTMATFILE)
-	loctree2 --quiet --domain bact # TODO
+	loctree2 --quiet --domain bact --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
 
 $(LOCTREE2EUKA): $(FASTAFILE) $(BLASTMATFILE)
-	loctree2 --quiet --domain euka # TODO
+	loctree2 --quiet --domain euka --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
 
 .SECONDARY: $(PSICFILE) $(CLUSTALNGZ)
 %.psic %.clustalngz : $(FASTAFILE) $(BLASTFILE)
@@ -435,6 +435,7 @@ install:
 		$(INFILE) \
 		$(ISISFILE) \
 		$(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE) \
+		$(LOCTREE2ARCH) $(LOCTREE2BACT) $(LOCTREE2EUKA) \
 		$(METADISORDERFILE) \
 		$(NLSFILE) $(NLSDATFILE) $(NLSSUMFILE) \
 		$(NORSFILE) $(NORSSUMFILE) \

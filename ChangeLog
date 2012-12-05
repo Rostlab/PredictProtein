@@ -1,8 +1,8 @@
-predictprotein (1.0.88) UNRELEASED; urgency=low
+predictprotein (1.0.88) unstable; urgency=low
 
-  * loctree2 integration IN PROGRESS
+  * loctree2 integrated as an optional target
 
- -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 17 Oct 2012 14:35:49 +0200
+ -- Laszlo Kajan <lkajan@rostlab.org>  Wed, 05 Dec 2012 13:16:40 +0100
 
 predictprotein (1.0.87) unstable; urgency=low
 
