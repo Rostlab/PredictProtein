@@ -1,3 +1,9 @@
+predictprotein (1.0.91) UNRELEASED; urgency=low
+
+  * Added metastudent Gene Ontology terms prediction 	target=go
+
+ -- Manfred Roos <roos@rostlab.org>  Fri May 17 21:12:38 CEST 2013
+             
 predictprotein (1.0.90) UNRELEASED; urgency=low
 
   * Removed --succint flag per bug 191 https://rostlab.org/bugzilla3/show_bug.cgi?id=191

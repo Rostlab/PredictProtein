@@ -108,6 +108,8 @@ ISISFILE:=$(INFILE:%.in=%.isis)
 DISISFILE:=$(INFILE:%.in=%.disis)
 PPFILE:=$(INFILE:%.in=%.predictprotein)
 TMHMMFILE:=$(INFILE:%.in=%.tmhmm)
+METASTUDENTBPO:=$(INFILE:%.in=%.metastudent.BPO.txt)
+METASTUDENTMPO:=$(INFILE:%.in=%.metastudent.MPO.txt)
 
 DISULFINDERCTRL :=
 NCBISEGCTRL := "NOT APPLICABLE"
@@ -124,7 +126,7 @@ PROFTMBCTRL :=
 # lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'standard' methods: those that are available through hard Debian dependencies.
 # lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function html hssp interaction ncbi-seg pfam saf sec-struct subcell-loc
+all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function go html hssp interaction  ncbi-seg pfam saf sec-struct subcell-loc
 
 .PHONY: blast
 blast: $(BLASTALIFILE) $(BLASTCHECKFILE) $(BLASTFILE) $(BLASTMATFILE) $(BLASTPSWISSM8)
@@ -144,6 +146,10 @@ html: $(BLASTFILERDB)
 
 .PHONY: interaction
 interaction: profisis
+
+.PHONY: go
+go: metastudent
+
 
 .PHONY: pfam
 pfam: hmm2pfam hmm3pfam
@@ -359,6 +365,14 @@ $(PROFTEXTFILE): $(PROFFILE)
 	# conv_prof creates query.profAscii.tmp in case query.profAscii already exists - make sure it does not
 	rm -f $(PROFTEXTFILE); $(PROFROOT)scr/conv_prof.pl $< fileOut=$@ ascii nohtml nodet nograph
 
+.PHONY: metastudent
+metastudent: $(METASTUDENTBPO) $(METASTUDENTMPO)
+
+.SECONDARY: $(METASTUDENTBPO) $(METASTUDENTMPO)
+%.metastudent.BPO.txt %.metastudent.MPO.txt : $(FASTAFILE)
+	metastudent -i $(FASTAFILE) -o query.metastudent --silent
+
+
 # NORSp
 .SECONDARY: $(NORSFILE) $(NORSSUMFILE)
 %.nors %.sumNors : $(FASTAFILE) $(HSSPFILTERFILE) $(PROFFILE) $(PHDRDBFILE) $(COILSFILE)
@@ -411,6 +425,8 @@ $(BLASTALIFILE): $(BLASTCHECKFILE) $(FASTAFILE)
 %.safBlastPsi80 %.blastPsi80Rdb : $(BLASTFILE)  $(FASTAFILE)
 	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLAST80FILERDB) fileOutSaf=$(SAF80FILE) red=100 maxAli=3000 tile=0
 
+
+
 $(FASTAFILE): $(INFILE)
 	$(LIBRGUTILS)/copf.pl $< formatIn=fasta formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq
 
@@ -437,6 +453,7 @@ install:
 		$(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE) \
 		$(LOCTREE2ARCH) $(LOCTREE2BACT) $(LOCTREE2EUKA) \
 		$(METADISORDERFILE) \
+		$(METASTUDENTBPO) $(METASTUDENTMPO) \
 		$(NLSFILE) $(NLSDATFILE) $(NLSSUMFILE) \
 		$(NORSFILE) $(NORSSUMFILE) \
 		$(NORSNETFILE) \
@@ -460,6 +477,7 @@ help:
 	@echo
 	@echo "disorder - run disorder predictors"
 	@echo "function - function prediction"
+	@echo "go - Gene Ontology terms prediction"
 	@echo "interaction - run binding site predictors"
 	@echo "pfam, hmm2pfam, hmm3pfam"
 	@echo "profbval"
