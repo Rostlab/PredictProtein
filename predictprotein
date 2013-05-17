@@ -596,6 +596,8 @@ These methods are run by the default target 'all':
  coiled-coils           coiledcoils       coils, coils_raw        coils-wrap(1)
                                                                   ncoils(1)
  disulfide bridges      disulfinder       disulfinder             disulfinder(1)
+ Gene Ontology terms    metastudent       metastudent.BPO.txt,    metastudent(1)
+                                          metastudent.MFO.txt
  local alignment        blast             blastPsiOutTmp, chk,    blastpgp(1)
                                           blastPsiMat,
                                           blastPsiAli,
@@ -619,8 +621,7 @@ These methods are run by the default target 'all':
  transmembrane          phd               phdPred, phdRdb         prof(1)
   helices
  unstructured loops     norsnet           norsnet                 norsnet(1)
- Gene Ontology terms    metastudent       metastudent.BFO.txt,    metastudent(1)
-                                          metastudent.MFO.txt
+
 =head2 Optional methods
 
 These methods are non-redistributable or depend on non-redistributable software (indicated by '*').  You have to acquire the non-redistributable components yourself before you can use these methods.
