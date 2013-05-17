@@ -109,7 +109,7 @@ DISISFILE:=$(INFILE:%.in=%.disis)
 PPFILE:=$(INFILE:%.in=%.predictprotein)
 TMHMMFILE:=$(INFILE:%.in=%.tmhmm)
 METASTUDENTBPO:=$(INFILE:%.in=%.metastudent.BPO.txt)
-METASTUDENTMPO:=$(INFILE:%.in=%.metastudent.MPO.txt)
+METASTUDENTMPO:=$(INFILE:%.in=%.metastudent.MFO.txt)
 
 DISULFINDERCTRL :=
 NCBISEGCTRL := "NOT APPLICABLE"
@@ -369,8 +369,8 @@ $(PROFTEXTFILE): $(PROFFILE)
 metastudent: $(METASTUDENTBPO) $(METASTUDENTMPO)
 
 .SECONDARY: $(METASTUDENTBPO) $(METASTUDENTMPO)
-%.metastudent.BPO.txt %.metastudent.MPO.txt : $(FASTAFILE)
-	metastudent -i $(FASTAFILE) -o query.metastudent --silent
+%.metastudent.BPO.txt %.metastudent.MFO.txt : $(FASTAFILE)
+	metastudent -i $(FASTAFILE) -o query.metastudent --silent $(if $(DEBUG), --debug, )
 
 
 # NORSp
