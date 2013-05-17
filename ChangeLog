@@ -1,4 +1,4 @@
-predictprotein (1.0.91) UNRELEASED; urgency=low
+predictprotein (1.0.91) unstable; urgency=low
 
   * Added metastudent Gene Ontology terms predictor.
 
