@@ -19,6 +19,7 @@ $Carp::Verbose = 1;
 our %meth_ext_hash = (
   asp => 'profasp',
   blastPsiAli => 'blastpgp',
+  'blastPsiAli.gz' => 'blastpgp',
   blastPsiMat => 'blastpgp',
   blastPsiOutTmp => 'blastpgp',
   blastPsiRdb => 'blastpgp',
@@ -39,6 +40,7 @@ our %meth_ext_hash = (
   hssp => 'blastpgp',
   hssp80 => 'blastpgp',
   hsspPsiFil => 'hssp_filter',
+  'hsspPsiFil.gz' => 'hssp_filter',
   in => 'input',
   isis => 'profisis',
   loctreeAnimal => 'loctree',
@@ -102,7 +104,6 @@ my $bigblastdb = glob( $config->val('predictprotein', 'bigblastdb' ) );
 my $big80blastdb = glob( $config->val('predictprotein', 'big80blastdb' ) );
 my @default_targets = ( $config->val('predictprotein', 'default_targets') ? split(/ /o, $config->val('predictprotein', 'default_targets') ) : () );
 my $librg_utils_perl = glob($config->val('predictprotein', 'librg_utils_perl')).'/' || '/usr/share/librg-utils-perl/';
-my $light_cache = $config->val('predictprotein', 'light_cache') || 0;
 my $numresmax = $config->val('predictprotein', 'numresmax') || 6000; # Marco's suggestion, we know it now blows up for over 19000 (convert_seq I think)
 my $pfam2db = glob($config->val('predictprotein', 'pfam2db'));
 my $pfam3db = glob($config->val('predictprotein', 'pfam3db'));
@@ -379,7 +380,7 @@ else
 if( !$dbg ) { open( STDOUT, '>&', $oldout ) || die( $! ); }
 
 # copy to output dir?
-# We have to copy results to the output directory /before/ storing because in case light_cache is on and the cache is being directly accessed, some result files are deleted from $work_dir during storing.
+# We copy results to the output directory /before/ storing.
 if( $output_dir )
 {
   my @cmd_install = ( @cmd, "DESTDIR=$output_dir", 'install' );
@@ -408,18 +409,13 @@ if( $use_cache )
     # lkajan: these are result files that are big, derived from other files kept and not needed for the web interface (or anything of importance) so regeneration time is not crucial
     # lkajan: at present these are: safBlastPsi safBlastPsi80 hssp
     # lkajan: When cache_merge is in use, these files need to be actively removed from the precache_dir since in this case it is /the/ cache dir
-    if( $light_cache && $res_file =~ /\.(safBlastPsi|safBlastPsi80|hssp)$/o )
+
     # lkajan 20111018: pending new policy for files stored in cache:
     # - we keep files directly shown on the web interface
     # - we keep the immediate input files of (top level) predictors so that
     #   they can be re-run, files such as .hsspPsiFil and .blastpSwissM8
     # - we do not keep ancestors of these files, such as .blastPsiOutTmp and
     #   .hssp80
-    #if( $light_cache && $res_file =~ /\.(blastPsiAli|blastPsiOutTmp|hssp|hssp80|safBlastPsi|safBlastPsi80)$/o )
-    {
-      if( $cache_merge ){ if( $dbg ){ warn("light-cache removing '$precache_dir/$res_file'"); } unlink( "$precache_dir/$res_file" ) || confess("failed to remove '$precache_dir/$res_file': $!"); }
-      next;
-    }
 
     # query.blastpSwissM8 => $method->{blastpswiss}->{res}->{blastpSwissM8} = "$precache_dir/$res_file";
     # Also allow file names like: 'query.arch.lc2', $extkey should here be 'arch.lc2'.

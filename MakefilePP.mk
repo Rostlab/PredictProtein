@@ -44,6 +44,8 @@ PSICEXE:=/usr/share/rost-runpsic/runNewPSIC.pl
 # RESULTS FILES
 HSSPFILE:=$(INFILE:%.in=%.hssp)
 HSSP80FILE:=$(INFILE:%.in=%.hssp80)
+HSSPFILTERFILENZ:=$(INFILE:%.in=%.hsspPsiFil.nz)
+HSSPFILTERFILEGZ:=$(INFILE:%.in=%.hsspPsiFil.gz)
 HSSPFILTERFILE:=$(INFILE:%.in=%.hsspPsiFil)
 COILSFILE:=$(INFILE:%.in=%.coils)
 COILSRAWFILE:=$(INFILE:%.in=%.coils_raw)
@@ -70,10 +72,12 @@ BLASTFILE:=$(INFILE:%.in=%.blastPsiOutTmp)
 BLASTCHECKFILE:=$(INFILE:%.in=%.chk)
 # as of 20110415 Guy says the following IS needed by the web interface
 BLASTFILERDB:=$(INFILE:%.in=%.blastPsiRdb)
-# as of 20110415 Guy says the following is NOT needed by the web interface
+# as of 20110415 Guy says the following is not needed by the web interface
 BLAST80FILERDB:=$(INFILE:%.in=%.blastPsi80Rdb)
 BLASTPSWISSM8:=$(INFILE:%.in=%.blastpSwissM8)
 BLASTMATFILE:=$(INFILE:%.in=%.blastPsiMat)
+BLASTALIFILENZ:=$(INFILE:%.in=%.blastPsiAli.nz)
+BLASTALIFILEGZ:=$(INFILE:%.in=%.blastPsiAli.gz)
 BLASTALIFILE:=$(INFILE:%.in=%.blastPsiAli)
 DISULFINDERFILE:=$(INFILE:%.in=%.disulfinder)
 HMM2PFAM:=$(INFILE:%.in=%.hmm2pfam)
@@ -125,11 +129,12 @@ PROFTMBCTRL :=
 
 # lkajan: This target 'all' does NOT invoke all the methods! It only invokes the 'standard' methods: those that are available through hard Debian dependencies.
 # lkajan: So 'optional' targets are NOT included since these are not guaranteed to work.
+# lkajan: List only non-intermediate targets.
 .PHONY: all
-all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function go html hssp interaction  ncbi-seg pfam saf sec-struct subcell-loc
+all:  $(FASTAFILE) $(GCGFILE) $(SEGGCGFILE) blast disorder function go html hssp interaction  ncbi-seg pfam sec-struct subcell-loc
 
 .PHONY: blast
-blast: $(BLASTALIFILE) $(BLASTCHECKFILE) $(BLASTFILE) $(BLASTMATFILE) $(BLASTPSWISSM8)
+blast: $(BLASTALIFILEGZ) $(BLASTCHECKFILE) $(BLASTMATFILE) $(BLASTPSWISSM8)
 
 .PHONY: disorder
 disorder: norsnet profbval norsp
@@ -138,7 +143,7 @@ disorder: norsnet profbval norsp
 function: disulfinder predictnls prosite
 
 .PHONY: hssp
-hssp: $(HSSPFILE) $(HSSP80FILE) $(HSSPFILTERFILE)
+hssp: $(HSSPFILTERFILEGZ)
 
 # lkajan: this target is for files that are solely needed by the web interface
 .PHONY: html
@@ -153,9 +158,6 @@ go: metastudent
 
 .PHONY: pfam
 pfam: hmm2pfam hmm3pfam
-
-.PHONY: saf
-saf: $(SAFFILE) $(SAF80FILE)
 
 .PHONY: sec-struct
 sec-struct: $(PROFTEXTFILE) coiledcoils phd prof proftmb
@@ -296,14 +298,24 @@ $(METADISORDERFILE): $(FASTAFILE) $(PROFFILE) $(PROFBVALFILE) $(NORSNETFILE) $(H
 .PHONY: metadisorder
 metadisorder: $(METADISORDERFILE)
 
+.INTERMEDIATE: $(HSSPFILE)
 $(HSSPFILE): $(SAFFILE)
 	$(LIBRGUTILS)/copf.pl $< formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq
 
+.INTERMEDIATE: $(HSSP80FILE)
 $(HSSP80FILE): $(SAF80FILE)
 	$(LIBRGUTILS)/copf.pl $< formatIn=saf formatOut=hssp fileOut=$@ exeConvertSeq=convert_seq
 
-$(HSSPFILTERFILE): $(HSSP80FILE)
+.INTERMEDIATE: $(HSSPFILTERFILENZ)
+$(HSSPFILTERFILENZ): $(HSSP80FILE)
 	$(LIBRGUTILS)/hssp_filter.pl  red=80 $< fileOut=$@
+
+$(HSSPFILTERFILEGZ): $(HSSPFILTERFILENZ)
+	gzip -c -6 < '$<' > '$@'
+
+.INTERMEDIATE: $(HSSPFILTERFILE)
+$(HSSPFILTERFILE): $(HSSPFILTERFILEGZ)
+	gunzip -c < '$<' > '$@'
 
 .PHONY: blastpSwissM8
 blastpSwissM8: $(BLASTPSWISSM8)
@@ -402,7 +414,8 @@ ncbi-seg: $(SEGFILE)
 $(SEGGCGFILE): $(SEGFILE)
 	$(LIBRGUTILS)/copf.pl $< formatOut=gcg fileOut=$@
 
-.SECONDARY: $(BLASTFILE) $(BLASTCHECKFILE) $(BLASTMATFILE)
+.INTERMEDIATE: $(BLASTFILE)
+.SECONDARY: $(BLASTCHECKFILE) $(BLASTMATFILE)
 %.blastPsiOutTmp %.chk %.blastPsiMat : $(FASTAFILE)
 	# blast call may throw warnings on STDERR - silence it when we are not in debug mode; blastpgp and blastall create a normally 0-sized 'error.log' - remove it
 	trap "rm -f error.log" EXIT; \
@@ -410,18 +423,27 @@ $(SEGGCGFILE): $(SEGFILE)
 		EXIT=$$?; cat error.log >&2; exit $$EXIT; \
 	fi
 
-$(BLASTALIFILE): $(BLASTCHECKFILE) $(FASTAFILE)
+.INTERMEDIATE: $(BLASTALIFILENZ)
+$(BLASTALIFILENZ): $(BLASTCHECKFILE) $(FASTAFILE)
 	# blast call may throw warnings on STDERR - silence it when we are not in debug mode
 	trap "rm -f error.log" EXIT; \
 	if ! ( blastpgp -F F -a $(BLASTCORES) -b 1000 -e 1 -d $(BIGBLASTDB) -i $(FASTAFILE) -o $@ -R $(BLASTCHECKFILE) $(if $(DEBUG), , >>error.log 2>&1) ); then \
 		EXIT=$$?; cat error.log >&2; exit $$EXIT; \
 	fi
 
-.SECONDARY: $(SAFFILE) $(BLASTFILERDB)
+$(BLASTALIFILEGZ): $(BLASTALIFILENZ)
+	gzip -c -6 < '$<' > '$@'
+
+.INTERMEDIATE: $(BLASTALIFILE)
+$(BLASTALIFILE): $(BLASTALIFILEGZ)
+	gunzip -c < '$<' > '$@'
+
+.INTERMEDIATE: $(SAFFILE)
+.SECONDARY: $(BLASTFILERDB)
 %.safBlastPsi %.blastPsiRdb : $(BLASTALIFILE)  $(FASTAFILE)
 	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$(SAFFILE) red=100 maxAli=3000 tile=0
 
-.SECONDARY: $(SAF80FILE) $(BLAST80FILERDB)
+.INTERMEDIATE: $(SAF80FILE) $(BLAST80FILERDB)
 %.safBlastPsi80 %.blastPsi80Rdb : $(BLASTFILE)  $(FASTAFILE)
 	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLAST80FILERDB) fileOutSaf=$(SAF80FILE) red=100 maxAli=3000 tile=0
 
@@ -434,18 +456,19 @@ $(GCGFILE): $(INFILE)
 $(DISULFINDDIR):
 	mkdir -p $@
 
+# lkajan: list only non-INTERMEDIATE targets here
 .PHONY: install
 install:
 	for f in \
 		$(ASPFILE) \
-		$(BLASTFILE) $(BLASTALIFILE) $(BLASTMATFILE) $(BLASTFILERDB) $(BLAST80FILERDB) $(BLASTCHECKFILE) \
+		$(BLASTALIFILEGZ) $(BLASTMATFILE) $(BLASTFILERDB) $(BLASTCHECKFILE) \
 		$(BLASTPSWISSM8) \
 		$(COILSFILE) $(COILSRAWFILE) \
 		$(DISISFILE) \
 		$(DISULFINDERFILE) \
 		$(FASTAFILE) \
 		$(HMM2PFAM) $(HMM3PFAM) $(HMM3PFAMTBL) $(HMM3PFAMDOMTBL) \
-		$(HSSPFILE) $(HSSP80FILE) $(HSSPFILTERFILE) \
+		$(HSSPFILTERFILEGZ) \
 		$(INFILE) \
 		$(ISISFILE) \
 		$(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE) \
@@ -461,7 +484,6 @@ install:
 		$(PROFTMBFILE) $(PROFTMBDATFILE) \
 		$(PROSITEFILE) \
 		$(PSICFILE) $(CLUSTALNGZ) \
-		$(SAFFILE) $(SAF80FILE) \
 		$(SEGFILE) $(SEGGCGFILE) \
 		$(GCGFILE) \
 		$(TMHMMFILE) \

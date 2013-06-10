@@ -8,10 +8,6 @@ librg_utils_perl=/usr/share/librg-utils-perl
 # use/do not use result cache
 use_cache=0
 
-# If `1', do not cache certain derived files that take up a lot of space and are not required after all prediction methods are run. Default: 0. [0|1]
-# Files not cached when `1': .safBlastPsi .safBlastPsi80 .hssp .hssp80
-light_cache=0
-
 # bigblastdb: Path to comprehensive blast database
 bigblastdb=/mnt/project/rost_db/data/blast/big
 
