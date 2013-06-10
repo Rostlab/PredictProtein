@@ -1,3 +1,9 @@
+predictprotein (1.0.93) unstable; urgency=low
+
+  * Fixed bug that kept blastPsiOutTmp in result.
+
+ -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 10 Jun 2013 21:49:14 +0200
+
 predictprotein (1.0.92) unstable; urgency=low
 
   * Intermediates: saf, saf80, hssp, hssp80, blastPsiOutTmp

@@ -227,11 +227,11 @@ $(LOCTREE2EUKA): $(FASTAFILE) $(BLASTMATFILE)
 	loctree2 --quiet --domain euka --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
 
 .SECONDARY: $(PSICFILE) $(CLUSTALNGZ)
-%.psic %.clustalngz : $(FASTAFILE) $(BLASTFILE)
+%.psic %.clustalngz : %.fasta %.blastPsiOutTmp
 	# lkajan: Yana's $(PSICEXE) fails when there are no blast hits - catch those conditions. Even in those conditions we have to make the targets, preferably in the expected format (compressed for clustalngz).
 	# lkajan: there's a blast in here - remove its empty error.log
 	trap "rm -f error.log" EXIT; \
-	$(PSICEXE) --use-blastfile $(BLASTFILE) --infile $< $(if $(DEBUG), --debug, ) --quiet --min-seqlen $(PROFNUMRESMIN) --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $(PSICFILE) --save-clustaln '$(CLUSTALNGZ)' --gzip-clustaln; \
+	$(PSICEXE) --use-blastfile $*.blastPsiOutTmp --infile $*.fasta $(if $(DEBUG), --debug, ) --quiet --min-seqlen $(PROFNUMRESMIN) --blastdata_uniref $(BIGBLASTDB) --blastpgp_seg_filter F --blastpgp_processors $(BLASTCORES) --psic_matrix $(PSICMAT) --psicfile $(PSICFILE) --save-clustaln '$(CLUSTALNGZ)' --gzip-clustaln; \
 	RETVAL=$$?; \
 	if [ -s error.log ]; then cat error.log >&2; fi; \
 	case "$$RETVAL" in \
@@ -414,12 +414,11 @@ ncbi-seg: $(SEGFILE)
 $(SEGGCGFILE): $(SEGFILE)
 	$(LIBRGUTILS)/copf.pl $< formatOut=gcg fileOut=$@
 
-.INTERMEDIATE: $(BLASTFILE)
 .SECONDARY: $(BLASTCHECKFILE) $(BLASTMATFILE)
-%.blastPsiOutTmp %.chk %.blastPsiMat : $(FASTAFILE)
+%.blastPsiOutTmp %.chk %.blastPsiMat : %.fasta
 	# blast call may throw warnings on STDERR - silence it when we are not in debug mode; blastpgp and blastall create a normally 0-sized 'error.log' - remove it
 	trap "rm -f error.log" EXIT; \
-	if ! ( blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BIG80BLASTDB) -i $< -o $(BLASTFILE) -C $(BLASTCHECKFILE) -Q $(BLASTMATFILE) $(if $(DEBUG), , >>error.log 2>&1) ); then \
+	if ! ( blastpgp -F F -a $(BLASTCORES) -j 3 -b 3000 -e 1 -h 1e-3 -d $(BIG80BLASTDB) -i $*.fasta -o $*.blastPsiOutTmp -C $*.chk -Q $*.blastPsiMat $(if $(DEBUG), , >>error.log 2>&1) ); then \
 		EXIT=$$?; cat error.log >&2; exit $$EXIT; \
 	fi
 
@@ -444,8 +443,8 @@ $(BLASTALIFILE): $(BLASTALIFILEGZ)
 	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLASTFILERDB) fileOutSaf=$(SAFFILE) red=100 maxAli=3000 tile=0
 
 .INTERMEDIATE: $(SAF80FILE) $(BLAST80FILERDB)
-%.safBlastPsi80 %.blastPsi80Rdb : $(BLASTFILE)  $(FASTAFILE)
-	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$(FASTAFILE)  fileOutRdb=$(BLAST80FILERDB) fileOutSaf=$(SAF80FILE) red=100 maxAli=3000 tile=0
+%.safBlastPsi80 %.blastPsi80Rdb : %.blastPsiOutTmp %.fasta
+	$(LIBRGUTILS)/blastpgp_to_saf.pl fileInBlast=$< fileInQuery=$*.fasta  fileOutRdb=$*.blastPsi80Rdb fileOutSaf=$*.safBlastPsi80 red=100 maxAli=3000 tile=0
 
 $(FASTAFILE): $(INFILE)
 	$(LIBRGUTILS)/copf.pl $< formatIn=fasta formatOut=fasta fileOut=$@ exeConvertSeq=convert_seq

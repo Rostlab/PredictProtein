@@ -335,6 +335,7 @@ if( ! -e $work_seq_file )
 # RUN MAKEFILE
 my @cmd = ();
 push (@cmd,"make");
+push (@cmd,"--no-builtin-rules");
 push (@cmd,"INFILE=$prot_name.in");
 push (@cmd,"-C", $work_dir);
 push (@cmd,"JOBID=".$prot_name);
