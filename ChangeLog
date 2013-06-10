@@ -1,4 +1,4 @@
-predictprotein (1.0.92) UNRELEASED; urgency=low
+predictprotein (1.0.92) unstable; urgency=low
 
   * Intermediates: saf, saf80, hssp, hssp80, blastPsiOutTmp
   * No more light-cache, replaced by .INTERMEDIATE targets.
