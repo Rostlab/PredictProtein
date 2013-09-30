@@ -1,8 +1,8 @@
-predictprotein (1.0.94) UNRELEASED; urgency=low
+predictprotein (1.0.94) unstable; urgency=low
 
-  * Not yet released.
+  * Fixed POD error.
 
- -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 10 Jun 2013 21:50:35 +0200
+ -- Laszlo Kajan <lkajan@rostlab.org>  Mon, 30 Sep 2013 20:55:44 +0200
 
 predictprotein (1.0.93) unstable; urgency=low
 

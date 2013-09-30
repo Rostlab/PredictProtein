@@ -897,11 +897,11 @@ Option `use_cache' may be given in configuration files to override default.
 
 =over
 
-=item 253
+=item I<253>
 
 Sequence is too long, see B<--numresmax>
 
-=item 254
+=item I<254>
 
 Sequence is too short, shorter than minimum length required by prof. See B<--profnumresmin>.
 
