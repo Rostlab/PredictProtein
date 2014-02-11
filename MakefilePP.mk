@@ -97,15 +97,24 @@ PROFCONFILE:=$(INFILE:%.in=%.profcon)
 PROFTMBFILE:=$(INFILE:%.in=%.proftmb)
 PROFTMBDATFILE:=$(INFILE:%.in=%.proftmbdat)
 PCCFILE:=$(INFILE:%.in=%.pcc)
-LOCTREEANIMALFILE:=$(INFILE:%.in=%.loctreeAnimal)
-LOCTREEANIMALTXTFILE:=$(INFILE:%.in=%.loctreeAnimalTxt)
-LOCTREEPLANTFILE:=$(INFILE:%.in=%.loctreePlant)
-LOCTREEPLANTTXTFILE:=$(INFILE:%.in=%.loctreePlantTxt)
-LOCTREEPROKAFILE:=$(INFILE:%.in=%.loctreeProka)
-LOCTREEPROKATXTFILE:=$(INFILE:%.in=%.loctreeProkaTxt)
+
+# loctree 1 is now deprecated (GY 10/02/2014)
+#LOCTREEANIMALFILE:=$(INFILE:%.in=%.loctreeAnimal)
+#LOCTREEANIMALTXTFILE:=$(INFILE:%.in=%.loctreeAnimalTxt)
+#LOCTREEPLANTFILE:=$(INFILE:%.in=%.loctreePlant)
+#LOCTREEPLANTTXTFILE:=$(INFILE:%.in=%.loctreePlantTxt)
+#LOCTREEPROKAFILE:=$(INFILE:%.in=%.loctreeProka)
+#LOCTREEPROKATXTFILE:=$(INFILE:%.in=%.loctreeProkaTxt)
+
 LOCTREE2ARCH:=$(INFILE:%.in=%.arch.lc2)
 LOCTREE2BACT:=$(INFILE:%.in=%.bact.lc2)
 LOCTREE2EUKA:=$(INFILE:%.in=%.euka.lc2)
+
+LOCTREE3ARCH:=$(INFILE:%.in=%.arch.lc3)
+LOCTREE3BACT:=$(INFILE:%.in=%.bact.lc3)
+LOCTREE3EUKA:=$(INFILE:%.in=%.euka.lc3)
+
+
 PSICFILE:=$(INFILE:%.in=%.psic)
 CLUSTALNGZ:=$(INFILE:%.in=%.clustalngz)
 ISISFILE:=$(INFILE:%.in=%.isis)
@@ -169,6 +178,7 @@ subcell-loc:
 #           These packages are usually non-redistributable or have some other problem with them.
 #           loctree depends on SignalP
 #           loctree2 contains non-free binary
+#           loctree3 contains non-free binary
 #           profdisis depends on svm-light5
 #
 #           psic is non-redistributable
@@ -178,53 +188,67 @@ subcell-loc:
 #
 # Optional targets should never appear in other aggregate targets (such as 'interaction').
 .PHONY: optional
-optional: loctree loctree2 metadisorder psic tmhmm
+optional: loctree3 metadisorder psic tmhmm
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
 
-.PHONY: loctree
-loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
+# loctree is now deprecated
+#.PHONY: loctree
+#loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
 
-.PHONY: loctree2
-loctree2: $(LOCTREE2ARCH) $(LOCTREE2BACT) $(LOCTREE2EUKA)
+# loctree1 and loctree2 are now deprecated
+.PHONY: loctree3
+loctree3: $(LOCTREE3ARCH) $(LOCTREE3BACT) $(LOCTREE3EUKA)
 
 .PHONY: psic
 psic: $(PSICFILE) $(CLUSTALNGZ)
 
 # lkajan: rules that make multiple targets HAVE TO be expressed with %
-.SECONDARY: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE)
-%.loctreeAnimal %.loctreeAnimalTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
-	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEANIMALFILE) --loctreetxt $(LOCTREEANIMALTXTFILE) \
-	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
-	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
-	  --org animal \
-	  $(if $(DEBUG), --debug, )
+#.SECONDARY: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE)
+#%.loctreeAnimal %.loctreeAnimalTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
+#	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEANIMALFILE) --loctreetxt $(LOCTREEANIMALTXTFILE) \
+#	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(#HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
+#	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
+#	  --org animal \
+#	  $(if $(DEBUG), --debug, )
 
-.SECONDARY: $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE)
-%.loctreePlant %.loctreePlantTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
-	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPLANTFILE) --loctreetxt $(LOCTREEPLANTTXTFILE) \
-	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
-	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
-	  --org plant \
-	  $(if $(DEBUG), --debug, )
+#.SECONDARY: $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE)
+#%.loctreePlant %.loctreePlantTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
+#	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPLANTFILE) --loctreetxt $(LOCTREEPLANTTXTFILE) \
+#	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(#HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
+#	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
+#	  --org plant \
+#	  $(if $(DEBUG), --debug, )
 
-.SECONDARY: $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
-%.loctreeProka %.loctreeProkaTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
-	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPROKAFILE) --loctreetxt $(LOCTREEPROKATXTFILE) \
-	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
-	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
-	  --org proka \
-	  $(if $(DEBUG), --debug, )
+#.SECONDARY: $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
+#%.loctreeProka %.loctreeProkaTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
+#	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPROKAFILE) --loctreetxt $(LOCTREEPROKATXTFILE) \
+#	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(#HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
+#	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
+#	  --org proka \
+#	  $(if $(DEBUG), --debug, )
 
-$(LOCTREE2ARCH): $(FASTAFILE) $(BLASTMATFILE)
-	loctree2 --quiet --domain arch --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
+# $(LOCTREE2ARCH): $(FASTAFILE) $(BLASTMATFILE)
+# 	loctree2 --quiet --domain arch --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
 
-$(LOCTREE2BACT): $(FASTAFILE) $(BLASTMATFILE)
-	loctree2 --quiet --domain bact --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
+# $(LOCTREE2BACT): $(FASTAFILE) $(BLASTMATFILE)
+# 	loctree2 --quiet --domain bact --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
 
-$(LOCTREE2EUKA): $(FASTAFILE) $(BLASTMATFILE)
-	loctree2 --quiet --domain euka --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
+# $(LOCTREE2EUKA): $(FASTAFILE) $(BLASTMATFILE)
+# 	loctree2 --quiet --domain euka --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
+
+
+$(LOCTREE3ARCH): $(FASTAFILE) $(BLASTMATFILE)
+	loctree3 --quiet --domain arch --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
+
+$(LOCTREE3BACT): $(FASTAFILE) $(BLASTMATFILE)
+	loctree3 --quiet --domain bact --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
+
+$(LOCTREE3EUKA): $(FASTAFILE) $(BLASTMATFILE)
+	loctree3 --quiet --domain euka --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
+
+
 
 .SECONDARY: $(PSICFILE) $(CLUSTALNGZ)
 %.psic %.clustalngz : %.fasta %.blastPsiOutTmp
@@ -470,8 +494,10 @@ install:
 		$(HSSPFILTERFILEGZ) \
 		$(INFILE) \
 		$(ISISFILE) \
-		$(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE) \
-		$(LOCTREE2ARCH) $(LOCTREE2BACT) $(LOCTREE2EUKA) \
+	#	loctree1 and loctree2 are now deprecated (GY 2014_02_10)
+	#	$(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE) \
+		# $(LOCTREE2ARCH) $(LOCTREE2BACT) $(LOCTREE2EUKA) \
+		$(LOCTREE3ARCH) $(LOCTREE3BACT) $(LOCTREE3EUKA) \
 		$(METADISORDERFILE) \
 		$(METASTUDENTBPO) $(METASTUDENTMPO) \
 		$(NLSFILE) $(NLSDATFILE) $(NLSSUMFILE) \

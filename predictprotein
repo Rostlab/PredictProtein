@@ -43,15 +43,9 @@ our %meth_ext_hash = (
   'hsspPsiFil.gz' => 'hssp_filter',
   in => 'input',
   isis => 'profisis',
-  loctreeAnimal => 'loctree',
-  loctreeAnimalTxt => 'loctree',
-  loctreePlant => 'loctree',
-  loctreePlantTxt => 'loctree',
-  loctreeProka => 'loctree',
-  loctreeProkaTxt => 'loctree',
-  'arch.lc2' => 'loctree2',
-  'bact.lc2' => 'loctree2',
-  'euka.lc2' => 'loctree2',
+  'arch.lc3' => 'loctree3',
+  'bact.lc3' => 'loctree3',
+  'euka.lc3' => 'loctree3',
   mdisorder => 'metadisorder',
   'metastudent.BPO.txt' =>'metastudent',
   'metastudent.MFO.txt' =>'metastudent',
@@ -628,10 +622,7 @@ These methods are run by the target 'optional'.
  Feature                Target            Extension               Man page
  -------                ------            ---------               --------
  disordered regions     metadisorder      mdisorder               metadisorder(1)
- subcellular            loctree2          {arch,bact,euka}.lc2    loctree2(1)
-  localization
-                        loctree           loctree{Animal,Plant,   loctree(1)
-                         |                 Proka}{,Txt}
+ subcellular            loctree3          {arch,bact,euka}.lc3    loctree3(1)
                          tmhmm*           tmhmm
  protein-DNA            profdisis         disis                   profdisis(1)
   interaction sites
@@ -911,7 +902,7 @@ Sequence is too short, shorter than minimum length required by prof. See B<--pro
 
  predictprotein --seqfile __docdir__/examples/tquick.fasta --output-dir /tmp/pp 
 
- predictprotein --seqfile __docdir__/examples/tquick.fasta --output-dir /tmp/pp --target query.profRdb --target loctree2
+ predictprotein --seqfile __docdir__/examples/tquick.fasta --output-dir /tmp/pp --target query.profRdb --target loctree3
 
  predictprotein --seqfile __docdir__/examples/tquick.fasta --method=norsp,win=100 --output-dir /tmp/pp 
 
