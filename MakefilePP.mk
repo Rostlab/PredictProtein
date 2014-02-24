@@ -98,18 +98,7 @@ PROFTMBFILE:=$(INFILE:%.in=%.proftmb)
 PROFTMBDATFILE:=$(INFILE:%.in=%.proftmbdat)
 PCCFILE:=$(INFILE:%.in=%.pcc)
 
-# loctree 1 is now deprecated (GY 10/02/2014)
-#LOCTREEANIMALFILE:=$(INFILE:%.in=%.loctreeAnimal)
-#LOCTREEANIMALTXTFILE:=$(INFILE:%.in=%.loctreeAnimalTxt)
-#LOCTREEPLANTFILE:=$(INFILE:%.in=%.loctreePlant)
-#LOCTREEPLANTTXTFILE:=$(INFILE:%.in=%.loctreePlantTxt)
-#LOCTREEPROKAFILE:=$(INFILE:%.in=%.loctreeProka)
-#LOCTREEPROKATXTFILE:=$(INFILE:%.in=%.loctreeProkaTxt)
-
-LOCTREE2ARCH:=$(INFILE:%.in=%.arch.lc2)
-LOCTREE2BACT:=$(INFILE:%.in=%.bact.lc2)
-LOCTREE2EUKA:=$(INFILE:%.in=%.euka.lc2)
-
+# loctree 1 and loctree2 is now deprecated (GY 10/02/2014)
 LOCTREE3ARCH:=$(INFILE:%.in=%.arch.lc3)
 LOCTREE3BACT:=$(INFILE:%.in=%.bact.lc3)
 LOCTREE3EUKA:=$(INFILE:%.in=%.euka.lc3)
@@ -205,48 +194,14 @@ loctree3: $(LOCTREE3ARCH) $(LOCTREE3BACT) $(LOCTREE3EUKA)
 psic: $(PSICFILE) $(CLUSTALNGZ)
 
 # lkajan: rules that make multiple targets HAVE TO be expressed with %
-#.SECONDARY: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE)
-#%.loctreeAnimal %.loctreeAnimalTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
-#	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEANIMALFILE) --loctreetxt $(LOCTREEANIMALTXTFILE) \
-#	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(#HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
-#	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
-#	  --org animal \
-#	  $(if $(DEBUG), --debug, )
-
-#.SECONDARY: $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE)
-#%.loctreePlant %.loctreePlantTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
-#	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPLANTFILE) --loctreetxt $(LOCTREEPLANTTXTFILE) \
-#	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(#HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
-#	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
-#	  --org plant \
-#	  $(if $(DEBUG), --debug, )
-
-#.SECONDARY: $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
-#%.loctreeProka %.loctreeProkaTxt : $(FASTAFILE) $(BLASTPSWISSM8) $(HMM2PFAM) $(HSSPFILTERFILE) $(PROFFILE)
-#	loctree --fasta $(FASTAFILE) --loctreeres $(LOCTREEPROKAFILE) --loctreetxt $(LOCTREEPROKATXTFILE) \
-#	  --use-blastall $(BLASTPSWISSM8) --use-blastall-names $(JOBID) --use-pfamres $(HMM2PFAM) --use-pfamres-names $(JOBID) --use-hssp-coll $(#HSSPFILTERFILE) --use-rdbprof-coll $(PROFFILE) \
-#	  --prosite-dat $(PROSITEDAT) --swissprot-docs-keyindex $(SPKEYIDX) \
-#	  --org proka \
-#	  $(if $(DEBUG), --debug, )
-
-# $(LOCTREE2ARCH): $(FASTAFILE) $(BLASTMATFILE)
-# 	loctree2 --quiet --domain arch --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
-
-# $(LOCTREE2BACT): $(FASTAFILE) $(BLASTMATFILE)
-# 	loctree2 --quiet --domain bact --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
-
-# $(LOCTREE2EUKA): $(FASTAFILE) $(BLASTMATFILE)
-# 	loctree2 --quiet --domain euka --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
-
-
 $(LOCTREE3ARCH): $(FASTAFILE) $(BLASTMATFILE)
-	loctree3 --quiet --domain arch --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
+	loctree3 --quiet --domain arch --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@' -a 
 
 $(LOCTREE3BACT): $(FASTAFILE) $(BLASTMATFILE)
-	loctree3 --quiet --domain bact --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
+	loctree3 --quiet --domain bact --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@' -a
 
 $(LOCTREE3EUKA): $(FASTAFILE) $(BLASTMATFILE)
-	loctree3 --quiet --domain euka --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@'
+	loctree3 --quiet --domain euka --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@' -a
 
 
 
@@ -495,6 +450,7 @@ install:
 		$(INFILE) \
 		$(ISISFILE) \
 		$(LOCTREE3ARCH) $(LOCTREE3BACT) $(LOCTREE3EUKA) \
+		$(LOCTREE3ARCH).pb $(LOCTREE3BACT).pb $(LOCTREE3EUKA).pb \
 		$(METADISORDERFILE) \
 		$(METASTUDENTBPO) $(METASTUDENTMPO) \
 		$(NLSFILE) $(NLSDATFILE) $(NLSSUMFILE) \
