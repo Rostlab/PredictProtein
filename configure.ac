@@ -1,4 +1,4 @@
-AC_INIT([predictprotein], [1.0.95], [https://rostlab.org/bugzilla3/enter_bug.cgi?product=predictprotein])
+AC_INIT([predictprotein], [1.0.96], [https://rostlab.org/bugzilla3/enter_bug.cgi?product=predictprotein])
 AC_CONFIG_SRCDIR([predictprotein])
 AM_INIT_AUTOMAKE
 AC_CONFIG_FILES([Makefile] [perl/Build.PL] [examples/Makefile] [helper_apps/Makefile] [resources/Makefile])

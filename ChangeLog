@@ -1,3 +1,9 @@
+predictprotein (1.0.96) unstable; urgency=low
+
+  * Associated loctree3 extenstions with loctree3 method
+
+ -- Guy Yachdav <gyachdav@rostlab.org>  Wed, 26 Feb 2014 23:32:42 +0100
+
 predictprotein (1.0.95) unstable; urgency=low
 
   * Upgraded loctree2 to loctree3.
