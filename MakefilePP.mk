@@ -13,6 +13,7 @@ export DESTDIR:=.
 # These temporary directories are automatically removed after use
 DISULFINDDIR:=$(shell mktemp -d)
 TMHMMDIR:=$(shell mktemp -d)
+CONSURFDIR:=$(shell mktemp -d)
 
 BLASTCORES := 1
 PROFNUMRESMIN := 17
@@ -103,6 +104,8 @@ LOCTREE3ARCH:=$(INFILE:%.in=%.arch.lc3)
 LOCTREE3BACT:=$(INFILE:%.in=%.bact.lc3)
 LOCTREE3EUKA:=$(INFILE:%.in=%.euka.lc3)
 
+CONSURFFILE:=$(INFILE:%.in=%_consurf.grades)
+CONSURFFILE_BASENAME:=$(CONSURFFILE)##*/
 
 PSICFILE:=$(INFILE:%.in=%.psic)
 CLUSTALNGZ:=$(INFILE:%.in=%.clustalngz)
@@ -177,14 +180,20 @@ subcell-loc:
 #
 # Optional targets should never appear in other aggregate targets (such as 'interaction').
 .PHONY: optional
-optional: loctree3 metadisorder psic tmhmm
+optional: loctree3 metadisorder psic tmhmm consurf
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
 
-# loctree is now deprecated
-#.PHONY: loctree
-#loctree: $(LOCTREEANIMALFILE) $(LOCTREEANIMALTXTFILE) $(LOCTREEPLANTFILE) $(LOCTREEPLANTTXTFILE) $(LOCTREEPROKAFILE) $(LOCTREEPROKATXTFILE)
+
+.PHONE: consurf
+consurf: $(CONSURFFILE)
+
+$(CONSURFFILE): $(FASTAFILE) 
+	trap "rm -rf '$(CONSURFDIR)' error.log" EXIT; \
+	if ! ( consurf --Seq_File $< --Out_Dir $(CONSURFDIR) -m --quiet $(if $(DEBUG), , >>error.log 2>&1) ); then \
+		EXIT=$$?; cat error.log >&2; exit $$EXIT; \
+	else \cp -a $(CONSURFDIR)/$(CONSURFFILE_BASENAME) $@; fi
 
 # loctree1 and loctree2 are now deprecated
 .PHONY: loctree3
@@ -202,8 +211,6 @@ $(LOCTREE3BACT): $(FASTAFILE) $(BLASTMATFILE)
 
 $(LOCTREE3EUKA): $(FASTAFILE) $(BLASTMATFILE)
 	loctree3 --quiet --domain euka --fasta '$(FASTAFILE)' --blastmat '$(BLASTMATFILE)' --resfile '$@' -a
-
-
 
 .SECONDARY: $(PSICFILE) $(CLUSTALNGZ)
 %.psic %.clustalngz : %.fasta %.blastPsiOutTmp
@@ -442,6 +449,7 @@ install:
 		$(BLASTALIFILEGZ) $(BLASTMATFILE) $(BLASTFILERDB) $(BLASTCHECKFILE) \
 		$(BLASTPSWISSM8) \
 		$(COILSFILE) $(COILSRAWFILE) \
+		$(CONSURFFILE) \
 		$(DISISFILE) \
 		$(DISULFINDERFILE) \
 		$(FASTAFILE) \

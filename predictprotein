@@ -29,6 +29,7 @@ our %meth_ext_hash = (
   clustalngz => 'psic',
   coils => 'coiledcoils',
   coils_raw => 'coiledcoils',
+  '_consurf.grades' => 'consurf',
   disis => 'profdisis',
   disulfinder => 'disulfinder',
   fasta => 'input',
@@ -57,7 +58,6 @@ our %meth_ext_hash = (
   phdNotHtm => 'phd',
   phdPred => 'phd',
   phdRdb => 'phd',
-  proDom => 'prodom', # obsolete, target no longer exists
   profAscii => 'prof',
   profbval => 'profbval',
   profb4snap => 'profbval',
@@ -171,7 +171,7 @@ pod2usage(-verbose => 2) if $man;
 if ($version){
     print STDERR qq|This is PredictProtein version __PACKAGE_VERSION__
 
-Copyright 1992-2010, Rostlab
+Copyright 1992-2014, Rostlab
 
 Please see the COPYING file for license information.
 
