@@ -180,7 +180,7 @@ subcell-loc:
 #
 # Optional targets should never appear in other aggregate targets (such as 'interaction').
 .PHONY: optional
-optional: loctree3 metadisorder psic tmhmm consurf
+optional: loctree3 metadisorder psic tmhmm
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
