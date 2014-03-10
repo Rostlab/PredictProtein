@@ -53,6 +53,8 @@ COILSRAWFILE:=$(INFILE:%.in=%.coils_raw)
 NLSFILE:=$(INFILE:%.in=%.nls)
 NLSDATFILE:=$(INFILE:%.in=%.nlsDat)
 NLSSUMFILE:=$(INFILE:%.in=%.nlsSum)
+TMSEGFILE:=$(INFILE:%.in=%.tmseg)
+
 PHDFILE:=$(INFILE:%.in=%.phdPred)
 PHDRDBFILE:=$(INFILE:%.in=%.phdRdb)
 # lkajan: never make PHDNOTHTMFILE a target - its creation depends on whether phd found an HTM region or not: it isn't always created
@@ -180,7 +182,7 @@ subcell-loc:
 #
 # Optional targets should never appear in other aggregate targets (such as 'interaction').
 .PHONY: optional
-optional: loctree3 metadisorder psic tmhmm
+optional: loctree3 metadisorder psic tmhmm tmseg
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
@@ -337,6 +339,13 @@ disulfinder: $(DISULFINDERFILE)
 .PHONY: predictnls
 predictnls: $(NLSFILE) $(NLSDATFILE) $(NLSSUMFILE)
 
+.PHONY: tmseg
+tmseg: $(TMSEGFILE)
+
+.SECONDARY: $(TMSEGFILE)
+$(TMSEGFILE): $(FASTAFILE) $(BLASTMATFILE)
+	tmseg -i $(FASTAFILE) -p  $(BLASTMATFILE) -o $@
+
 .SECONDARY: $(PHDFILE) $(PHDRDBFILE)
 %.phdPred %.phdRdb : $(HSSPFILTERFILE)
 	$(PROFROOT)embl/phd.pl $(HSSPFILTERFILE) htm exePhd=phd1994 filterHsspMetric=$(PROFROOT)embl/mat/Maxhom_Blosum.metric  exeHtmfil=$(PROFROOT)embl/scr/phd_htmfil.pl \
@@ -471,6 +480,7 @@ install:
 		$(PROSITEFILE) \
 		$(PSICFILE) $(CLUSTALNGZ) \
 		$(SEGFILE) $(SEGGCGFILE) \
+		$(TMSEGFILE) \
 		$(GCGFILE) \
 		$(TMHMMFILE) \
 	; do if [ -e $$f ]; then cp -a $$f "$$DESTDIR/" ; fi; done

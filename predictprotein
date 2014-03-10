@@ -88,7 +88,8 @@ our %meth_ext_hash = (
   segNorm => 'ncbi-seg',
   seqGCG => 'input',
   sumNors => 'nors',
-  tmhmm => 'tmhmm'
+  tmhmm => 'tmhmm',
+  tmseg => 'tmseg'
 );
 
 # SYSTEM CONFIGURATION RETRIEVAL
@@ -646,6 +647,7 @@ These methods are run by the target 'optional'.
   and its base multi-                                             clustalw(1)
   ple alignment
  transmembrane helices  tmhmm             tmhmm                   n.a.
+                        tmseg             tmseg                   tmseg(1)
 
 =head2 Resources
 

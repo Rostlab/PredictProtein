@@ -1,5 +1,11 @@
 predictprotein (1.0.97) unstable; urgency=low
 
+  * Integrated TMSEG(1) a new transmmebrane predictor
+
+ -- Guy Yachdav <gyachdav@rostlab.org>  Mon, 10 Mar 2014 20:41:50 +0100
+
+predictprotein (1.0.97) unstable; urgency=low
+
   * Associated loctree3 extenstions with loctree3 method
 
  -- Guy Yachdav <gyachdav@rostlab.org>  Wed, 26 Feb 2014 23:32:42 +0100
