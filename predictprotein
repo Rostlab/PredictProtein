@@ -74,6 +74,7 @@ our %meth_ext_hash = (
   phdPred => 'phd',
   phdRdb => 'phd',
   profAscii => 'prof',
+  reprof => 'reprof',
   profbval => 'profbval',
   profb4snap => 'profbval',
   prof1Rdb => 'prof',
@@ -625,6 +626,9 @@ These methods are run by the default target 'all':
  secondary structure,   prof              prof1Rdb                prof(1)
   accessibility from
   single sequence
+ secondary structure,   reprof            reprof                  reprof(1)
+  accessibility from
+  single sequence
  transmembrane          phd               phdPred, phdRdb         prof(1)
   helices
  unstructured loops     norsnet           norsnet                 norsnet(1)
@@ -639,7 +643,7 @@ These methods are run by the target 'optional'.
  -------                ------            ---------               --------
  disordered regions     metadisorder      mdisorder               metadisorder(1)
  subcellular            loctree3          {arch,bact,euka}.lc3    loctree3(1)
-                         tmhmm*           tmhmm
+                        tmhmm*            tmhmm                   n.a.
  protein-DNA            profdisis         disis                   profdisis(1)
   interaction sites
  position-specific      psic*             psic, clustalngz        psic(1),

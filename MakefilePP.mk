@@ -98,6 +98,7 @@ PROFTEXTFILE:=$(INFILE:%.in=%.profAscii)
 # profcon is very slow and it is said not to have much effect on md results - so we do not run it
 PROFCONFILE:=$(INFILE:%.in=%.profcon)
 PROFTMBFILE:=$(INFILE:%.in=%.proftmb)
+REPROFFILE:=$(INFILE:%.in=%.reprof)
 PROFTMBDATFILE:=$(INFILE:%.in=%.proftmbdat)
 PCCFILE:=$(INFILE:%.in=%.pcc)
 
@@ -163,7 +164,7 @@ go: metastudent
 pfam: hmm2pfam hmm3pfam
 
 .PHONY: sec-struct
-sec-struct: $(PROFTEXTFILE) coiledcoils phd prof proftmb
+sec-struct: $(PROFTEXTFILE) coiledcoils phd prof proftmb reprof
 
 .PHONY: subcell-loc
 subcell-loc:
@@ -246,6 +247,14 @@ tmhmm: $(TMHMMFILE)
 
 $(TMHMMFILE): $(FASTAFILE)
 	trap "rm -rf '$(TMHMMDIR)'" EXIT; tmhmm --workdir=$(TMHMMDIR) --nohtml --noplot $< > $@
+
+.PHONY: reprof
+proftmb: $(REPROFFILE)
+
+.SECONDARY: $(REPROFFILE)
+$(REPROFFILE): $(BLASTMATFILE)
+	reprof -i $< -o $@
+
 
 .PHONY: proftmb
 proftmb: $(PROFTMBFILE) $(PROFTMBDATFILE)
@@ -477,6 +486,7 @@ install:
 		$(PROFTEXTFILE) $(PROFFILE) $(PROF1FILE) \
 		$(PROFBVALFILE) $(PROFB4SNAPFILE) \
 		$(PROFTMBFILE) $(PROFTMBDATFILE) \
+		$(REPROFFILE)\
 		$(PROSITEFILE) \
 		$(PSICFILE) $(CLUSTALNGZ) \
 		$(SEGFILE) $(SEGGCGFILE) \
