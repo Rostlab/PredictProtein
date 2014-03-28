@@ -90,7 +90,8 @@ our %meth_ext_hash = (
   seqGCG => 'input',
   sumNors => 'nors',
   tmhmm => 'tmhmm',
-  tmseg => 'tmseg'
+  tmseg => 'tmseg',
+  somena => 'somena'
 );
 
 # SYSTEM CONFIGURATION RETRIEVAL
@@ -644,7 +645,8 @@ These methods are run by the target 'optional'.
  disordered regions     metadisorder      mdisorder               metadisorder(1)
  subcellular            loctree3          {arch,bact,euka}.lc3    loctree3(1)
                         tmhmm*            tmhmm                   n.a.
- protein-DNA            profdisis         disis                   profdisis(1)
+ protein-RNA,           somena            somena                  somena(1)
+ protein-DNA
   interaction sites
  position-specific      psic*             psic, clustalngz        psic(1),
   independent counts                                              runNewPSIC(1),

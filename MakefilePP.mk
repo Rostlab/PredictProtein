@@ -54,7 +54,7 @@ NLSFILE:=$(INFILE:%.in=%.nls)
 NLSDATFILE:=$(INFILE:%.in=%.nlsDat)
 NLSSUMFILE:=$(INFILE:%.in=%.nlsSum)
 TMSEGFILE:=$(INFILE:%.in=%.tmseg)
-
+SOMENAFILE:=$(INFILE:%.in=%.somena)
 PHDFILE:=$(INFILE:%.in=%.phdPred)
 PHDRDBFILE:=$(INFILE:%.in=%.phdRdb)
 # lkajan: never make PHDNOTHTMFILE a target - its creation depends on whether phd found an HTM region or not: it isn't always created
@@ -183,13 +183,19 @@ subcell-loc:
 #
 # Optional targets should never appear in other aggregate targets (such as 'interaction').
 .PHONY: optional
-optional: loctree3 metadisorder psic tmhmm tmseg
+optional: loctree3 metadisorder psic tmhmm tmseg somena
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
 
+.PHONY: somena
+somena: $(SOMENAFILE)
 
-.PHONE: consurf
+# .fasta .blastPsiMat .profbval .isis .reprof and .coils
+$(SOMENAFILE):  $(FASTAFILE) $(BLASTMATFILE) $(PROFBVALFILE) $(ISISFILE) $(REPROFFILE) $(COILSFILE)
+	somena -i $(dir $(FASTAFILE)) -o $@
+
+.PHONY: consurf
 consurf: $(CONSURFFILE)
 
 $(CONSURFFILE): $(FASTAFILE) 
@@ -491,6 +497,7 @@ install:
 		$(PSICFILE) $(CLUSTALNGZ) \
 		$(SEGFILE) $(SEGGCGFILE) \
 		$(TMSEGFILE) \
+		$(SOMENAFILE)\
 		$(GCGFILE) \
 		$(TMHMMFILE) \
 	; do if [ -e $$f ]; then cp -a $$f "$$DESTDIR/" ; fi; done
