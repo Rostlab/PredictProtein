@@ -108,6 +108,8 @@ LOCTREE3BACT:=$(INFILE:%.in=%.bact.lc3)
 LOCTREE3EUKA:=$(INFILE:%.in=%.euka.lc3)
 
 CONSURFFILE:=$(INFILE:%.in=%_consurf.grades)
+CONSURFFILE_HTML:=$(INFILE:%.in=%_ColoredSeq.html )
+CONSURFFILE_HTML_TARGET:=$(INFILE:%.in=%_consurf.html )
 CONSURFFILE_BASENAME:=$(CONSURFFILE)##*/
 
 PSICFILE:=$(INFILE:%.in=%.psic)
@@ -183,7 +185,7 @@ subcell-loc:
 #
 # Optional targets should never appear in other aggregate targets (such as 'interaction').
 .PHONY: optional
-optional: loctree3 metadisorder psic tmhmm tmseg somena
+optional: loctree3 metadisorder psic tmhmm tmseg somena consurf
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
@@ -198,11 +200,13 @@ $(SOMENAFILE):  $(FASTAFILE) $(BLASTMATFILE) $(PROFBVALFILE) $(ISISFILE) $(REPRO
 .PHONY: consurf
 consurf: $(CONSURFFILE)
 
-$(CONSURFFILE): $(FASTAFILE) 
+
+# consurf  --Seq_File /mnt/home/gyachdav/test_seq3/query.fasta  --BlastFile /mnt/home/gyachdav/test_seq3/query.blastPsiMat  -m --debug
+$(CONSURFFILE): $(FASTAFILE) $(BLASTALIFILE) $(CONSURFDIR)
 	trap "rm -rf '$(CONSURFDIR)' error.log" EXIT; \
-	if ! ( consurf --Seq_File $< --Out_Dir $(CONSURFDIR) -m --quiet $(if $(DEBUG), , >>error.log 2>&1) ); then \
+	if ! ( consurf --Seq_File $< --Out_Dir $(CONSURFDIR)  --BlastFile $(BLASTALIFILE)  -m --quiet $(if $(DEBUG), , >>error.log 2>&1) ); then \
 		EXIT=$$?; cat error.log >&2; exit $$EXIT; \
-	else \cp -a $(CONSURFDIR)/$(CONSURFFILE_BASENAME) $@; fi
+	else \cp -a $(CONSURFDIR)/$(CONSURFFILE_BASENAME) $@;  \cp -a $(CONSURFDIR)/$(CONSURFFILE_HTML) $(CONSURFFILE_HTML_TARGET); 	fi
 
 # loctree1 and loctree2 are now deprecated
 .PHONY: loctree3
@@ -474,6 +478,7 @@ install:
 		$(BLASTPSWISSM8) \
 		$(COILSFILE) $(COILSRAWFILE) \
 		$(CONSURFFILE) \
+		$(CONSURFFILE_HTML_TARGET) \
 		$(DISISFILE) \
 		$(DISULFINDERFILE) \
 		$(FASTAFILE) \
