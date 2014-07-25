@@ -203,12 +203,11 @@ consurf: $(CONSURFFILE)
 
 # gyachdav: to silence consurf we use:
 # if ! ( consurf --Seq_File $< --Out_Dir $(CONSURFDIR)  --BlastFile $(BLASTALIFILE)  -m --quiet  $(if $(DEBUG), , >>error.log 2>&1) ); then 
-# however i can;t understand the  $(if $(DEBUG), , >>error.log 2>&1) section, will contact laszlo
 # in the menatime all stderr go to err.log
-$(CONSURFFILE): $(FASTAFILE) $(BLASTALIFILE) $(CONSURFDIR)
+$(CONSURFFILE): $(FASTAFILE) $(BLASTFILE) $(CONSURFDIR)
 	trap "rm -rf '$(CONSURFDIR)' error.log" EXIT; \
-	if ! ( consurf --Seq_File $< --Out_Dir $(CONSURFDIR)  --BlastFile $(BLASTALIFILE)  -m --quiet   >>error.log 2>&1 ); then \
-		EXIT=$$?; cat error.log >&2; exit $$EXIT;  \
+	if ! ( consurf --Seq_File $< --Out_Dir $(CONSURFDIR)  --BlastFile $(BLASTFILE)  -m --quiet  $(if $(DEBUG), , >>error.log 2>&1 ) ); then \
+		EXIT=$$?; exit $$EXIT;  \
 	else \cp -a $(CONSURFDIR)/$(CONSURFFILE_BASENAME) $(CONSURFFILE_TARGET);  \cp -a $(CONSURFDIR)/$(CONSURFFILE_HTML) $(CONSURFFILE_HTML_TARGET); 	fi
 
 # loctree1 and loctree2 are now deprecated
