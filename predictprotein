@@ -22,11 +22,13 @@ our %meth_ext_hash = (
   'blastPsiAli.gz' => 'blastpgp',
   blastPsiMat => 'blastpgp',
   blastPsiOutTmp => 'blastpgp',
+  'blastPsiOutTmp.gz'     => 'blastpgp', 
   blastPsiRdb => 'blastpgp',
   blastPsi80Rdb => 'blastpgp',
   blastpSwissM8 => 'blastpswiss',
   chk => 'blastpgp',
   clustalngz => 'psic',
+  clustaln  => 'psic',  
   coils => 'coiledcoils',
   coils_raw => 'coiledcoils',
   'consurf.grades' => 'consurf',
@@ -76,6 +78,9 @@ our %meth_ext_hash = (
   phdRdb => 'phd',
   profAscii => 'prof',
   reprof => 'reprof',
+  reprof  => 'mprof', 
+  reprof_ORI  => 'mprof', 
+  reprof_EXTRA_ => 'mprof',  
   profbval => 'profbval',
   profb4snap => 'profbval',
   prof1Rdb => 'prof',
@@ -84,11 +89,30 @@ our %meth_ext_hash = (
   proftmbdat => 'proftmb',
   prosite => 'prosite',
   psic => 'psic',
+  pssh2   => 'pssh2',
+  'pssh2.gz'  => 'pssh2', 
   safBlastPsi => 'blastpgp',
   safBlastPsi80 => 'blastpgp',
   segNormGCG => 'ncbi-seg',
   segNorm => 'ncbi-seg',
   seqGCG => 'input',
+  'SIFTprediction.gz'   => 'sift',
+  'SIFTprediction'      => 'sift',
+  'sift_tab'            => 'sift',
+  'snap3.gz'    => 'snap',
+  snap3         => 'snap',
+  snap_tab      => 'snap',
+  muts          => 'snap',
+  'uniprot20.hhm'               => 'hhblits',
+  'uniprot20.hhr'               => 'hhblits',
+  'uniprot20.hhr.gz'            => 'hhblits',
+  'uniprot20.a3m'               => 'hhblits',
+  'uniprot20.a3m.gz'            => 'hhblits',
+  'uniprot20.pdb.full.hhr'      => 'hhblits',
+  'uniprot20.pdb.full.hhr.gz'   => 'hhblits',
+  'uniprot20.pdb.full.a3m'      => 'hhblits',
+  'fasta.hhblits.log'           => 'hhblits',
+  'uniprot20.hhm.hhblits.log'   => 'hhblits',
   sumNors => 'nors',
   tmhmm => 'tmhmm',
   tmseg => 'tmseg',
@@ -128,6 +152,7 @@ my $prositeconvdat = glob( $config->val('predictprotein', 'prositeconvdat' ) );
 my $psicexe = glob( $config->val('predictprotein', 'psicexe' ) );
 my $spkeyidx = glob( $config->val('predictprotein', 'spkeyidx' ) );
 my $swissblastdb = glob( $config->val('predictprotein', 'swissblastdb' ) );
+my $hhblitsdb = glob( $config->val('predictprotein', 'hhblitsdb' ) );
 my $use_cache = $config->val('predictprotein', 'use_cache');
 #
 my $root_dir = $pp_rootdir || "__pkgdatadir__";
@@ -179,6 +204,7 @@ my $result = GetOptions (
 			    "s|seq|sequence=s" =>\$sequence_in,
           'seqfile=s' => \$seqfile,
           'swissblastdb=s' => \$swissblastdb,
+          'hhblitsdb=s' => \$hhblitsdb, 
           'target=s@' => \@target,
           'use-cache!' => \$use_cache,
 			    "v|version" => \$version,
@@ -370,6 +396,7 @@ if( $prositeconvdat ){ push @cmd, "PROSITECONVDAT=$prositeconvdat"; }
 if( $psicexe ){ push @cmd, "PSICEXE=$psicexe"; }
 if( $spkeyidx ){ push @cmd, "SPKEYIDX=$spkeyidx"; }
 if( $swissblastdb ){ push @cmd, "SWISSBLASTDB=$swissblastdb"; }
+if( $hhblitsdb ){ push @cmd, "HHDB=$hhblitsdb"; } 
 # method control params
 push (@cmd, @$makemethod );
 if( !$dbg ){ push @cmd, '--quiet'; } else { push (@cmd, "DEBUG=".$dbg); }
@@ -436,10 +463,21 @@ if( $use_cache )
     my( $filename, $directories, $suffix ) = fileparse( $res_file, qr/\..*$/o ); # lkajan: we want the longest possible match from the right
     my $extkey = substr( $suffix, 1 );
 
+    # andrea, roos 20140725: if there is no method-filename_extension-mapping we only warn if $debug is set! 
+    # The warning does not seem to be really needed except for tracing what PP does.
+    # 
     my $method = $meth_ext_hash{$extkey};
-    if( !$method ){ warn("Warning: extension '$extkey' does not have associated method"); $method = $extkey; }
-
+    if( !$method ){ 
+	if ( $dbg ){
+	    warn("Warning: extension '$extkey' does not have associated method");
+	};
+	$method = $extkey; 
+    }
+    # andrea 20140725: TODO: disucss whether we want to store these unknown files or not 
+    # currently we store it as was the behaviour before the change in warnings, but maybe we do not want that?
+#    else {
     $hash_meth->{$method}->{res}->{$extkey} = "$precache_dir/$res_file";
+#    }	    
   }
   #if( $dbg ){ cluck( Dumper( $hash_meth ) ); }
 
@@ -655,7 +693,7 @@ These methods are run by the target 'optional'.
   ple alignment
  transmembrane helices  tmhmm             tmhmm                   n.a.
                         tmseg             tmseg                   tmseg(1)
- functional regions     consurf           _consurf.grades         consurf(1)
+ functional regions     consurf           consurf.grades         consurf(1)
 
 =head2 Resources
 
