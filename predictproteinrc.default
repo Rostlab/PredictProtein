@@ -30,7 +30,7 @@ prositedat=/mnt/project/rost_db/data/prosite/prosite.dat
 prositeconvdat=/mnt/project/rost_db/data/prosite/prosite_convert.dat
 
 # swissblastdb: Path to SwissProt blast database
-swissblastdb=/mnt/project/rost_db/data/blast/swiss
+swissblastdb=/mnt/project/rost_db/data/swissprot/uniprot_sprot
 
 # hhblitsdb: Path to HHblits database
 hhblitsdb=/var/tmp/rost_db/data/hhblits
