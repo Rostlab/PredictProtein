@@ -65,6 +65,7 @@ our %meth_ext_hash = (
   'euka.lc3.svm' => 'loctree3',
   mdisorder => 'metadisorder',
   'metastudent.BPO.txt' =>'metastudent',
+  'metastudent.CCO.txt' =>'metastudent',
   'metastudent.MFO.txt' =>'metastudent',
   nls => 'predictnls',
   nlsDat => 'predictnls',
@@ -607,6 +608,7 @@ These methods are run by the default target 'all':
                                                                   ncoils(1)
  disulfide bridges      disulfinder       disulfinder             disulfinder(1)
  Gene Ontology terms    metastudent       metastudent.BPO.txt,    metastudent(1)
+                                          metastudent.CCO.txt,
                                           metastudent.MFO.txt
  local alignment        blast             blastPsiOutTmp, chk,    blastpgp(1)
                                           blastPsiMat,

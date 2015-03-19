@@ -120,6 +120,7 @@ DISISFILE:=$(INFILE:%.in=%.disis)
 PPFILE:=$(INFILE:%.in=%.predictprotein)
 TMHMMFILE:=$(INFILE:%.in=%.tmhmm)
 METASTUDENTBPO:=$(INFILE:%.in=%.metastudent.BPO.txt)
+METASTUDENTCCO:=$(INFILE:%.in=%.metastudent.CCO.txt)
 METASTUDENTMPO:=$(INFILE:%.in=%.metastudent.MFO.txt)
 
 DISULFINDERCTRL :=
@@ -394,10 +395,10 @@ $(PROFTEXTFILE): $(PROFFILE)
 	rm -f $(PROFTEXTFILE); $(PROFROOT)scr/conv_prof.pl $< fileOut=$@ ascii nohtml nodet nograph
 
 .PHONY: metastudent
-metastudent: $(METASTUDENTBPO) $(METASTUDENTMPO)
+metastudent: $(METASTUDENTBPO) $(METASTUDENTCCO) $(METASTUDENTMPO)
 
-.SECONDARY: $(METASTUDENTBPO) $(METASTUDENTMPO)
-%.metastudent.BPO.txt %.metastudent.MFO.txt : $(FASTAFILE)
+.SECONDARY: $(METASTUDENTBPO) $(METASTUDENTCCO) $(METASTUDENTMPO)
+%.metastudent.BPO.txt %.metastudent.CCO.txt %.metastudent.MFO.txt : $(FASTAFILE)
 	metastudent -i $(FASTAFILE) -o query.metastudent --silent $(if $(DEBUG), --debug, )
 
 
@@ -491,7 +492,7 @@ install:
 		$(LOCTREE3ARCH) $(LOCTREE3BACT) $(LOCTREE3EUKA) \
 		$(LOCTREE3ARCH).pb $(LOCTREE3BACT).pb $(LOCTREE3EUKA).pb \
 		$(METADISORDERFILE) \
-		$(METASTUDENTBPO) $(METASTUDENTMPO) \
+		$(METASTUDENTBPO) $(METASTUDENTCCO) $(METASTUDENTMPO) \
 		$(NLSFILE) $(NLSDATFILE) $(NLSSUMFILE) \
 		$(NORSFILE) $(NORSSUMFILE) \
 		$(NORSNETFILE) \
