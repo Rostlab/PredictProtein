@@ -1,4 +1,4 @@
-predictprotein (1.1.07) UNRELEASED; urgency=low
+predictprotein (1.1.07) unstable; urgency=low
 
   * Added metastudent CCO (Cellular Component Ontology) prediction file handling.
 
