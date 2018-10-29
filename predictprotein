@@ -75,6 +75,7 @@ our %meth_ext_hash = (
   phdNotHtm => 'phd',
   phdPred => 'phd',
   phdRdb => 'phd',
+  predbind => 'predbind',
   profAscii => 'prof',
   reprof => 'reprof',
   profbval => 'profbval',
@@ -651,6 +652,10 @@ These methods are run by the target 'optional'.
  protein-RNA,           somena            somena                  somena(1)
  protein-DNA
   interaction sites
+ DNA- , RNA- and        predbind          predbind                predbind(1)
+  Protein-binding
+  protein and binding
+  sites
  position-specific      psic*             psic, clustalngz        psic(1),
   independent counts                                              runNewPSIC(1),
   and its base multi-                                             clustalw(1)
