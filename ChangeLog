@@ -1,4 +1,4 @@
-predictprotein (1.1.08) UNRELEASED; urgency=low
+predictprotein (1.1.08) unstable; urgency=low
 
   * Added predbind(1) prediction file handling.
 
