@@ -1,3 +1,9 @@
+predictprotein (1.1.08) unstable; urgency=low
+
+  * Added predbind(1) prediction file handling.
+
+ -- Timothy Karl <karl@rostlab.org>  Mon, 29 Oct 2018 15:25:37 +0100 
+
 predictprotein (1.1.07) unstable; urgency=low
 
   * Added metastudent CCO (Cellular Component Ontology) prediction file handling.
