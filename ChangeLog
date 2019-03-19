@@ -1,3 +1,11 @@
+predictprotein (1.1.09) unstable; urgency=low
+
+  * predbind(1) has been renamed to prona2019(1)
+  * prona2019(1) target and output file have been renamed from 
+    'predbind' to 'prona'
+
+ -- Timothy Karl <karl@rostlab.org>  Mon, 18 Mar 2019 15:57:00 +0100 
+
 predictprotein (1.1.08) unstable; urgency=low
 
   * Added predbind(1) prediction file handling.

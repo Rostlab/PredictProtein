@@ -75,8 +75,8 @@ our %meth_ext_hash = (
   phdNotHtm => 'phd',
   phdPred => 'phd',
   phdRdb => 'phd',
-  predbind => 'predbind',
   profAscii => 'prof',
+  prona => 'prona',
   reprof => 'reprof',
   profbval => 'profbval',
   profb4snap => 'profbval',
@@ -652,7 +652,7 @@ These methods are run by the target 'optional'.
  protein-RNA,           somena            somena                  somena(1)
  protein-DNA
   interaction sites
- DNA- , RNA- and        predbind          predbind                predbind(1)
+ DNA- , RNA- and        prona             prona                   prona2019(1)
   Protein-binding
   protein and binding
   sites

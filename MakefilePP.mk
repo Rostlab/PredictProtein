@@ -59,10 +59,10 @@ PHDFILE:=$(INFILE:%.in=%.phdPred)
 PHDRDBFILE:=$(INFILE:%.in=%.phdRdb)
 # lkajan: never make PHDNOTHTMFILE a target - its creation depends on whether phd found an HTM region or not: it isn't always created
 PHDNOTHTMFILE:=$(INFILE:%.in=%.phdNotHtm)
-PREDBINDFILE:=$(INFILE:%.in=%.predbind)
 PROFFILE:=$(INFILE:%.in=%.profRdb)
 # prof output generated explicitely from one sequence - NO alignment - Chris Schaefer initiated this - B approved
 PROF1FILE:=$(INFILE:%.in=%.prof1Rdb)
+PRONAFILE:=$(INFILE:%.in=%.prona)
 # lkajan: 20120816: profasp is now removed (https://rostlab.org/bugzilla3/show_bug.cgi?id=154)
 ASPFILE:=$(INFILE:%.in=%.asp)
 NORSFILE:=$(INFILE:%.in=%.nors)
@@ -188,7 +188,7 @@ subcell-loc:
 #
 # Optional targets should never appear in other aggregate targets (such as 'interaction').
 .PHONY: optional
-optional: loctree3 metadisorder predbind psic tmhmm tmseg somena consurf
+optional: loctree3 metadisorder prona psic tmhmm tmseg somena consurf
 
 .PHONY: coiledcoils
 coiledcoils: $(COILSFILE)
@@ -395,12 +395,12 @@ $(PROFTEXTFILE): $(PROFFILE)
 	# conv_prof creates query.profAscii.tmp in case query.profAscii already exists - make sure it does not
 	rm -f $(PROFTEXTFILE); $(PROFROOT)scr/conv_prof.pl $< fileOut=$@ ascii nohtml nodet nograph
 
-.PHONY: predbind
-predbind: $(PREDBINDFILE)
+.PHONY: prona
+prona: $(PRONAFILE)
 
-# Predbind needs .fasta .blastPsiMat .profbval .mdisorder .profRdb to run
-$(PREDBINDFILE): $(FASTAFILE) $(BLASTMATFILE) $(PROFBVALFILE) $(METADISORDERFILE) $(PROFFILE)
-	predbind -p $(dir $(FASTAFILE)) -d $(BIG80BLASTDB) $(if $(DEBUG), -v True, ) -o $@
+# ProNA needs .fasta .blastPsiMat .profbval .mdisorder .profRdb to run
+$(PRONAFILE): $(FASTAFILE) $(BLASTMATFILE) $(PROFBVALFILE) $(METADISORDERFILE) $(PROFFILE)
+	prona2019 -p $(dir $(FASTAFILE)) -d $(BIG80BLASTDB) $(if $(DEBUG), -v True, ) -o $@
 
 .PHONY: metastudent
 metastudent: $(METASTUDENTBPO) $(METASTUDENTCCO) $(METASTUDENTMPO)
@@ -505,7 +505,7 @@ install:
 		$(NORSFILE) $(NORSSUMFILE) \
 		$(NORSNETFILE) \
 		$(PHDFILE) $(PHDNOTHTMFILE) $(PHDRDBFILE) \
-        $(PREDBINDFILE) \
+		$(PRONAFILE) \
 		$(PROFTEXTFILE) $(PROFFILE) $(PROF1FILE) \
 		$(PROFBVALFILE) $(PROFB4SNAPFILE) \
 		$(PROFTMBFILE) $(PROFTMBDATFILE) \
