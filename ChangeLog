@@ -1,3 +1,10 @@
+predictprotein (1.1.10) unstable; urgency=low
+
+  * Remove ProNA unnecessary BLAST run
+  * Correct profRdb results
+
+ -- Timothy Karl <karl@rostlab.org>  Mon, 15 Dec 2020 15:29:00 +0100 
+
 predictprotein (1.1.09) unstable; urgency=low
 
   * predbind(1) has been renamed to prona2019(1)
