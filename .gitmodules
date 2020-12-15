@@ -1,0 +1,3 @@
+[submodule "helper_apps/prof-fix"]
+	path = helper_apps/prof-fix
+	url = https://git.rostlab.org/bernhoferm/prof-fix.git

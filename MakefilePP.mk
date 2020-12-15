@@ -384,9 +384,11 @@ phd: $(PHDFILE) $(PHDRDBFILE)
 
 $(PROFFILE): $(HSSPFILTERFILE)
 	prof $< both fileRdb=$@ $(if $(DEBUG), 'dbg', ) numresMin=$(PROFNUMRESMIN) nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=.
+	$(HELPERAPPSDIR)prof-fix/prof_fix.py -i $(PROFFILE)
 
 $(PROF1FILE): $(FASTAFILE)
 	prof $< both fileRdb=$@ $(if $(DEBUG), 'dbg', ) numresMin=$(PROFNUMRESMIN) nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=.
+	$(HELPERAPPSDIR)prof-fix/prof_fix.py -i $(PROF1FILE)
 
 .PHONY: prof
 prof: $(PROFFILE) $(PROF1FILE)
@@ -400,7 +402,7 @@ prona: $(PRONAFILE)
 
 # ProNA needs .fasta .blastPsiMat .profbval .mdisorder .profRdb to run
 $(PRONAFILE): $(FASTAFILE) $(BLASTMATFILE) $(PROFBVALFILE) $(METADISORDERFILE) $(PROFFILE)
-	prona2019 -p $(dir $(FASTAFILE)) -d $(BIG80BLASTDB) $(if $(DEBUG), -v True, ) -o $@
+	prona2019 -p $(dir $(FASTAFILE)) $(if $(DEBUG), -v True, ) -o $@
 
 .PHONY: metastudent
 metastudent: $(METASTUDENTBPO) $(METASTUDENTCCO) $(METASTUDENTMPO)
