@@ -384,11 +384,11 @@ phd: $(PHDFILE) $(PHDRDBFILE)
 
 $(PROFFILE): $(HSSPFILTERFILE)
 	prof $< both fileRdb=$@ $(if $(DEBUG), 'dbg', ) numresMin=$(PROFNUMRESMIN) nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=.
-	$(HELPERAPPSDIR)prof-fix/prof_fix.py -i $(PROFFILE)
+	$(HELPERAPPSDIR)prof_fix.py -i $(PROFFILE)
 
 $(PROF1FILE): $(FASTAFILE)
 	prof $< both fileRdb=$@ $(if $(DEBUG), 'dbg', ) numresMin=$(PROFNUMRESMIN) nresPerLineAli=60 riSubSec=4 riSubAcc=3 riSubSym=.
-	$(HELPERAPPSDIR)prof-fix/prof_fix.py -i $(PROF1FILE)
+	$(HELPERAPPSDIR)prof_fix.py -i $(PROF1FILE)
 
 .PHONY: prof
 prof: $(PROFFILE) $(PROF1FILE)
