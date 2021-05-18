@@ -131,171 +131,224 @@ http://www.predictprotein.org/meta.php
           * You have a prediction and an observation of secondary structure and you want to compile the prediction accuracy?
             We compile per-residue and per-segment based score for the evaluation of prediction accuracy (examples for: request; and output).
 
-       
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 QUOTE and COPYRIGHT
 
-Who are we?
+## Who are we?
 
-    * Current team:
-          o Burkhard Rost (CUBIC, Columbia Univ, New York / LION, Heidelberg WWW, rost@columbia.edu ) pioneered the PredictProtein service; wrote the PHD prediction programs: PHDsec, PHDacc, PHDhtm, and PHDtopology; developed the prediction-based threading method PHDthreader/TOPITS; programmed, and proposed the scores compiled by EvalSec; hacked some of the PredictProtein scripts; is helping to keep the service up and running, and is responsible for the documentation.
-o Guy Yachdav (CUBIC, Columbia Univ, New York WWW, yachdav@rostlab.org ) is currently maintaining the PredictProtein server and providing on-going support.
-o Laszlo Kajan - visualPP
-o Joe Karlin - web master
-     
-    * Others who contributed (in the past):
-          o Reinhard Schneider (
-now EMBL, Heidelberg,) wrote the program MaxHom for multiple sequence, and 1D structure alignments, and helped the service take off.
-          o Antoine de Daruvar (now Univ. Bordeaux and LION, Heidelberg) rewrote the scripts managing requests, and maintained the service running for twelve months.
-o Volker Eyrich (Chemistry Dept, Columbia Univ, New York,) wrote the scripts for the META server which allows you to access a large variety of selected servers world-wide from a single-page interface.
-o Jinfeng Liu provided scientific support for the PredictProtein server.
+### Current Team @ Rostlab:
+
+  - Burkhard Rost:
+    - Founded the PredictProtein server
+    - Contributed the PHD and PROF methods
+    - Continues to support the server by all means possible
+  - Tim Karl:
+    - Maintains the PredictProtein software and databases
+    - Keeps everything running
+  - Michael Bernhofer:
+    - Contributed the TMSEG method
+  - Christian Dallago:
+    - Developed and maintains the Bioembeddings server
+  - Michael Heinzinger:
+    - Contributed the ProtBERTsec and goPredSim methods
+  - Maria Littmann:
+    - Contributed the goPredSim method
+  - Tobias Olenyi:
+    - Contributed the goPredSim method
+  - Lothar Richter:
+    - Scientific advisor
+  - Konstantin Schütze:
+    - Developed and maintains the Bioembeddings server
+  - Guy Yachdav:
+    - Designed and implemented the PredictProtein pipeline and online service
+
+### Schneider Lab @ LCSB
+
+  - Reinhard Schneider:
+    - Hosts and supports the PredictProtein server at the LCSB
+    - Original author of the HSSP method
+  - Piotr Gawron:
+    - Hosts and supports the PredictProtein server at the LCSB
+  - Wei Gu: 
+    - Hosts and supports the PredictProtein server at the LCSB
+  - Yohan Jarosz:
+    - Hosts and supports the PredictProtein server at the LCSB
+  - Venkata Satagopam:
+    - Hosts and supports the PredictProtein server at the LCSB
+  - Noua Toukourou:
+    - Hosts and supports the PredictProtein server at the LCSB
+  - Christophe Trefois: 
+    - Hosts and supports the PredictProtein server at the LCSB
+  - Maharshi Vyas:
+    - Hosts and supports the PredictProtein server at the LCSB
+
+### MMseqs2 Support
+
+  - Martin Steinegger:
+    - Hosts and supports the MMseqs2 server
+  - Milot Mirdita:
+    - Hosts and supports the MMseqs2 server
+
+### Additional Contributors
+
+  - Yana Bromberg:
+    - Contributed the original SNAP method
+  - Nir Ben-Tal:
+    - Contributed the ConSurf method
+  - Sean O'Donoghue:
+    - Developer of Aquaria
+  - Andrea Schafferhans:
+    - Contributed the PSSH method for sequence to structure mapping
+    - Developer of Aquaria
+  - Laszlo Kajan:
+    - Contributed the Freecontact method
+    - Software development and packaging
+  - Tatyana Goldberg: 
+    - Contributed the LocTree3 method
+  - Jiajun Qiu:
+    - Contributed the ProNA2020 method
+  - Haim Ashkenazy:
+    - Contributed the ConSurf method
+  - Henry Bigelow: 
+    - Contributed the PROFtmb method
+  - Tobias Hamp: 
+    - Contributed the Metastudent method
+  - Maximilian Hecht: 
+    - Contributed the SNAP2 method
+  - David Hoksza: 
+    - Developer of MolArt
+  - Peter Hönigschmid: 
+    - Contributed the SomeNA method
+  - Marco Punta: 
+    - Contributed the Meta-Disorder method
+  - Avner Schlessinger: 
+    - Contributed the PROFbval, Meta-Disorder, and NorsNet methods
+
+### Original Contributors
+
+  - Chris Sander:
+    - Guided the development of the first round of PredictProtein method(s) with one of his first graduate students
+    - Worked with Reinhard Schneider on the HSSP method
+    - Developed the Evolutionary Couplings method for 3D folding with Debora Marks that built on the key original idea "let's build on evolutionary information" in PredictProtein
+  - Antoine de Daruvar:
+    - Helped getting the first PredictProtein server online
+  - Roy Omond:
+    - Helped in the communication between VMS and Unix systems for the first server
+  - Gerrit Vriend:
+    - Helped getting the PredictProtein server online
+
+### Former Contributors
+
+  - Juan Miguel Cejuela:
+    - Added the literature search feature
+  - Rachel First:
+    - Designed the artwork for the localization prediction
+    - Designed the site tutorial
+  - Paolo Frasconi:
+    - Contributed the DISULFIND method
+  - Edda Kloppmann:
+    - Scientific advisor
+  - Jinfeng Liu: 
+    - Contributed code for the PredictProtein pipeline
+    - Contributed the NORS, CHOP & CHOPnet methods
+  - Sven Mika:
+    - Contributed the UniqueProt method
+  - Rajesh Nair:
+    - Contributed the LocTree method
+  - Yanay Ofran: 
+    - Contributed the PPSites and PROFdisis methods
+  - Dariusz Przybylski:
+    - Contributed the AGAPE method
+  - Jonas Reeb:
+    - Scientific advisor
+  - Manfred Roos: 
+    - Maintained the PredictProtein Knowledgebase
+  - Thomas Splettstoesser: 
+    - Designed the PredictProtein logo
+  - Kazimierz Wrzeszczynski:
+    - Contributed code and ideas
+
+ 
 
 
-          o Chris Sander (nowMemorial Sloan Kettering Medical Center,) organized resources, contributed ideas, and simulated the grand guru.
-* Authors of other programs used:
-          o Stephen F Altschul and Samuel Karlin (NCBI, WWW, altschul@ncbi.nlm.nih.gov) wrote the initial database search bestseller BLAST.
-          o Stephen F Altschul and colleagues (NCBI, WWW, altschul@ncbi.nlm.nih.gov) wrote the recent hit PSI-BLAST.
-          o Amos Bairoch (Geneva, WWW, bairoch@cmu.unige.ch) maintains SWISS-PROT, and initialised ProSite (as well as, numerous other services!).
-          o Amos Bairoch, Philip Bucher, Kay Hofmann (Geneva, WWW, bairoch@cmu.unige.ch) maintain ProSite, and wrote the scripts returning the ProSite output.
-          o Nigel Brown (London, WWW, <nbrown@nimr.mrc.ac.uk) has developed the program MView which is a rather powerful tool for automatically displaying alignments.
-          o Florence Corpet, Jerome Gouzy & Daniel Kahn (Toulouse, WWW, dkahn@zyx.toulouse.inra.fr) maintain the ProDom database of domain assignments to all proteins in SWISS-PROT.
-          o Piero Fariselli (farisel@kaiser.alma.unibo.it) and Rita Casadio (Univ of Bologna, Italy) wrote the program CYSPRED that predicts the disulfide-bonding state of cysteine residues.
-          o Patrice Gouet (gouet@ipbs.fr) (IPBS, WWW, ) wrote the program ESPript that converts alignments into PostScript, GIF, and TIFF formatted images. Emmanuel Courcelle (manu@ipbs.fr) installed (and maintains) the local mirror of ESPript in New York.
-          o Andrei Lupas (SmithKline Beecham, Collegeville; lupasa00@mh.us.sbphrd.com) wrote the program COILS (detection of coiled-coil regions).
-            Note: the latest version of the source code was provided by Rob Russell (EMBL rob.russell@embl-heidelberg.de).
-          o Reinhard Schneider (EMBL, Heidelberg, WWW) wrote the program MaxHom (multiple sequence alignment).
-          o John C Wootton and Scott Federhen (NCBI, WWW, federhen@ncbi.nlm.nih.gov) wrote the classic program for detecting regions of low-complexity (composition bias).
-          o Malin M Young(Sandia National Lab, mmyoung@sandia.gov), Kent Kirshenbaum, Ken Dill, and Stefan Highsmith wrote the program for detecting regions likely to undergo structural switches (ASP).
-•	Jinfeng Liu - wrote CHOP and NORS
-•	Dariusz Przybylski - developed fold recognition
-•	Rajesh Nair - sub cellular localization
-•	 Yanay Ofran - protein-protein and protein DNA binding sites
-•	 Avner Schlessinger - protein disorder
-•	Marco Punta - intra residue contacts
-•	Andrea Passserini - disulphide bridges 
-•	Yana Bormberg - functional changed affected by SNP
-•	Henry Bigelow - 
 
+Please cite the latest publication on PredictProtein.
+Links to literature related to PP.
 
-  * Authors of services available through META:
-          o SignalP prediction of presence and location of signal peptide cleavage sites in amino acid sequences from different organisms
-            Henrik Nielsen, Soeren Brunak (both CBS Copenhagen), and Gunnar von Heijne (Univ Stockholm, Sweden); Administrator: Kristoffer Rapacki rapacki@cbs.dtu.dk
-          o NetOglyc prediction of mucin type GalNAc O-glycosylation sites in mammalian proteins.
-            Jan Hansen (CBS, Copenhagen, Denmark); Administrator: Kristoffer Rapacki rapacki@cbs.dtu.dk
-          o NetPicoRNA predictions of cleavage sites of picornaviral proteases.
-            Nikolaj Blom (CBS, Copenhagen, Denmark); Administrator: Kristoffer Rapacki rapacki@cbs.dtu.dk
-          o ChloroP predictions of whether or not a protein contains an N-terminal chloroplast transit peptide, cTP, and of probable sites for cleavage of the transit peptide.
-            Olof Emanuelsson (CBS Copenhagen, Denmark); Administrator: Kristoffer Rapacki rapacki@cbs.dtu.dk
-          o JPRED consensus method for protein secondary structure prediction.
-            James Cuff, and Geoff Barton (both EBI Hinxton, England); Administrator: James Cuffjames@ebi.ac.uk
-          o TMHMM prediction of the location of transmembrane helices and their topology.
-            Anders Krogh (CBS, Copenhagen, Denmark); Administrator: Anders Krogh krogh@cbs.dtu.dk
-          o TOPPRED prediction of location and orientation of transmembrane helices.
-            Erik Wallin, and Gunnar von Heijne (both Stockholm Univ, Sweden); Administrator: Erik Wallin erikw@biokemi.su.se
-          o DAS prediction of location of transmembrane helices.
-            Miklos Cserzo, Istvan Simon (both Academy of Sciences, Budapest, Hungary), Erik Wallin, Gunnar von Heijne, Arne Elofsson (Stockholm Univ, Sweden); Administrator: Miklos Cserzo miklos@pugh.bip.bham.ac.uk
-          o FRSVR prediction-based threading, also incorporating purely sequence-based database searches.
-            Daniel Fischer (Ben Gurion Univ of the Negev, Israel); Administrator: Daniel Fischer dfischer@cs.bgu.ac.il
-          o SAMT98 hidden Markov model method (SAM-T98) for finding remote homologs of protein sequences.
-            Kevin Karplus, Christian Barrett, and Richard Hughey (all UCSD, Santa Cruz, USA); Administrator: sam-info@cse.ucsc.edu
-          o SWISS-MODEL prediction of 3D structure by homology modelling (automated server).
-            Manuel Peitsch, Torsten Schwede, and Nicolas Guex (all Glaxo, Geneva, Switzerland); Administrator: Nicolas Guex ng45767@GlaxoWellcome.co.uk
-          o CPHmodels prediction of 3D structure by homology modelling through a collection of methods and databases developed to predict protein structures.
-            Ole Lund (CBS, Copenhagen, Denmark); Administrator: Kristoffer Rapacki rapacki@cbs.dtu.dk
-
-
-Pleeeaze cite for PredictProtein (!!)
-Comment: if you find the following list too long, please note that PredictProtein combines a large number of independent tools. Where other servers adopt the philosophy 'one mail/WWW interface per tool' (for a few examples), PP attempts to provide one single interface to many tools. Many of the tools are at the forefront of bio-informatics (academics may 'pay' these services by quoting).
-Links to more literature related to PP.
-
-   1. PredictProtein: B Rost, G Yachdav and J Liu (2003) The PredictProtein Server. Nucleic Acids Research 32(Web Server issue):W321-W326.
-          * Author: B Rost
-          * Contact: yachdav@rostlab.org
+  - PredictProtein:  Michael Bernhofer, Christian Dallago, Tim Karl, Venkata Satagopam, B. Rost, et. al(2021) PredictProtein - Predicting Protein Structure and Function for 29 Years. Nucleic Acids Research.
+          * Contact: info@predictprotein.org
           * URL: http://www.predictprotein.org
-          * Version: 10.20.04
-          * Description: PredictProtein is the acronym for all prediction programs run.
-   2. PROSITE: A Bairoch, P Bucher & K Hofmann (1997) Nucleic Acids Research, 25:217-221
+  - PredictProtein: B Rost, G Yachdav and J Liu (2003) The PredictProtein Server. Nucleic Acids Research 32(Web Server issue):W321-W326.
+          * Author: B Rost
+  - PROSITE: A Bairoch, P Bucher & K Hofmann (1997) Nucleic Acids Research, 25:217-221
           * Author: A Bairoch, P Bucher & K Hofmann
           * Contact: bairoch@cmu.unige.ch
           * URL: http://www.expasy.ch/prosite
           * Version: 99.07
           * Description: PROSITE is a database of functional motifs. ScanProsite, finds all functional motifs in your sequence that are annotated in the ProSite db.
-   3. SEG: J C Wootton & S Federhen (1996) Methods in Enzymology, 266:554-571
+  - SEG: J C Wootton & S Federhen (1996) Methods in Enzymology, 266:554-571
           * Author: J C Wootton & S Federhen
           * Contact: rost@columbia.edu
           * URL: wootton@ncbi.nlm.nih.gov
           * Version: 1994
           * Description: SEG divides sequences into regions of low-, and high-complexity. Low-complexity regions typically correspond to 'simple sequences' or 'compositionally-biased' regions.
-   4. ProDom: ELL Sonnhammer & D Kahn (1994) Protein Science, 3:482-492
+  - ProDom: ELL Sonnhammer & D Kahn (1994) Protein Science, 3:482-492
           * Author: LL Sonnhammer; J Gouzy, F Corpet, F Servant, D Kahn, dkahn@zyx.toulouse.inra.fr
           * Contact: dkahn@zyx.toulouse.inra.fr
           * URL: http://protein.toulouse.inra.fr/prodom.html
           * Version: 2000.1
           * Description: ProDom is a database of putative protein domains. The database is searched with BLAST for domains corresponding to your protein.
-7. PHD: B Rost (1996) Methods in Enzymology, 266:525-539
+  - PHD: B Rost (1996) Methods in Enzymology, 266:525-539
           * Author: B Rost
           * Contact: rost@columbia.edu
           * URL: http://www.predictprotein.org
           * Version: 1.0.16
           * Description: PHD is a suite of programs predicting 1D structure (secondary structure, solvent accessibility) from multiple sequence alignments.
-   8. PHDsec: B Rost & C Sander (1993) J. of Molecular Biology, 232:584-599
+  - PHDsec: B Rost & C Sander (1993) J. of Molecular Biology, 232:584-599
           * Author: B Rost
           * Contact: rost@columbia.edu
           * URL: www.predictprotein.org
           * Version: 1.0.16
           * Description: PHDsec predicts secondary structure from multiple sequence alignments.
-   9. PHDacc: B Rost & C Sander (1994) Proteins, 20:216-226
+  - PHDacc: B Rost & C Sander (1994) Proteins, 20:216-226
           * Author: B Rost
           * Contact: rost@columbia.edu
           * Version: 1.0.16
           * Description: PHDacc predicts per residue solvent accessibility from multiple sequence alignments.
-  10. PHDhtm: B Rost, P Fariselli & R Casadio (1996) Protein Science, 7:1704-1718
+  - PHDhtm: B Rost, P Fariselli & R Casadio (1996) Protein Science, 7:1704-1718
           * Author: B Rost
           * Contact: rost@columbia.edu
           * URL: http:// www.predictprotein.org
           * Version: 1.0.16
           * Description: PHDhtm predicts the location and topology of transmembrane helices from multiple sequence alignments.
-  11. PROF: B Rost (2004) Meth. Mol. Biol., submitted.
+  - PROF: B Rost (2004) Meth. Mol. Biol., submitted.
           * Author: B Rost
           * Contact: rost@columbia.edu
           * Version: 1.0.16
           * Description: PROF is a suite of programs predicting 1D structure (secondary structure, solvent accessibility) from multiple sequence alignments.
-  12. PROFsec: B Rost (2004) Meth. Mol. Biol., submitted.
+  - PROFsec: B Rost (2004) Meth. Mol. Biol., submitted.
           * Author: B Rost
           * Contact: rost@columbia.edu
           * URL: http:// www.predictprotein.org * Version: 1.0.16
           * Description: PROFsec predicts secondary structure from multiple sequence alignments.
-  13. PROFACC: B Rost (2004) Meth. Mol. Biol., submitted.
+  - PROFACC: B Rost (2004) Meth. Mol. Biol., submitted.
           * Author: B Rost
           * Contact: rost@columbia.edu
           * URL: http:// www.predictprotein.org * Version: 1.0.16
           * Description: PROFacc predicts per residue solvent accessibility from multiple sequence alignments.
-  14. GLOBE: B Rost (1998) unpublished
+  - GLOBE: B Rost (1998) unpublished
           * Author: B Rost
           * Contact: rost@columbia.edu
           * URL: http:// www.predictprotein.org
           * Version: 1.0.0
           * Description: GLOBE predicts the globularity of a protein
-  15. DISULFIND: A.Ceroni, P.Frasconi, A.Passerini and A.Vullo (2004) Bioinformatics, 20, 653-659, 2004
+  - DISULFIND: A.Ceroni, P.Frasconi, A.Passerini and A.Vullo (2004) Bioinformatics, 20, 653-659, 2004
           * Author:A.Ceroni, P.Frasconi, A.Passerini and A.Vullo
           * Contact:cystein@dsi.unifi.it
           * URL:http://cassandra.dsi.unifi.it/cysteines/index.html
           * Version: 1.0-rg2
           * Description: DISULFIND is a disulphide bridges predictor based on a two steps process.
-  16. A conformational switch prediction program: Young et al. Protein Science(1999) 8:1752-64.
+  - A conformational switch prediction program: Young et al. Protein Science(1999) 8:1752-64.
           * Author: Young M, Kirshenbaum K, Dill KA and Highsmith S.
 * Version: 1.0
           * Description: ASP finds regions that are most likely to behave as switches in proteins known to exhibit this behavior
@@ -312,38 +365,23 @@ Links to more literature related to PP.
 27. LOCtree
 
 
+## COPYRIGHT
 
+PredictProtein is released under the Academic Free License ("AFL") v. 3.0. A copy of the license can be found in the `LICENSE` document.
 
+## Contact
 
-
-
-
-
-
-   
-
-      Copyright
-
-      All rights reserved, including copyrights. Commercial users should apply for a license.
-
-      Contact
-by email via:   info@predictprotein.org
-      or via the web:     http://www.predictprotein.org/subscribe.php
+  - by email via: info@predictprotein.org 
+  - or via the web: https://predictprotein.org/contact
               
 
 
-      Feedback
-
-      Address questions, suggestions, bug reports, or comments
-
-by email via:   help@predictprotein.org
-      or via the web:     http://www.predictprotein.org/feedback.php
-              
+## Feedback
+  Address questions, suggestions, bug reports, or comments
+  
+  - by email via:   help@predictprotein.org
 
 
-      Protection of sequence data
-
-      Your sequence data is deposited in files to which only the PP administrator (BR) has read access. No one else inside or outside of CUBIC (Columbia University BioInformatics Centre) can read your data, except our system administrators who are held to the highest standards of confidentiality. Occasionally, the PP administrator may look at the data in order to assess the performance of the server.
 
 DEFAULT INPUT AND OUTPUT
 
